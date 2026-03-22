@@ -24,55 +24,51 @@
   --ticker-height: 24px;
 }
 
-.ticker-box { 
+.ticker-box {
   display: flex;
   align-items: center;
   gap: 12px;
   background: var(--yellow-2);
-  padding: 6px 20px;
+  padding: 6px 16px;
   border-radius: 999px;
   border: 1px solid var(--border);
   
-  /* KEEP THIS FIXED so the box doesn't move */
-  width: 550px; 
-  min-width: 550px; 
+  /* FIXED WIDTH SETTINGS */
+  width: 500px; /* Sets a specific width */
+  min-width: 600px; /* Prevents it from shrinking */
+  overflow: hidden; /* Keeps everything inside the pill shape */
 }
 
 .ticker-window {
   height: var(--ticker-height);
   overflow: hidden;
-  flex: 1; 
-  
-  /* THE FIX: This centers the content inside the fixed window */
-  display: flex;
-  justify-content: center; 
-  align-items: center;
+  flex: 1; /* Takes up all remaining space in the 500px box */
 }
 
-#ticker-content {
-  /* Ensure the message container itself is flexible */
-  display: flex;
-  justify-content: center;
-  width: 100%;
+.ticker-message {
+  height: var(--ticker-height);
+  line-height: var(--ticker-height);
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.85rem;
   
-  /* Standard text centering as a backup */
-  text-align: center; 
+  /* TEXT TRUNCATION (If message is too long) */
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
+/* SLOWER ANIMATION (8 seconds total) */
 .animate-slide {
-  /* Use a subtle fade/scale instead of a vertical slide 
-     to keep the "centered" feel looking premium */
-  animation: centerFade 8s ease-in-out infinite;
+  animation: slideMessage 8s ease-in-out infinite;
 }
 
-@keyframes centerFade {
-  0% { opacity: 0; transform: translateY(10px); }
+@keyframes slideMessage {
+  0% { opacity: 0; transform: translateY(15px); }
   8% { opacity: 1; transform: translateY(0); }
   92% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 0; transform: translateY(-15px); }
 }
-
 
 /* Animation class - Applied by JS */
 .animate-slide {
