@@ -57,6 +57,22 @@
   overflow: hidden;
   text-overflow: ellipsis; 
 }
+.logo-link {
+  order: 0; 
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  height: 42px; /* Adjust this height to fit your logo's shape */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.nav-logo:hover {
+  transform: scale(1.05); /* Subtle interaction when hovering the logo */
+}
 
 /* SLOWER ANIMATION (8 seconds total) */
 .animate-slide {
@@ -375,6 +391,10 @@
 <body>
   <header class="topbar">
     <div class="topbar-inner">
+		 <a href="/" class="logo-link">
+      <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo">
+    </a>
+
       <div class="brand">2026 Associate Appreciation</div>
       <nav class="nav">
 	  <div class="brand"></div>
