@@ -64,7 +64,7 @@
 }
 
 .nav-logo {
-  height: 42px; /* Adjust this height to fit your logo's shape */
+  height: 60px; /* Adjust this height to fit your logo's shape */
   width: auto;
   object-fit: contain;
   transition: transform 0.3s ease;
@@ -380,6 +380,49 @@
   --shadow: 0 12px 28px rgba(0,0,0,.08);
 }
 
+	  /* Matching the Photo Contest Image Style */
+.section-image-wrap {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: white;
+  margin-bottom: 15px;
+}
+
+.section-image-wrap img {
+  width: 100%;
+  height: auto;
+  transition: transform .4s ease;
+}
+
+.section-image-wrap:hover img {
+  transform: scale(1.03); /* The same zoom effect you have elsewhere */
+}
+
+/* Style for the secondary/alternate button */
+.pill.alternate {
+  background: #e0e0e0;
+  border: 1px solid var(--border);
+}
+
+.pill.alternate:hover {
+  background: #d0d0d0;
+}
+
+
+.card-grid { 
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 24px;
+}
+
+@media (max-width: 800px) {
+  .card-grid {
+    grid-template-columns: 1fr; /* Stack them on mobile phones */
+  }
+}
+
 
 
   </style>
@@ -434,7 +477,7 @@
       <div class="section-image-link" href="#"><img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" /></div>
       <p>Check out the daily themes. Dress up and show your Waffle House pride!</p>
       <div class="links">
-        <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View full schedule</a>
+        <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
       </div>
     </section>
 
@@ -471,6 +514,27 @@
         <a class="section-link secondary" href="#">Recognition details</a>
       </div>
     </section>
+		<section id="shoes-for-crews" class="section">
+  <div class="section-head">
+    <div class="eyebrow">Safety First</div>
+    <h2>Shoes For Crews</h2>
+  </div>
+  
+  <p>Stay safe and stylish on the floor! Access your exclusive associate discount and browse the latest slip-resistant styles designed for our fast-paced environment.</p>
+
+  <div class="section-image-wrap">
+    <img src="your-shoes-image.jpg" alt="Shoes For Crews Collection">
+  </div>
+
+  <div class="section-actions" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+    <a href="https://www.shoesforcrews.com/wafflehouse" target="_blank" class="pill">
+      Shop with Discount
+    </a>
+    <a href="payroll-deduction-form.pdf" class="pill alternate" style="background: #eee; color: #111;">
+      Payroll Deduction Info
+    </a>
+  </div>
+</section>
   </main>
 
   <div class="footer">
