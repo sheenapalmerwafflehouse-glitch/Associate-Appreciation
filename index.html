@@ -24,39 +24,7 @@
   --ticker-height: 24px;
 }
 
-.ticker-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--yellow-2);
-  padding: 6px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  
-  /* FIXED WIDTH SETTINGS */
-  width: 500px; /* Sets a specific width */
-  min-width: 600px; /* Prevents it from shrinking */
-  overflow: hidden; /* Keeps everything inside the pill shape */
-}
 
-.ticker-window {
-  height: var(--ticker-height);
-  overflow: hidden;
-  flex: 1; /* Takes up all remaining space in the 500px box */
-}
-
-.ticker-message {
-  height: var(--ticker-height);
-  line-height: var(--ticker-height);
-  font-weight: 400;
-  color: var(--text);
-  font-size: 0.97rem;
-  
-  /* TEXT TRUNCATION (If message is too long) */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; 
-}
 .logo-link {
   order: 0; 
   display: flex;
@@ -74,35 +42,6 @@
   transform: scale(1.05); /* Subtle interaction when hovering the logo */
 }
 
-/* SLOWER ANIMATION (8 seconds total) */
-.animate-slide {
-  animation: slideMessage 8s ease-in-out infinite;
-}
-
-@keyframes slideMessage {
-  0% { opacity: 0; transform: translateY(15px); }
-  8% { opacity: 1; transform: translateY(0); }
-  92% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-15px); }
-}
-
-/* Animation class - Applied by JS */
-.animate-slide {
-  animation: slideMessage 5s ease-in-out infinite;
-}
-
-/* Slide and Fade animation sequence */
-@keyframes slideMessage {
-  0% { opacity: 0; transform: translateY(100%); }
-  5% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-100%); }
-}
-
-/* Hover over the ticker to pause the animation and read */
-.ticker-box:hover .ticker-message {
-  animation-play-state: paused;
-}
 
 
 
@@ -442,11 +381,6 @@
       <nav class="nav">
 	  <div class="brand"></div>
 
-<div class="ticker-box">
-  <div class="appreciation-microcopy">From Us to You:</div>
-  <div class="ticker-window">
-    <div id="ticker-content" class="ticker-message">
-      </div>
   </div>
 </div>
       </nav>
@@ -488,7 +422,7 @@
       <div class="section-image-link" href=""><img src="Images/Museum Tour.png" alt="Trivia" /></div>
       <p>Test your knowledge for a chance to win exclusive raffle prizes.</p>
       <div class="links">
-        <a class="section-link" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D">Enter trivia</a>
+        <a class="section-link" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D"> Ready for Trivia?</a>
       </div>
     </section>
 
@@ -499,13 +433,13 @@
       <div class="section-image-link" href="#"><img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" /></div>
       <p>Upload your best photos to enter.</p>
       <div class="links">
-        <a class="section-link" href="https://form.jotform.com/260616390409053">Photo Submission & Contest Rules</a>
+        <a class="section-link" href="https://form.jotform.com/260616390409053">Submission & Contest Rules</a>
       </div>
     </section>
 	<main class="sections">
     <section class="section" id="anniversaries">
       <div class="section-head">
-        <h2>Celebrating Anniversaries</h2>
+        <h2>Anniversaries</h2>
       </div>
       <div class="section-image-link" href="#"><img src="Images/Anniversary Landing Page Graphic (8).jpg" alt="Anniversaries" /></div>
       <p>Recognizing the dedication and milestones of our incredible team members this year.</p>
@@ -516,11 +450,11 @@
     </section>
 		<section id="shoes-for-crews" class="section">
   <div class="section-head">
-    <div class="eyebrow">Safety First</div>
+    <div class="eyebrow"></div>
     <h2>Shoes For Crews</h2>
   </div>
   
-  <p>Stay safe and stylish on the floor! Access your exclusive associate discount and browse the latest slip-resistant styles designed for our fast-paced environment.</p>
+  <p>Access your subsidy or exclusive discount.</p>
 
   <div class="section-image-wrap">
     <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection">
@@ -533,46 +467,6 @@
   </div>
 </section>
   </main>
-
-  <div class="footer">
-    &copy; 2026 Associate Appreciation Celebration Page. 
-  </div>
-  <script>
-  // List of messages transcribed directly from your image
-  const messages = [
-    "🎉 You are a big part of why this is 'America’s Place To Eat'™.",
-    "🌟 What you do every day has real value. We appreciate you!",
-    "👍 Customers come back because of how you treat them. You matter!",
-    "💖 You turn simple meals into memorable experiences.",
-    "👀 Your hard work does not go unnoticed.",
-    "🏠 Team Members feel at home because of you.",
-    "🤝 Thank you for supporting each other today!",
-    "☀️ You show up, you care, and it makes a difference.",
-    "🙏 We’re grateful for the effort behind every shift."
-  ];
-
-  const contentDiv = document.getElementById('ticker-content');
-  let currentIndex = 0;
-
- function rotateMessage() {
-  contentDiv.classList.remove('animate-slide');
-
-  // Trigger a "reflow" so the browser notices the class was removed
-  void contentDiv.offsetWidth; 
-
-  contentDiv.textContent = messages[currentIndex];
-  contentDiv.classList.add('animate-slide');
-  
-  currentIndex = (currentIndex + 1) % messages.length;
-}
-
-// Initial start
-rotateMessage();
-
-// Change message every 8 seconds (8000 milliseconds)
-setInterval(rotateMessage, 8000);
-
-</script>
 
 
 </body>
