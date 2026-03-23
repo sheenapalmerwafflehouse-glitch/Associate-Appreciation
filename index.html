@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
+
   <style>
     :root {
       --bg: #f3f3f1;
@@ -11,42 +12,22 @@
       --text: #111111;
       --muted: #5e5e5e;
       --yellow: #f5d547;
-      --yellow-2: #fff3a6;
       --green-tint: #f0f6df;
       --border: rgba(0, 0, 0, 0.08);
       --shadow: 0 12px 28px rgba(0,0,0,.08);
       --radius: 20px;
       --max: 1120px;
-	  --ticker-height: 24px;
     }
 
-
-
-.logo-link {
-  order: 0; 
-  display: flex;
-  align-items: center;
-}
-
-.nav-logo {
-  height: 80px; /* Adjust this height to fit your logo's shape */
-  width: auto;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-.nav-logo:hover {
-  transform: scale(1.05); /* Subtle interaction when hovering the logo */
-}
-
-
-
-
-    * { box-sizing: border-box; }
-    html { 
-      scroll-behavior: smooth; 
-      scroll-padding-top: 80px; 
+    * {
+      box-sizing: border-box;
     }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -54,7 +35,11 @@
       background: radial-gradient(circle at top left, #faf9ee 0%, #f6f6f4 38%, #efefe9 100%);
     }
 
-    img { max-width: 100%; height: auto; display: block; }
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
     .topbar {
       position: sticky;
@@ -68,165 +53,53 @@
     .topbar-inner {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 0px 0px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      flex-wrap: wrap;
     }
 
-    .brand {
-      font-weight: 800;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      font-size: 1rem;
-    }
-
-    .nav {
+    .logo-link {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
     }
-    .pill, .section-link {
-      text-decoration: none;
-      color: #111;
-      background: var(--yellow);
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 0 rgba(0,0,0,.08);
-      transition: all .18s ease;
-      display: inline-block;
-      text-align: center;
-    }
 
-    .pill:hover, .section-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0,0,0,.10);
-      background: #ffe66a;
-    }
-    
-    .pill:active { transform: scale(0.96); }
-
-    .hero {
-      max-width: var(--max);
-      margin: 26px auto 22px;
-      padding: 0 18px;
-      display: grid;
-      grid-template-columns: 1.02fr .98fr;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .hero-copy {
-      background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.78));
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 34px;
-      box-shadow: var(--shadow);
-    }
-
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: .2em;
-      font-size: .78rem;
-      color: #7b6c00;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2.2rem, 4.5vw, 4.6rem);
-      line-height: .95;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-
-    .hero p {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.65;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .hero-card {
-      background: white;
-      border-radius: 26px;
-      padding: 14px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
+    .nav-logo {
+      height: 80px;
+      width: auto;
+      object-fit: contain;
       transition: transform 0.3s ease;
     }
-    
-    .hero-card:hover { transform: translateY(-5px); }
 
-    .hero-card img, .section img {
-      border-radius: 16px;
-    }
-
-    .jump-grid {
-      max-width: var(--max);
-      margin: 0 auto 30px;
-      padding: 0 18px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .jump-grid a {
-      text-decoration: none;
-      background: linear-gradient(180deg, #ffffff, #fbfbf6);
-      color: var(--text);
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      min-height: 110px;
-      transition: all 0.2s ease;
-    }
-    
-    .jump-grid a:hover {
-      background: var(--green-tint);
-      transform: scale(1.02);
-    }
-
-    .jump-grid a span {
-      display: block;
-      margin-top: 8px;
-      font-weight: 500;
-      text-transform: none;
-      letter-spacing: 0;
-      color: var(--muted);
-      font-size: .95rem;
-      line-height: 1.45;
+    .nav-logo:hover {
+      transform: scale(1.05);
     }
 
     .sections {
       max-width: var(--max);
-      margin: 0 auto 56px;
-      padding: 0 18px 30px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
     .section {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto 28px;
+      padding: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,.88), rgba(240,246,223,.5));
       border: 1px solid var(--border);
       border-radius: 26px;
       box-shadow: var(--shadow);
-      padding: 20px;
-      margin: 0 0 28px;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      border-color: var(--yellow);
     }
 
     .section-head {
@@ -251,6 +124,12 @@
       margin: 12px 0 16px;
     }
 
+    .section-image-wrap {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
     .section-image-link {
       display: block;
       border-radius: 18px;
@@ -260,6 +139,8 @@
     }
 
     .section-image-link img {
+      width: 100%;
+      height: auto;
       transition: transform .4s ease;
     }
 
@@ -272,10 +153,92 @@
       gap: 12px;
       flex-wrap: wrap;
       margin-top: 12px;
+      justify-content: flex-start;
+    }
+
+    .pill,
+    .section-link {
+      text-decoration: none;
+      color: #111;
+      background: var(--yellow);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 0 rgba(0,0,0,.08);
+      transition: all .18s ease;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .pill:hover,
+    .section-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,.10);
+      background: #ffe66a;
     }
 
     .section-link.secondary {
       background: white;
+    }
+
+    .hero-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: left;
+    }
+
+    .hero-copy {
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto 18px;
+      text-align: left;
+    }
+
+    #hero .eyebrow {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      font-size: 12px;
+      color: #7b6c00;
+      font-weight: 800;
+      margin-bottom: 12px;
+      white-space: normal;
+    }
+
+    #hero h1 {
+      margin: 0;
+      font-size: clamp(32px, 4vw, 56px);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-image {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .hero-image img {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 24px;
+    }
+
+    .hero-links {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
 
     .footer {
@@ -286,241 +249,180 @@
     }
 
     @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .jump-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .nav-logo {
+        height: 68px;
+      }
+
+      .section {
+        max-width: 760px;
+      }
     }
 
     @media (max-width: 640px) {
-      .jump-grid { grid-template-columns: 1fr; }
-      .hero-actions { flex-direction: column; }
+      .sections {
+        padding: 12px;
+      }
+
+      .section {
+        padding: 12px;
+        border-radius: 22px;
+      }
+
+      .hero-card {
+        padding: 14px;
+      }
+
+      .section-image-wrap {
+        max-width: 100%;
+      }
+
+      .hero-image img {
+        max-width: 100%;
+      }
+
+      .links,
+      .hero-links {
+        justify-content: center;
+      }
+
+      #hero .eyebrow {
+        font-size: 11px;
+        letter-spacing: .18em;
+      }
+
+      #hero h1 {
+        font-size: clamp(28px, 8vw, 42px);
+      }
     }
-	/* Update your .section hover state */ 
-.section {
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Super smooth easing */
-  position: relative;
-  overflow: hidden;
-}
-
-.section:hover {
-  transform: translateY(-8px); /* Lifts the card */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12); /* Deepens the shadow */
-  border-color: var(--yellow); /* Highlights the border in your brand yellow */
-}
-/* 1. Default Light Mode */
-:root {
-  --bg: #f3f3f1;
-  --card: #ffffff;
-  --text: #111111;
-  --muted: #5e5e5e;
-  --border: rgba(0, 0, 0, 0.08);
-  --shadow: 0 12px 28px rgba(0,0,0,.08);
-}
-
-	/* This targets the container we built earlier */ 
-.section-image-wrap {
-  max-width: 600px; /* Adjust this number (e.g., 300px or 500px) to the size you want */
-  margin: 0 auto 20px; /* Centers the image and adds space below it */
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.section-image-wrap img {
-  width: 100%; /* Makes the image fill exactly 400px */
-  height: auto; /* Keeps the proportions correct */
-  display: block;
-}
-
-
-.section-image-wrap:hover img {
-  transform: scale(1.03); /* The same zoom effect you have elsewhere */
-}
-
-/* Style for the secondary/alternate button */
-.pill.alternate {
-  background: #e0e0e0;
-  border: 1px solid var(--border);
-}
-
-.pill.alternate:hover {
-  background: #d0d0d0;
-}
-
-.section{
-	width:100%
-	max-width: 900px;
-	margin:0 auto 28px;
-	padding: 16px;
-	boxing-size: borde-box;
-}
-.card-grid { 
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
-  gap: 24px;
-}
-
-@media (max-width: 800px) {
-  .card-grid {
-    grid-template-columns: 1fr; /* Stack them on mobile phones */
-  }
-.hero-card {
-  background: #fff;
-  border-radius: 28px;
-  padding: 18px 18px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: left;
-}
-
-.hero-copy {
-  width: 100%;
-  max-width:640px;
-  margin:0 auto 18px;
-  text-align: left;
-}
-
-.hero-image {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.hero-image img {
-  display: block;
-  width: 100%;
-  max-width: 430px;
-  height: auto;
-  margin: 0 auto;
-  border-radius: 24px;
-}
-
-.hero-links {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-hero-copy {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto 18px;
-  text-align: left;
-}
-
-#hero .eyebrow {
-  display: block;
-  font-size: 12px;
-  letter-spacing: 3px;
-  line-height: 1.3;
-  margin-bottom: 12px;
-  white-space: nowrap;
-}
-
-#hero h1 {
-  margin: 0;
-  font-size: clamp(32px, 4vw, 56px);
-  line-height: 1;
-  letter-spacing: -0.5px;
-}
-}
   </style>
 </head>
-<script> 
-
-</script>
-
 <body>
   <header class="topbar">
     <div class="topbar-inner">
-		 <div href="/" class="logo-link">
-      <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo">
-    </div>
-
-  </div>
-</div>
-      </nav>
+      <div class="logo-link">
+        <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo">
+      </div>
     </div>
   </header>
 
- <section id="hero" class="section">
-	 <div class="section-image-wrap hero-card">
-		 <div class="hero copy">
-      <div class="eyebrow">Welcome to Our</div>
-        <h1>Celebration Page</h1>
-	  </div>
-		 <div class="section-image-link hero-image">
-    <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" /></div>
-		<div class="links hero-links">
-		 <a class="section link" href="#FY26 Milestone Anniversary List- Associate Appreciation.pdf">
-			 From the CEO: Thank You!
-		 </a>
-     </div>
-   </section>
+  <main class="sections">
 
- <section id="dressup" class="section">
-    <div class="section-head">
+    <section id="hero" class="section">
+      <div class="section-image-wrap hero-card">
+        <div class="hero-copy">
+          <div class="eyebrow">Welcome to Our</div>
+          <h1>Celebration Page</h1>
+        </div>
+
+        <div class="section-image-link hero-image">
+          <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
+        </div>
+
+        <div class="links hero-links">
+          <a class="section-link" href="PDFs/FY26 Milestone Anniversary List- Associate Appreciation.pdf">
+            From the CEO: Thank You!
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="dressup" class="section">
+      <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
-		 <div class="section-image-wrap">
-      <div class="section-image-link" href="#"><img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" /></div>
-      <p>Dress up and show your Waffle House pride.</p>
-      <div class="links">
-        <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link">
+          <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+        </div>
+
+        <p>Dress up and show your Waffle House pride.</p>
+
+        <div class="links">
+          <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
+        </div>
       </div>
     </section>
 
- <section id="trivia" class="section">
-    <div class="section-head">
-        <h2>Museum Tour & Trivia</h2>
+    <section id="trivia" class="section">
+      <div class="section-head">
+        <h2>Museum Tour &amp; Trivia</h2>
       </div>
-		 <div class="section-image-wrap">
-      <div class="section-image-link" href=""><img src="Images/Museum Tour.png" alt="Trivia" /></div>
-      <p>Test your knowledge for a chance to win exclusive raffle prizes.</p>
-      <div class="links">
-        <a class="section-link" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D"> Ready for Trivia?</a>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link">
+          <img src="Images/Museum Tour.png" alt="Trivia" />
+        </div>
+
+        <p>Test your knowledge for a chance to win exclusive raffle prizes.</p>
+
+        <div class="links">
+          <a class="section-link" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D">
+            Ready for Trivia?
+          </a>
+        </div>
       </div>
     </section>
 
- <section id="photo" class="section">
-    <div class="section-head">
+    <section id="photo" class="section">
+      <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
-		 <div class="section-image-wrap">
-      <div class="section-image-link" style="margin-top: 20px; display:text-align; center: 12px; flex-wrap: wrap;"><img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" /></div>
-      <p>Upload your best photos to enter.</p>
-      <div class="links">
-        <a class="section-link" href="https://form.jotform.com/260616390409053">Submission & Contest Rules</a>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link">
+          <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+        </div>
+
+        <p>Upload your best photos to enter.</p>
+
+        <div class="links">
+          <a class="section-link" href="https://form.jotform.com/260616390409053">Submission &amp; Contest Rules</a>
+        </div>
       </div>
     </section>
- <section id="anniversaries" class="section">
-     <div class="section-head">
+
+    <section id="anniversaries" class="section">
+      <div class="section-head">
         <h2>Anniversaries</h2>
       </div>
-		 <div class="section-image-wrap">
-	  <div class="section-image-link" style="margin-top: 20px; display:text-align; center: 12px; flex-wrap: wrap;"><img src="Images/Anniversary Landing Page Graphic (8).jpg" alt="Anniversaries" /></div>
-      <p>Celebrating over 16,000 Associates for their dedication and service.</p>
-      <div class="links">
-        <a class="section-link" href="#">Recognition details</a>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link">
+          <img src="Images/Anniversary Landing Page Graphic (8).jpg" alt="Anniversaries" />
+        </div>
+
+        <p>Celebrating over 16,000 Associates for their dedication and service.</p>
+
+        <div class="links">
+          <a class="section-link" href="#">Recognition details</a>
+        </div>
       </div>
     </section>
- <section id="shoes-for-crews" class="section">
-     <div class="section-head">
-        <h2>Shoes For Crews</h2>
-     </div>
-       <div class="section-image-wrap">
-       <div class="section-image-link" style="margin-top: 20px; display:text-align; center: 12px; flex-wrap: wrap;"><img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection"/></div>
-       <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker.</p>
-       <div class="links">
-        <a class="section-link" href="https://www.shoesforcrews.com/wafflehouse" target="_blank">Shop Now!</a>
-	    <a class="section-link secondary" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
-	   </div>
-    </section>
-  </main>
-<div class="footer">
-    &copy; 2026 Waffle House Associate Appreciation 
-  </div>
 
+    <section id="shoes-for-crews" class="section">
+      <div class="section-head">
+        <h2>Shoes For Crews</h2>
+      </div>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link">
+          <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+        </div>
+
+        <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker.</p>
+
+        <div class="links">
+          <a class="section-link" href="https://www.shoesforcrews.com/wafflehouse" target="_blank" rel="noopener noreferrer">Shop Now!</a>
+          <a class="section-link secondary" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="footer">
+    &copy; 2026 Waffle House Associate Appreciation
+  </div>
 </body>
 </html>
