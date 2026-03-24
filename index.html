@@ -149,6 +149,11 @@
       transform: scale(1.03);
     }
 
+    /* Disable zoom on anniversaries so it doesn't over-expand on hover */
+    .anniversary-image .section-image-link:hover img {
+      transform: scale(1);
+    }
+
     .links {
       display: flex;
       gap: 12px;
@@ -256,6 +261,21 @@
       border-radius: 12px;
     }
 
+    .museum-video-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin: 18px auto 0;
+    }
+
+    .museum-video-wrap iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      border: 0;
+      display: block;
+      border-radius: 12px;
+    }
+
     .anniversary-image {
       max-width: 560px;
     }
@@ -302,7 +322,8 @@
       .hero-card,
       .hero-copy,
       .hero-image img,
-      .ceo-video-wrap {
+      .ceo-video-wrap,
+      .museum-video-wrap {
         max-width: 100%;
       }
     }
@@ -408,10 +429,20 @@
 
       <div class="section-image-wrap">
         <div class="section-image-link">
-          <img src="Images/Museum Tour.png" alt="Trivia" />
+          <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
         </div>
 
-        <p>Test your knowledge for a chance to win exclusive raffle prizes.</p>
+        <div class="museum-video-wrap">
+          <iframe
+            src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
+            title="Museum Tour Video"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
 
         <div class="links">
           <a class="section-link" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D">
