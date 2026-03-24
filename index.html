@@ -104,7 +104,7 @@
 
     .section-head {
       display: flex;
-      justify-content:center;
+      justify-content: center;
       align-items: center;
       gap: 14px;
       margin-bottom: 14px;
@@ -127,7 +127,7 @@
 
     .section-image-wrap {
       width: 100%;
-      max-width: 480px;
+      max-width: 560px;
       margin: 0 auto;
     }
 
@@ -191,11 +191,13 @@
       flex-direction: column;
       align-items: center;
       text-align: left;
+      max-width: 760px;
+      width: 100%;
     }
 
     .hero-copy {
       width: 100%;
-      max-width: 640px;
+      max-width: 760px;
       margin: 0 auto 18px;
       text-align: left;
     }
@@ -229,10 +231,49 @@
     .hero-image img {
       display: block;
       width: 100%;
-      max-width: 500px;
+      max-width: 760px;
       height: auto;
       margin: 0 auto;
       border-radius: 24px;
+    }
+
+    #ceo-message {
+      text-align: center;
+    }
+
+    .ceo-video-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin: 24px auto 0;
+    }
+
+    .ceo-video-wrap iframe {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      border: 0;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .anniversary-image {
+      max-width: 560px;
+    }
+
+    .anniversary-image .section-image-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      background: #fff;
+    }
+
+    .anniversary-image img {
+      width: 100%;
+      max-width: 560px;
+      height: auto;
+      object-fit: contain;
+      margin: 0 auto;
     }
 
     .hero-links {
@@ -257,6 +298,13 @@
       .section {
         max-width: 760px;
       }
+
+      .hero-card,
+      .hero-copy,
+      .hero-image img,
+      .ceo-video-wrap {
+        max-width: 100%;
+      }
     }
 
     @media (max-width: 640px) {
@@ -273,7 +321,8 @@
         padding: 14px;
       }
 
-      .section-image-wrap {
+      .section-image-wrap,
+      .anniversary-image {
         max-width: 100%;
       }
 
@@ -294,26 +343,6 @@
       #hero h1 {
         font-size: clamp(28px, 8vw, 42px);
       }
-      .anniversary-image{
-        max-width:420px;
-      }
-
-.ceo-video-wrap {
-  width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
-  aspect-ratio: 16 / 9;
-  text-align: center;
-}
-
-.ceo-video-wrap iframe {
-  width: 100%;
-  height: 100px;
-  border: 0;
-  display: block;
-  border-radius: 12px;
-}
-
     }
   </style>
 </head>
@@ -338,19 +367,20 @@
         <div class="section-image-link hero-image">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
-        </div>
+      </div>
     </section>
+
     <section id="ceo-message" class="section">
-        <h2>From the CEO: Thank You!</h2>
-        <div class="ceo-video-wrap">
-  <iframe 
-    src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
-    title="Associate Appreciation Kits Info"
-    frameborder="0"
-    allow="autoplay; fullscreen; picture-in-picture"
-    allowfullscreen>
-  </iframe>
-</div>
+      <h2>From the CEO: Thank You!</h2>
+      <div class="ceo-video-wrap">
+        <iframe
+          src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
+          title="Associate Appreciation Kits Info"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
     </section>
 
     <section id="dressup" class="section">
