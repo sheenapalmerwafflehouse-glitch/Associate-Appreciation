@@ -51,6 +51,7 @@
       font: inherit;
     }
 
+    /* Scroll progress bar */
     #scroll-progress {
       position: fixed;
       top: 0;
@@ -123,6 +124,7 @@
       border-color: var(--yellow);
     }
 
+    /* Scroll reveal */
     .reveal {
       opacity: 0;
       transform: translateY(34px);
@@ -319,25 +321,125 @@
     }
 
     .audio-card p {
-      margin: 0 0 14px;
+      margin: 0 0 16px;
       color: var(--muted);
     }
 
-    .audio-player-wrap {
-      max-width: 520px;
+    .audio-player-shell {
+      max-width: 560px;
       margin: 0 auto;
-      padding: 12px 14px;
-      background: #ffffff;
+      padding: 14px;
+      background: #fff;
       border: 1px solid rgba(0,0,0,.08);
-      border-radius: 999px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.05);
+      border-radius: 22px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 6px 16px rgba(0,0,0,.06);
     }
 
-    .audio-player {
+    .audio-player-ui {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .audio-play-btn {
+      width: 54px;
+      height: 54px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--yellow), #ebc92e);
+      color: #111;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(245, 213, 71, 0.35);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      flex-shrink: 0;
+    }
+
+    .audio-play-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(245, 213, 71, 0.42);
+      background: linear-gradient(180deg, #ffe66a, var(--yellow));
+    }
+
+    .audio-play-btn:active {
+      transform: scale(.98);
+    }
+
+    .audio-play-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+      margin-left: 2px;
+    }
+
+    .audio-play-btn.is-playing svg {
+      margin-left: 0;
+    }
+
+    .audio-progress-wrap {
       width: 100%;
-      display: block;
+      text-align: left;
+    }
+
+    .audio-time {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .86rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .audio-progress {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      height: 10px;
       border-radius: 999px;
-      accent-color: #d8b600;
+      outline: none;
+      background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow) 0%, #e9e9e9 0%, #e9e9e9 100%);
+      cursor: pointer;
+    }
+
+    .audio-progress::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.18);
+    }
+
+    .audio-progress::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #111;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,.18);
+    }
+
+    .audio-progress::-moz-range-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #e9e9e9;
+    }
+
+    .audio-status {
+      font-size: .86rem;
+      font-weight: 700;
+      color: #7b6c00;
+      white-space: nowrap;
+    }
+
+    .audio-native {
+      display: none;
     }
 
     #ceo-message {
@@ -408,6 +510,7 @@
       font-size: .94rem;
     }
 
+    /* Lightbox */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -522,9 +625,17 @@
         font-size: clamp(28px, 8vw, 42px);
       }
 
-      .audio-player-wrap {
-        border-radius: 20px;
-        padding: 10px 12px;
+      .audio-player-ui {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .audio-play-btn {
+        margin: 0 auto;
+      }
+
+      .audio-status {
+        text-align: center;
       }
 
       .lightbox {
@@ -587,13 +698,41 @@
           <h3>Appreciation Song</h3>
           <p>Click below to listen.</p>
 
-          <div class="audio-player-wrap">
+          <div class="audio-player-shell">
+            <div class="audio-player-ui">
+              <button class="audio-play-btn" type="button" aria-label="Play song">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14l11-7z"></path>
+                </svg>
+              </button>
+
+              <div class="audio-progress-wrap">
+                <div class="audio-time">
+                  <span class="audio-current">0:00</span>
+                  <span class="audio-duration">0:00</span>
+                </div>
+                <input
+                  class="audio-progress"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="0"
+                  step="0.1"
+                  aria-label="Audio progress"
+                />
+              </div>
+
+              <div class="audio-status">Now Playing</div>
+            </div>
+
             <audio
-              class="audio-player"
-              controls
+              class="audio-native"
               preload="metadata"
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              disablePictureInPicture
+              oncontextmenu="return false;"
             >
-              <source src="Audio/scattered,-smothered-thanks.mp3" type="audio/mpeg" />
+              <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
               Your browser does not support the audio element.
             </audio>
           </div>
@@ -631,7 +770,24 @@
         </div>
       </div>
     </section>
+ <section id="shoes-for-crews" class="section reveal">
+      <div class="section-head">
+        <h2>Shoes For Crews</h2>
+      </div>
 
+      <div class="section-image-wrap">
+        <div class="section-image-link lightbox-trigger">
+          <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+        </div>
+
+        <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker (see FAQs for steps).</p>
+
+        <div class="links">
+          <a class="section-link" href="https://www.shoesforcrews.com/wafflehouse">Shop Now!</a>
+          <a class="section-link secondary" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
+        </div>
+      </div>
+    </section>
     <section id="trivia" class="section reveal">
       <div class="section-head">
         <h2>Museum Tour &amp; Trivia</h2>
@@ -679,24 +835,7 @@
         </div>
       </div>
     </section>
-<section id="shoes-for-crews" class="section reveal">
-      <div class="section-head">
-        <h2>Shoes For Crews</h2>
-      </div>
 
-      <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
-        </div>
-
-        <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker (see FAQs for steps).</p>
-
-        <div class="links">
-          <a class="section-link" href="https://www.shoesforcrews.com/wafflehouse">Shop Now!</a>
-          <a class="section-link secondary" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
-        </div>
-      </div>
-    </section>
     <section id="anniversaries" class="section reveal">
       <div class="section-head">
         <h2>Anniversaries</h2>
@@ -741,6 +880,7 @@
     &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
   </div>
 
+  <!-- Lightbox -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-inner">
       <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
@@ -748,12 +888,14 @@
     </div>
   </div>
 
+  <!-- Confetti library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+      /* Scroll progress bar */
       const progressBar = document.getElementById("scroll-progress");
 
       const updateProgressBar = () => {
@@ -766,6 +908,7 @@
       updateProgressBar();
       window.addEventListener("scroll", updateProgressBar);
 
+      /* Scroll reveal */
       const revealItems = document.querySelectorAll(".reveal");
 
       if (!prefersReducedMotion && "IntersectionObserver" in window) {
@@ -776,16 +919,14 @@
               observer.unobserve(entry.target);
             }
           });
-        }, {
-          threshold: 0.12,
-          rootMargin: "0px 0px -40px 0px"
-        });
+        }, { threshold: 0.14 });
 
         revealItems.forEach((item) => revealObserver.observe(item));
       } else {
         revealItems.forEach((item) => item.classList.add("show"));
       }
 
+      /* Hero entrance animation */
       const heroCopy = document.querySelector(".hero-copy");
       const heroImage = document.querySelector(".hero-image");
       const audioCard = document.querySelector(".audio-card");
@@ -800,24 +941,19 @@
         audioCard?.classList.add("animate");
       }
 
-      let confettiFired = false;
+      /* Confetti burst on load */
+      if (!prefersReducedMotion && typeof confetti === "function") {
+        setTimeout(() => {
+          confetti({
+            particleCount: 110,
+            spread: 78,
+            startVelocity: 34,
+            origin: { y: 0.28 }
+          });
+        }, 500);
+      }
 
-      const fireConfetti = () => {
-        if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
-        confettiFired = true;
-
-        confetti({
-          particleCount: 110,
-          spread: 78,
-          startVelocity: 34,
-          origin: { y: 0.28 }
-        });
-      };
-
-      setTimeout(fireConfetti, 500);
-      window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
-      window.addEventListener("click", fireConfetti, { once: true, passive: true });
-
+      /* Lightbox */
       const lightbox = document.getElementById("lightbox");
       const lightboxImage = document.getElementById("lightbox-image");
       const lightboxClose = document.querySelector(".lightbox-close");
@@ -860,17 +996,121 @@
         trigger.setAttribute("aria-label", "Open image");
       });
 
-      lightboxClose?.addEventListener("click", closeLightbox);
+      lightboxClose.addEventListener("click", closeLightbox);
 
-      lightbox?.addEventListener("click", (e) => {
+      lightbox.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
 
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && lightbox?.classList.contains("open")) {
+        if (e.key === "Escape" && lightbox.classList.contains("open")) {
           closeLightbox();
         }
       });
+
+      /* Custom audio player */
+      const audio = document.querySelector(".audio-native");
+      const playBtn = document.querySelector(".audio-play-btn");
+      const progress = document.querySelector(".audio-progress");
+      const currentTimeEl = document.querySelector(".audio-current");
+      const durationEl = document.querySelector(".audio-duration");
+      const statusEl = document.querySelector(".audio-status");
+
+      const playIcon = `
+        <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z"></path>
+        </svg>
+      `;
+
+      const pauseIcon = `
+        <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 5h4v14H7zm6 0h4v14h-4z"></path>
+        </svg>
+      `;
+
+      const formatTime = (seconds) => {
+        if (!isFinite(seconds)) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, "0")}`;
+      };
+
+      const updateProgressFill = () => {
+        const value = Number(progress.value) || 0;
+        progress.style.background =
+          `linear-gradient(90deg, var(--yellow) 0%, var(--yellow) ${value}%, #e9e9e9 ${value}%, #e9e9e9 100%)`;
+      };
+
+      const updatePlayButton = () => {
+        if (audio.paused) {
+          playBtn.innerHTML = playIcon;
+          playBtn.classList.remove("is-playing");
+          playBtn.setAttribute("aria-label", "Play song");
+          statusEl.textContent = "Ready to Play";
+        } else {
+          playBtn.innerHTML = pauseIcon;
+          playBtn.classList.add("is-playing");
+          playBtn.setAttribute("aria-label", "Pause song");
+          statusEl.textContent = "Now Playing";
+        }
+      };
+
+      if (audio && playBtn && progress) {
+        audio.addEventListener("loadedmetadata", () => {
+          durationEl.textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener("timeupdate", () => {
+          if (audio.duration) {
+            progress.value = (audio.currentTime / audio.duration) * 100;
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            durationEl.textContent = formatTime(audio.duration);
+            updateProgressFill();
+          }
+        });
+
+        audio.addEventListener("ended", () => {
+          updatePlayButton();
+          progress.value = 0;
+          currentTimeEl.textContent = "0:00";
+          updateProgressFill();
+          statusEl.textContent = "Replay";
+        });
+
+        playBtn.addEventListener("click", async () => {
+          try {
+            if (audio.paused) {
+              await audio.play();
+            } else {
+              audio.pause();
+            }
+            updatePlayButton();
+          } catch (err) {
+            console.error("Audio playback failed:", err);
+          }
+        });
+
+        audio.addEventListener("play", updatePlayButton);
+        audio.addEventListener("pause", updatePlayButton);
+
+        progress.addEventListener("input", () => {
+          if (audio.duration) {
+            const newTime = (progress.value / 100) * audio.duration;
+            audio.currentTime = newTime;
+            updateProgressFill();
+          }
+        });
+
+        audio.addEventListener("contextmenu", (e) => e.preventDefault());
+        document.addEventListener("contextmenu", (e) => {
+          if (e.target.closest(".audio-player-shell")) {
+            e.preventDefault();
+          }
+        });
+
+        updateProgressFill();
+        updatePlayButton();
+      }
     });
   </script>
 </body>
