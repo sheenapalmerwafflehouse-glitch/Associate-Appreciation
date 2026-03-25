@@ -149,7 +149,6 @@
       transform: scale(1.03);
     }
 
-    /* Disable zoom on anniversaries so it doesn't over-expand on hover */
     .anniversary-image .section-image-link:hover img {
       transform: scale(1);
     }
@@ -204,7 +203,7 @@
       width: 100%;
       max-width: 760px;
       margin: 0 auto 18px;
-      text-align: left;
+      text-align: center;
     }
 
     #hero .eyebrow {
@@ -224,6 +223,7 @@
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: -0.5px;
+      text-align: center;
     }
 
     .hero-image {
@@ -242,16 +242,15 @@
       border-radius: 24px;
     }
 
-    /* NEW: Intro audio box */
     .audio-card {
       width: 100%;
       max-width: 760px;
       margin: 18px auto 0;
-      padding: 18px;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: linear-gradient(180deg, #fffdf5, #f7f7f2);
-      box-shadow: 0 6px 18px rgba(0,0,0,.05);
+      padding: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fffdf2 0%, #f3f8df 100%);
+      box-shadow: 0 10px 24px rgba(0,0,0,.06);
       text-align: center;
     }
 
@@ -259,7 +258,7 @@
       margin: 0 0 8px;
       font-size: 1.05rem;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: .05em;
     }
 
     .audio-card p {
@@ -267,9 +266,21 @@
       color: var(--muted);
     }
 
+    .audio-player-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 12px 14px;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 999px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.05);
+    }
+
     .audio-player {
       width: 100%;
-      max-width: 460px;
+      display: block;
+      border-radius: 999px;
+      accent-color: #d8b600;
     }
 
     #ceo-message {
@@ -395,6 +406,11 @@
       #hero h1 {
         font-size: clamp(28px, 8vw, 42px);
       }
+
+      .audio-player-wrap {
+        border-radius: 20px;
+        padding: 10px 12px;
+      }
     }
   </style>
 </head>
@@ -420,14 +436,23 @@
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
 
-        <!-- NEW: MP3 / audio section inside hero box -->
         <div class="audio-card">
-          <h3>Appreciation Song</h3>
+          <h3>Smothered, Scattered, and Thanks Song</h3>
           <p>Click below to listen.</p>
-          <audio class="audio-player" controls>
-            <source src="Music/scattered,-smothered-thanks.mp3" type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+
+          <div class="audio-player-wrap">
+            <audio
+              class="audio-player"
+              controls
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              disablePictureInPicture
+              oncontextmenu="return false;"
+              preload="metadata"
+            >
+              <source src="Audio/smothered-scattered-and-thanks.mp3" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
         </div>
       </div>
     </section>
@@ -548,7 +573,6 @@
       </div>
     </section>
 
-    <!-- NEW: TouchTunes section -->
     <section id="touchtunes" class="section">
       <div class="section-head">
         <h2>TouchTunes</h2>
@@ -556,17 +580,13 @@
 
       <div class="section-image-wrap">
         <div class="section-image-link">
-          <!-- Replace with your actual TouchTunes image -->
           <img src="Images/TouchTunes.png" alt="TouchTunes" />
         </div>
 
-        <p>Enjoy free credits on the House because your hospitality is like music to our ears.</p>
+        <p>Enjoy free credits on the house because your hospitality is like music to our ears.</p>
 
         <div class="links">
-          <!-- Replace with your real app download URL -->
           <a class="section-link" href="https://www.touchtunes.com/" target="_blank" rel="noopener noreferrer">Click to Download App</a>
-
-          <!-- Replace with your real FAQ PDF -->
           <a class="section-link secondary" href="PDFs/TouchTunes FAQs.pdf" target="_blank" rel="noopener noreferrer">View FAQs</a>
         </div>
       </div>
@@ -577,5 +597,21 @@
   <div class="footer">
     &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const audio = document.querySelector(".audio-player");
+
+      if (audio) {
+        audio.addEventListener("contextmenu", (e) => e.preventDefault());
+      }
+
+      document.addEventListener("contextmenu", (e) => {
+        if (e.target.closest(".audio-player-wrap")) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
