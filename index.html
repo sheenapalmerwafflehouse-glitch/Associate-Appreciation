@@ -12,13 +12,12 @@
       --text: #111111;
       --muted: #5e5e5e;
       --yellow: #f5d547;
-      --yellow-dark: #d4b000;
-      --yellow-soft: #fff7c8;
       --green-tint: #f0f6df;
       --border: rgba(0, 0, 0, 0.08);
       --shadow: 0 12px 28px rgba(0,0,0,.08);
       --radius: 20px;
       --max: 1120px;
+      --waffle-blue: #134B93;
     }
 
     * {
@@ -37,30 +36,10 @@
       background: radial-gradient(circle at top left, #faf9ee 0%, #f6f6f4 38%, #efefe9 100%);
     }
 
-    body.lightbox-open,
-    body.milestone-open {
-      overflow: hidden;
-    }
-
     img {
       max-width: 100%;
       height: auto;
       display: block;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    #scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 4px;
-      width: 0%;
-      background: linear-gradient(90deg, var(--yellow), #ffe66a);
-      z-index: 9999;
-      box-shadow: 0 2px 10px rgba(245, 213, 71, 0.45);
     }
 
     .topbar {
@@ -113,7 +92,7 @@
       border: 1px solid var(--border);
       border-radius: 26px;
       box-shadow: var(--shadow);
-      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s ease, opacity 0.7s ease;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
       position: relative;
       overflow: hidden;
     }
@@ -122,16 +101,6 @@
       transform: translateY(-8px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
       border-color: var(--yellow);
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(34px);
-    }
-
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .section-head {
@@ -169,7 +138,7 @@
       overflow: hidden;
       border: 1px solid var(--border);
       background: white;
-      cursor: zoom-in;
+      text-decoration: none;
     }
 
     .section-image-link img {
@@ -227,10 +196,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: left;
+      text-align: center;
       max-width: 760px;
       width: 100%;
-      position: relative;
     }
 
     .hero-copy {
@@ -238,14 +206,6 @@
       max-width: 760px;
       margin: 0 auto 18px;
       text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .hero-copy.animate {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     #hero .eyebrow {
@@ -257,6 +217,7 @@
       font-weight: 800;
       margin-bottom: 12px;
       white-space: normal;
+      text-align: center;
     }
 
     #hero h1 {
@@ -273,14 +234,6 @@
       display: flex;
       justify-content: center;
       margin-top: 8px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .hero-image.animate {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .hero-image img {
@@ -296,27 +249,19 @@
       width: 100%;
       max-width: 760px;
       margin: 18px auto 0;
-      padding: 20px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 22px;
-      background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
-      box-shadow: 0 10px 24px rgba(0,0,0,.06);
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffdf5, #f7f7f2);
+      box-shadow: 0 6px 18px rgba(0,0,0,.05);
       text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .audio-card.animate {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .audio-card h3 {
       margin: 0 0 8px;
       font-size: 1.05rem;
       text-transform: uppercase;
-      letter-spacing: .05em;
+      letter-spacing: .04em;
     }
 
     .audio-card p {
@@ -324,35 +269,9 @@
       color: var(--muted);
     }
 
-    .audio-player-wrap {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
-      border: 1px solid rgba(0,0,0,.08);
-      border-radius: 999px;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.75),
-        0 2px 0 rgba(0,0,0,.08),
-        0 10px 18px rgba(0,0,0,.10);
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-    }
-
-    .audio-player-wrap:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.8),
-        0 2px 0 rgba(0,0,0,.08),
-        0 14px 24px rgba(0,0,0,.14);
-      background: linear-gradient(180deg, #fff07f 0%, #ffe15a 100%);
-    }
-
     .audio-player {
       width: 100%;
-      display: block;
-      border-radius: 999px;
-      accent-color: #111111;
-      filter: saturate(1.02) contrast(1.02);
+      max-width: 460px;
     }
 
     #ceo-message {
@@ -390,86 +309,89 @@
     }
 
     .anniversary-image {
-      max-width: 700px;
+      max-width: 560px;
     }
 
-    .anniversary-interactive {
-      position: relative;
-      display: block;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+    .anniversary-image .section-image-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
       background: #fff;
-      cursor: default;
     }
 
-    .anniversary-interactive img {
+    .anniversary-image img {
       width: 100%;
-      display: block;
+      max-width: 560px;
       height: auto;
+      object-fit: contain;
+      margin: 0 auto;
     }
 
-    .anniversary-instruction {
+    .anniversary-callout {
+      display: inline-block;
+      margin: 16px auto 0;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #fff7cc;
+      color: var(--waffle-blue);
+      font-weight: 800;
       text-align: center;
-      font-weight: 700;
-      color: #7b6c00;
-      margin: 8px 0 14px;
-      line-height: 1.5;
+      line-height: 1.4;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      border: 1px solid rgba(19, 75, 147, 0.12);
     }
 
-    .balloon-hotspot {
-      position: absolute;
-      width: 10.5%;
-      height: 15%;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
+    .anniversary-callout-wrap {
+      text-align: center;
+    }
+
+    .balloon-clickable {
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      transform-origin: center bottom;
+      animation: balloonBounce 2.4s ease-in-out infinite;
+      will-change: transform, opacity;
     }
 
-    .balloon-hotspot:focus-visible {
-      outline: 3px solid rgba(245, 213, 71, 0.95);
-      outline-offset: 2px;
-      box-shadow: 0 0 0 6px rgba(245, 213, 71, 0.25);
+    .balloon-clickable:hover {
+      transform: scale(1.03);
     }
 
-    .balloon-hotspot::after {
-      content: "";
-      position: absolute;
-      inset: -8%;
-      border-radius: 50%;
-      background: rgba(245, 213, 71, 0);
-      transition: background .18s ease, transform .18s ease;
+    .balloon-clickable.is-popping {
+      animation: balloonPop 0.35s ease-out forwards;
     }
 
-    .balloon-hotspot:hover::after,
-    .balloon-hotspot:focus-visible::after,
-    .balloon-hotspot:active::after {
-      background: rgba(245, 213, 71, 0.16);
-      transform: scale(1.06);
+    @keyframes balloonBounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      25% {
+        transform: translateY(-4px);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+      75% {
+        transform: translateY(-4px);
+      }
     }
 
-    /* Top row */
-    .balloon-1  { top: 7.5%;  left: 10.2%; }
-    .balloon-2  { top: 5.2%;  left: 20.8%; }
-    .balloon-3  { top: 6.1%;  left: 32.0%; }
-    .balloon-4  { top: 2.2%;  left: 43.0%; }
-    .balloon-5  { top: 5.8%;  left: 54.2%; }
-    .balloon-10 { top: 4.8%;  left: 65.2%; }
-    .balloon-15 { top: 8.0%;  left: 76.0%; }
-
-    /* Bottom row */
-    .balloon-20 { top: 20.8%; left: 9.0%; }
-    .balloon-25 { top: 17.2%; left: 20.8%; }
-    .balloon-30 { top: 18.0%; left: 32.2%; }
-    .balloon-35 { top: 14.2%; left: 43.8%; }
-    .balloon-40 { top: 16.8%; left: 55.5%; }
-    .balloon-45 { top: 18.5%; left: 66.5%; }
-    .balloon-50 { top: 18.6%; left: 77.0%; }
-
-    .anniversary-summary {
-      margin-top: 16px;
+    @keyframes balloonPop {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: brightness(1);
+      }
+      35% {
+        transform: scale(1.12);
+        opacity: 1;
+        filter: brightness(1.08);
+      }
+      100% {
+        transform: scale(0.82);
+        opacity: 0;
+        filter: brightness(1.15);
+      }
     }
 
     .hero-links {
@@ -484,109 +406,6 @@
       color: var(--muted);
       padding: 0 18px 36px;
       font-size: .94rem;
-    }
-
-    .lightbox,
-    .milestone-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 17, 17, 0.82);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity .25s ease, visibility .25s ease;
-      z-index: 5000;
-    }
-
-    .lightbox.open,
-    .milestone-modal.open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .lightbox-inner {
-      position: relative;
-      max-width: min(1100px, 96vw);
-      max-height: 92vh;
-      transform: scale(.96);
-      transition: transform .25s ease;
-    }
-
-    .lightbox.open .lightbox-inner,
-    .milestone-modal.open .milestone-modal-inner {
-      transform: scale(1);
-    }
-
-    .lightbox img {
-      display: block;
-      max-width: 100%;
-      max-height: 92vh;
-      border-radius: 18px;
-      box-shadow: 0 24px 60px rgba(0,0,0,.35);
-      background: #fff;
-    }
-
-    .lightbox-close,
-    .milestone-close {
-      position: absolute;
-      top: -14px;
-      right: -14px;
-      width: 42px;
-      height: 42px;
-      border: none;
-      border-radius: 50%;
-      background: #fff;
-      color: #111;
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,.24);
-    }
-
-    .milestone-modal-inner {
-      position: relative;
-      width: min(420px, 92vw);
-      background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
-      border: 1px solid rgba(0,0,0,.08);
-      border-radius: 24px;
-      padding: 28px 24px 24px;
-      box-shadow: 0 24px 60px rgba(0,0,0,.28);
-      text-align: center;
-      transform: scale(.96);
-      transition: transform .25s ease;
-    }
-
-    .milestone-badge {
-      display: inline-block;
-      margin-bottom: 12px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
-      color: #111;
-      font-weight: 800;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      box-shadow: 0 6px 14px rgba(0,0,0,.10);
-    }
-
-    .milestone-modal h3 {
-      margin: 0 0 10px;
-      font-size: clamp(1.25rem, 3vw, 1.7rem);
-      line-height: 1.1;
-      text-transform: uppercase;
-      letter-spacing: .03em;
-    }
-
-    .milestone-modal p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.04rem;
-      line-height: 1.65;
     }
 
     @media (max-width: 900px) {
@@ -645,93 +464,47 @@
         font-size: clamp(28px, 8vw, 42px);
       }
 
-      .audio-player-wrap {
-        border-radius: 20px;
-        padding: 10px 12px;
-      }
-
-      .balloon-hotspot {
-        width: 12.5%;
-        height: 16%;
-      }
-
-      .lightbox,
-      .milestone-modal {
-        padding: 16px;
-      }
-
-      .lightbox-close,
-      .milestone-close {
-        top: -10px;
-        right: -6px;
-      }
-
-      .milestone-modal-inner {
-        padding: 26px 18px 20px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
-      }
-
-      .reveal,
-      .hero-copy,
-      .hero-image,
-      .audio-card {
-        opacity: 1 !important;
-        transform: none !important;
+      .anniversary-callout {
+        border-radius: 18px;
+        padding: 10px 14px;
       }
     }
   </style>
 </head>
 <body>
-  <div id="scroll-progress"></div>
-
   <header class="topbar">
     <div class="topbar-inner">
       <div class="logo-link">
-        <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
+        <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo">
       </div>
     </div>
   </header>
 
   <main class="sections">
 
-    <section id="hero" class="section reveal">
+    <section id="hero" class="section">
       <div class="section-image-wrap hero-card">
         <div class="hero-copy">
           <div class="eyebrow">Welcome to Our</div>
           <h1>Celebration Page</h1>
         </div>
 
-        <div class="section-image-link hero-image lightbox-trigger">
+        <div class="section-image-link hero-image">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
 
         <div class="audio-card">
-          <h3>Appreciation Song</h3>
-          <p>Click to listen.</p>
-
-          <div class="audio-player-wrap">
-            <audio class="audio-player" controls preload="metadata">
-              <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
+          <h3>Smothered, Scattered, and Thanks Song</h3>
+          <p>Click below to listen.</p>
+          <audio class="audio-player" controls>
+            <source src="Audio/smothered-scattered-and-thanks.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
         </div>
       </div>
     </section>
 
-    <section id="ceo-message" class="section reveal">
+    <section id="ceo-message" class="section">
       <h2>From the CEO: Thank You!</h2>
       <div class="ceo-video-wrap">
         <iframe
@@ -744,13 +517,13 @@
       </div>
     </section>
 
-    <section id="dressup" class="section reveal">
+    <section id="dressup" class="section">
       <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
+        <div class="section-image-link">
           <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
         </div>
 
@@ -762,13 +535,13 @@
       </div>
     </section>
 
-    <section id="trivia" class="section reveal">
+    <section id="trivia" class="section">
       <div class="section-head">
         <h2>Museum Tour &amp; Trivia</h2>
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
+        <div class="section-image-link">
           <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
         </div>
 
@@ -792,13 +565,13 @@
       </div>
     </section>
 
-    <section id="photo" class="section reveal">
+    <section id="photo" class="section">
       <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
+        <div class="section-image-link">
           <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
         </div>
 
@@ -810,34 +583,21 @@
       </div>
     </section>
 
-    <section id="anniversaries" class="section reveal">
+    <section id="anniversaries" class="section">
       <div class="section-head">
         <h2>Anniversaries</h2>
       </div>
 
       <div class="section-image-wrap anniversary-image">
-        <p class="anniversary-instruction">Tap a balloon to see how many Associates are celebrating each milestone.</p>
-
-        <div class="anniversary-interactive">
+        <a class="section-image-link balloon-clickable" href="#">
           <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+        </a>
 
-          <button class="balloon-hotspot balloon-1"  type="button" data-years="1"  data-count="6248" aria-label="See 1 year milestone count"></button>
-          <button class="balloon-hotspot balloon-2"  type="button" data-years="2"  data-count="3650" aria-label="See 2 year milestone count"></button>
-          <button class="balloon-hotspot balloon-3"  type="button" data-years="3"  data-count="2293" aria-label="See 3 year milestone count"></button>
-          <button class="balloon-hotspot balloon-4"  type="button" data-years="4"  data-count="1793" aria-label="See 4 year milestone count"></button>
-          <button class="balloon-hotspot balloon-5"  type="button" data-years="5"  data-count="1345" aria-label="See 5 year milestone count"></button>
-          <button class="balloon-hotspot balloon-10" type="button" data-years="10" data-count="651"  aria-label="See 10 year milestone count"></button>
-          <button class="balloon-hotspot balloon-15" type="button" data-years="15" data-count="290"  aria-label="See 15 year milestone count"></button>
-          <button class="balloon-hotspot balloon-20" type="button" data-years="20" data-count="141"  aria-label="See 20 year milestone count"></button>
-          <button class="balloon-hotspot balloon-25" type="button" data-years="25" data-count="58"   aria-label="See 25 year milestone count"></button>
-          <button class="balloon-hotspot balloon-30" type="button" data-years="30" data-count="20"   aria-label="See 30 year milestone count"></button>
-          <button class="balloon-hotspot balloon-35" type="button" data-years="35" data-count="5"    aria-label="See 35 year milestone count"></button>
-          <button class="balloon-hotspot balloon-40" type="button" data-years="40" data-count="4"    aria-label="See 40 year milestone count"></button>
-          <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1"    aria-label="See 45 year milestone count"></button>
-          <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2"    aria-label="See 50 year milestone count"></button>
+        <div class="anniversary-callout-wrap">
+          <p class="anniversary-callout">
+            Click the balloons to see how many Associates are celebrating milestone anniversaries.
+          </p>
         </div>
-
-        <p class="anniversary-summary">Celebrating over 16,000 Associates for their dedication and service.</p>
 
         <div class="links">
           <a class="section-link" href="#">Recognition details</a>
@@ -845,13 +605,13 @@
       </div>
     </section>
 
-    <section id="shoes-for-crews" class="section reveal">
+    <section id="shoes-for-crews" class="section">
       <div class="section-head">
         <h2>Shoes For Crews</h2>
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
+        <div class="section-image-link">
           <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
         </div>
 
@@ -864,21 +624,21 @@
       </div>
     </section>
 
-    <section id="touchtunes" class="section reveal">
+    <section id="touchtunes" class="section">
       <div class="section-head">
         <h2>TouchTunes</h2>
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
+        <div class="section-image-link">
           <img src="Images/TouchTunes.png" alt="TouchTunes" />
         </div>
 
-        <p>Enjoy free credits on the House because your hospitality is like music to our ears.</p>
+        <p>Enjoy free credits on the house because your hospitality is like music to our ears.</p>
 
         <div class="links">
-          <a class="section-link" href="https://www.touchtunes.com/play/app" target="_blank" rel="noopener noreferrer">Download the App</a>
-          <a class="section-link secondary" href="https://touchtunes.helpshift.com/hc/en/8-touchtunes/?p=all" target="_blank" rel="noopener noreferrer">App Help</a>
+          <a class="section-link" href="https://www.touchtunes.com/" target="_blank" rel="noopener noreferrer">Click to Download App</a>
+          <a class="section-link secondary" href="PDFs/TouchTunes FAQs.pdf" target="_blank" rel="noopener noreferrer">View FAQs</a>
         </div>
       </div>
     </section>
@@ -889,202 +649,16 @@
     &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
   </div>
 
-  <div class="lightbox" id="lightbox" aria-hidden="true">
-    <div class="lightbox-inner">
-      <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
-      <img id="lightbox-image" src="" alt="" />
-    </div>
-  </div>
-
-  <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
-    <div class="milestone-modal-inner">
-      <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
-      <div class="milestone-badge">Anniversary Milestone</div>
-      <h3 id="milestone-title">10 Years</h3>
-      <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll('.balloon-clickable').forEach(function (balloon) {
+      balloon.addEventListener('click', function () {
+        balloon.classList.remove('is-popping');
+        void balloon.offsetWidth;
+        balloon.classList.add('is-popping');
 
-      const progressBar = document.getElementById("scroll-progress");
-
-      const updateProgressBar = () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        progressBar.style.width = progress + "%";
-      };
-
-      updateProgressBar();
-      window.addEventListener("scroll", updateProgressBar);
-
-      const revealItems = document.querySelectorAll(".reveal");
-
-      if (!prefersReducedMotion && "IntersectionObserver" in window) {
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("show");
-              observer.unobserve(entry.target);
-            }
-          });
-        }, {
-          threshold: 0.12,
-          rootMargin: "0px 0px -40px 0px"
-        });
-
-        revealItems.forEach((item) => revealObserver.observe(item));
-      } else {
-        revealItems.forEach((item) => item.classList.add("show"));
-      }
-
-      const heroCopy = document.querySelector(".hero-copy");
-      const heroImage = document.querySelector(".hero-image");
-      const audioCard = document.querySelector(".audio-card");
-
-      if (!prefersReducedMotion) {
-        setTimeout(() => heroCopy?.classList.add("animate"), 100);
-        setTimeout(() => heroImage?.classList.add("animate"), 350);
-        setTimeout(() => audioCard?.classList.add("animate"), 600);
-      } else {
-        heroCopy?.classList.add("animate");
-        heroImage?.classList.add("animate");
-        audioCard?.classList.add("animate");
-      }
-
-      let confettiFired = false;
-
-      const fireConfetti = () => {
-        if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
-        confettiFired = true;
-
-        confetti({
-          particleCount: 110,
-          spread: 78,
-          startVelocity: 34,
-          origin: { y: 0.28 }
-        });
-      };
-
-      setTimeout(fireConfetti, 500);
-      window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
-      window.addEventListener("click", fireConfetti, { once: true, passive: true });
-
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImage = document.getElementById("lightbox-image");
-      const lightboxClose = document.querySelector(".lightbox-close");
-      const triggers = document.querySelectorAll(".lightbox-trigger");
-
-      const openLightbox = (img) => {
-        lightboxImage.src = img.src;
-        lightboxImage.alt = img.alt || "";
-        lightbox.classList.add("open");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.classList.add("lightbox-open");
-      };
-
-      const closeLightbox = () => {
-        lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("lightbox-open");
-        setTimeout(() => {
-          lightboxImage.src = "";
-          lightboxImage.alt = "";
-        }, 180);
-      };
-
-      triggers.forEach((trigger) => {
-        trigger.addEventListener("click", () => {
-          const img = trigger.querySelector("img");
-          if (img) openLightbox(img);
-        });
-
-        trigger.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            const img = trigger.querySelector("img");
-            if (img) openLightbox(img);
-          }
-        });
-
-        trigger.setAttribute("tabindex", "0");
-        trigger.setAttribute("role", "button");
-        trigger.setAttribute("aria-label", "Open image");
-      });
-
-      lightboxClose?.addEventListener("click", closeLightbox);
-
-      lightbox?.addEventListener("click", (e) => {
-        if (e.target === lightbox) closeLightbox();
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && lightbox?.classList.contains("open")) {
-          closeLightbox();
-        }
-      });
-
-      const milestoneModal = document.getElementById("milestone-modal");
-      const milestoneTitle = document.getElementById("milestone-title");
-      const milestoneText = document.getElementById("milestone-text");
-      const milestoneClose = document.querySelector(".milestone-close");
-      const balloonHotspots = document.querySelectorAll(".balloon-hotspot");
-
-      const formatCount = (count) => Number(count).toLocaleString();
-
-     const openMilestoneModal = (years, count) => {
-  const numericCount = Number(count);
-  const associateWord = numericCount === 1 ? "Associate" : "Associates";
-  const verbWord = numericCount === 1 ? "is" : "are";
-  const yearWord = years === "1" ? "year" : "years";
-
-  milestoneTitle.textContent = `${years} ${yearWord}`;
-  milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
-
-  milestoneModal.classList.add("open");
-  milestoneModal.setAttribute("aria-hidden", "false");
-  document.body.classList.add("milestone-open");
-};
-
-      const closeMilestoneModal = () => {
-        milestoneModal.classList.remove("open");
-        milestoneModal.setAttribute("aria-hidden", "true");
-        document.body.classList.remove("milestone-open");
-      };
-
-      balloonHotspots.forEach((spot) => {
-        const years = spot.dataset.years;
-        const count = spot.dataset.count;
-
-        spot.addEventListener("click", () => {
-          openMilestoneModal(years, count);
-        });
-
-        spot.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            openMilestoneModal(years, count);
-          }
-        });
-      });
-
-      milestoneClose?.addEventListener("click", closeMilestoneModal);
-
-      milestoneModal?.addEventListener("click", (e) => {
-        if (e.target === milestoneModal) {
-          closeMilestoneModal();
-        }
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) {
-          closeMilestoneModal();
-        }
+        setTimeout(function () {
+          balloon.classList.remove('is-popping');
+        }, 350);
       });
     });
   </script>
