@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
- 
+
   <style>
     :root {
       --bg: #f3f3f1;
@@ -19,39 +19,41 @@
       --shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
       --radius: 20px;
       --max: 1120px;
+      --media-width: 560px;
+      --media-frame-min-height: 320px;
     }
- 
+
     * {
       box-sizing: border-box;
     }
- 
+
     html {
       scroll-behavior: smooth;
       scroll-padding-top: 80px;
     }
- 
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
       background: radial-gradient(circle at top left, #faf9ee 0%, #f6f6f4 38%, #efefe9 100%);
     }
- 
+
     body.lightbox-open,
     body.milestone-open {
       overflow: hidden;
     }
- 
+
     img {
       max-width: 100%;
       height: auto;
       display: block;
     }
- 
+
     button {
       font: inherit;
     }
- 
+
     #scroll-progress {
       position: fixed;
       top: 0;
@@ -62,7 +64,7 @@
       z-index: 9999;
       box-shadow: 0 2px 10px rgba(245, 213, 71, 0.45);
     }
- 
+
     .topbar {
       position: sticky;
       top: 0;
@@ -71,7 +73,7 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
     }
- 
+
     .topbar-inner {
       max-width: var(--max);
       margin: 0 auto;
@@ -80,30 +82,30 @@
       align-items: center;
       justify-content: center;
     }
- 
+
     .logo-link {
       display: flex;
       align-items: center;
       justify-content: center;
     }
- 
+
     .nav-logo {
       height: 90px;
       width: auto;
       object-fit: contain;
       transition: transform 0.3s ease;
     }
- 
+
     .nav-logo:hover {
       transform: scale(1.05);
     }
- 
+
     .sections {
       max-width: var(--max);
       margin: 0 auto;
       padding: 16px;
     }
- 
+
     .section {
       width: 100%;
       max-width: 900px;
@@ -121,23 +123,23 @@
       position: relative;
       overflow: hidden;
     }
- 
+
     .section:hover {
       transform: translateY(-8px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
       border-color: var(--yellow);
     }
- 
+
     .reveal {
       opacity: 0;
       transform: translateY(34px);
     }
- 
+
     .reveal.show {
       opacity: 1;
       transform: translateY(0);
     }
- 
+
     .section-head {
       display: flex;
       justify-content: center;
@@ -146,7 +148,7 @@
       margin-bottom: 14px;
       flex-wrap: wrap;
     }
- 
+
     .section h2 {
       margin: 0;
       text-transform: uppercase;
@@ -154,7 +156,7 @@
       font-size: clamp(1.18rem, 2vw, 1.8rem);
       text-align: center;
     }
- 
+
     .section p {
       color: var(--muted);
       line-height: 1.65;
@@ -162,32 +164,43 @@
       max-width: 680px;
       text-align: center;
     }
- 
+
     .section-image-wrap {
       width: 100%;
-      max-width: 560px;
+      max-width: var(--media-width);
       margin: 0 auto;
     }
- 
+
     .section-image-link {
       display: block;
+      width: 100%;
       border-radius: 18px;
       overflow: hidden;
       border: 1px solid var(--border);
       background: white;
       cursor: zoom-in;
     }
- 
-    .section-image-link img {
+
+    .media-frame {
+      width: 100%;
+      min-height: var(--media-frame-min-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+    }
+
+    .media-frame img {
       width: 100%;
       height: auto;
+      object-fit: contain;
       transition: transform 0.4s ease;
     }
- 
-    .section-image-link:hover img {
+
+    .section-image-link:hover .media-frame img {
       transform: scale(1.03);
     }
- 
+
     .links {
       display: flex;
       gap: 12px;
@@ -195,7 +208,7 @@
       margin-top: 12px;
       justify-content: center;
     }
- 
+
     .pill,
     .section-link {
       text-decoration: none;
@@ -210,18 +223,18 @@
       display: inline-block;
       text-align: center;
     }
- 
+
     .pill:hover,
     .section-link:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
       background: #ffe66a;
     }
- 
+
     .section-link.secondary {
       background: white;
     }
- 
+
     .hero-card {
       background: #fff;
       border-radius: 28px;
@@ -234,7 +247,7 @@
       width: 100%;
       position: relative;
     }
- 
+
     .hero-copy {
       width: 100%;
       max-width: 760px;
@@ -244,12 +257,12 @@
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
- 
+
     .hero-copy.animate {
       opacity: 1;
       transform: translateY(0);
     }
- 
+
     #hero .eyebrow {
       display: block;
       text-transform: uppercase;
@@ -261,7 +274,7 @@
       margin-bottom: 10px;
       white-space: normal;
     }
- 
+
     #hero h1 {
       margin: 0;
       font-size: clamp(32px, 4vw, 56px);
@@ -271,7 +284,7 @@
       text-align: center;
       text-wrap: balance;
     }
- 
+
     .hero-image {
       width: 100%;
       display: flex;
@@ -281,12 +294,12 @@
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
- 
+
     .hero-image.animate {
       opacity: 1;
       transform: translateY(0);
     }
- 
+
     .hero-image img {
       display: block;
       width: 100%;
@@ -295,7 +308,7 @@
       margin: 0 auto;
       border-radius: 24px;
     }
- 
+
     .audio-card {
       width: 100%;
       max-width: 760px;
@@ -310,25 +323,25 @@
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
- 
+
     .audio-card.animate {
       opacity: 1;
       transform: translateY(0);
     }
- 
+
     .audio-card h3 {
       margin: 0 0 8px;
       font-size: 1.05rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
- 
+
     .audio-card p {
       margin: 0 0 14px;
       color: var(--muted);
       text-align: center;
     }
- 
+
     .audio-player-wrap {
       max-width: 520px;
       margin: 0 auto;
@@ -342,7 +355,7 @@
         0 10px 18px rgba(0, 0, 0, 0.1);
       transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
- 
+
     .audio-player-wrap:hover {
       transform: translateY(-2px);
       box-shadow:
@@ -351,7 +364,7 @@
         0 14px 24px rgba(0, 0, 0, 0.14);
       background: linear-gradient(180deg, #fff07f 0%, #ffe15a 100%);
     }
- 
+
     .audio-player {
       width: 100%;
       display: block;
@@ -359,17 +372,17 @@
       accent-color: #111111;
       filter: saturate(1.02) contrast(1.02);
     }
- 
+
     #ceo-message {
       text-align: center;
     }
- 
+
     .ceo-video-wrap {
       width: 100%;
       max-width: 760px;
       margin: 24px auto 0;
     }
- 
+
     .ceo-video-wrap iframe {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -378,13 +391,13 @@
       display: block;
       border-radius: 12px;
     }
- 
+
     .museum-video-wrap {
       width: 100%;
       max-width: 760px;
       margin: 18px auto 0;
     }
- 
+
     .museum-video-wrap iframe {
       width: 100%;
       aspect-ratio: 16 / 9;
@@ -393,14 +406,11 @@
       display: block;
       border-radius: 12px;
     }
- 
-    .anniversary-image {
-      max-width: 700px;
-    }
 
     .anniversary-interactive {
       position: relative;
       display: block;
+      width: 100%;
       border-radius: 18px;
       overflow: hidden;
       border: 1px solid var(--border);
@@ -421,6 +431,10 @@
       cursor: zoom-in;
     }
 
+    .anniversary-image-layer .media-frame {
+      min-height: var(--media-frame-min-height);
+    }
+
     .anniversary-image-layer img {
       width: 100%;
       display: block;
@@ -439,7 +453,7 @@
       z-index: 2;
       pointer-events: none;
     }
- 
+
     .anniversary-instruction {
       text-align: center;
       font-weight: 700;
@@ -447,7 +461,7 @@
       margin: 8px 0 14px;
       line-height: 1.5;
     }
- 
+
     .balloon-hotspot {
       position: absolute;
       width: 10.5%;
@@ -460,7 +474,7 @@
       -webkit-tap-highlight-color: transparent;
       transition: transform 0.22s ease;
     }
- 
+
     .balloon-hotspot:focus-visible {
       outline: 3px solid rgba(245, 213, 71, 0.95);
       outline-offset: 2px;
@@ -476,7 +490,7 @@
       opacity: 0;
       transition: opacity 0.22s ease, transform 0.22s ease;
     }
- 
+
     .balloon-hotspot::after {
       content: "";
       position: absolute;
@@ -485,7 +499,7 @@
       background: rgba(245, 213, 71, 0);
       transition: background 0.18s ease, transform 0.18s ease;
     }
- 
+
     .balloon-hotspot:hover,
     .balloon-hotspot:focus-visible {
       transform: translateY(-3px);
@@ -496,7 +510,7 @@
       opacity: 1;
       transform: scale(1.08);
     }
- 
+
     .balloon-hotspot:hover::after,
     .balloon-hotspot:focus-visible::after,
     .balloon-hotspot:active::after {
@@ -549,7 +563,7 @@
         transform: translateY(-4px);
       }
     }
- 
+
     .balloon-1  { top: 7.5%;  left: 10.2%; }
     .balloon-2  { top: 5.2%;  left: 20.8%; }
     .balloon-3  { top: 6.1%;  left: 32.0%; }
@@ -557,7 +571,7 @@
     .balloon-5  { top: 5.8%;  left: 54.2%; }
     .balloon-10 { top: 4.8%;  left: 65.2%; }
     .balloon-15 { top: 8.0%;  left: 76.0%; }
- 
+
     .balloon-20 { top: 20.8%; left: 9.0%; }
     .balloon-25 { top: 17.2%; left: 20.8%; }
     .balloon-30 { top: 18.0%; left: 32.2%; }
@@ -565,25 +579,25 @@
     .balloon-40 { top: 16.8%; left: 55.5%; }
     .balloon-45 { top: 18.5%; left: 66.5%; }
     .balloon-50 { top: 18.6%; left: 77.0%; }
- 
+
     .anniversary-summary {
       margin-top: 16px;
     }
- 
+
     .hero-links {
       width: 100%;
       display: flex;
       justify-content: center;
       margin-top: 20px;
     }
- 
+
     .footer {
       text-align: center;
       color: var(--muted);
       padding: 0 18px 36px;
       font-size: 0.94rem;
     }
- 
+
     .lightbox,
     .milestone-modal {
       position: fixed;
@@ -599,14 +613,14 @@
       transition: opacity 0.25s ease, visibility 0.25s ease;
       z-index: 5000;
     }
- 
+
     .lightbox.open,
     .milestone-modal.open {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
     }
- 
+
     .lightbox-inner {
       position: relative;
       max-width: min(1100px, 96vw);
@@ -614,12 +628,12 @@
       transform: scale(0.96);
       transition: transform 0.25s ease;
     }
- 
+
     .lightbox.open .lightbox-inner,
     .milestone-modal.open .milestone-modal-inner {
       transform: scale(1);
     }
- 
+
     .lightbox img {
       display: block;
       max-width: 100%;
@@ -628,7 +642,7 @@
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
       background: #fff;
     }
- 
+
     .lightbox-close,
     .milestone-close {
       position: absolute;
@@ -645,7 +659,7 @@
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
     }
- 
+
     .milestone-modal-inner {
       position: relative;
       width: min(420px, 92vw);
@@ -658,7 +672,7 @@
       transform: scale(0.96);
       transition: transform 0.25s ease;
     }
- 
+
     .milestone-badge {
       display: inline-block;
       margin-bottom: 12px;
@@ -671,7 +685,7 @@
       text-transform: uppercase;
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
     }
- 
+
     .milestone-modal h3 {
       margin: 0 0 10px;
       font-size: clamp(1.25rem, 3vw, 1.7rem);
@@ -679,23 +693,23 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
- 
+
     .milestone-modal p {
       margin: 0;
       color: var(--muted);
       font-size: 1.04rem;
       line-height: 1.65;
     }
- 
+
     @media (max-width: 900px) {
       .nav-logo {
         height: 68px;
       }
- 
+
       .section {
         max-width: 760px;
       }
- 
+
       .hero-card,
       .hero-copy,
       .hero-image img,
@@ -705,47 +719,50 @@
         max-width: 100%;
       }
     }
- 
+
     @media (max-width: 640px) {
+      :root {
+        --media-frame-min-height: 260px;
+      }
+
       .sections {
         padding: 12px;
       }
- 
+
       .section {
         padding: 14px 12px;
         border-radius: 22px;
       }
- 
+
       .hero-card {
         padding: 14px;
       }
- 
-      .section-image-wrap,
-      .anniversary-image {
+
+      .section-image-wrap {
         max-width: 100%;
       }
- 
+
       .hero-image img {
         max-width: 100%;
       }
- 
+
       .links,
       .hero-links {
         justify-content: center;
       }
- 
+
       #hero .eyebrow {
         font-size: 11px;
         letter-spacing: 0.12em;
         margin-bottom: 8px;
       }
- 
+
       #hero h1 {
         font-size: clamp(28px, 8vw, 42px);
         line-height: 1;
         letter-spacing: -0.02em;
       }
- 
+
       .section p,
       .anniversary-summary,
       .audio-card p {
@@ -753,45 +770,45 @@
         padding-inline: 6px;
         text-align: center;
       }
- 
+
       .audio-player-wrap {
         border-radius: 20px;
         padding: 10px 12px;
       }
- 
+
       .balloon-hotspot {
         width: 12.5%;
         height: 16%;
       }
- 
+
       .lightbox,
       .milestone-modal {
         padding: 16px;
       }
- 
+
       .lightbox-close,
       .milestone-close {
         top: -10px;
         right: -6px;
       }
- 
+
       .milestone-modal-inner {
         padding: 26px 18px 20px;
       }
     }
- 
+
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
       }
- 
+
       *,
       *::before,
       *::after {
         animation: none !important;
         transition: none !important;
       }
- 
+
       .reveal,
       .hero-copy,
       .hero-image,
@@ -804,7 +821,7 @@
 </head>
 <body>
   <div id="scroll-progress"></div>
- 
+
   <header class="topbar">
     <div class="topbar-inner">
       <div class="logo-link">
@@ -812,24 +829,24 @@
       </div>
     </div>
   </header>
- 
+
   <main class="sections">
- 
+
     <section id="hero" class="section reveal">
       <div class="section-image-wrap hero-card">
         <div class="hero-copy">
           <div class="eyebrow">Welcome to Our</div>
           <h1>Celebration Page</h1>
         </div>
- 
+
         <div class="section-image-link hero-image lightbox-trigger">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
- 
+
         <div class="audio-card">
           <h3>Appreciation Song</h3>
           <p>Click to listen.</p>
- 
+
           <div class="audio-player-wrap">
             <audio
               class="audio-player"
@@ -845,7 +862,7 @@
         </div>
       </div>
     </section>
- 
+
     <section id="ceo-message" class="section reveal">
       <h2>From the CEO: Thank You!</h2>
       <div class="ceo-video-wrap">
@@ -858,19 +875,21 @@
         </iframe>
       </div>
     </section>
- 
+
     <section id="dressup" class="section reveal">
       <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
- 
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger">
-          <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+          <div class="media-frame">
+            <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+          </div>
         </div>
- 
+
         <p>Dress up and show your Waffle House pride.</p>
- 
+
         <div class="links">
           <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
         </div>
@@ -881,11 +900,13 @@
       <div class="section-head">
         <h2>Anniversaries</h2>
       </div>
- 
-      <div class="section-image-wrap anniversary-image">
+
+      <div class="section-image-wrap">
         <div class="anniversary-interactive">
           <div class="anniversary-image-layer lightbox-trigger">
-            <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+            <div class="media-frame">
+              <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+            </div>
           </div>
 
           <div class="anniversary-hotspots" aria-hidden="false">
@@ -905,27 +926,29 @@
             <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
           </div>
         </div>
- 
+
         <p class="anniversary-summary">
           Celebrating over 16,000 Associates for their dedication and service! Click on the balloons to see how many are celebrating each milestone.
         </p>
- 
+
         <div class="links">
           <a class="section-link" href="#">Recognition details</a>
         </div>
       </div>
     </section>
- 
+
     <section id="trivia" class="section reveal">
       <div class="section-head">
         <h2>Museum Tour &amp; Trivia</h2>
       </div>
- 
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger">
-          <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+          <div class="media-frame">
+            <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+          </div>
         </div>
- 
+
         <div class="museum-video-wrap">
           <iframe
             src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
@@ -935,9 +958,9 @@
             allowfullscreen>
           </iframe>
         </div>
- 
+
         <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
- 
+
         <div class="links">
           <a
             class="section-link"
@@ -949,18 +972,21 @@
         </div>
       </div>
     </section>
+
     <section id="photo" class="section reveal">
       <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
- 
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger">
-          <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+          <div class="media-frame">
+            <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+          </div>
         </div>
- 
+
         <p>Upload your best photos to enter.</p>
- 
+
         <div class="links">
           <a
             class="section-link"
@@ -972,18 +998,21 @@
         </div>
       </div>
     </section>
+
     <section id="shoes-for-crews" class="section reveal">
       <div class="section-head">
         <h2>Shoes For Crews</h2>
       </div>
- 
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger">
-          <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+          <div class="media-frame">
+            <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+          </div>
         </div>
- 
+
         <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker (see FAQs for steps).</p>
- 
+
         <div class="links">
           <a
             class="section-link"
@@ -996,19 +1025,21 @@
         </div>
       </div>
     </section>
- 
+
     <section id="touchtunes" class="section reveal">
       <div class="section-head">
         <h2>TouchTunes</h2>
       </div>
- 
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger">
-          <img src="Images/touchtunes.png" alt="TouchTunes" />
+          <div class="media-frame">
+            <img src="Images/touchtunes.png" alt="TouchTunes" />
+          </div>
         </div>
- 
+
         <p>Enjoy 5 free jukebox credits a week on the House.</p>
- 
+
         <div class="links">
           <a
             class="section-link"
@@ -1027,20 +1058,20 @@
         </div>
       </div>
     </section>
- 
+
   </main>
- 
+
   <div class="footer">
     &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
   </div>
- 
+
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-inner">
       <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
       <img id="lightbox-image" src="" alt="" />
     </div>
   </div>
- 
+
   <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
     <div class="milestone-modal-inner">
       <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
@@ -1049,27 +1080,27 @@
       <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
     </div>
   </div>
- 
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
- 
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- 
+
       const progressBar = document.getElementById("scroll-progress");
- 
+
       const updateProgressBar = () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
         progressBar.style.width = progress + "%";
       };
- 
+
       updateProgressBar();
       window.addEventListener("scroll", updateProgressBar);
- 
+
       const revealItems = document.querySelectorAll(".reveal");
- 
+
       if (!prefersReducedMotion && "IntersectionObserver" in window) {
         const revealObserver = new IntersectionObserver((entries, observer) => {
           entries.forEach((entry) => {
@@ -1082,16 +1113,16 @@
           threshold: 0.12,
           rootMargin: "0px 0px -40px 0px"
         });
- 
+
         revealItems.forEach((item) => revealObserver.observe(item));
       } else {
         revealItems.forEach((item) => item.classList.add("show"));
       }
- 
+
       const heroCopy = document.querySelector(".hero-copy");
       const heroImage = document.querySelector(".hero-image");
       const audioCard = document.querySelector(".audio-card");
- 
+
       if (!prefersReducedMotion) {
         setTimeout(() => heroCopy?.classList.add("animate"), 100);
         setTimeout(() => heroImage?.classList.add("animate"), 350);
@@ -1101,13 +1132,13 @@
         heroImage?.classList.add("animate");
         audioCard?.classList.add("animate");
       }
- 
+
       let confettiFired = false;
- 
+
       const fireConfetti = () => {
         if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
         confettiFired = true;
- 
+
         confetti({
           particleCount: 110,
           spread: 78,
@@ -1115,16 +1146,16 @@
           origin: { y: 0.28 }
         });
       };
- 
+
       setTimeout(fireConfetti, 500);
       window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
       window.addEventListener("click", fireConfetti, { once: true, passive: true });
- 
+
       const lightbox = document.getElementById("lightbox");
       const lightboxImage = document.getElementById("lightbox-image");
       const lightboxClose = document.querySelector(".lightbox-close");
       const triggers = document.querySelectorAll(".lightbox-trigger");
- 
+
       const openLightbox = (img) => {
         lightboxImage.src = img.src;
         lightboxImage.alt = img.alt || "";
@@ -1132,7 +1163,7 @@
         lightbox.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
       };
- 
+
       const closeLightbox = () => {
         lightbox.classList.remove("open");
         lightbox.setAttribute("aria-hidden", "true");
@@ -1142,13 +1173,13 @@
           lightboxImage.alt = "";
         }, 180);
       };
- 
+
       triggers.forEach((trigger) => {
         trigger.addEventListener("click", () => {
           const img = trigger.querySelector("img");
           if (img) openLightbox(img);
         });
- 
+
         trigger.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -1156,46 +1187,46 @@
             if (img) openLightbox(img);
           }
         });
- 
+
         trigger.setAttribute("tabindex", "0");
         trigger.setAttribute("role", "button");
         trigger.setAttribute("aria-label", "Open image");
       });
- 
+
       lightboxClose?.addEventListener("click", closeLightbox);
- 
+
       lightbox?.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
- 
+
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && lightbox?.classList.contains("open")) {
           closeLightbox();
         }
       });
- 
+
       const milestoneModal = document.getElementById("milestone-modal");
       const milestoneTitle = document.getElementById("milestone-title");
       const milestoneText = document.getElementById("milestone-text");
       const milestoneClose = document.querySelector(".milestone-close");
       const balloonHotspots = document.querySelectorAll(".balloon-hotspot");
- 
+
       const formatCount = (count) => Number(count).toLocaleString();
- 
+
       const openMilestoneModal = (years, count) => {
         const numericCount = Number(count);
         const associateWord = numericCount === 1 ? "Associate" : "Associates";
         const verbWord = numericCount === 1 ? "is" : "are";
         const yearWord = years === "1" ? "year" : "years";
- 
+
         milestoneTitle.textContent = `${years} ${yearWord}`;
         milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
- 
+
         milestoneModal.classList.add("open");
         milestoneModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("milestone-open");
       };
- 
+
       const closeMilestoneModal = () => {
         milestoneModal.classList.remove("open");
         milestoneModal.setAttribute("aria-hidden", "true");
@@ -1226,17 +1257,17 @@
           origin: { x, y }
         });
       };
- 
+
       balloonHotspots.forEach((spot) => {
         const years = spot.dataset.years;
         const count = spot.dataset.count;
- 
+
         spot.addEventListener("click", (e) => {
           e.stopPropagation();
           popBalloonEffect(spot);
           setTimeout(() => openMilestoneModal(years, count), 90);
         });
- 
+
         spot.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -1246,24 +1277,26 @@
           }
         });
       });
- 
+
       milestoneClose?.addEventListener("click", closeMilestoneModal);
- 
+
       milestoneModal?.addEventListener("click", (e) => {
         if (e.target === milestoneModal) {
           closeMilestoneModal();
         }
       });
- 
+
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && milestoneModal?.classList.contains("open")) {
           closeMilestoneModal();
         }
       });
- 
+
       const audioPlayer = document.querySelector(".audio-player");
       audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
     });
   </script>
 </body>
 </html>
+
+
