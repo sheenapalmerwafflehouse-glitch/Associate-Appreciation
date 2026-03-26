@@ -397,7 +397,7 @@
     .anniversary-image {
       max-width: 700px;
     }
- 
+
     .anniversary-interactive {
       position: relative;
       display: block;
@@ -406,18 +406,19 @@
       border: 1px solid var(--border);
       background: #fff;
       cursor: default;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
     .anniversary-interactive:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
     }
 
     .anniversary-image-layer {
       position: relative;
       z-index: 1;
       overflow: hidden;
+      cursor: zoom-in;
     }
 
     .anniversary-image-layer img {
@@ -501,6 +502,16 @@
     .balloon-hotspot:active::after {
       background: rgba(245, 213, 71, 0.16);
       transform: scale(1.08);
+    }
+
+    .balloon-hotspot.popping {
+      animation: balloonPop 0.22s ease;
+    }
+
+    @keyframes balloonPop {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(1.18) translateY(-2px); }
+      100% { transform: scale(0.92) translateY(0); }
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -873,7 +884,7 @@
  
       <div class="section-image-wrap anniversary-image">
         <div class="anniversary-interactive">
-          <div class="anniversary-image-layer">
+          <div class="anniversary-image-layer lightbox-trigger">
             <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
           </div>
 
@@ -1195,19 +1206,48 @@
         milestoneModal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("milestone-open");
       };
+
+      const popBalloonEffect = (spot) => {
+        spot.classList.remove("popping");
+        void spot.offsetWidth;
+        spot.classList.add("popping");
+
+        setTimeout(() => {
+          spot.classList.remove("popping");
+        }, 220);
+
+        if (prefersReducedMotion || typeof confetti !== "function") return;
+
+        const rect = spot.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+          particleCount: 14,
+          spread: 55,
+          startVelocity: 20,
+          ticks: 70,
+          scalar: 0.7,
+          origin: { x, y }
+        });
+      };
  
       balloonHotspots.forEach((spot) => {
         const years = spot.dataset.years;
         const count = spot.dataset.count;
  
-        spot.addEventListener("click", () => {
-          openMilestoneModal(years, count);
+        spot.addEventListener("click", (e) => {
+          e.stopPropagation();
+          popBalloonEffect(spot);
+          setTimeout(() => openMilestoneModal(years, count), 90);
         });
  
         spot.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            openMilestoneModal(years, count);
+            e.stopPropagation();
+            popBalloonEffect(spot);
+            setTimeout(() => openMilestoneModal(years, count), 90);
           }
         });
       });
