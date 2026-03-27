@@ -1089,6 +1089,113 @@
     .audio-player-wrap 
     {display: none;
     }
+.lyric-video-shell {
+      width: 100%;
+      max-width: 760px;
+      margin: 22px auto 0;
+      padding: 12px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,247,237,0.92));
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 14px 28px rgba(92, 77, 19, 0.07);
+    }
+
+    .lyric-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      background:
+        linear-gradient(to bottom, #87c9ff 0%, #dff3ff 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+    }
+
+    .lyric-stage-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    .lyric-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(255,255,255,0.36) 0 70px, transparent 75px),
+        radial-gradient(circle at 28% 10%, rgba(255,255,255,0.28) 0 95px, transparent 105px),
+        radial-gradient(circle at 78% 16%, rgba(255,255,255,0.22) 0 88px, transparent 98px),
+        radial-gradient(circle at 86% 76%, rgba(255,255,255,0.22) 0 100px, transparent 112px);
+      pointer-events: none;
+    }
+
+    .lyric-cloud-host {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .phrase-cloud {
+      position: absolute;
+      min-width: 240px;
+      max-width: 520px;
+      padding: 28px 34px;
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+    }
+
+    .phrase-cloud.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      animation: lyricFloat 7s ease-in-out infinite;
+    }
+
+    .phrase-bubble {
+      position: absolute;
+      background: rgba(255,255,255,0.94);
+      border-radius: 999px;
+      box-shadow: 10px 12px 22px rgba(255,255,255,0.30);
+    }
+
+    .phrase-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 800;
+      line-height: 1.24;
+      letter-spacing: 0.2px;
+      font-size: clamp(18px, 1.9vw, 30px);
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.96),
+        0 0 22px rgba(255,255,255,0.72),
+        0 2px 5px rgba(255,255,255,0.6);
+      white-space: pre-line;
+    }
+
+    .lyric-scrubber-wrap {
+      width: 100%;
+      max-width: 760px;
+      margin: 12px auto 0;
+    }
+
+    .lyric-scrubber {
+      width: 100%;
+      accent-color: #111111;
+    }
+
+    @keyframes lyricFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.01); }
+    }
 
     @media (max-width: 900px) {
       .nav-logo { height: 68px; }
@@ -1282,6 +1389,29 @@
             <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
+        </div>
+        <div class="lyric-video-shell">
+          <div class="video-label-row">
+            <div class="video-label">Cloud Lyrics</div>
+          </div>
+
+          <div class="lyric-stage" id="lyric-stage">
+            <img src="Images/Wilson.png" alt="Wilson lyric background" class="lyric-stage-bg" />
+            <div class="lyric-cloud-host" id="lyric-cloud-host"></div>
+          </div>
+        </div>
+
+        <div class="lyric-scrubber-wrap">
+          <input
+            type="range"
+            id="lyric-scrubber"
+            class="lyric-scrubber"
+            min="0"
+            max="128"
+            step="0.1"
+            value="0"
+            aria-label="Lyric timing scrubber"
+          />
         </div>
       </div>
     </section>
@@ -1562,6 +1692,104 @@
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
       const pressables = document.querySelectorAll(".pressable");
       const photoFlashLink = document.getElementById("photo-flash-link");
+const lyricCloudHost = document.getElementById("lyric-cloud-host");
+      const lyricScrubber = document.getElementById("lyric-scrubber");
+
+      const lyricPhrases = [
+        { start: 0.0, end: 10.0, text: "Globe light glowing on the corner booth\nName tag greeted by the coffee steam\nYou remember how I like my food" },
+        { start: 10.0, end: 21.0, text: "Starting early mornings off with what I need\nBut I see more than what’s in sight\nTools moving behind the scenes\nKeeping everything working right" },
+
+        { start: 21.0, end: 28.0, text: "So here’s to you\nServing up egg-cellence" },
+        { start: 28.0, end: 41.0, text: "Every pour, every plate, every smile makes a difference\nFrom the front to the back, every role you play\nKeeps Waffle House running day to day" },
+        { start: 41.0, end: 47.0, text: "I’m grateful for the care you bring\nThank you for everything" },
+
+        { start: 47.0, end: 56.0, text: "Hash browns crisp\nToast on the side\nCallbacks hit right on time" },
+        { start: 56.0, end: 65.0, text: "You’ve got my order in before the drinks\nYou hold the night while the world sleeps tight" },
+
+        { start: 65.0, end: 72.0, text: "So here’s to you\nServing up egg-cellence" },
+        { start: 72.0, end: 85.0, text: "Every pour, every plate, every smile makes a difference\nFrom the front to the back, every role you play\nKeeps Waffle House running day to day" },
+        { start: 85.0, end: 91.0, text: "I’m grateful for the care you bring\nThank you for everything" },
+
+        { start: 91.0, end: 100.0, text: "And I notice how you move as one\nPulling, Marking, dropping too\nPrepping, cleaning, coaching strong" },
+        { start: 100.0, end: 110.0, text: "The hospitality the attention you give\nIt all comes together in America’s Place\nBecause of you each day" },
+
+        { start: 110.0, end: 116.0, text: "So here’s to you" },
+        { start: 116.0, end: 124.0, text: "Serving up egg-cellence\nServing up egg-cellence\nServing up egg-cellence" },
+        { start: 124.0, end: 128.0, text: "Thank you" }
+      ];
+
+      const lyricPositions = [
+        { x: 7,  y: 8  },
+        { x: 50, y: 10 },
+        { x: 10, y: 34 },
+        { x: 52, y: 38 },
+        { x: 12, y: 63 },
+        { x: 54, y: 68 }
+      ];
+
+      const makePhraseCloud = (text, index) => {
+        const div = document.createElement("div");
+        div.className = "phrase-cloud";
+
+        const p = lyricPositions[index % lyricPositions.length];
+        div.style.left = p.x + "%";
+        div.style.top = p.y + "%";
+
+        const width = Math.min(520, Math.max(280, text.length * 4.2 + 170));
+        div.style.width = width + "px";
+
+        const bubbles = [
+          [8, 24, 28, 34],
+          [24, 4, 32, 38],
+          [42, 0, 35, 40],
+          [62, 7, 28, 34],
+          [75, 24, 22, 28],
+          [18, 48, 26, 30],
+          [45, 52, 28, 30],
+          [68, 46, 24, 26]
+        ];
+
+        bubbles.forEach(([left, top, w, h]) => {
+          const bubble = document.createElement("div");
+          bubble.className = "phrase-bubble";
+          bubble.style.left = left + "%";
+          bubble.style.top = top + "%";
+          bubble.style.width = w + "%";
+          bubble.style.height = h + "%";
+          div.appendChild(bubble);
+        });
+
+        const content = document.createElement("div");
+        content.className = "phrase-content";
+        content.textContent = text;
+        div.appendChild(content);
+
+        return div;
+      };
+
+      const lyricClouds = lyricCloudHost
+        ? lyricPhrases.map((phrase, i) => {
+            const el = makePhraseCloud(phrase.text, i);
+            lyricCloudHost.appendChild(el);
+            return { el, phrase };
+          })
+        : [];
+
+      const renderLyrics = () => {
+        if (!audioPlayer || !lyricClouds.length) return;
+
+        const t = audioPlayer.currentTime || 0;
+
+        lyricClouds.forEach(({ el, phrase }) => {
+          const active = t >= phrase.start && t < phrase.end;
+          el.classList.toggle("active", active);
+        });
+
+        if (lyricScrubber) {
+          lyricScrubber.value = t;
+        }
+      };
+
 
       let confettiFired = false;
       let nudgeTimer;
@@ -1780,9 +2008,37 @@
         updateSongButton();
       };
 
-      audioPlayer?.addEventListener("play", syncAudioState);
-      audioPlayer?.addEventListener("pause", syncAudioState);
-      audioPlayer?.addEventListener("ended", syncAudioState);
+            audioPlayer?.addEventListener("play", () => {
+        syncAudioState();
+        renderLyrics();
+      });
+
+      audioPlayer?.addEventListener("pause", () => {
+        syncAudioState();
+        renderLyrics();
+      });
+
+      audioPlayer?.addEventListener("ended", () => {
+        syncAudioState();
+        renderLyrics();
+      });
+
+      audioPlayer?.addEventListener("timeupdate", renderLyrics);
+      audioPlayer?.addEventListener("seeked", renderLyrics);
+      audioPlayer?.addEventListener("loadedmetadata", () => {
+        if (lyricScrubber && lyricPhrases.length) {
+          lyricScrubber.max = lyricPhrases[lyricPhrases.length - 1].end;
+        }
+        renderLyrics();
+      });
+
+      lyricScrubber?.addEventListener("input", (e) => {
+        if (!audioPlayer) return;
+        audioPlayer.currentTime = Number(e.target.value);
+        renderLyrics();
+      });
+
+
 
       songToggle?.addEventListener("click", async () => {
         if (!audioPlayer) return;
@@ -1905,8 +2161,10 @@
         });
       }
 
-      syncAudioState();
+            syncAudioState();
       updateSongButton();
+      renderLyrics();
+
     });
   </script>
 </body>
