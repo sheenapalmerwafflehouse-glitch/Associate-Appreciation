@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
 
@@ -57,9 +57,14 @@
       z-index: -1;
     }
 
-    body.lightbox-open,
+    body.lightbox-open {
+      overflow: hidden;
+    }
+
     body.milestone-open {
       overflow: hidden;
+      position: fixed;
+      width: 100%;
     }
 
     img {
@@ -506,19 +511,19 @@
     }
 
     .song-layout {
-    width: 100%;
-    max-width: 560px;
-    margin: 20px auto 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 14px;
-    align-items: center;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.76);
-    border: 1px solid rgba(176, 150, 44, 0.12);
-    border-radius: 22px;
-    padding: 14px;
+      width: 100%;
+      max-width: 560px;
+      margin: 20px auto 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 14px;
+      align-items: center;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      border-radius: 22px;
+      padding: 14px;
     }
 
     .song-toggle {
@@ -536,10 +541,9 @@
     }
 
     .song-meta {
-  min-width: 0;
-  text-align: center;
-}
-
+      min-width: 0;
+      text-align: center;
+    }
 
     .song-label {
       font-size: 0.76rem;
@@ -649,10 +653,20 @@
       overflow: hidden;
       border-radius: 20px;
       border: 1px solid rgba(176, 150, 44, 0.12);
-      background:
-        linear-gradient(rgba(34, 49, 74, 0.20), rgba(34, 49, 74, 0.28)),
-        url("Images/Wilson.png") center / cover no-repeat;
+      background: linear-gradient(180deg, #eaf6ff 0%, #f3f9ff 100%);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .lyric-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, #dff1ff 0%, #eef8ff 100%);
     }
 
     .lyric-stage::before {
@@ -660,6 +674,7 @@
       position: absolute;
       inset: 0;
       background:
+        linear-gradient(180deg, rgba(34, 49, 74, 0.20), rgba(34, 49, 74, 0.28)),
         linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 36%, rgba(10,17,30,0.10) 100%),
         radial-gradient(circle at 50% 26%, rgba(255,255,255,0.10), rgba(255,255,255,0) 42%);
       pointer-events: none;
@@ -695,6 +710,7 @@
       font-size: clamp(22px, 2vw, 32px);
       line-height: 1.16;
       letter-spacing: 0.01em;
+      white-space: pre-line;
       text-shadow:
         0 2px 10px rgba(0,0,0,0.30),
         0 0 12px rgba(0,0,0,0.18);
@@ -708,13 +724,11 @@
 
     .lyric-line.active {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
       filter: blur(0);
     }
 
     .lyric-line.exiting {
       opacity: 0;
-      transform: translateX(-50%) translateY(-12px);
       filter: blur(2px);
     }
 
@@ -1038,15 +1052,18 @@
       position: fixed;
       inset: 0;
       background: rgba(17, 17, 17, 0.82);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.25s ease, visibility 0.25s ease;
       z-index: 5000;
+    }
+
+    .lightbox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
     }
 
     .lightbox.open,
@@ -1077,9 +1094,6 @@
 
     .lightbox-close,
     .milestone-close {
-      position: absolute;
-      top: -14px;
-      right: -14px;
       width: 42px;
       height: 42px;
       border: none;
@@ -1092,15 +1106,36 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
     }
 
+    .lightbox-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+    }
+
+    .milestone-modal {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 3vw, 28px);
+      overflow-y: auto;
+    }
+
     .milestone-modal-inner {
       position: relative;
-      width: min(420px, 92vw);
+      width: min(420px, calc(100vw - 32px));
+      margin: auto;
       background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
       border: 1px solid rgba(176, 150, 44, 0.14);
       border-radius: 24px;
       padding: 28px 24px 24px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
       text-align: center;
+    }
+
+    .milestone-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
     }
 
     .milestone-badge {
@@ -1165,13 +1200,13 @@
       transform: translateY(0) scale(1);
     }
 
-    .audio-player-wrap { 
-    position:absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
+    .audio-player-wrap {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
     }
 
     @media (max-width: 900px) {
@@ -1211,7 +1246,6 @@
         margin: 18px auto 0;
         max-width: 31ch;
       }
-
 
       .song-toggle {
         width: 74px;
@@ -1313,7 +1347,8 @@
         <div class="section-kicker">Featured</div>
         <h2>Appreciation Song</h2>
       </div>
-        <div class="song-card" id="audio-card">
+
+      <div class="song-card" id="audio-card">
         <p>POV: You are a big part of why this is “America’s Place To Eat.”</p>
 
         <div class="song-layout">
@@ -1326,7 +1361,7 @@
 
           <div class="song-meta">
             <div class="song-label">Tap the waffle to play/pause</div>
-            <div class="song-song">🎵"Serving Up Egg-cellence"</div>
+            <div class="song-title">🎵 "Serving Up Egg-cellence"</div>
           </div>
         </div>
 
@@ -1346,6 +1381,18 @@
 
         <div class="lyric-video-shell">
           <div class="lyric-stage" id="lyric-stage">
+            <video
+              class="lyric-bg-video"
+              id="lyric-bg-video"
+              muted
+              playsinline
+              loop
+              preload="auto"
+              aria-hidden="true"
+            >
+              <source src="Images/Wilson.mp4" type="video/mp4" />
+            </video>
+
             <div class="lyric-line-host" id="lyric-line-host"></div>
           </div>
         </div>
@@ -1643,12 +1690,12 @@
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
       const lyricScrubber = document.getElementById("lyric-scrubber");
+      const lyricBgVideo = document.getElementById("lyric-bg-video");
 
-      // Karaoke-paced timings tuned to the uploaded 151.56s audio.
       const lyricLines = [
-        { start: 10.8,   end: 13.7,   top: "16%", text: "Globe light glowing\non the corner booth" },
-        { start: 13.8,   end: 16.0,   top: "34%", text: "Name tag greeted by\nthe coffee steam" },
-        { start: 16.1,   end: 17.9,  top: "22%", text: "You remember how\nI like my food" },
+        { start: 10.8,  end: 13.7,  top: "16%", text: "Globe light glowing\non the corner booth" },
+        { start: 13.8,  end: 16.0,  top: "34%", text: "Name tag greeted by\nthe coffee steam" },
+        { start: 16.1,  end: 17.9,  top: "22%", text: "You remember how\nI like my food" },
         { start: 18.0,  end: 21.1,  top: "42%", text: "Starting early mornings off\nwith what I need" },
         { start: 21.2,  end: 24.0,  top: "26%", text: "But I see more than\nwhat’s in sight" },
         { start: 24.1,  end: 26.9,  top: "46%", text: "Tools moving behind\nthe scenes" },
@@ -1734,6 +1781,7 @@
       let nudgeTimer;
       let tipShown = false;
       let lastInteractionTime = Date.now();
+      let milestoneScrollY = 0;
 
       const markInteraction = () => {
         lastInteractionTime = Date.now();
@@ -1870,15 +1918,21 @@
         milestoneTitle.textContent = `${years} ${yearWord}`;
         milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
 
+        milestoneScrollY = window.scrollY;
+        document.body.style.top = `-${milestoneScrollY}px`;
+        document.body.classList.add("milestone-open");
+
         milestoneModal.classList.add("open");
         milestoneModal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("milestone-open");
       };
 
       const closeMilestoneModal = () => {
         milestoneModal.classList.remove("open");
         milestoneModal.setAttribute("aria-hidden", "true");
+
         document.body.classList.remove("milestone-open");
+        document.body.style.top = "";
+        window.scrollTo(0, milestoneScrollY);
       };
 
       const popBalloonEffect = (spot) => {
@@ -1928,8 +1982,6 @@
         }
       });
 
-      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
-
       const updateSongButton = () => {
         if (!songToggle || !audioPlayer) return;
         const playing = !audioPlayer.paused && !audioPlayer.ended;
@@ -1940,12 +1992,29 @@
         );
       };
 
+      const syncLyricVideo = () => {
+        if (!audioPlayer || !lyricBgVideo) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+
+        if (playing) {
+          const playPromise = lyricBgVideo.play();
+          if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(() => {});
+          }
+        } else {
+          lyricBgVideo.pause();
+        }
+      };
+
       const syncAudioState = () => {
         if (!audioPlayer || !audioCard) return;
         const playing = !audioPlayer.paused && !audioPlayer.ended;
         audioCard.classList.toggle("audio-playing", playing);
         updateSongButton();
+        syncLyricVideo();
       };
+
+      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
 
       audioPlayer?.addEventListener("play", () => {
         syncAudioState();
@@ -1958,12 +2027,17 @@
       });
 
       audioPlayer?.addEventListener("ended", () => {
+        if (lyricBgVideo) {
+          lyricBgVideo.pause();
+          lyricBgVideo.currentTime = 0;
+        }
         syncAudioState();
         renderLyrics();
       });
 
       audioPlayer?.addEventListener("timeupdate", renderLyrics);
       audioPlayer?.addEventListener("seeked", renderLyrics);
+
       audioPlayer?.addEventListener("loadedmetadata", () => {
         if (lyricScrubber && lyricLines.length) {
           lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
@@ -1974,6 +2048,11 @@
       lyricScrubber?.addEventListener("input", (e) => {
         if (!audioPlayer) return;
         audioPlayer.currentTime = Number(e.target.value);
+
+        if (lyricBgVideo) {
+          lyricBgVideo.currentTime = 0;
+        }
+
         renderLyrics();
       });
 
