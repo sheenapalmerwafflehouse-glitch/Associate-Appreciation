@@ -638,16 +638,18 @@
     }
 
     .lyric-bg-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center;
-      z-index: 0;
-      pointer-events: none;
-      background: linear-gradient(180deg, #dff1ff 0%, #eef8ff 100%);
-    }
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  background: #dfeaf6;
+}
+
 
     .lyric-stage::before {
       content: "";
@@ -1359,24 +1361,24 @@
           </audio>
         </div>
 
-        <div class="lyric-video-shell">
-          <div class="lyric-stage" id="lyric-stage">
-            <video
-              class="lyric-bg-video"
-              id="lyric-bg-video"
-              muted
-              playsinline
-              loop
-              preload="auto"
-              aria-hidden="true"
-            >
-              <source src="Images/Wilson.mp4" type="video/mp4" />
-              <source src="Images/Wilson.webm" type="video/webm" />
-            </video>
+        <div class="lyric-stage" id="lyric-stage">
+  <video
+    class="lyric-bg-video"
+    id="lyric-bg-video"
+    muted
+    playsinline
+    loop
+    preload="metadata"
+    poster="Images/Wilson-preview.jpg"
+    aria-hidden="true"
+  >
+    <source src="Images/Wilson.mp4" type="video/mp4" />
+    <source src="Images/Wilson.webm" type="video/webm" />
+  </video>
 
-            <div class="lyric-line-host" id="lyric-line-host"></div>
-          </div>
-        </div>
+  <div class="lyric-line-host" id="lyric-line-host"></div>
+</div>
+
 
         <div class="lyric-scrubber-wrap">
           <input
@@ -1673,6 +1675,12 @@
       const lyricScrubber = document.getElementById("lyric-scrubber");
       const lyricStage = document.getElementById("lyric-stage");
       const lyricBgVideo = document.getElementById("lyric-bg-video");
+
+      lyricBgVideo?.addEventListener("loadeddata", () => {
+  try {
+    lyricBgVideo.currentTime = 0.01;
+  } catch (e) {}
+});
 
       const lyricLines = [
         { start: 10.8,  end: 13.7,  top: "16%", text: "Globe light glowing\non the corner booth" },
