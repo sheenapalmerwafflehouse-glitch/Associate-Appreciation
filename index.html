@@ -2440,6 +2440,77 @@
 .tilt-glare {
   z-index: 2 !important;
 }
+/* --- Photo flash desktop/mobile cleanup --- */
+.photo-flash-link {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.photo-flash-link .tilt-stage {
+  position: relative;
+  z-index: 1;
+}
+
+.photo-flash-link::before {
+  content: "";
+  position: absolute;
+  inset: -6%;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255,255,255,0.82) 0%,
+      rgba(255,255,255,0.42) 20%,
+      rgba(255,255,255,0.10) 40%,
+      rgba(255,255,255,0) 64%
+    );
+  opacity: 0;
+  transform: scale(0.76);
+  pointer-events: none;
+  z-index: 5;
+  border-radius: inherit;
+}
+
+.photo-flash-link::after {
+  content: "";
+  position: absolute;
+  inset: -4% -18%;
+  background: linear-gradient(
+    115deg,
+    rgba(255,255,255,0) 34%,
+    rgba(255,255,255,0.88) 50%,
+    rgba(255,255,255,0) 66%
+  );
+  opacity: 0;
+  transform: translateX(-130%);
+  pointer-events: none;
+  z-index: 6;
+  border-radius: inherit;
+  mix-blend-mode: screen;
+}
+
+.tilt-glare {
+  z-index: 2 !important;
+}
+
+@keyframes photoFlashSweep {
+  0% {
+    transform: translateX(-130%);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.95;
+  }
+  72% {
+    transform: translateX(130%);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(130%);
+    opacity: 0;
+  }
+}
 
   </style>
 </head>
