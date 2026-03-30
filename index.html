@@ -20,6 +20,9 @@
       --media-width: 560px;
       --media-frame-min-height: 320px;
       --page-warmth: 0;
+      --tilt-perspective: 1400px;
+      --tilt-max-rotate: 12deg;
+      --tilt-scale: 1.02;
     }
 
     * { box-sizing: border-box; }
@@ -294,7 +297,7 @@
       display: block;
       width: 100%;
       border-radius: 20px;
-      overflow: hidden;
+      overflow: visible;
       border: 1px solid rgba(176, 150, 44, 0.14);
       background: #fff;
       cursor: zoom-in;
@@ -304,7 +307,7 @@
 
     .media-frame {
       width: 100%;
-      min-height: var(--media-frame-min-height);
+      min-height: clamp(220px, 42vw, var(--media-frame-min-height));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -327,7 +330,8 @@
 
     .section-copy { margin-top: 20px; }
 
-    .links {
+    .links,
+    .actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -613,40 +617,40 @@
       border-radius: 18px;
     }
 
-.lyric-video-shell {
-  width: 100%;
-  max-width: 560px;
-  margin: 36px auto 0;
-  padding: 12px;
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,247,237,0.92));
-  border: 1px solid rgba(176, 150, 44, 0.14);
-  box-shadow: 0 14px 28px rgba(92, 77, 19, 0.07);
-}
+    .lyric-video-shell {
+      width: 100%;
+      max-width: 560px;
+      margin: 36px auto 0;
+      padding: 12px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,247,237,0.92));
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 14px 28px rgba(92, 77, 19, 0.07);
+    }
 
-.lyric-stage {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 720 / 706;
-  overflow: hidden;
-  border-radius: 20px;
-  border: 1px solid rgba(176, 150, 44, 0.12);
-  background: #dfeaf6;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
-}
+    .lyric-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 720 / 706;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      background: #dfeaf6;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    }
 
-.lyric-bg-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  display: block;
-  z-index: 0;
-  pointer-events: none;
-  background: transparent;
-}
+    .lyric-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent;
+    }
 
     .lyric-stage::before {
       content: "";
@@ -654,7 +658,7 @@
       inset: 0;
       background:
         linear-gradient(180deg, rgba(34, 49, 74, 0.20), rgba(34, 49, 74, 0.28)),
-        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 36%, rgba(10,17,30,0.10) 100%),
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 36%, rgba(10,17,30,0.10) 100%);
       pointer-events: none;
       z-index: 1;
     }
@@ -729,7 +733,7 @@
       display: block;
       width: 100%;
       border-radius: 20px;
-      overflow: hidden;
+      overflow: visible;
       border: 1px solid rgba(176, 150, 44, 0.14);
       background: #fff;
       cursor: default;
@@ -747,10 +751,11 @@
       z-index: 1;
       overflow: hidden;
       cursor: zoom-in;
+      border-radius: 20px;
     }
 
     .anniversary-image-layer .media-frame {
-      min-height: var(--media-frame-min-height);
+      min-height: clamp(220px, 42vw, var(--media-frame-min-height));
     }
 
     .anniversary-image-layer img {
@@ -768,8 +773,9 @@
     .anniversary-hotspots {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
+      border-radius: 20px;
     }
 
     .anniversary-tip {
@@ -1181,6 +1187,152 @@
       transform: translateY(0) scale(1);
     }
 
+    /* ---------- 3D hover / tilt cards ---------- */
+
+    .tilt-card {
+      position: relative;
+      isolation: isolate;
+      transform-style: preserve-3d;
+      perspective: var(--tilt-perspective);
+      border-radius: 20px;
+    }
+
+    .tilt-stage {
+      position: relative;
+      border-radius: inherit;
+      transform-style: preserve-3d;
+      transition:
+        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 260ms ease,
+        filter 260ms ease;
+      will-change: transform;
+    }
+
+    .tilt-card::after {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -20px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(27, 21, 5, 0.26) 0%, rgba(27, 21, 5, 0) 72%);
+      filter: blur(16px);
+      opacity: 0;
+      transform: translateY(0) scale(0.94);
+      transition: opacity 260ms ease, transform 260ms ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .tilt-card.is-tilting::after,
+    .tilt-card:hover::after {
+      opacity: 0.46;
+      transform: translateY(6px) scale(1);
+    }
+
+    .tilt-card .media-frame,
+    .tilt-card .anniversary-hotspots,
+    .tilt-card .anniversary-image-layer,
+    .tilt-card img,
+    .tilt-card .tilt-glare {
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+
+    .tilt-card .media-frame,
+    .tilt-card .anniversary-image-layer {
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .tilt-card img {
+      transform: translateZ(24px) scale(1.01);
+      transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: center center;
+    }
+
+    .tilt-card.is-tilting img {
+      transform: translateZ(34px) scale(1.04);
+    }
+
+    .tilt-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+      background:
+        radial-gradient(
+          circle at var(--glare-x, 50%) var(--glare-y, 50%),
+          rgba(255, 255, 255, 0.54) 0%,
+          rgba(255, 255, 255, 0.2) 16%,
+          rgba(255, 255, 255, 0) 44%
+        );
+      transition: opacity 220ms ease;
+      mix-blend-mode: screen;
+    }
+
+    .tilt-card.is-tilting .tilt-glare {
+      opacity: 0.95;
+    }
+
+    .tilt-card:focus-within .tilt-stage {
+      transform: rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1);
+      box-shadow: 0 18px 34px rgba(92, 77, 19, 0.14);
+    }
+
+    .tilt-card.is-tilting .tilt-stage {
+      box-shadow: 0 18px 34px rgba(92, 77, 19, 0.16);
+      filter: saturate(1.02);
+    }
+
+    .tilt-card[data-tilt-depth="soft"] .tilt-stage {
+      transition-duration: 220ms;
+    }
+
+    .tilt-card[data-tilt-depth="soft"] img {
+      transform: translateZ(18px) scale(1.01);
+    }
+
+    .tilt-card[data-tilt-depth="soft"].is-tilting img {
+      transform: translateZ(24px) scale(1.03);
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .tilt-card::after,
+      .tilt-glare {
+        display: none;
+      }
+
+      .tilt-card .tilt-stage,
+      .tilt-card.is-tilting .tilt-stage {
+        transform: none !important;
+        box-shadow: none;
+        filter: none;
+      }
+
+      .tilt-card img,
+      .tilt-card.is-tilting img {
+        transform: none !important;
+      }
+
+      .tilt-card:active .tilt-stage {
+        transform: translateY(-3px) scale(1.01) !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tilt-stage,
+      .tilt-card img,
+      .tilt-glare,
+      .tilt-card::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
     @media (max-width: 900px) {
       .nav-logo { height: 68px; }
       .section { max-width: 760px; }
@@ -1225,12 +1377,11 @@
         font-size: 2rem;
       }
 
-@media (max-width: 640px) {
-  .lyric-video-shell {
-    max-width: 92%;
-    margin-top: 24px;
-  }
-}
+      .lyric-video-shell {
+        max-width: 92%;
+        margin-top: 24px;
+      }
+
       .lyric-line {
         width: calc(100% - 24px);
         max-width: 94%;
@@ -1252,14 +1403,6 @@
       .photo-flash-link.attention::after {
         animation-duration: 1.55s;
       }
-    }
-
-    .actions {
-      margin-top: 14px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
     }
   </style>
 </head>
@@ -1320,7 +1463,6 @@
           <iframe
             src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
             title="Associate Appreciation Kits Info"
-            frameborder="0"
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen>
           </iframe>
@@ -1367,27 +1509,27 @@
           </audio>
         </div>
 
-  <div class="lyric-video-shell">
-  <div class="lyric-stage" id="lyric-stage">
-    <video
-      class="lyric-bg-video"
-      id="lyric-bg-video"
-      muted
-      playsinline
-      loop
-      preload="metadata"
-      poster="Images/Wilson-preview.png"
-      aria-hidden="true"
-    >
-      <source src="Images/Wilson.mp4" type="video/mp4" />
-      <source src="Images/Wilson.webm" type="video/webm" />
-    </video>
+        <div class="lyric-video-shell">
+          <div class="lyric-stage" id="lyric-stage">
+            <video
+              class="lyric-bg-video"
+              id="lyric-bg-video"
+              muted
+              playsinline
+              loop
+              preload="metadata"
+              poster="Images/Wilson-preview.png"
+              aria-hidden="true"
+            >
+              <source src="Images/Wilson.mp4" type="video/mp4" />
+              <source src="Images/Wilson.webm" type="video/webm" />
+            </video>
 
-    <div class="lyric-line-host" id="lyric-line-host"></div>
-  </div>
-</div>
+            <div class="lyric-line-host" id="lyric-line-host"></div>
+          </div>
+        </div>
 
-<div class="lyric-scrubber-wrap">
+        <div class="lyric-scrubber-wrap">
           <input
             type="range"
             id="lyric-scrubber"
@@ -1410,9 +1552,12 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <div class="media-frame">
-            <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -1435,28 +1580,32 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="anniversary-interactive">
-          <div class="anniversary-image-layer lightbox-trigger">
-            <div class="media-frame">
-              <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+        <div class="anniversary-interactive tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="anniversary-image-layer lightbox-trigger">
+              <div class="media-frame">
+                <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+              </div>
             </div>
-          </div>
 
-          <div class="anniversary-hotspots" aria-hidden="false">
-            <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
-            <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
-            <button class="balloon-hotspot balloon-3" type="button" data-years="3" data-count="2293" aria-label="See 3 year milestone count"></button>
-            <button class="balloon-hotspot balloon-4" type="button" data-years="4" data-count="1793" aria-label="See 4 year milestone count"></button>
-            <button class="balloon-hotspot balloon-5" type="button" data-years="5" data-count="1345" aria-label="See 5 year milestone count"></button>
-            <button class="balloon-hotspot balloon-10" type="button" data-years="10" data-count="651" aria-label="See 10 year milestone count"></button>
-            <button class="balloon-hotspot balloon-15" type="button" data-years="15" data-count="290" aria-label="See 15 year milestone count"></button>
-            <button class="balloon-hotspot balloon-20" type="button" data-years="20" data-count="141" aria-label="See 20 year milestone count"></button>
-            <button class="balloon-hotspot balloon-25" type="button" data-years="25" data-count="58" aria-label="See 25 year milestone count"></button>
-            <button class="balloon-hotspot balloon-30" type="button" data-years="30" data-count="20" aria-label="See 30 year milestone count"></button>
-            <button class="balloon-hotspot balloon-35" type="button" data-years="35" data-count="5" aria-label="See 35 year milestone count"></button>
-            <button class="balloon-hotspot balloon-40" type="button" data-years="40" data-count="4" aria-label="See 40 year milestone count"></button>
-            <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
-            <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
+            <div class="anniversary-hotspots" aria-hidden="false">
+              <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
+              <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
+              <button class="balloon-hotspot balloon-3" type="button" data-years="3" data-count="2293" aria-label="See 3 year milestone count"></button>
+              <button class="balloon-hotspot balloon-4" type="button" data-years="4" data-count="1793" aria-label="See 4 year milestone count"></button>
+              <button class="balloon-hotspot balloon-5" type="button" data-years="5" data-count="1345" aria-label="See 5 year milestone count"></button>
+              <button class="balloon-hotspot balloon-10" type="button" data-years="10" data-count="651" aria-label="See 10 year milestone count"></button>
+              <button class="balloon-hotspot balloon-15" type="button" data-years="15" data-count="290" aria-label="See 15 year milestone count"></button>
+              <button class="balloon-hotspot balloon-20" type="button" data-years="20" data-count="141" aria-label="See 20 year milestone count"></button>
+              <button class="balloon-hotspot balloon-25" type="button" data-years="25" data-count="58" aria-label="See 25 year milestone count"></button>
+              <button class="balloon-hotspot balloon-30" type="button" data-years="30" data-count="20" aria-label="See 30 year milestone count"></button>
+              <button class="balloon-hotspot balloon-35" type="button" data-years="35" data-count="5" aria-label="See 35 year milestone count"></button>
+              <button class="balloon-hotspot balloon-40" type="button" data-years="40" data-count="4" aria-label="See 40 year milestone count"></button>
+              <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
+              <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
+            </div>
+
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -1477,9 +1626,12 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <div class="media-frame">
-            <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card data-tilt-depth="soft">
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -1492,7 +1644,6 @@
             <iframe
               src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
               title="Museum Tour Video"
-              frameborder="0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowfullscreen>
             </iframe>
@@ -1523,9 +1674,12 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger photo-flash-link attention" id="photo-flash-link">
-          <div class="media-frame">
-            <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+        <div class="section-image-link lightbox-trigger photo-flash-link attention tilt-card" id="photo-flash-link" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -1553,9 +1707,12 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <div class="media-frame">
-            <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -1572,15 +1729,11 @@
             </a>
             <a class="section-link secondary pressable" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
           </div>
-		   <div class="actions">
-         
-          <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫Email Customer Service</a>
-          <a class="section-link secondary pressable" href="tel:+18005234448">📞 Call Customer Service</a>
-        </div>
 
-      
-      </div>
-    </div>
+          <div class="actions">
+            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫 Email Customer Service</a>
+            <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
+          </div>
         </div>
       </div>
     </section>
@@ -1593,14 +1746,17 @@
       </div>
 
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <div class="media-frame">
-            <img src="Images/touchtunes.png" alt="TouchTunes" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/touchtunes.png" alt="TouchTunes" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
 
         <div class="section-copy">
-          <p>Enjoy 15 free jukebox credits a week on the House.</p>
+          <p>Enjoy 5 free jukebox credits a week on the House.</p>
 
           <div class="links">
             <a
@@ -1666,7 +1822,9 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+      const pointerFineMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+      const mobileMedia = window.matchMedia("(max-width: 640px)");
+
       const progressBar = document.getElementById("scroll-progress");
       const sections = Array.from(document.querySelectorAll(".section"));
       const lightbox = document.getElementById("lightbox");
@@ -1691,43 +1849,44 @@
       const lyricScrubber = document.getElementById("lyric-scrubber");
       const lyricStage = document.getElementById("lyric-stage");
       const lyricBgVideo = document.getElementById("lyric-bg-video");
+      const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
 
       lyricBgVideo?.addEventListener("loadeddata", () => {
-  try {
-    lyricBgVideo.currentTime = 0.01;
-  } catch (e) {}
-});
+        try {
+          lyricBgVideo.currentTime = 0.01;
+        } catch (e) {}
+      });
 
       const lyricLines = [
-        { start: 10.7,  end: 13.3,  top: "16%", text: "Globe light glowing\non the corner booth" },
-        { start: 13.4,  end: 16.1,  top: "34%", text: "Name tag greeted by\nthe coffee steam" },
-        { start: 16.2,  end: 18.0,  top: "22%", text: "You remember how\nI like my food" },
-        { start: 18.1,  end: 21.1,  top: "42%", text: "Starting early mornings off\nwith what I need" },
-        { start: 21.2,  end: 24.0,  top: "26%", text: "But I see more than\nwhat’s in sight" },
-        { start: 24.1,  end: 26.9,  top: "46%", text: "Tools moving behind\nthe scenes" },
-        { start: 27.0,  end: 30.0,  top: "66%", text: "Keeping everything\nworking right" },
+        { start: 10.7, end: 13.3, top: "16%", text: "Globe light glowing\non the corner booth" },
+        { start: 13.4, end: 16.1, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
+        { start: 16.2, end: 18.0, top: "22%", text: "You remember how\nI like my food" },
+        { start: 18.1, end: 21.1, top: "42%", text: "Starting early mornings off\nwith what I need" },
+        { start: 21.2, end: 24.0, top: "26%", text: "But I see more than\nwhat’s in sight" },
+        { start: 24.1, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
+        { start: 27.0, end: 30.0, top: "66%", text: "Keeping everything\nworking right" },
 
-        { start: 31.1,  end: 32.0,  top: "18%", text: "So here’s to you" },
-        { start: 32.1,  end: 33.5,  top: "34%", text: "Serving up\negg-cellence" },
-        { start: 33.6,  end: 36.1,  top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
-        { start: 36.2,  end: 38.9,  top: "26%", text: "From the front to the back,\nevery role you play" },
-        { start: 39.0,  end: 41.2,  top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 41.3,  end: 45.1,  top: "68%", text: "I’m grateful for the care you bring" },
-        { start: 45.2,  end: 48.0,  top: "24%", text: "Thank you for everything" },
+        { start: 31.1, end: 32.0, top: "18%", text: "So here’s to you" },
+        { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 33.6, end: 36.1, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
 
-        { start: 57.3,  end: 58.4,  top: "18%", text: "Hash browns crisp" },
-        { start: 58.5,  end: 60.0,  top: "34%", text: "Toast on the side" },
-        { start: 60.1,  end: 63.5,  top: "52%", text: "Callbacks hit\nright on time" },
-        { start: 63.6,  end: 65.8,  top: "26%", text: "You’ve got my order in\nbefore the drinks" },
-        { start: 65.9,  end: 67.9,  top: "50%", text: "You hold the night while\nthe world sleeps tight" },
+        { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
+        { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
+        { start: 60.1, end: 63.5, top: "52%", text: "Callbacks hit\nright on time" },
+        { start: 63.6, end: 65.8, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
+        { start: 65.9, end: 67.9, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
 
-        { start: 68.0,  end: 68.8,  top: "18%", text: "So here’s to you" },
-        { start: 68.9,  end: 70.9,  top: "34%", text: "Serving up\negg-cellence" },
-        { start: 71.0,  end: 72.9,  top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
-        { start: 73.0,  end: 76.0,  top: "26%", text: "From the front to the back,\nevery role you play" },
-        { start: 76.1,  end: 78.9,  top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 79.0,  end: 82.0,  top: "68%", text: "I’m grateful for the care you bring" },
-        { start: 83.1,  end: 85.8, top: "24%", text: "Thank you for everything" },
+        { start: 68.0, end: 68.8, top: "18%", text: "So here’s to you" },
+        { start: 68.9, end: 70.9, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 71.0, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 76.1, end: 78.9, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 79.0, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 83.1, end: 85.8, top: "24%", text: "Thank you for everything" },
 
         { start: 94.8, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
         { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
@@ -1742,7 +1901,6 @@
         { start: 127.0, end: 130.0, top: "72%", text: "Serving up egg-cellence" },
         { start: 137.0, end: 149.0, top: "42%", text: "Thank you" }
       ];
-
 
       const lyricNodes = lyricLineHost
         ? lyricLines.map((line) => {
@@ -1858,7 +2016,7 @@
       };
 
       window.addEventListener("load", () => {
-        setTimeout(fireConfetti, isMobile ? 900 : 650);
+        setTimeout(fireConfetti, mobileMedia.matches ? 900 : 650);
       });
 
       window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
@@ -2108,7 +2266,7 @@
           if (anniversaryInView) {
             const nudgeSpot = balloonHotspots[0];
             nudgeSpot?.classList.add("hinting");
-            if (isMobile) showAnniversaryTip();
+            if (mobileMedia.matches) showAnniversaryTip();
             setTimeout(() => nudgeSpot?.classList.remove("hinting"), 2200);
           }
 
@@ -2168,7 +2326,7 @@
             if (document.visibilityState === "visible") {
               photoFlashLink.classList.add("attention");
             }
-          }, isMobile ? 1400 : 900);
+          }, mobileMedia.matches ? 1400 : 900);
         };
 
         photoFlashLink.addEventListener("click", pausePhotoAttention);
@@ -2182,6 +2340,94 @@
           }
         });
       }
+
+      /* ---------- 3D hover / tilt logic ---------- */
+
+      const resetTiltCard = (card, instant = false) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+
+        if (instant) {
+          stage.style.transition = "none";
+        }
+
+        stage.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+        card.style.setProperty("--glare-x", "50%");
+        card.style.setProperty("--glare-y", "50%");
+        card.classList.remove("is-tilting");
+
+        if (instant) {
+          requestAnimationFrame(() => {
+            stage.style.transition = "";
+          });
+        }
+      };
+
+      const updateTiltCard = (card, clientX, clientY) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+
+        const rect = card.getBoundingClientRect();
+        const px = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+        const py = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
+
+        const maxRotate = window.innerWidth < 768 ? 7 : 12;
+        const rotateY = (px - 0.5) * (maxRotate * 2);
+        const rotateX = (0.5 - py) * (maxRotate * 1.65);
+
+        stage.style.transform =
+          `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
+
+        card.style.setProperty("--glare-x", `${(px * 100).toFixed(2)}%`);
+        card.style.setProperty("--glare-y", `${(py * 100).toFixed(2)}%`);
+        card.classList.add("is-tilting");
+      };
+
+      const enableTiltCards = () => {
+        tiltCards.forEach((card) => {
+          if (card.dataset.tiltBound === "true") return;
+          card.dataset.tiltBound = "true";
+
+          resetTiltCard(card, true);
+
+          card.addEventListener("pointerenter", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointermove", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointerleave", () => {
+            resetTiltCard(card);
+          });
+
+          card.addEventListener("blur", () => {
+            resetTiltCard(card);
+          }, true);
+
+          card.addEventListener("focusin", () => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            card.classList.add("is-tilting");
+          });
+
+          card.addEventListener("touchstart", () => {
+            resetTiltCard(card, true);
+          }, { passive: true });
+        });
+      };
+
+      enableTiltCards();
+
+      window.addEventListener("resize", () => {
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+      });
+
+      pointerFineMedia.addEventListener?.("change", () => {
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+      });
 
       syncAudioState();
       updateSongButton();
