@@ -3559,36 +3559,41 @@
         }
       };
 
-      const createStateButtons = () => {
-        if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
+     const createStateButtons = () => {
+  if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
 
-        Object.values(roadTripStates).forEach((state) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = `state-node ${regionClassName(state.region)}`;
-          button.dataset.state = state.code;
-          button.style.left = `${state.x}%`;
-          button.style.top = `${state.y}%`;
-          button.innerHTML = `
-            <span class="state-node-label">${state.code}</span>
-            <span class="state-node-points">${state.points.toLocaleString()}</span>
-            ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
-          `;
-          button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
-          const moveToState = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  attemptRoadTripMove(state.code);
+  Object.values(roadTripStates).forEach((state) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `state-node ${regionClassName(state.region)}`;
+    button.dataset.state = state.code;
+    button.style.left = `${state.x}%`;
+    button.style.top = `${state.y}%`;
+
+    button.innerHTML = `
+      <span class="state-node-label">${state.code}</span>
+      <span class="state-node-points">${state.points.toLocaleString()}</span>
+      ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
+    `;
+
+    button.setAttribute(
+      "aria-label",
+      `${state.name}, ${state.points.toLocaleString()} points`
+    );
+
+    const moveToState = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      attemptRoadTripMove(state.code);
+    };
+
+    button.addEventListener("click", moveToState);
+    button.addEventListener("touchend", moveToState, { passive: false });
+
+    roadtripMap.appendChild(button);
+  });
 };
 
-button.addEventListener("click", moveToState);
-button.addEventListener("touchend", moveToState, { passive: false });
-
-roadtripCar.style.left = `${current.x + 4}%`;
-roadtripCar.style.top = `${current.y + 2}%`;
-
-        });
-      };
 
       const getAvailableMoves = () => {
         const currentState = roadTripStates[roadTrip.current];
@@ -3674,18 +3679,21 @@ roadtripCar.style.top = `${current.y + 2}%`;
         });
       };
 
-      const updateRoadTripHUD = () => {
-        roadtripScore.textContent = roadTrip.score.toLocaleString();
-        roadtripFuel.textContent = roadTrip.fuel;
-        roadtripVisited.textContent = roadTrip.visited.size;
-        const current = roadTripStates[roadTrip.current];
-        roadtripCar.style.left = `${current.x}%`;
-        roadtripCar.style.top = `${current.y}%`;
-        renderRoadTripRoute();
-        renderRoadTripChoices();
-        updateRoadTripNodes();
-        scrollRoadTripMapToCurrent();
-      };
+     const updateRoadTripHUD = () => {
+  roadtripScore.textContent = roadTrip.score.toLocaleString();
+  roadtripFuel.textContent = roadTrip.fuel;
+  roadtripVisited.textContent = roadTrip.visited.size;
+
+  const current = roadTripStates[roadTrip.current];
+  roadtripCar.style.left = `${current.x + 4}%`;
+  roadtripCar.style.top = `${current.y + 2}%`;
+
+  renderRoadTripRoute();
+  renderRoadTripChoices();
+  updateRoadTripNodes();
+  scrollRoadTripMapToCurrent();
+};
+
 
       const showRoadTripCelebration = (message) => {
         if (!roadtripCelebration) return;
