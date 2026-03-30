@@ -2511,109 +2511,101 @@
     opacity: 0;
   }
 }
-/* --- Photo flash: visible on desktop, no dark swipe --- */
+/* --- Photo contest flash at top camera/medallion --- */
 .photo-flash-link {
   position: relative;
-  isolation: isolate;
   overflow: hidden;
   border-radius: 20px;
-}
-
-.photo-flash-link .tilt-stage {
-  position: relative;
-  z-index: 1;
 }
 
 .photo-flash-link::before {
   content: "";
   position: absolute;
-  inset: -4%;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 5;
-  opacity: 0;
-  transform: scale(0.82);
+  left: 50%;
+  top: 17%;
+  width: 24%;
+  height: 20%;
+  transform: translate(-50%, -50%) scale(0.72);
+  border-radius: 50%;
   background: radial-gradient(
-    circle at 50% 50%,
-    rgba(255,255,255,0.78) 0%,
-    rgba(255,255,255,0.32) 26%,
-    rgba(255,255,255,0.08) 42%,
-    rgba(255,255,255,0) 62%
+    circle,
+    rgba(255,255,255,0.98) 0%,
+    rgba(255,255,255,0.62) 24%,
+    rgba(255,255,255,0.18) 44%,
+    rgba(255,255,255,0) 72%
   );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
 }
 
 .photo-flash-link::after {
   content: "";
   position: absolute;
-  top: -8%;
-  bottom: -8%;
-  left: -30%;
-  width: 42%;
-  border-radius: inherit;
-  pointer-events: none;
-  z-index: 6;
-  opacity: 0;
+  left: 28%;
+  top: 10%;
+  width: 44%;
+  height: 16%;
+  border-radius: 999px;
   background: linear-gradient(
-    105deg,
+    90deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.08) 18%,
-    rgba(255,255,255,0.92) 50%,
-    rgba(255,255,255,0.08) 82%,
+    rgba(255,255,255,0.9) 50%,
     rgba(255,255,255,0) 100%
   );
-  transform: translateX(0);
+  opacity: 0;
+  transform: translateX(-120%);
+  pointer-events: none;
+  z-index: 7;
+  filter: blur(2px);
 }
 
 .photo-flash-link:hover::before,
 .photo-flash-link:focus-visible::before,
 .photo-flash-link.attention::before {
-  animation: photoFlashPulseSoft 1.15s ease-out;
+  animation: photoCameraFlashPulse 1.05s ease-out;
 }
 
 .photo-flash-link:hover::after,
 .photo-flash-link:focus-visible::after,
 .photo-flash-link.attention::after {
-  animation: photoFlashSweepSoft 1.15s ease-out;
+  animation: photoCameraFlashSweep 1.05s ease-out;
 }
 
-.tilt-glare {
-  z-index: 2 !important;
-}
-
-@keyframes photoFlashPulseSoft {
+@keyframes photoCameraFlashPulse {
   0% {
     opacity: 0;
-    transform: scale(0.82);
+    transform: translate(-50%, -50%) scale(0.72);
   }
   18% {
-    opacity: 0.95;
-    transform: scale(1.01);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
-  48% {
+  55% {
     opacity: 0.18;
-    transform: scale(1.05);
+    transform: translate(-50%, -50%) scale(1.08);
   }
   100% {
     opacity: 0;
-    transform: scale(1.08);
+    transform: translate(-50%, -50%) scale(1.12);
   }
 }
 
-@keyframes photoFlashSweepSoft {
+@keyframes photoCameraFlashSweep {
   0% {
     opacity: 0;
-    transform: translateX(-170%);
+    transform: translateX(-120%);
   }
-  18% {
+  20% {
     opacity: 1;
   }
-  72% {
+  75% {
     opacity: 1;
-    transform: translateX(300%);
+    transform: translateX(120%);
   }
   100% {
     opacity: 0;
-    transform: translateX(300%);
+    transform: translateX(120%);
   }
 }
 
