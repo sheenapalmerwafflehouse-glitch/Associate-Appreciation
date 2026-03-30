@@ -1585,7 +1585,7 @@
       width: 72px;
       height: auto;
       display: block;
-      z-index: 4;
+      z-index: 1;
       pointer-events: none;
       background: transparent;
       border: none;
@@ -2001,17 +2001,21 @@
       filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
-    .roadtrip-map-stage .state-node {
-      width: 86px;
-      min-height: 86px;
-      padding: 10px 8px 11px;
-      border-radius: 22px;
-      border: 2px solid rgba(255,255,255,0.35);
-      box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
-      backdrop-filter: blur(2px);
-      line-height: 1;
-      z-index: 2;
-    }
+   .roadtrip-map-stage .state-node {
+  width: 86px;
+  min-height: 86px;
+  padding: 10px 8px 11px;
+  border-radius: 22px;
+  border: 2px solid rgba(255,255,255,0.35);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
+  backdrop-filter: blur(2px);
+  line-height: 1;
+  z-index: 5;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
 
     .roadtrip-map-stage .state-node:hover,
     .roadtrip-map-stage .state-node:focus-visible {
@@ -2019,10 +2023,10 @@
       box-shadow: 0 20px 34px rgba(17, 17, 17, 0.22);
     }
 
-    .roadtrip-map-stage .state-node.current-stop {
-      box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
-      z-index: 3;
-    }
+   .roadtrip-map-stage .state-node.current-stop {
+  box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
+  z-index: 6;
+}
 
     .roadtrip-map-stage .state-node.visited {
       opacity: 0.62;
@@ -2292,12 +2296,15 @@
         display: none;
       }
 
-      .roadtrip-map-scroll {
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-inline: -2px;
-        padding-bottom: 4px;
-      }
+   .roadtrip-map-scroll {
+  overflow: auto;
+  border-radius: 22px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(122, 97, 8, 0.28) rgba(255,255,255,0.55);
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
 
       .roadtrip-map-stage {
         width: 760px;
@@ -3568,8 +3575,18 @@
             ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
           `;
           button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
-          button.addEventListener("click", () => attemptRoadTripMove(state.code));
-          roadtripMap.appendChild(button);
+          const moveToState = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  attemptRoadTripMove(state.code);
+};
+
+button.addEventListener("click", moveToState);
+button.addEventListener("touchend", moveToState, { passive: false });
+
+roadtripCar.style.left = `${current.x + 4}%`;
+roadtripCar.style.top = `${current.y + 2}%`;
+
         });
       };
 
