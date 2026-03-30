@@ -2057,6 +2057,32 @@
       opacity: 0.95;
     }
 
+    .state-node-fuel,
+    .next-fuel-pill,
+    .roadtrip-bonus-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #6c5a00;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 5px 10px rgba(92, 77, 19, 0.08);
+    }
+
+    .state-node-fuel {
+      margin-top: 2px;
+      font-size: 0.62rem;
+      padding: 3px 7px;
+      color: #624f00;
+    }
+
     .roadtrip-map-stage .state-car {
       width: 66px;
       height: 40px;
@@ -2135,6 +2161,24 @@
       letter-spacing: 0.08em;
       opacity: 0.75;
       font-weight: 900;
+    }
+
+    .roadtrip-next-meta {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .roadtrip-bonus-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .roadtrip-bonus-pill {
+      background: linear-gradient(180deg, #fff8d5, #ffe66a);
+      color: #4b3f00;
     }
 
     .roadtrip-next-btn.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); }
@@ -2712,7 +2756,7 @@
     <div class="footer-decor-inner">
       <p class="footer-thanks">Thank you for everything you do.</p>
       <p class="footer-note">
-       You turn simple meals into memorable experiences.
+        Your dedication, teamwork, and heart are what make this "America's Place".
       </p>
     </div>
   </section>
@@ -2751,7 +2795,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-            The points are based on the actual number of Associates Waffle House is celebrating in each state!
+            Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough celebration points to reach 15,000 before the tank runs dry.
           </p>
         </div>
 
@@ -2764,7 +2808,7 @@
               </div>
               <div class="hud-card">
                 <div class="hud-label">Fuel</div>
-                <div class="hud-value" id="roadtrip-fuel">12</div>
+                <div class="hud-value" id="roadtrip-fuel">18</div>
               </div>
               <div class="hud-card">
                 <div class="hud-label">Visited</div>
@@ -2774,7 +2818,7 @@
 
             <div class="roadtrip-status-strip">
               <div class="game-banner" id="roadtrip-status">
-                <strong>Georgia is your starting stop.</strong> Choose one of the glowing connected states to keep the celebration road trip going.
+                <strong>Georgia is your starting stop.</strong> Hit celebration refuel stops to add fuel and keep the road trip going longer.
               </div>
             </div>
 
@@ -2821,8 +2865,13 @@
             </div>
 
             <div class="game-panel-card">
+              <h3>Bonus Refuel Stops</h3>
+              <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
+            </div>
+
+            <div class="game-panel-card">
               <h3>Trip Goal</h3>
-              <p>Each stop adds that state’s anniversary points. You win when your total reaches <strong>10,000</strong> before fuel hits zero.</p>
+              <p>Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>15,000</strong> before fuel hits zero.</p>
             </div>
 
             <div class="game-actions">
@@ -2885,38 +2934,42 @@
       const roadtripNextStops = document.getElementById("roadtrip-next-stops");
       const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
       const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
+      const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
+
+      const ROADTRIP_START_FUEL = 18;
+      const ROADTRIP_GOAL = 15000;
 
       const roadTripStates = {
         CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
         AZ: { code: "AZ", name: "Arizona", points: 140, region: "west", x: 9, y: 56, neighbors: ["CO"] },
-        TX: { code: "TX", name: "Texas", points: 1098, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
+        TX: { code: "TX", name: "Texas", points: 1098, fuelBonus: 2, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
         OK: { code: "OK", name: "Oklahoma", points: 149, region: "south", x: 21, y: 60, neighbors: ["TX", "AR", "MO", "KS"] },
         KS: { code: "KS", name: "Kansas", points: 43, region: "midwest", x: 23, y: 42, neighbors: ["OK", "MO", "CO"] },
-        LA: { code: "LA", name: "Louisiana", points: 870, region: "south", x: 31, y: 79, neighbors: ["MS", "TX", "AR"] },
+        LA: { code: "LA", name: "Louisiana", points: 870, fuelBonus: 2, region: "south", x: 31, y: 79, neighbors: ["MS", "TX", "AR"] },
         AR: { code: "AR", name: "Arkansas", points: 442, region: "south", x: 33, y: 58, neighbors: ["TX", "LA", "MS", "TN", "MO", "OK"] },
         MO: { code: "MO", name: "Missouri", points: 315, region: "midwest", x: 35, y: 42, neighbors: ["AR", "OK", "KS", "IL", "KY", "TN"] },
         MS: { code: "MS", name: "Mississippi", points: 750, region: "south", x: 45, y: 72, neighbors: ["AL", "LA", "TN", "AR"] },
         IL: { code: "IL", name: "Illinois", points: 14, region: "midwest", x: 43, y: 24, neighbors: ["MO", "IN"] },
         IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 52, y: 22, neighbors: ["IL", "OH", "KY"] },
-        TN: { code: "TN", name: "Tennessee", points: 794, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
+        TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
         KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
         OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 62, y: 20, neighbors: ["IN", "KY", "PA", "WV"] },
-        AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
+        AL: { code: "AL", name: "Alabama", points: 1364, fuelBonus: 2, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
         GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
         WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 70, y: 27, neighbors: ["OH", "VA", "PA", "MD"] },
-        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 77, y: 50, neighbors: ["SC", "GA", "VA", "TN"] },
+        NC: { code: "NC", name: "North Carolina", points: 1496, fuelBonus: 2, region: "south", x: 77, y: 50, neighbors: ["SC", "GA", "VA", "TN"] },
         VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 77, y: 35, neighbors: ["NC", "KY", "WV", "MD"] },
         PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 80, y: 15, neighbors: ["OH", "WV", "MD", "DE"] },
-        SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 79, y: 63, neighbors: ["GA", "NC", "FL"] },
+        SC: { code: "SC", name: "South Carolina", points: 1460, fuelBonus: 2, region: "south", x: 79, y: 63, neighbors: ["GA", "NC", "FL"] },
         MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 85, y: 27, neighbors: ["VA", "WV", "DE", "PA"] },
         DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 90, y: 23, neighbors: ["MD", "PA"] },
-        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 82, y: 84, neighbors: ["GA", "AL", "SC"] }
+        FL: { code: "FL", name: "Florida", points: 1934, fuelBonus: 2, region: "south", x: 82, y: 84, neighbors: ["GA", "AL", "SC"] }
       };
 
       let roadTrip = {
         current: "GA",
         score: roadTripStates.GA.points,
-        fuel: 12,
+        fuel: ROADTRIP_START_FUEL,
         visited: new Set(["GA"]),
         route: ["GA"],
         status: "",
@@ -3498,6 +3551,14 @@
         `).join("");
       };
 
+      const renderBonusStops = () => {
+        if (!roadtripBonusList) return;
+        const bonusStates = Object.values(roadTripStates).filter((state) => state.fuelBonus);
+        roadtripBonusList.innerHTML = bonusStates.map((state) => `
+          <span class="roadtrip-bonus-pill">${state.code} +${state.fuelBonus} fuel</span>
+        `).join("");
+      };
+
       const regionClassName = (region) => {
         switch (region) {
           case "west": return "region-west";
@@ -3521,6 +3582,7 @@
           button.innerHTML = `
             <span class="state-node-label">${state.code}</span>
             <span class="state-node-points">${state.points.toLocaleString()}</span>
+            ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
           `;
           button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
           button.addEventListener("click", () => attemptRoadTripMove(state.code));
@@ -3570,6 +3632,9 @@
             </div>
             <div class="next-points">${state.name}</div>
             <div class="next-region">${state.region.replace("-", " ")}</div>
+            <div class="roadtrip-next-meta">
+              ${state.fuelBonus ? `<span class="next-fuel-pill">+${state.fuelBonus} fuel</span>` : ""}
+            </div>
           </button>
         `).join("");
 
@@ -3643,7 +3708,7 @@
 
         if (won) {
           showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
-          setRoadTripStatus(`<strong>You won!</strong> You reached the 10,000-point goal with ${roadTrip.fuel} fuel left.`);
+          setRoadTripStatus(`<strong>You won!</strong> You reached the ${ROADTRIP_GOAL.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
           if (!prefersReducedMotion && typeof confetti === "function") {
             confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           }
@@ -3668,8 +3733,14 @@
         roadTrip.visited.add(code);
         roadTrip.route.push(code);
 
+        let fuelMessage = "";
+        if (nextState.fuelBonus) {
+          roadTrip.fuel += nextState.fuelBonus;
+          fuelMessage = ` and refueled +${nextState.fuelBonus}`;
+        }
+
         clearRoadTripCelebration();
-        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points. Pick another connected stop.`);
+        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
         updateRoadTripHUD();
 
         if (!prefersReducedMotion && typeof confetti === "function") {
@@ -3681,7 +3752,7 @@
           });
         }
 
-        if (roadTrip.score >= 10000) {
+        if (roadTrip.score >= ROADTRIP_GOAL) {
           finishRoadTrip(true);
           return;
         }
@@ -3700,7 +3771,7 @@
         roadTrip = {
           current: "GA",
           score: roadTripStates.GA.points,
-          fuel: 12,
+          fuel: ROADTRIP_START_FUEL,
           visited: new Set(["GA"]),
           route: ["GA"],
           status: "",
@@ -3708,7 +3779,7 @@
         };
 
         clearRoadTripCelebration();
-        setRoadTripStatus("<strong>Georgia is your starting stop.</strong> Choose one of the glowing connected states to keep the celebration road trip going.");
+        setRoadTripStatus("<strong>Georgia is your starting stop.</strong> Hit celebration refuel stops to add fuel and keep the road trip going longer.");
         updateRoadTripHUD();
       };
 
@@ -3738,6 +3809,7 @@
       });
 
       renderTopStates();
+      renderBonusStops();
       createStateButtons();
       resetRoadTrip();
       enableTiltCards();
