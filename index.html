@@ -1513,7 +1513,11 @@
     .state-car {
       position: absolute;
       transform: translate(-50%, -50%);
-      z-index: 2;
+      display: block;
+      z-index: 4;
+      pointer-events: none;
+      transition: left 0.45s ease, top 0.45s ease, transform 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
     .state-node {
@@ -1575,39 +1579,24 @@
     .state-node.region-northeast { background: linear-gradient(180deg, #b48aff, #7a3ff2); color: #fff; }
 
     .state-car {
-      width: 54px;
-      height: 32px;
-      background: linear-gradient(180deg, #fff 0%, #f7f2d6 100%);
-      border: 2px solid rgba(17,17,17,0.14);
-      border-radius: 18px 18px 12px 12px;
-      box-shadow: 0 12px 20px rgba(17, 17, 17, 0.18);
-      transition: left 0.45s ease, top 0.45s ease;
-      z-index: 3;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 72px;
+      height: auto;
+      display: block;
+      z-index: 4;
+      pointer-events: none;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      transition: left 0.45s ease, top 0.45s ease, transform 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
     .state-car::before,
     .state-car::after {
-      content: "";
-      position: absolute;
-      bottom: -8px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #222;
-    }
-
-    .state-car::before { left: 8px; }
-    .state-car::after { right: 8px; }
-
-    .state-car-roof {
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      top: -9px;
-      height: 14px;
-      border-radius: 10px 10px 2px 2px;
-      background: linear-gradient(180deg, #f5d547, #d4b000);
-      border: 2px solid rgba(17,17,17,0.14);
+      content: none;
+      display: none;
     }
 
     .game-panel-card {
@@ -2004,7 +1993,11 @@
 
     .roadtrip-map-stage .state-node,
     .roadtrip-map-stage .state-car {
-      transform: translate(-50%, -50%);
+      width: 76px;
+      height: auto;
+      z-index: 4;
+      transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
     .roadtrip-map-stage .state-node {
@@ -2084,33 +2077,24 @@
     }
 
     .roadtrip-map-stage .state-car {
-      width: 66px;
-      height: 40px;
+      width: 76px;
+      height: auto;
       z-index: 4;
       transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
     .roadtrip-map-stage .state-car::before,
     .roadtrip-map-stage .state-car::after {
-      width: 15px;
-      height: 15px;
-      bottom: -9px;
-    }
-
-    .roadtrip-map-stage .state-car-roof {
-      left: 14px;
-      right: 14px;
-      top: -12px;
-      height: 18px;
+      content: none;
+      display: none;
     }
 
     .roadtrip-helper {
       font-size: 0.9rem;
       color: #5a5a5a;
       margin-bottom: 10px;
-    }
-
-    .roadtrip-next-stops {
+    }.roadtrip-next-stops {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
@@ -2728,7 +2712,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Enjoy 15 free jukebox credits a week on the House.</p>
+          <p>Enjoy 5 free jukebox credits a week on the House.</p>
 
           <div class="links">
             <a
@@ -2756,11 +2740,11 @@
     <div class="footer-decor-inner">
       <p class="footer-thanks">Thank you for everything you do.</p>
       <p class="footer-note">
-       
+        Your dedication, teamwork, and heart are what make this "America's Place".
       </p>
     </div>
   </section>
-   You are trusted, needed, and appreciated.
+
   <div class="footer">
     &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
   </div>
@@ -2795,7 +2779,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-          Start in Georgia, follow the road to connected states, and collect enough celebration points to reach 10,000 before the tank runs dry.The points are based on the actual number of Associates Waffle House is celebrating in each state!
+            Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough celebration points to reach 15,000 before the tank runs dry.
           </p>
         </div>
 
@@ -2838,9 +2822,7 @@
                   <path class="route-main" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                   <path class="route-center" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                 </svg>
-                <div class="state-car" id="roadtrip-car" style="left:68%; top:70%;">
-                  <div class="state-car-roof"></div>
-                </div>
+                <img src="WilsonCar.png" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" />
               </div>
             </div>
 
