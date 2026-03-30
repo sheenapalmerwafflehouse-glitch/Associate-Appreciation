@@ -2363,6 +2363,37 @@
         min-height: 500px;
       }
     }
+/* --- Final Wilson car overlay fix --- */
+.roadtrip-map-stage {
+  isolation: isolate;
+}
+
+.roadtrip-map-stage .state-node {
+  z-index: 5;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.roadtrip-map-stage #roadtrip-car {
+  position: absolute;
+  width: 62px;
+  height: auto;
+  z-index: 7;
+  pointer-events: none !important;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
+  opacity: 0.48;
+  transform: translate(-50%, -54%);
+  transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, opacity 0.2s ease;
+  filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.18));
+}
+
+/* optional: makes the car colors sit nicer on top of the yellow card */
+.roadtrip-map-stage #roadtrip-car {
+  mix-blend-mode: multiply;
+}
+
 
   </style>
 </head>
@@ -3685,8 +3716,8 @@
   roadtripVisited.textContent = roadTrip.visited.size;
 
   const current = roadTripStates[roadTrip.current];
-  roadtripCar.style.left = `${current.x + 4}%`;
-  roadtripCar.style.top = `${current.y + 2}%`;
+  roadtripCar.style.left = `${current.x}%`;
+roadtripCar.style.top = `${current.y}%`;
 
   renderRoadTripRoute();
   renderRoadTripChoices();
