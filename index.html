@@ -1521,6 +1521,7 @@
     }
 
     .state-node {
+      pointer-events: auto;
       width: 72px;
       min-height: 72px;
       padding: 8px 6px 10px;
@@ -1584,8 +1585,11 @@
       width: 72px;
       height: auto;
       display: block;
-      z-index: 4;
+      z-index: 1;
       pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
       background: transparent;
       border: none;
       box-shadow: none;
@@ -1995,12 +1999,18 @@
     .roadtrip-map-stage .state-car {
       width: 76px;
       height: auto;
-      z-index: 4;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
       transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
       filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
 
     .roadtrip-map-stage .state-node {
+      pointer-events: auto;
+      z-index: 2;
       width: 86px;
       min-height: 86px;
       padding: 10px 8px 11px;
@@ -2079,7 +2089,11 @@
     .roadtrip-map-stage .state-car {
       width: 76px;
       height: auto;
-      z-index: 4;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
       transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
       filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
     }
@@ -2431,7 +2445,7 @@
       </div>
 
       <div class="song-card" id="audio-card">
-        <p>POV: You are a big part of why this is “America’s Place To Eat.”</p>
+        <p>POV: You are a big part of why this is â€œAmericaâ€™s Place To Eat.â€</p>
 
         <div class="song-layout">
           <button
@@ -2439,11 +2453,11 @@
             id="song-toggle"
             type="button"
             aria-label="Play appreciation song"
-          >🧇</button>
+          >ðŸ§‡</button>
 
           <div class="song-meta">
             <div class="song-label">Tap the waffle to play/pause</div>
-            <div class="song-title">🎵 "Serving Up Egg-cellence"</div>
+            <div class="song-title">ðŸŽµ "Serving Up Egg-cellence"</div>
           </div>
         </div>
 
@@ -2673,7 +2687,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
+          <p>Donâ€™t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
 
           <div class="links">
             <a
@@ -2687,8 +2701,8 @@
           </div>
 
           <div class="actions">
-            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫 Email Customer Service</a>
-            <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
+            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">ðŸ“« Email Customer Service</a>
+            <a class="section-link secondary pressable" href="tel:8005234448">ðŸ“ž Call Customer Service</a>
           </div>
         </div>
       </div>
@@ -2750,7 +2764,7 @@
   </div>
 
   <button class="back-to-top pressable" id="back-to-top" type="button" aria-label="Back to top">
-    <span class="arrow">↑</span>
+    <span class="arrow">â†‘</span>
     <span class="label">Top</span>
   </button>
 
@@ -2822,7 +2836,7 @@
                   <path class="route-main" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                   <path class="route-center" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                 </svg>
-                <img src="Images/WilsonCar.png" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" />
+                <img src="Images/WilsonCar.png" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
               </div>
             </div>
 
@@ -2853,7 +2867,7 @@
 
             <div class="game-panel-card">
               <h3>Trip Goal</h3>
-              <p>Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>15,000</strong> before fuel hits zero.</p>
+              <p>Each stop adds that stateâ€™s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>15,000</strong> before fuel hits zero.</p>
             </div>
 
             <div class="game-actions">
@@ -2866,7 +2880,7 @@
   </div>
 
   <div class="anniversary-tip" id="anniversary-tip" aria-hidden="true">
-    🎈 Tap the balloons to reveal milestone counts
+    ðŸŽˆ Tap the balloons to reveal milestone counts
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -2973,35 +2987,35 @@
         { start: 13.4, end: 16.1, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
         { start: 16.2, end: 18.0, top: "22%", text: "You remember how\nI like my food" },
         { start: 18.1, end: 21.1, top: "42%", text: "Starting early mornings off\nwith what I need" },
-        { start: 21.2, end: 24.0, top: "26%", text: "But I see more than\nwhat’s in sight" },
+        { start: 21.2, end: 24.0, top: "26%", text: "But I see more than\nwhatâ€™s in sight" },
         { start: 24.1, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
         { start: 27.0, end: 30.0, top: "66%", text: "Keeping everything\nworking right" },
-        { start: 31.1, end: 32.0, top: "18%", text: "So here’s to you" },
+        { start: 31.1, end: 32.0, top: "18%", text: "So hereâ€™s to you" },
         { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
         { start: 33.6, end: 36.1, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
         { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
         { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 41.3, end: 45.1, top: "68%", text: "Iâ€™m grateful for the care you bring" },
         { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
         { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
         { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
         { start: 60.1, end: 63.5, top: "52%", text: "Callbacks hit\nright on time" },
-        { start: 63.6, end: 65.8, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
+        { start: 63.6, end: 65.8, top: "26%", text: "Youâ€™ve got my order in\nbefore the drinks" },
         { start: 65.9, end: 67.9, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
-        { start: 68.0, end: 68.8, top: "18%", text: "So here’s to you" },
+        { start: 68.0, end: 68.8, top: "18%", text: "So hereâ€™s to you" },
         { start: 68.9, end: 70.9, top: "34%", text: "Serving up\negg-cellence" },
         { start: 71.0, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
         { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
         { start: 76.1, end: 78.9, top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 79.0, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 79.0, end: 82.0, top: "68%", text: "Iâ€™m grateful for the care you bring" },
         { start: 83.1, end: 85.8, top: "24%", text: "Thank you for everything" },
         { start: 94.8, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
         { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
         { start: 100.1, end: 105.0, top: "52%", text: "Prepping, cleaning,\ncoaching strong" },
         { start: 105.1, end: 107.9, top: "24%", text: "The hospitality,\nthe attention you give" },
-        { start: 108.0, end: 112.0, top: "46%", text: "It all comes together\nin America’s Place" },
+        { start: 108.0, end: 112.0, top: "46%", text: "It all comes together\nin Americaâ€™s Place" },
         { start: 112.1, end: 117.0, top: "68%", text: "Because of you each day" },
-        { start: 117.9, end: 122.1, top: "22%", text: "So here’s to you" },
+        { start: 117.9, end: 122.1, top: "22%", text: "So hereâ€™s to you" },
         { start: 122.2, end: 124.0, top: "40%", text: "Serving up egg-cellence" },
         { start: 124.1, end: 126.9, top: "56%", text: "Serving up egg-cellence" },
         { start: 127.0, end: 130.0, top: "72%", text: "Serving up egg-cellence" },
@@ -3255,7 +3269,7 @@
       const updateSongButton = () => {
         if (!songToggle || !audioPlayer) return;
         const playing = !audioPlayer.paused && !audioPlayer.ended;
-        songToggle.textContent = playing ? "❚❚" : "🧇";
+        songToggle.textContent = playing ? "âšâš" : "ðŸ§‡";
         songToggle.setAttribute(
           "aria-label",
           playing ? "Pause appreciation song" : "Play appreciation song"
@@ -3689,13 +3703,13 @@
         renderRoadTripChoices();
 
         if (won) {
-          showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
+          showRoadTripCelebration(`ðŸŽ‰ You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
           setRoadTripStatus(`<strong>You won!</strong> You reached the ${ROADTRIP_GOAL.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
           if (!prefersReducedMotion && typeof confetti === "function") {
             confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           }
         } else {
-          showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
+          showRoadTripCelebration(`ðŸ Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
           setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
         }
       };
