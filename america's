@@ -2394,6 +2394,52 @@
   mix-blend-mode: multiply;
 }
 
+.photo-flash-link:hover::before,
+.photo-flash-link:focus-visible::before {
+  animation: photoFlashPulse 1.15s ease-out;
+}
+
+.photo-flash-link:hover::after,
+.photo-flash-link:focus-visible::after {
+  animation: photoFlashSweep 1.15s ease-out;
+}
+
+.photo-flash-link.attention::before {
+  animation: photoFlashPulse 1.25s ease-out infinite;
+}
+
+.photo-flash-link.attention::after {
+  animation: photoFlashSweep 1.25s ease-out infinite;
+}
+
+
+.tilt-glare {
+  ...
+  z-index: 2;
+}
+
+
+.photo-flash-link {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.photo-flash-link .tilt-stage {
+  position: relative;
+  z-index: 1;
+}
+
+.photo-flash-link::before {
+  z-index: 5 !important;
+}
+
+.photo-flash-link::after {
+  z-index: 6 !important;
+}
+
+.tilt-glare {
+  z-index: 2 !important;
+}
 
   </style>
 </head>
@@ -2751,7 +2797,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Enjoy 5 free jukebox credits a week on the House.</p>
+          <p>Enjoy 15 free jukebox credits a week on the House.</p>
 
           <div class="links">
             <a
