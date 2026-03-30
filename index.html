@@ -1226,6 +1226,7 @@
     }
 
     .tilt-card.is-tilting::after,
+    .tilt-card.is-touch-tilting::after,
     .tilt-card:hover::after {
       opacity: 0.46;
       transform: translateY(6px) scale(1);
@@ -1274,7 +1275,8 @@
       mix-blend-mode: screen;
     }
 
-    .tilt-card.is-tilting .tilt-glare {
+    .tilt-card.is-tilting .tilt-glare,
+    .tilt-card.is-touch-tilting .tilt-glare {
       opacity: 0.95;
     }
 
@@ -1283,7 +1285,8 @@
       box-shadow: 0 18px 34px rgba(92, 77, 19, 0.14);
     }
 
-    .tilt-card.is-tilting .tilt-stage {
+    .tilt-card.is-tilting .tilt-stage,
+    .tilt-card.is-touch-tilting .tilt-stage {
       box-shadow: 0 18px 34px rgba(92, 77, 19, 0.16);
       filter: saturate(1.02);
     }
@@ -1296,30 +1299,43 @@
       transform: translateZ(18px) scale(1.01);
     }
 
-    .tilt-card[data-tilt-depth="soft"].is-tilting img {
+    .tilt-card[data-tilt-depth="soft"].is-tilting img,
+    .tilt-card[data-tilt-depth="soft"].is-touch-tilting img {
       transform: translateZ(24px) scale(1.03);
     }
 
     @media (hover: none), (pointer: coarse) {
-      .tilt-card::after,
-      .tilt-glare {
-        display: none;
+      .tilt-card {
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .tilt-card .tilt-stage,
-      .tilt-card.is-tilting .tilt-stage {
-        transform: none !important;
-        box-shadow: none;
-        filter: none;
+      .tilt-card .tilt-stage {
+        transition:
+          transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 180ms ease,
+          filter 180ms ease;
       }
 
-      .tilt-card img,
-      .tilt-card.is-tilting img {
-        transform: none !important;
+      .tilt-card img {
+        transform: translateZ(14px) scale(1.005);
+      }
+
+      .tilt-card.is-tilting img,
+      .tilt-card.is-touch-tilting img {
+        transform: translateZ(22px) scale(1.024);
+      }
+
+      .tilt-card.is-touch-tilting::after {
+        opacity: 0.38;
+      }
+
+      .tilt-card.is-touch-tilting .tilt-glare {
+        opacity: 0.78;
       }
 
       .tilt-card:active .tilt-stage {
-        transform: translateY(-3px) scale(1.01) !important;
+        box-shadow: 0 14px 26px rgba(92, 77, 19, 0.12);
       }
     }
 
@@ -2342,6 +2358,7 @@
       }
 
       /* ---------- 3D hover / tilt logic ---------- */
+      /* On touch devices like iPhone, this becomes press-and-drag / touch tilt. */
 
       const resetTiltCard = (card, instant = false) => {
         const stage = card.querySelector(".tilt-stage");
@@ -2383,6 +2400,32 @@
         card.classList.add("is-tilting");
       };
 
+      const touchTiltTimers = new WeakMap();
+
+      const clearTouchTiltTimer = (card) => {
+        const existing = touchTiltTimers.get(card);
+        if (existing) {
+          clearTimeout(existing);
+          touchTiltTimers.delete(card);
+        }
+      };
+
+      const startTouchTilt = (card, clientX, clientY) => {
+        clearTouchTiltTimer(card);
+        updateTiltCard(card, clientX, clientY);
+        card.classList.add("is-touch-tilting");
+      };
+
+      const endTouchTilt = (card, delay = 140) => {
+        clearTouchTiltTimer(card);
+        const timer = setTimeout(() => {
+          card.classList.remove("is-touch-tilting");
+          resetTiltCard(card);
+          touchTiltTimers.delete(card);
+        }, delay);
+        touchTiltTimers.set(card, timer);
+      };
+
       const enableTiltCards = () => {
         tiltCards.forEach((card) => {
           if (card.dataset.tiltBound === "true") return;
@@ -2396,16 +2439,46 @@
           });
 
           card.addEventListener("pointermove", (e) => {
-            if (!pointerFineMedia.matches || prefersReducedMotion) return;
-            updateTiltCard(card, e.clientX, e.clientY);
+            if (prefersReducedMotion) return;
+
+            if (pointerFineMedia.matches && e.pointerType !== "touch" && e.pointerType !== "pen") {
+              updateTiltCard(card, e.clientX, e.clientY);
+              return;
+            }
+
+            if (e.pointerType === "touch" || e.pointerType === "pen") {
+              startTouchTilt(card, e.clientX, e.clientY);
+            }
+          });
+
+          card.addEventListener("pointerdown", (e) => {
+            if (prefersReducedMotion) return;
+
+            if (e.pointerType === "touch" || e.pointerType === "pen" || !pointerFineMedia.matches) {
+              startTouchTilt(card, e.clientX, e.clientY);
+            }
           });
 
           card.addEventListener("pointerleave", () => {
+            clearTouchTiltTimer(card);
+            card.classList.remove("is-touch-tilting");
             resetTiltCard(card);
           });
 
+          card.addEventListener("pointerup", () => {
+            if (!pointerFineMedia.matches) {
+              endTouchTilt(card, 180);
+            } else {
+              resetTiltCard(card);
+            }
+          });
+
+          card.addEventListener("pointercancel", () => {
+            endTouchTilt(card, 0);
+          });
+
           card.addEventListener("blur", () => {
-            resetTiltCard(card);
+            endTouchTilt(card, 0);
           }, true);
 
           card.addEventListener("focusin", () => {
@@ -2413,9 +2486,29 @@
             card.classList.add("is-tilting");
           });
 
-          card.addEventListener("touchstart", () => {
-            resetTiltCard(card, true);
+          card.addEventListener("touchstart", (e) => {
+            if (prefersReducedMotion) return;
+            const point = e.touches?.[0];
+            if (point) {
+              startTouchTilt(card, point.clientX, point.clientY);
+            }
           }, { passive: true });
+
+          card.addEventListener("touchmove", (e) => {
+            if (prefersReducedMotion) return;
+            const point = e.touches?.[0];
+            if (point) {
+              startTouchTilt(card, point.clientX, point.clientY);
+            }
+          }, { passive: true });
+
+          card.addEventListener("touchend", () => {
+            endTouchTilt(card, 180);
+          });
+
+          card.addEventListener("touchcancel", () => {
+            endTouchTilt(card, 0);
+          });
         });
       };
 
