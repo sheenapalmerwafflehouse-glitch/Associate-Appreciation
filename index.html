@@ -2025,8 +2025,89 @@
     .zone-south { left: 44%; bottom: 8%; }
     .zone-atlantic { right: 5%; top: 9%; }
 
-    .roadtrip-map-stage .state-node,
-    .roadtrip-map-stage .state-car {
+   /* --- Road Trip state cards + Wilson car layering fix --- */
+.roadtrip-map-stage .state-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 4;
+  width: 86px;
+  min-height: 86px;
+  padding: 10px 8px 11px;
+  border-radius: 22px;
+  border: 2px solid rgba(255,255,255,0.35);
+  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
+  backdrop-filter: blur(2px);
+  line-height: 1;
+  transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.roadtrip-map-stage .state-node:hover,
+.roadtrip-map-stage .state-node:focus-visible {
+  transform: translate(-50%, -50%) scale(1.07);
+  box-shadow: 0 20px 34px rgba(17, 17, 17, 0.22);
+  outline: none;
+}
+
+.roadtrip-map-stage .state-node.current-stop {
+  box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
+  z-index: 5;
+}
+
+.roadtrip-map-stage .state-node.visited {
+  opacity: 0.62;
+}
+
+.roadtrip-map-stage .state-node.available {
+  animation: pulseRoadTrip 1.2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(255,230,106,0.4), 0 16px 28px rgba(17,17,17,0.18);
+}
+
+.roadtrip-map-stage .state-node.unavailable {
+  opacity: 0.28;
+  filter: grayscale(0.16);
+}
+
+.roadtrip-map-stage .state-node-label {
+  font-size: 1.02rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+}
+
+.roadtrip-map-stage .state-node-points {
+  font-size: 0.82rem;
+  font-weight: 800;
+  opacity: 0.95;
+}
+
+.roadtrip-map-stage .state-car {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 84px;
+  height: auto;
+  z-index: 8;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
+  opacity: 0.82;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, opacity 0.2s ease;
+  filter: drop-shadow(0 10px 16px rgba(17, 17, 17, 0.28));
+}
+
+.roadtrip-map-stage .state-car::before,
+.roadtrip-map-stage .state-car::after {
+  content: none;
+  display: none;
+}
+
       width: 76px;
       height: auto;
       z-index: 1;
@@ -3702,17 +3783,20 @@
       };
 
       const updateRoadTripHUD = () => {
-        roadtripScore.textContent = roadTrip.score.toLocaleString();
-        roadtripFuel.textContent = roadTrip.fuel;
-        roadtripVisited.textContent = roadTrip.visited.size;
-        const current = roadTripStates[roadTrip.current];
-        roadtripCar.style.left = `${current.x}%`;
-        roadtripCar.style.top = `${current.y}%`;
-        renderRoadTripRoute();
-        renderRoadTripChoices();
-        updateRoadTripNodes();
-        scrollRoadTripMapToCurrent();
-      };
+  roadtripScore.textContent = roadTrip.score.toLocaleString();
+  roadtripFuel.textContent = roadTrip.fuel;
+  roadtripVisited.textContent = roadTrip.visited.size;
+
+  const current = roadTripStates[roadTrip.current];
+  roadtripCar.style.left = `${current.x + 2.2}%`;
+  roadtripCar.style.top = `${current.y - 1.6}%`;
+  roadtripCar.style.opacity = "0.82";
+
+  renderRoadTripRoute();
+  renderRoadTripChoices();
+  updateRoadTripNodes();
+  scrollRoadTripMapToCurrent();
+};
 
       const showRoadTripCelebration = (message) => {
         if (!roadtripCelebration) return;
