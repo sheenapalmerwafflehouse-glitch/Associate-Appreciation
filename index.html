@@ -971,6 +971,8 @@
       animation: photoFlashSweep 1.05s ease-out;
     }
 
+    
+
     .photo-flash-link.attention::before {
       animation: photoFlashPulse 1.35s ease-out infinite;
     }
@@ -2671,7 +2673,7 @@
                   <path class="route-main" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                   <path class="route-center" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                 </svg>
-                <img src="Images/WilsonCar.png" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
+                <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
               </div>
             </div>
 
@@ -3228,70 +3230,54 @@
           runIdleNudge();
         }, 6200);
       };
-      if (!prefersReducedMotion) runIdleNudge();
+     if (!prefersReducedMotion && photoFlashLink) {
+  let photoFlashTimeout;
+  let photoFlashLoopTimeout;
 
-      const createRipple = (el, clientX, clientY) => {
-        const rect = el.getBoundingClientRect();
-        const ripple = document.createElement("span");
-        const size = Math.max(rect.width, rect.height) * 1.35;
-        ripple.className = "ripple";
-        ripple.style.width = `${size}px`;
-        ripple.style.height = `${size}px`;
-        ripple.style.left = `${clientX - rect.left}px`;
-        ripple.style.top = `${clientY - rect.top}px`;
-        el.appendChild(ripple);
-        ripple.addEventListener("animationend", () => ripple.remove());
-      };
+  const triggerPhotoFlash = () => {
+    photoFlashLink.classList.remove("flash-now");
+    void photoFlashLink.offsetWidth;
+    photoFlashLink.classList.add("flash-now");
 
-      pressables.forEach((el) => {
-        const pressStart = (e) => {
-          el.classList.remove("rebound");
-          el.classList.add("is-pressing");
-          const point = e.touches?.[0] || e;
-          if (point && typeof point.clientX === "number") {
-            createRipple(el, point.clientX, point.clientY);
-          } else {
-            const rect = el.getBoundingClientRect();
-            createRipple(el, rect.left + rect.width / 2, rect.top + rect.height / 2);
-          }
-        };
+    clearTimeout(photoFlashTimeout);
+    photoFlashTimeout = setTimeout(() => {
+      photoFlashLink.classList.remove("flash-now");
+    }, 1100);
+  };
 
-        const pressEnd = () => {
-          if (!el.classList.contains("is-pressing")) return;
-          el.classList.remove("is-pressing");
-          el.classList.add("rebound");
-          setTimeout(() => el.classList.remove("rebound"), 240);
-        };
+  const startPhotoFlashLoop = () => {
+    clearTimeout(photoFlashLoopTimeout);
 
-        el.addEventListener("pointerdown", pressStart);
-        el.addEventListener("pointerup", pressEnd);
-        el.addEventListener("pointerleave", pressEnd);
-        el.addEventListener("pointercancel", pressEnd);
-        el.addEventListener("touchstart", pressStart, { passive: true });
-        el.addEventListener("touchend", pressEnd);
-      });
-
-      if (!prefersReducedMotion && photoFlashLink) {
-        const pausePhotoAttention = () => {
-          photoFlashLink.classList.remove("attention");
-          setTimeout(() => {
-            if (document.visibilityState === "visible") {
-              photoFlashLink.classList.add("attention");
-            }
-          }, mobileMedia.matches ? 1400 : 900);
-        };
-
-        photoFlashLink.addEventListener("click", pausePhotoAttention);
-        photoFlashLink.addEventListener("pointerenter", () => photoFlashLink.classList.remove("attention"));
-
-        document.addEventListener("visibilitychange", () => {
-          if (document.visibilityState === "hidden") {
-            photoFlashLink.classList.remove("attention");
-          } else {
-            photoFlashLink.classList.add("attention");
-          }
-        });
+    const loop = () => {
+      if (document.visibilityState === "visible") {
+        triggerPhotoFlash();
       }
+
+      photoFlashLoopTimeout = setTimeout(
+        loop,
+        mobileMedia.matches ? 3200 : 2600
+      );
+    };
+
+    photoFlashLoopTimeout = setTimeout(loop, 1200);
+  };
+
+  triggerPhotoFlash();
+  startPhotoFlashLoop();
+
+  photoFlashLink.addEventListener("click", triggerPhotoFlash);
+  photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      triggerPhotoFlash();
+      startPhotoFlashLoop();
+    } else {
+      clearTimeout(photoFlashLoopTimeout);
+    }
+  });
+}
+
 
       const resetTiltCard = (card, instant = false) => {
         const stage = card.querySelector(".tilt-stage");
