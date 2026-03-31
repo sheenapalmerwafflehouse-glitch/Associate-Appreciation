@@ -3070,11 +3070,11 @@
       const roadTripStates = {
         CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
         AZ: { code: "AZ", name: "Arizona", points: 140, region: "west", x: 9, y: 56, neighbors: ["CO"] },
-        TX: { code: "TX", name: "Texas", points: 1098, fuelBonus: 2, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
+        TX: { code: "TX", name: "Texas", points: 1098, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
         OK: { code: "OK", name: "Oklahoma", points: 149, region: "south", x: 21, y: 60, neighbors: ["TX", "AR", "MO", "KS"] },
         KS: { code: "KS", name: "Kansas", points: 43, region: "midwest", x: 23, y: 42, neighbors: ["OK", "MO", "CO"] },
         LA: { code: "LA", name: "Louisiana", points: 870, fuelBonus: 2, region: "south", x: 31, y: 79, neighbors: ["MS", "TX", "AR"] },
-        AR: { code: "AR", name: "Arkansas", points: 442, region: "south", x: 33, y: 58, neighbors: ["TX", "LA", "MS", "TN", "MO", "OK"] },
+        AR: { code: "AR", name: "Arkansas", points: 442, fuelBonus: 2, region: "south", x: 33, y: 58, neighbors: ["TX", "LA", "MS", "TN", "MO", "OK"] },
         MO: { code: "MO", name: "Missouri", points: 315, region: "midwest", x: 35, y: 42, neighbors: ["AR", "OK", "KS", "IL", "KY", "TN"] },
         MS: { code: "MS", name: "Mississippi", points: 750, region: "south", x: 45, y: 72, neighbors: ["AL", "LA", "TN", "AR"] },
         IL: { code: "IL", name: "Illinois", points: 14, region: "midwest", x: 43, y: 24, neighbors: ["MO", "IN"] },
