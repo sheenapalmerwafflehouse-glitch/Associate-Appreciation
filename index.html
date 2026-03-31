@@ -23,10 +23,6 @@
       --tilt-perspective: 1400px;
       --tilt-max-rotate: 12deg;
       --tilt-scale: 1.02;
-      --game-red: #d72638;
-      --game-blue: #2f80ed;
-      --game-green: #2ea44f;
-      --game-purple: #7a3ff2;
       --game-card-shadow: 0 16px 30px rgba(17, 17, 17, 0.12);
     }
 
@@ -1336,11 +1332,6 @@
       transform: translateZ(24px) scale(1.03);
     }
 
-    .anniversary-game-wrap {
-      width: 100%;
-      margin-top: 24px;
-    }
-
     .game-modal {
       position: fixed;
       inset: 0;
@@ -1440,10 +1431,7 @@
       box-shadow: 0 10px 22px rgba(92, 77, 19, 0.07);
     }
 
-    .game-map-panel {
-      padding: 18px;
-    }
-
+    .game-map-panel { padding: 18px; }
     .game-side-panel {
       padding: 16px;
       display: grid;
@@ -1491,216 +1479,11 @@
       overflow: hidden;
     }
 
-    .game-map::before {
-      content: "";
-      position: absolute;
-      inset: 9% 8% 18% 7%;
-      background: linear-gradient(180deg, #f7d98c, #e4c06d);
-      clip-path: polygon(11% 20%, 16% 15%, 24% 16%, 31% 19%, 39% 18%, 46% 20%, 55% 17%, 64% 18%, 75% 23%, 82% 26%, 87% 34%, 90% 46%, 88% 58%, 82% 67%, 75% 72%, 67% 74%, 57% 74%, 49% 78%, 42% 78%, 34% 76%, 25% 72%, 19% 69%, 12% 61%, 9% 52%, 8% 43%, 9% 31%);
-      border-radius: 26px;
-      box-shadow: inset 0 8px 18px rgba(255,255,255,0.28), 0 18px 28px rgba(92, 77, 19, 0.08);
-      opacity: 0.96;
-    }
-
-    .game-map::after {
-      content: "";
-      position: absolute;
-      left: 11%;
-      right: 11%;
-      bottom: 10%;
-      height: 16%;
-      background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.45), rgba(255,255,255,0) 24%), linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.18));
-      pointer-events: none;
-    }
-
     .map-path {
       position: absolute;
       inset: 0;
       pointer-events: none;
       z-index: 1;
-    }
-
-    .map-road {
-      fill: none;
-      stroke: rgba(82, 64, 8, 0.45);
-      stroke-width: 12;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 18 12;
-      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.08));
-    }
-
-    .map-road-outline {
-      fill: none;
-      stroke: rgba(255,255,255,0.55);
-      stroke-width: 4;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 18 12;
-    }
-
-    .state-node,
-    .state-car {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      display: block;
-      z-index: 4;
-      pointer-events: none;
-      transition: left 0.45s ease, top 0.45s ease, transform 0.2s ease;
-      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
-    }
-
-    .state-node {
-      pointer-events: auto;
-      width: 72px;
-      min-height: 72px;
-      padding: 8px 6px 10px;
-      border: none;
-      border-radius: 18px;
-      color: #111;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-      box-shadow: var(--game-card-shadow);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
-    .state-node:hover,
-    .state-node:focus-visible {
-      transform: translate(-50%, -50%) scale(1.05);
-      box-shadow: 0 18px 34px rgba(17, 17, 17, 0.18);
-      outline: none;
-    }
-
-    .state-node.visited {
-      opacity: 0.58;
-      filter: grayscale(0.14);
-    }
-
-    .state-node.available {
-      animation: pulseRoadTrip 1.4s ease-in-out infinite;
-    }
-
-    .state-node.unavailable {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: translate(-50%, -50%) scale(0.95);
-    }
-
-    .state-node-label {
-      font-size: 1rem;
-      line-height: 1;
-      letter-spacing: 0.03em;
-    }
-
-    .state-node-points {
-      font-size: 0.76rem;
-      line-height: 1;
-      opacity: 0.88;
-    }
-
-    .state-node.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); }
-    .state-node.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
-    .state-node.region-midwest { background: linear-gradient(180deg, #8de58a, #2ea44f); color: #fff; }
-    .state-node.region-mid-atlantic,
-    .state-node.region-northeast { background: linear-gradient(180deg, #b48aff, #7a3ff2); color: #fff; }
-
-    .state-car {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      width: 72px;
-      height: auto;
-      display: block;
-      z-index: 1;
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
-      touch-action: none;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      transition: left 0.45s ease, top 0.45s ease, transform 0.2s ease;
-      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
-    }
-
-    .state-car::before,
-    .state-car::after {
-      content: none;
-      display: none;
-    }
-
-    .game-panel-card {
-      padding: 14px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #fffdf5, #fff8dd);
-      border: 1px solid rgba(176, 150, 44, 0.14);
-    }
-
-    .game-panel-card h3 {
-      margin: 0 0 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 0.9rem;
-      color: #6f5f00;
-      text-align: left;
-    }
-
-    .game-panel-card p,
-    .game-panel-card ul {
-      margin: 0;
-      max-width: none;
-      text-align: left;
-      line-height: 1.6;
-      color: #4f4f4f;
-      font-size: 0.95rem;
-    }
-
-    .game-panel-card ul {
-      padding-left: 18px;
-    }
-
-    .game-panel-card li + li {
-      margin-top: 4px;
-    }
-
-    .top-state-list {
-      display: grid;
-      gap: 8px;
-    }
-
-    .top-state-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(176, 150, 44, 0.12);
-      font-weight: 800;
-    }
-
-    .challenge-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, #fff 0%, #fff6cf 100%);
-      border: 1px solid rgba(176, 150, 44, 0.14);
-      font-weight: 800;
-      color: #5f5000;
-      font-size: 0.84rem;
-    }
-
-    .game-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
     }
 
     .game-banner {
@@ -1744,131 +1527,6 @@
       0%, 100% { box-shadow: 0 0 0 0 rgba(245,213,71,0.22), var(--game-card-shadow); }
       50% { box-shadow: 0 0 0 12px rgba(245,213,71,0), 0 18px 34px rgba(17,17,17,0.18); }
     }
-
-    @media (hover: none), (pointer: coarse) {
-      .tilt-card::after,
-      .tilt-glare {
-        display: none;
-      }
-
-      .tilt-card .tilt-stage,
-      .tilt-card.is-tilting .tilt-stage {
-        transform: none !important;
-        box-shadow: none;
-        filter: none;
-      }
-
-      .tilt-card img,
-      .tilt-card.is-tilting img {
-        transform: none !important;
-      }
-
-      .tilt-card:active .tilt-stage {
-        transform: translateY(-3px) scale(1.01) !important;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .tilt-stage,
-      .tilt-card img,
-      .tilt-glare,
-      .tilt-card::after,
-      .state-node.available,
-      .game-celebration.show {
-        transition: none !important;
-        animation: none !important;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .nav-logo { height: 68px; }
-      .section { max-width: 760px; }
-      .game-board { grid-template-columns: 1fr; }
-      .game-map { min-height: 460px; }
-    }
-
-    @media (max-width: 640px) {
-      :root { --media-frame-min-height: 260px; }
-
-      html { scroll-padding-top: 126px; }
-
-      .topbar-inner {
-        padding-top: 8px;
-        gap: 6px;
-      }
-
-      .sections { padding: 18px 14px 14px; }
-
-      .divider-sparkle {
-        width: min(180px, 54vw);
-        margin-bottom: 18px;
-      }
-
-      .section {
-        padding: 18px 14px 20px;
-        border-radius: 24px;
-        margin-bottom: 24px;
-      }
-
-      .hero-card { padding: 14px; }
-
-      .section-image-wrap { max-width: 100%; }
-
-      .section p {
-        line-height: 1.72;
-        margin: 18px auto 0;
-        max-width: 31ch;
-      }
-
-      .song-toggle {
-        width: 74px;
-        height: 74px;
-        font-size: 2rem;
-      }
-
-      .lyric-video-shell {
-        max-width: 92%;
-        margin-top: 24px;
-      }
-
-      .lyric-line {
-        width: calc(100% - 24px);
-        max-width: 94%;
-        font-size: clamp(15px, 5vw, 24px);
-        line-height: 1.12;
-      }
-
-      .back-to-top {
-        right: 12px;
-        bottom: 14px;
-        min-width: 50px;
-        min-height: 50px;
-        padding: 0 14px;
-      }
-
-      .back-to-top .label { display: none; }
-
-      .photo-flash-link.attention::before,
-      .photo-flash-link.attention::after {
-        animation-duration: 1.55s;
-      }
-
-      .game-modal { padding: 10px; }
-      .game-modal-inner { padding: 14px; border-radius: 20px; }
-      .game-top { padding: 16px 14px 10px; }
-      .game-board { padding: 14px; gap: 14px; }
-      .game-hud { grid-template-columns: repeat(3, 1fr); }
-      .state-node {
-        width: 62px;
-        min-height: 62px;
-        border-radius: 16px;
-        padding: 6px 4px 8px;
-      }
-      .state-node-label { font-size: 0.92rem; }
-      .state-node-points { font-size: 0.68rem; }
-      .game-map { min-height: 430px; }
-    }
-  
 
     /* -------- Revised Anniversary Road Trip game overrides -------- */
     .game-modal-inner.game-modal-inner--wide {
@@ -1915,6 +1573,55 @@
 
     .roadtrip-status-strip {
       margin-bottom: 12px;
+    }
+
+    .roadtrip-status-level {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #5f5000;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 6px 12px rgba(92, 77, 19, 0.08);
+    }
+
+    .roadtrip-levels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roadtrip-level-btn {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 16px;
+      padding: 10px 8px;
+      background: linear-gradient(180deg, #fffef6, #fff9df);
+      color: #5d4f00;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(92, 77, 19, 0.06);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .roadtrip-level-btn:hover,
+    .roadtrip-level-btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 18px rgba(92, 77, 19, 0.1);
+      outline: none;
+    }
+
+    .roadtrip-level-btn.active {
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+      box-shadow: 0 12px 20px rgba(92, 77, 19, 0.14);
     }
 
     .roadtrip-scroll-hint {
@@ -2025,104 +1732,11 @@
     .zone-south { left: 44%; bottom: 8%; }
     .zone-atlantic { right: 5%; top: 9%; }
 
-   /* --- Road Trip state cards + Wilson car layering fix --- */
-.roadtrip-map-stage .state-node {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  pointer-events: auto;
-  z-index: 4;
-  width: 86px;
-  min-height: 86px;
-  padding: 10px 8px 11px;
-  border-radius: 22px;
-  border: 2px solid rgba(255,255,255,0.35);
-  box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
-  backdrop-filter: blur(2px);
-  line-height: 1;
-  transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.roadtrip-map-stage .state-node:hover,
-.roadtrip-map-stage .state-node:focus-visible {
-  transform: translate(-50%, -50%) scale(1.07);
-  box-shadow: 0 20px 34px rgba(17, 17, 17, 0.22);
-  outline: none;
-}
-
-.roadtrip-map-stage .state-node.current-stop {
-  box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
-  z-index: 5;
-}
-
-.roadtrip-map-stage .state-node.visited {
-  opacity: 0.62;
-}
-
-.roadtrip-map-stage .state-node.available {
-  animation: pulseRoadTrip 1.2s ease-in-out infinite;
-  box-shadow: 0 0 0 0 rgba(255,230,106,0.4), 0 16px 28px rgba(17,17,17,0.18);
-}
-
-.roadtrip-map-stage .state-node.unavailable {
-  opacity: 0.28;
-  filter: grayscale(0.16);
-}
-
-.roadtrip-map-stage .state-node-label {
-  font-size: 1.02rem;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  margin-bottom: 5px;
-}
-
-.roadtrip-map-stage .state-node-points {
-  font-size: 0.82rem;
-  font-weight: 800;
-  opacity: 0.95;
-}
-
-.roadtrip-map-stage .state-car {
-  position: absolute;
-  transform: translate(-50%, -50%) rotate(-8deg);
-  width: 92px;
-  height: auto;
-  z-index: 3;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  touch-action: none;
-  opacity: 0.96;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, opacity 0.2s ease;
-  filter: drop-shadow(0 10px 16px rgba(17, 17, 17, 0.28));
-}
-
-
-.roadtrip-map-stage .state-car::before,
-.roadtrip-map-stage .state-car::after {
-  content: none;
-  display: none;
-}
-
-      width: 76px;
-      height: auto;
-      z-index: 1;
-      pointer-events: none;
-      user-select: none;
-      -webkit-user-drag: none;
-      touch-action: none;
-      transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
-      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
-    }
-
     .roadtrip-map-stage .state-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
       pointer-events: auto;
-      z-index: 2;
+      z-index: 4;
       width: 86px;
       min-height: 86px;
       padding: 10px 8px 11px;
@@ -2131,18 +1745,29 @@
       box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
       backdrop-filter: blur(2px);
       line-height: 1;
-      z-index: 2;
+      transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      cursor: pointer;
     }
 
     .roadtrip-map-stage .state-node:hover,
     .roadtrip-map-stage .state-node:focus-visible {
       transform: translate(-50%, -50%) scale(1.07);
       box-shadow: 0 20px 34px rgba(17, 17, 17, 0.22);
+      outline: none;
     }
 
     .roadtrip-map-stage .state-node.current-stop {
       box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
-      z-index: 3;
+      z-index: 5;
     }
 
     .roadtrip-map-stage .state-node.visited {
@@ -2172,6 +1797,12 @@
       opacity: 0.95;
     }
 
+    .state-node.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); color: #111; }
+    .state-node.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
+    .state-node.region-midwest { background: linear-gradient(180deg, #8de58a, #2ea44f); color: #fff; }
+    .state-node.region-mid-atlantic,
+    .state-node.region-northeast { background: linear-gradient(180deg, #b48aff, #7a3ff2); color: #fff; }
+
     .state-node-fuel,
     .next-fuel-pill,
     .roadtrip-bonus-pill {
@@ -2199,15 +1830,25 @@
     }
 
     .roadtrip-map-stage .state-car {
-      width: 76px;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 74px;
       height: auto;
-      z-index: 1;
+      z-index: 7;
       pointer-events: none;
       user-select: none;
       -webkit-user-drag: none;
       touch-action: none;
-      transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease;
-      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
+      opacity: 0.82;
+      transition:
+        left 0.42s ease,
+        top 0.42s ease,
+        transform 0.3s ease,
+        opacity 0.2s ease;
+      filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
+      background: transparent;
+      border: none;
+      box-shadow: none;
     }
 
     .roadtrip-map-stage .state-car::before,
@@ -2220,7 +1861,9 @@
       font-size: 0.9rem;
       color: #5a5a5a;
       margin-bottom: 10px;
-    }.roadtrip-next-stops {
+    }
+
+    .roadtrip-next-stops {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
@@ -2332,14 +1975,95 @@
       color: #111;
     }
 
-    .roadtrip-side-panel .top-state-item {
-      background: rgba(255,255,255,0.9);
+    .top-state-list {
+      display: grid;
+      gap: 8px;
     }
 
-    @media (max-width: 980px) {
-      .roadtrip-board {
-        grid-template-columns: 1fr;
+    .top-state-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      font-weight: 800;
+    }
+
+    .game-panel-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffdf5, #fff8dd);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+    }
+
+    .game-panel-card h3 {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.9rem;
+      color: #6f5f00;
+      text-align: left;
+    }
+
+    .game-panel-card p,
+    .game-panel-card ul {
+      margin: 0;
+      max-width: none;
+      text-align: left;
+      line-height: 1.6;
+      color: #4f4f4f;
+      font-size: 0.95rem;
+    }
+
+    .game-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .tilt-card::after,
+      .tilt-glare {
+        display: none;
       }
+
+      .tilt-card .tilt-stage,
+      .tilt-card.is-tilting .tilt-stage {
+        transform: none !important;
+        box-shadow: none;
+        filter: none;
+      }
+
+      .tilt-card img,
+      .tilt-card.is-tilting img {
+        transform: none !important;
+      }
+
+      .tilt-card:active .tilt-stage {
+        transform: translateY(-3px) scale(1.01) !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tilt-stage,
+      .tilt-card img,
+      .tilt-glare,
+      .tilt-card::after,
+      .state-node.available,
+      .game-celebration.show {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .nav-logo { height: 68px; }
+      .section { max-width: 760px; }
+      .game-board { grid-template-columns: 1fr; }
+      .game-map { min-height: 460px; }
     }
 
     @media (max-width: 700px) {
@@ -2398,23 +2122,10 @@
         gap: 8px;
       }
 
-      .hud-card,
-      .game-banner,
-      .game-panel-card,
-      .roadtrip-next-stops,
-      .roadtrip-route-chips,
-      .top-state-list {
-        min-width: 0;
-      }
-
       .game-banner {
         font-size: clamp(0.95rem, 4.3vw, 1.1rem);
         line-height: 1.35;
         overflow-wrap: anywhere;
-      }
-
-      .roadtrip-scroll-hint {
-        display: none;
       }
 
       .roadtrip-map-scroll {
@@ -2429,7 +2140,8 @@
         min-height: 500px;
       }
 
-      .roadtrip-next-stops {
+      .roadtrip-next-stops,
+      .roadtrip-levels {
         grid-template-columns: 1fr;
       }
 
@@ -2438,32 +2150,43 @@
       }
     }
 
+    @media (max-width: 640px) {
+      :root { --media-frame-min-height: 260px; }
+      html { scroll-padding-top: 126px; }
+      .topbar-inner { padding-top: 8px; gap: 6px; }
+      .sections { padding: 18px 14px 14px; }
+      .divider-sparkle { width: min(180px, 54vw); margin-bottom: 18px; }
+      .section { padding: 18px 14px 20px; border-radius: 24px; margin-bottom: 24px; }
+      .hero-card { padding: 14px; }
+      .section-image-wrap { max-width: 100%; }
+      .section p { line-height: 1.72; margin: 18px auto 0; max-width: 31ch; }
+      .song-toggle { width: 74px; height: 74px; font-size: 2rem; }
+      .lyric-video-shell { max-width: 92%; margin-top: 24px; }
+      .lyric-line { width: calc(100% - 24px); max-width: 94%; font-size: clamp(15px, 5vw, 24px); line-height: 1.12; }
+      .back-to-top { right: 12px; bottom: 14px; min-width: 50px; min-height: 50px; padding: 0 14px; }
+      .back-to-top .label { display: none; }
+      .photo-flash-link.attention::before,
+      .photo-flash-link.attention::after { animation-duration: 1.55s; }
+      .game-modal { padding: 10px; }
+      .game-modal-inner { padding: 14px; border-radius: 20px; }
+      .game-top { padding: 16px 14px 10px; }
+      .game-board { padding: 14px; gap: 14px; }
+      .state-node { width: 62px; min-height: 62px; border-radius: 16px; padding: 6px 4px 8px; }
+      .state-node-label { font-size: 0.92rem; }
+      .state-node-points { font-size: 0.68rem; }
+      .game-map { min-height: 430px; }
+    }
+
     @media (max-width: 520px) {
       .roadtrip-map-panel,
-      .roadtrip-side-panel {
-        padding: 10px;
-      }
-
-      .hud-card {
-        padding: 10px 8px;
-      }
-
-      .roadtrip-map-stage {
-        width: 720px;
-        min-height: 470px;
-      }
-
-      .roadtrip-route-chips {
-        max-height: 108px;
-        overflow: auto;
-      }
+      .roadtrip-side-panel { padding: 10px; }
+      .hud-card { padding: 10px 8px; }
+      .roadtrip-map-stage { width: 720px; min-height: 470px; }
+      .roadtrip-route-chips { max-height: 108px; overflow: auto; }
     }
 
     @media (max-width: 900px) and (orientation: landscape) {
-      .game-modal {
-        padding: 0;
-      }
-
+      .game-modal { padding: 0; }
       .game-modal-inner.game-modal-inner--wide {
         width: 100vw;
         max-width: 100vw;
@@ -2471,36 +2194,9 @@
         max-height: 100dvh;
         border-radius: 0;
       }
-
-      .roadtrip-board {
-        padding: 12px;
-      }
-
-      .roadtrip-map-stage {
-        width: 820px;
-        min-height: 500px;
-      }
+      .roadtrip-board { padding: 12px; }
+      .roadtrip-map-stage { width: 820px; min-height: 500px; }
     }
-/* --- Wilson car final positioning fix --- */
-.roadtrip-map-stage .state-car {
-  width: 74px;
-  height: auto;
-  z-index: 7;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  touch-action: none;
-  opacity: 0.82;
-  transition:
-    left 0.42s ease,
-    top 0.42s ease,
-    transform 0.3s ease,
-    opacity 0.2s ease;
-  filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
-}
-
-
-
   </style>
 </head>
 <body>
@@ -2529,7 +2225,6 @@
   </header>
 
   <main class="sections">
-
     <section id="hero" class="section">
       <div class="section-image-wrap hero-card">
         <div class="hero-copy">
@@ -2576,7 +2271,7 @@
       </div>
 
       <div class="song-card" id="audio-card">
-        <p>POV: Your hard work does not go unnoticed.”</p>
+        <p>POV: Your hard work does not go unnoticed.</p>
 
         <div class="song-layout">
           <button
@@ -2708,7 +2403,7 @@
 
         <div class="section-copy">
           <p class="anniversary-summary">
-            Celebrating over 16,500 Associates for their dedication and service. 
+            Celebrating over 16,500 Associates for their dedication and service.
             Tap the balloons above to see how many are celebrating each milestone.
           </p>
 
@@ -2833,7 +2528,7 @@
           </div>
 
           <div class="actions">
-            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫 Email Customer Service</a>
+            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫Email Customer Service</a>
             <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
           </div>
         </div>
@@ -2879,7 +2574,6 @@
         </div>
       </div>
     </section>
-
   </main>
 
   <section class="footer-decor" aria-label="Closing Note">
@@ -2925,7 +2619,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-            Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough celebration points to reach 15,000 before the tank runs dry.
+            Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough celebration points to reach the goal before the tank runs dry.
           </p>
         </div>
 
@@ -2947,9 +2641,7 @@
             </div>
 
             <div class="roadtrip-status-strip">
-              <div class="game-banner" id="roadtrip-status">
-                <strong>Georgia is your starting stop.</strong> Hit celebration refuel stops to add fuel and keep the road trip going longer.
-              </div>
+              <div class="game-banner" id="roadtrip-status"></div>
             </div>
 
             <div class="roadtrip-scroll-hint">Swipe the map sideways if you need more room.</div>
@@ -2976,6 +2668,15 @@
           </div>
 
           <div class="game-side-panel roadtrip-side-panel">
+            <div class="game-panel-card">
+              <h3>Difficulty</h3>
+              <div class="roadtrip-levels" id="roadtrip-levels">
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="beginner">Beginner</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="intermediate">Intermediate</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced</button>
+              </div>
+            </div>
+
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
               <p class="roadtrip-helper">Tap a glowing state on the map or use these quick-pick buttons.</p>
@@ -2999,7 +2700,7 @@
 
             <div class="game-panel-card">
               <h3>Trip Goal</h3>
-              <p>Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>15,000</strong> before fuel hits zero.</p>
+              <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
 
             <div class="game-actions">
@@ -3063,9 +2764,8 @@
       const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
       const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
       const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
-
-      const ROADTRIP_START_FUEL = 18;
-      const ROADTRIP_GOAL = 15000;
+      const roadtripGoalCopy = document.getElementById("roadtrip-goal-copy");
+      const roadtripLevelButtons = Array.from(document.querySelectorAll("[data-roadtrip-level]"));
 
       const roadTripStates = {
         CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
@@ -3082,22 +2782,50 @@
         TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
         KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
         OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 62, y: 20, neighbors: ["IN", "KY", "PA", "WV"] },
-        AL: { code: "AL", name: "Alabama", points: 1364, fuelBonus: 2, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
+        AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
         GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
         WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 70, y: 27, neighbors: ["OH", "VA", "PA", "MD"] },
-        NC: { code: "NC", name: "North Carolina", points: 1496, fuelBonus: 2, region: "south", x: 77, y: 50, neighbors: ["SC", "GA", "VA", "TN"] },
+        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 77, y: 50, neighbors: ["SC", "GA", "VA", "TN"] },
         VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 77, y: 35, neighbors: ["NC", "KY", "WV", "MD"] },
         PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 80, y: 15, neighbors: ["OH", "WV", "MD", "DE"] },
-        SC: { code: "SC", name: "South Carolina", points: 1460, fuelBonus: 2, region: "south", x: 79, y: 63, neighbors: ["GA", "NC", "FL"] },
+        SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 79, y: 63, neighbors: ["GA", "NC", "FL"] },
         MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 85, y: 27, neighbors: ["VA", "WV", "DE", "PA"] },
         DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 90, y: 23, neighbors: ["MD", "PA"] },
-        FL: { code: "FL", name: "Florida", points: 1934, fuelBonus: 2, region: "south", x: 82, y: 84, neighbors: ["GA", "AL", "SC"] }
+        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 82, y: 84, neighbors: ["GA", "AL", "SC"] }
       };
+
+      const ROADTRIP_LEVELS = {
+        beginner: {
+          key: "beginner",
+          label: "Beginner",
+          goal: 12000,
+          startFuel: 22,
+          description: "More fuel and a lower score target for an easier first trip."
+        },
+        intermediate: {
+          key: "intermediate",
+          label: "Intermediate",
+          goal: 14000,
+          startFuel: 19,
+          description: "Balanced fuel and score target for a standard challenge."
+        },
+        advanced: {
+          key: "advanced",
+          label: "Advanced",
+          goal: 15500,
+          startFuel: 16,
+          description: "Tighter fuel and a tougher score target for expert route planning."
+        }
+      };
+
+      let currentRoadTripLevel = "beginner";
+
+      const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
 
       let roadTrip = {
         current: "GA",
         score: roadTripStates.GA.points,
-        fuel: ROADTRIP_START_FUEL,
+        fuel: getRoadTripSettings().startFuel,
         visited: new Set(["GA"]),
         route: ["GA"],
         status: "",
@@ -3107,12 +2835,6 @@
       const sortedTopStates = Object.values(roadTripStates)
         .sort((a, b) => b.points - a.points)
         .slice(0, 5);
-
-      lyricBgVideo?.addEventListener("loadeddata", () => {
-        try {
-          lyricBgVideo.currentTime = 0.01;
-        } catch (e) {}
-      });
 
       const lyricLines = [
         { start: 10.7, end: 13.3, top: "16%", text: "Globe light glowing\non the corner booth" },
@@ -3312,11 +3034,9 @@
       });
 
       lightboxClose?.addEventListener("click", closeLightbox);
-
       lightbox?.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
-
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && lightbox?.classList.contains("open")) {
           closeLightbox();
@@ -3344,7 +3064,6 @@
       const closeMilestoneModal = () => {
         milestoneModal.classList.remove("open");
         milestoneModal.setAttribute("aria-hidden", "true");
-
         document.documentElement.classList.remove("milestone-open");
         document.body.classList.remove("milestone-open");
       };
@@ -3389,11 +3108,8 @@
       });
 
       milestoneClose?.addEventListener("click", closeMilestoneModal);
-
       milestoneModal?.addEventListener("click", (e) => {
-        if (e.target === milestoneModal) {
-          closeMilestoneModal();
-        }
+        if (e.target === milestoneModal) closeMilestoneModal();
       });
 
       audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -3410,14 +3126,10 @@
 
       const syncLyricVideo = () => {
         if (!audioPlayer || !lyricBgVideo) return;
-
         const playing = !audioPlayer.paused && !audioPlayer.ended;
-
         if (playing) {
           const playPromise = lyricBgVideo.play();
-          if (playPromise && typeof playPromise.catch === "function") {
-            playPromise.catch(() => {});
-          }
+          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
         } else {
           lyricBgVideo.pause();
         }
@@ -3431,16 +3143,8 @@
         syncLyricVideo();
       };
 
-      audioPlayer?.addEventListener("play", () => {
-        syncAudioState();
-        renderLyrics();
-      });
-
-      audioPlayer?.addEventListener("pause", () => {
-        syncAudioState();
-        renderLyrics();
-      });
-
+      audioPlayer?.addEventListener("play", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("pause", () => { syncAudioState(); renderLyrics(); });
       audioPlayer?.addEventListener("ended", () => {
         if (lyricBgVideo) {
           lyricBgVideo.pause();
@@ -3449,40 +3153,29 @@
         syncAudioState();
         renderLyrics();
       });
-
       audioPlayer?.addEventListener("timeupdate", renderLyrics);
       audioPlayer?.addEventListener("seeked", renderLyrics);
-
       audioPlayer?.addEventListener("loadedmetadata", () => {
-        if (lyricScrubber && lyricLines.length) {
-          lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
-        }
+        if (lyricScrubber && lyricLines.length) lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
         renderLyrics();
       });
-
       lyricBgVideo?.addEventListener("loadedmetadata", () => {
         if (lyricBgVideo.videoWidth && lyricBgVideo.videoHeight && lyricStage) {
           lyricStage.style.aspectRatio = `${lyricBgVideo.videoWidth} / ${lyricBgVideo.videoHeight}`;
         }
       });
-
       lyricScrubber?.addEventListener("input", (e) => {
         if (!audioPlayer) return;
         audioPlayer.currentTime = Number(e.target.value);
         renderLyrics();
       });
-
       songToggle?.addEventListener("click", async () => {
         if (!audioPlayer) return;
-
         if (audioPlayer.paused) {
-          try {
-            await audioPlayer.play();
-          } catch (err) {}
+          try { await audioPlayer.play(); } catch (err) {}
         } else {
           audioPlayer.pause();
         }
-
         syncAudioState();
       });
 
@@ -3501,7 +3194,6 @@
       };
 
       const anniversarySection = document.getElementById("anniversaries");
-
       const runIdleNudge = () => {
         clearTimeout(nudgeTimer);
         nudgeTimer = setTimeout(() => {
@@ -3525,10 +3217,7 @@
           runIdleNudge();
         }, 6200);
       };
-
-      if (!prefersReducedMotion) {
-        runIdleNudge();
-      }
+      if (!prefersReducedMotion) runIdleNudge();
 
       const createRipple = (el, clientX, clientY) => {
         const rect = el.getBoundingClientRect();
@@ -3596,16 +3285,11 @@
       const resetTiltCard = (card, instant = false) => {
         const stage = card.querySelector(".tilt-stage");
         if (!stage) return;
-
-        if (instant) {
-          stage.style.transition = "none";
-        }
-
+        if (instant) stage.style.transition = "none";
         stage.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
         card.style.setProperty("--glare-x", "50%");
         card.style.setProperty("--glare-y", "50%");
         card.classList.remove("is-tilting");
-
         if (instant) {
           requestAnimationFrame(() => {
             stage.style.transition = "";
@@ -3620,7 +3304,6 @@
         const rect = card.getBoundingClientRect();
         const px = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
         const py = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
-
         const maxRotate = window.innerWidth < 768 ? 7 : 12;
         const rotateY = (px - 0.5) * (maxRotate * 2);
         const rotateX = (0.5 - py) * (maxRotate * 1.65);
@@ -3637,7 +3320,6 @@
         tiltCards.forEach((card) => {
           if (card.dataset.tiltBound === "true") return;
           card.dataset.tiltBound = "true";
-
           resetTiltCard(card, true);
 
           card.addEventListener("pointerenter", (e) => {
@@ -3650,23 +3332,24 @@
             updateTiltCard(card, e.clientX, e.clientY);
           });
 
-          card.addEventListener("pointerleave", () => {
-            resetTiltCard(card);
-          });
-
-          card.addEventListener("blur", () => {
-            resetTiltCard(card);
-          }, true);
-
+          card.addEventListener("pointerleave", () => resetTiltCard(card));
+          card.addEventListener("blur", () => resetTiltCard(card), true);
           card.addEventListener("focusin", () => {
             if (!pointerFineMedia.matches || prefersReducedMotion) return;
             card.classList.add("is-tilting");
           });
-
-          card.addEventListener("touchstart", () => {
-            resetTiltCard(card, true);
-          }, { passive: true });
+          card.addEventListener("touchstart", () => resetTiltCard(card, true), { passive: true });
         });
+      };
+
+      const regionClassName = (region) => {
+        switch (region) {
+          case "west": return "region-west";
+          case "midwest": return "region-midwest";
+          case "mid-atlantic": return "region-mid-atlantic";
+          case "northeast": return "region-northeast";
+          default: return "region-south";
+        }
       };
 
       const renderTopStates = () => {
@@ -3687,14 +3370,25 @@
         `).join("");
       };
 
-      const regionClassName = (region) => {
-        switch (region) {
-          case "west": return "region-west";
-          case "midwest": return "region-midwest";
-          case "mid-atlantic": return "region-mid-atlantic";
-          case "northeast": return "region-northeast";
-          default: return "region-south";
+      const updateRoadTripLevelUI = () => {
+        roadtripLevelButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.roadtripLevel === currentRoadTripLevel);
+        });
+      };
+
+      const updateRoadTripLevelText = () => {
+        const settings = getRoadTripSettings();
+        if (roadtripGoalCopy) {
+          roadtripGoalCopy.innerHTML = `Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>${settings.goal.toLocaleString()}</strong> before fuel hits zero. ${settings.description}`;
         }
+      };
+
+      const getRoadTripBannerLevel = () => {
+        return `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
+      };
+
+      const setRoadTripStatus = (message) => {
+        roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
       };
 
       const createStateButtons = () => {
@@ -3802,41 +3496,35 @@
         });
       };
 
-    const updateRoadTripHUD = () => {
-  roadtripScore.textContent = roadTrip.score.toLocaleString();
-  roadtripFuel.textContent = roadTrip.fuel;
-  roadtripVisited.textContent = roadTrip.visited.size;
+      const updateRoadTripHUD = () => {
+        const settings = getRoadTripSettings();
+        roadtripScore.textContent = roadTrip.score.toLocaleString();
+        roadtripFuel.textContent = roadTrip.fuel;
+        roadtripVisited.textContent = roadTrip.visited.size;
 
-  const current = roadTripStates[roadTrip.current];
+        const current = roadTripStates[roadTrip.current];
+        const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
+        const previous = roadTripStates[previousCode];
+        const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
+        const facingScale = movingLeft ? -1 : 1;
 
-  const previousCode =
-    roadTrip.route.length > 1
-      ? roadTrip.route[roadTrip.route.length - 2]
-      : roadTrip.current;
+        let carX = current.x + (movingLeft ? -8 : 8);
+        let carY = current.y + 2.5;
 
-  const previous = roadTripStates[previousCode];
+        if (carX < 8) carX = current.x + 8;
+        if (carX > 92) carX = current.x - 8;
+        if (carY > 90) carY = current.y - 4;
 
-  const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
-  const facingScale = movingLeft ? -1 : 1;
+        roadtripCar.style.left = `${carX}%`;
+        roadtripCar.style.top = `${carY}%`;
+        roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
 
-  let carX = current.x + (movingLeft ? -8 : 8);
-  let carY = current.y + 2.5;
-
-  /* keep Wilson inside the map edges */
-  if (carX < 8) carX = current.x + 8;
-  if (carX > 92) carX = current.x - 8;
-  if (carY > 90) carY = current.y - 4;
-
-  roadtripCar.style.left = `${carX}%`;
-  roadtripCar.style.top = `${carY}%`;
-  roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
-
-  renderRoadTripRoute();
-  renderRoadTripChoices();
-  updateRoadTripNodes();
-  scrollRoadTripMapToCurrent();
-};
-
+        renderRoadTripRoute();
+        renderRoadTripChoices();
+        updateRoadTripNodes();
+        updateRoadTripLevelText();
+        scrollRoadTripMapToCurrent();
+      };
 
       const showRoadTripCelebration = (message) => {
         if (!roadtripCelebration) return;
@@ -3848,18 +3536,15 @@
         roadtripCelebration?.classList.remove("show");
       };
 
-      const setRoadTripStatus = (message) => {
-        roadtripStatus.innerHTML = message;
-      };
-
       const finishRoadTrip = (won) => {
+        const settings = getRoadTripSettings();
         roadTrip.gameOver = true;
         updateRoadTripNodes();
         renderRoadTripChoices();
 
         if (won) {
           showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
-          setRoadTripStatus(`<strong>You won!</strong> You reached the ${ROADTRIP_GOAL.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+          setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
           if (!prefersReducedMotion && typeof confetti === "function") {
             confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           }
@@ -3878,6 +3563,7 @@
         if (roadTrip.fuel <= 0) return;
 
         const nextState = roadTripStates[code];
+        const settings = getRoadTripSettings();
         roadTrip.current = code;
         roadTrip.fuel -= 1;
         roadTrip.score += nextState.points;
@@ -3903,7 +3589,7 @@
           });
         }
 
-        if (roadTrip.score >= ROADTRIP_GOAL) {
+        if (roadTrip.score >= settings.goal) {
           finishRoadTrip(true);
           return;
         }
@@ -3919,10 +3605,11 @@
       };
 
       const resetRoadTrip = () => {
+        const settings = getRoadTripSettings();
         roadTrip = {
           current: "GA",
           score: roadTripStates.GA.points,
-          fuel: ROADTRIP_START_FUEL,
+          fuel: settings.startFuel,
           visited: new Set(["GA"]),
           route: ["GA"],
           status: "",
@@ -3930,8 +3617,16 @@
         };
 
         clearRoadTripCelebration();
-        setRoadTripStatus("<strong>Georgia is your starting stop.</strong> Hit celebration refuel stops to add fuel and keep the road trip going longer.");
+        setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
         updateRoadTripHUD();
+      };
+
+      const applyRoadTripLevel = (level) => {
+        if (!ROADTRIP_LEVELS[level]) return;
+        currentRoadTripLevel = level;
+        updateRoadTripLevelUI();
+        updateRoadTripLevelText();
+        resetRoadTrip();
       };
 
       const openRoadTripModal = () => {
@@ -3950,6 +3645,9 @@
       openRoadtripGame?.addEventListener("click", openRoadTripModal);
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
       roadtripRestart?.addEventListener("click", resetRoadTrip);
+      roadtripLevelButtons.forEach((button) => {
+        button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
+      });
       roadtripModal?.addEventListener("click", (e) => {
         if (e.target === roadtripModal) closeRoadTripModalFn();
       });
@@ -3962,16 +3660,14 @@
       renderTopStates();
       renderBonusStops();
       createStateButtons();
-      resetRoadTrip();
+      applyRoadTripLevel("beginner");
       enableTiltCards();
       window.addEventListener("resize", () => {
         tiltCards.forEach((card) => resetTiltCard(card, true));
       });
-
       pointerFineMedia.addEventListener?.("change", () => {
         tiltCards.forEach((card) => resetTiltCard(card, true));
       });
-
       syncAudioState();
       updateSongButton();
       renderLyrics();
