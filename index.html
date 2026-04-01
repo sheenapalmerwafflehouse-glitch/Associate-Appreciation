@@ -1595,20 +1595,28 @@
     .roadtrip-levels {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
     }
 
     .roadtrip-level-btn {
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 16px;
-      padding: 10px 8px;
+      min-height: 88px;
+      padding: 12px 10px;
       background: linear-gradient(180deg, #fffef6, #fff9df);
       color: #5d4f00;
       font-weight: 900;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
+      line-height: 1.12;
+      font-size: clamp(0.9rem, 1vw, 1.05rem);
       cursor: pointer;
       box-shadow: 0 8px 14px rgba(92, 77, 19, 0.06);
       transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: normal;
     }
 
     .roadtrip-level-btn:hover,
@@ -1767,6 +1775,13 @@
       cursor: pointer;
     }
 
+    .roadtrip-map-stage .state-node-label,
+    .roadtrip-map-stage .state-node-points,
+    .roadtrip-map-stage .state-node-fuel {
+      position: relative;
+      z-index: 2;
+    }
+
     .roadtrip-map-stage .state-node:hover,
     .roadtrip-map-stage .state-node:focus-visible {
       transform: translate(-50%, -50%) scale(1.07);
@@ -1789,8 +1804,9 @@
     }
 
     .roadtrip-map-stage .state-node.unavailable {
-      opacity: 0.28;
-      filter: grayscale(0.16);
+      opacity: 0.92;
+      filter: saturate(0.95) brightness(0.98);
+      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.12);
     }
 
     .roadtrip-map-stage .state-node-label {
@@ -2182,7 +2198,40 @@
       }
 
       .roadtrip-side-panel {
+        order: 1;
         padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      }
+
+      .roadtrip-map-panel {
+        order: 2;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(1) {
+        order: 1;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(2) {
+        order: 2;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(6) {
+        order: 3;
+      }
+
+      .roadtrip-side-panel .game-actions {
+        order: 4;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(3) {
+        order: 5;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(5) {
+        order: 6;
+      }
+
+      .roadtrip-side-panel .game-panel-card:nth-of-type(4) {
+        order: 7;
       }
     }
 
@@ -2676,8 +2725,8 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-  Celebration points match the actual number of Associates we're celebrating in each state across Waffle Nation. Every trip starts in Georgia, so your score begins with Georgia’s 3,596 points at every level. Each new state adds that state’s points, and bonus refuel stops help you keep the trip going until you reach the goal before Wilson’s tank runs dry.
-</p>
+            Celebration points match the actual number of Associates we're celebrating in each state across Waffle Nation. Every trip starts in Georgia, so your score begins with Georgia's 3,596 points at every level. Each new state adds that state's points, and bonus refuel stops help you keep the trip going until you reach the goal before Wilson's tank runs dry.
+          </p>
         </div>
   
         <div class="game-board roadtrip-board">
@@ -3423,7 +3472,7 @@
       const updateRoadTripLevelText = () => {
         const settings = getRoadTripSettings();
         if (roadtripGoalCopy) {
-          roadtripGoalCopy.innerHTML = `Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>${settings.goal.toLocaleString()}</strong> before fuel hits zero. ${settings.description}`;
+          roadtripGoalCopy.innerHTML = `Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>${settings.goal.toLocaleString()}</strong> before fuel hits zero.`;
         }
       };
 
