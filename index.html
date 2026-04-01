@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
-
+  
   <style>
     :root {
       --text: #111111;
@@ -971,8 +971,6 @@
       animation: photoFlashSweep 1.05s ease-out;
     }
 
-    
-
     .photo-flash-link.attention::before {
       animation: photoFlashPulse 1.35s ease-out infinite;
     }
@@ -1634,6 +1632,14 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       color: #7b6c00;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 247, 200, 0.9);
+      border: 1px solid rgba(212, 176, 0, 0.18);
+    }
+
+    .roadtrip-scroll-hint.show {
+      display: block;
     }
 
     .roadtrip-map-scroll {
@@ -1641,6 +1647,7 @@
       border-radius: 22px;
       scrollbar-width: thin;
       scrollbar-color: rgba(122, 97, 8, 0.28) rgba(255,255,255,0.55);
+      position: relative;
     }
 
     .roadtrip-map-stage {
@@ -1834,14 +1841,15 @@
     .roadtrip-map-stage .state-car {
       position: absolute;
       transform: translate(-50%, -50%);
+      transform-origin: center center;
       width: 74px;
       height: auto;
-      z-index: 7;
+      z-index: 8;
       pointer-events: none;
       user-select: none;
       -webkit-user-drag: none;
       touch-action: none;
-      opacity: 0.82;
+      opacity: 1;
       transition:
         left 0.42s ease,
         top 0.42s ease,
@@ -1851,12 +1859,34 @@
       background: transparent;
       border: none;
       box-shadow: none;
+      object-fit: contain;
+      max-width: none;
+      display: block;
     }
 
-    .roadtrip-map-stage .state-car::before,
-    .roadtrip-map-stage .state-car::after {
-      content: none;
+    .roadtrip-map-stage .state-car.car-fallback-hidden {
+      opacity: 0;
+    }
+
+    .roadtrip-car-fallback {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 7;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      background: rgba(255,255,255,0.94);
+      border: 2px solid rgba(176, 150, 44, 0.24);
+      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.18);
+      pointer-events: none;
+    }
+
+    .roadtrip-car-fallback.show {
+      display: flex;
     }
 
     .roadtrip-helper {
@@ -2138,8 +2168,12 @@
       }
 
       .roadtrip-map-stage {
-        width: 760px;
-        min-height: 500px;
+        width: clamp(560px, 155vw, 760px);
+        min-height: 460px;
+      }
+
+      .roadtrip-scroll-hint {
+        display: block;
       }
 
       .roadtrip-next-stops,
@@ -2177,14 +2211,47 @@
       .state-node-label { font-size: 0.92rem; }
       .state-node-points { font-size: 0.68rem; }
       .game-map { min-height: 430px; }
+      .roadtrip-map-stage .state-node {
+        width: 66px;
+        min-height: 66px;
+        border-radius: 18px;
+        padding: 7px 5px 8px;
+      }
+      .roadtrip-map-stage .state-node-label { font-size: 0.86rem; }
+      .roadtrip-map-stage .state-node-points { font-size: 0.66rem; }
+      .roadtrip-map-stage .state-car {
+        width: 58px;
+      }
+      .roadtrip-car-fallback {
+        width: 48px;
+        height: 48px;
+        font-size: 1.45rem;
+      }
+      .roadtrip-zone-label {
+        font-size: 0.66rem;
+        padding: 5px 8px;
+      }
+      .roadtrip-route-svg .route-main { stroke-width: 22; }
+      .roadtrip-route-svg .route-center { stroke-width: 6; stroke-dasharray: 10 12; }
     }
 
     @media (max-width: 520px) {
       .roadtrip-map-panel,
       .roadtrip-side-panel { padding: 10px; }
       .hud-card { padding: 10px 8px; }
-      .roadtrip-map-stage { width: 720px; min-height: 470px; }
+      .roadtrip-map-stage { width: clamp(520px, 150vw, 680px); min-height: 430px; }
       .roadtrip-route-chips { max-height: 108px; overflow: auto; }
+      .roadtrip-map-stage .state-node {
+        width: 60px;
+        min-height: 60px;
+      }
+      .roadtrip-map-stage .state-car {
+        width: 52px;
+      }
+      .roadtrip-scroll-hint {
+        font-size: 0.76rem;
+        padding: 7px 9px;
+      }
     }
 
     @media (max-width: 900px) and (orientation: landscape) {
@@ -2197,12 +2264,13 @@
         border-radius: 0;
       }
       .roadtrip-board { padding: 12px; }
-      .roadtrip-map-stage { width: 820px; min-height: 500px; }
+      .roadtrip-map-stage { width: clamp(620px, 120vw, 820px); min-height: 460px; }
     }
+
     .game-banner {
       display: flex;
       flex-direction: column;
-      align-tems: center;
+      align-items: center;
       gap: 12px;
     }
 
@@ -2214,13 +2282,13 @@
 </head>
 <body>
   <div id="scroll-progress"></div>
-
+  
   <header class="topbar">
     <div class="topbar-inner">
       <div class="logo-link">
         <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
       </div>
-
+  
       <div class="mini-nav-wrap" aria-label="Section Navigation">
         <nav class="mini-nav" id="mini-nav">
           <a href="about.html">Employee Assistance Program</a>
@@ -2236,7 +2304,7 @@
       </div>
     </div>
   </header>
-
+  
   <main class="sections">
     <section id="hero" class="section">
       <div class="section-image-wrap hero-card">
@@ -2244,24 +2312,24 @@
           <div class="eyebrow">Welcome to Our</div>
           <h1>Celebration Page</h1>
         </div>
-
+  
         <div class="section-image-link hero-image lightbox-trigger">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="appreciation" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Featured</div>
         <h2>Appreciation Song</h2>
       </div>
-
+  
       <div class="song-card" id="audio-card">
         <p>POV: Your hard work does not go unnoticed.</p>
-
+  
         <div class="song-layout">
           <button
             class="song-toggle pressable"
@@ -2269,13 +2337,13 @@
             type="button"
             aria-label="Play appreciation song"
           >🧇</button>
-
+  
           <div class="song-meta">
             <div class="song-label">Tap the waffle to play/pause</div>
             <div class="song-title">🎵 "Serving Up Egg-cellence"</div>
           </div>
         </div>
-
+  
         <div class="audio-player-wrap">
           <audio
             class="audio-player"
@@ -2289,7 +2357,7 @@
             Your browser does not support the audio element.
           </audio>
         </div>
-
+  
         <div class="lyric-video-shell">
           <div class="lyric-stage" id="lyric-stage">
             <video
@@ -2305,11 +2373,11 @@
               <source src="Images/Wilson.mp4" type="video/mp4" />
               <source src="Images/Wilson.webm" type="video/webm" />
             </video>
-
+  
             <div class="lyric-line-host" id="lyric-line-host"></div>
           </div>
         </div>
-
+  
         <div class="lyric-scrubber-wrap">
           <input
             type="range"
@@ -2324,14 +2392,14 @@
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="dressup" class="section">
       <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2341,25 +2409,25 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p>Dress up and show your Waffle House pride.</p>
-
+  
           <div class="links">
             <a class="section-link pressable" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
           </div>
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="anniversaries" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Interactive</div>
         <h2>Anniversaries</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="anniversary-interactive tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2368,7 +2436,7 @@
                 <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
               </div>
             </div>
-
+  
             <div class="anniversary-hotspots" aria-hidden="false">
               <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
               <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
@@ -2385,32 +2453,32 @@
               <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
               <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
             </div>
-
+  
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p class="anniversary-summary">
             Celebrating over 16,500 Associates for their dedication and service.
             Tap the balloons above to see how many are celebrating each milestone.
           </p>
-
+  
           <div class="links">
             <button class="section-link pressable" id="open-roadtrip-game" type="button">Play Anniversary Game</button>
           </div>
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="trivia" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Featured</div>
         <h2>Museum Tour &amp; Trivia</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card data-tilt-depth="soft">
           <div class="tilt-stage">
@@ -2420,12 +2488,12 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="video-shell" style="margin-top: 20px;">
           <div class="video-label-row">
             <div class="video-label">Watch Then Play</div>
           </div>
-
+  
           <div class="video-frame">
             <iframe
               src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
@@ -2435,10 +2503,10 @@
             </iframe>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
-
+  
           <div class="links">
             <a
               class="section-link pressable"
@@ -2451,14 +2519,14 @@
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="photo" class="section">
       <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger photo-flash-link attention tilt-card" id="photo-flash-link" data-tilt-card>
           <div class="tilt-stage">
@@ -2468,10 +2536,10 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p>Upload your best photos to enter.</p>
-
+  
           <div class="links">
             <a
               class="section-link pressable"
@@ -2484,14 +2552,14 @@
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="shoes-for-crews" class="section">
       <div class="section-head">
         <h2>Shoes For Crews</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2501,10 +2569,10 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
-
+  
           <div class="links">
             <a
               class="section-link pressable"
@@ -2515,7 +2583,7 @@
             </a>
             <a class="section-link secondary pressable" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
           </div>
-
+  
           <div class="actions">
             <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫Email Customer Service</a>
             <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
@@ -2523,14 +2591,14 @@
         </div>
       </div>
     </section>
-
+  
     <div class="divider-sparkle" aria-hidden="true"></div>
-
+  
     <section id="touchtunes" class="section">
       <div class="section-head">
         <h2>TouchTunes</h2>
       </div>
-
+  
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2540,10 +2608,10 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-
+  
         <div class="section-copy">
           <p>Enjoy 15 free jukebox credits a week on the House.</p>
-
+  
           <div class="links">
             <a
               class="section-link pressable"
@@ -2564,7 +2632,7 @@
       </div>
     </section>
   </main>
-
+  
   <section class="footer-decor" aria-label="Closing Note">
     <div class="footer-decor-inner">
       <p class="footer-thanks">Thank you for everything you do.</p>
@@ -2573,23 +2641,23 @@
       </p>
     </div>
   </section>
-
+  
   <div class="footer">
     &copy;2026 WH Intellectual, LLC. ®™ All Waffle House trademarks are owned by WH Intellectual, LLC and licensed to Waffle House, Inc.
   </div>
-
+  
   <button class="back-to-top pressable" id="back-to-top" type="button" aria-label="Back to top">
     <span class="arrow">↑</span>
     <span class="label">Top</span>
   </button>
-
+  
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-inner">
       <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
       <img id="lightbox-image" src="" alt="" />
     </div>
   </div>
-
+  
   <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
     <div class="milestone-modal-inner">
       <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
@@ -2598,11 +2666,11 @@
       <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
     </div>
   </div>
-
+  
   <div class="game-modal" id="roadtrip-game-modal" aria-hidden="true">
     <div class="game-modal-inner game-modal-inner--wide">
       <button class="game-modal-close" id="close-roadtrip-game" type="button" aria-label="Close game">&times;</button>
-
+  
       <div class="game-shell roadtrip-shell">
         <div class="game-top roadtrip-top">
           <div class="game-kicker">Anniversary Game</div>
@@ -2611,7 +2679,7 @@
             The celebration points are based on the actual number of Associates we're celebrating in each state across Waffle Nation! Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough points to reach the goal before the tank runs dry. 
           </p>
         </div>
-
+  
         <div class="game-board roadtrip-board">
           <div class="game-map-panel roadtrip-map-panel">
             <div class="game-hud">
@@ -2628,13 +2696,13 @@
                 <div class="hud-value" id="roadtrip-visited">1</div>
               </div>
             </div>
-
+  
             <div class="roadtrip-status-strip">
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
-
-            <div class="roadtrip-scroll-hint">Swipe the map sideways if you need more room.</div>
-
+  
+            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Swipe left or right to see the full road trip map.</div>
+  
             <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
               <div class="game-map roadtrip-map-stage" id="roadtrip-map">
                 <div class="roadtrip-sun" aria-hidden="true"></div>
@@ -2650,12 +2718,13 @@
                   <path class="route-center" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
                 </svg>
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
+                <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
               </div>
             </div>
-
+  
             <div class="game-celebration" id="roadtrip-celebration"></div>
           </div>
-
+  
           <div class="game-side-panel roadtrip-side-panel">
             <div class="game-panel-card">
               <h3>Difficulty</h3>
@@ -2665,33 +2734,33 @@
                 <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
               </div>
             </div>
-
+  
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
               <p class="roadtrip-helper">Tap a glowing state on the map or use these quick-pick buttons.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
-
+  
             <div class="game-panel-card">
               <h3>Trip Route</h3>
               <div class="roadtrip-route-chips" id="roadtrip-route-chips"></div>
             </div>
-
+  
             <div class="game-panel-card">
               <h3>Top Celebration States</h3>
               <div class="top-state-list" id="roadtrip-top-states"></div>
             </div>
-
+  
             <div class="game-panel-card">
               <h3>Bonus Refuel Stops</h3>
               <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
             </div>
-
+  
             <div class="game-panel-card">
               <h3>Trip Goal</h3>
               <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
-
+  
             <div class="game-actions">
               <button class="section-link pressable" id="roadtrip-restart" type="button">Restart Trip</button>
             </div>
@@ -2700,11 +2769,11 @@
       </div>
     </div>
   </div>
-
+  
   <div class="anniversary-tip" id="anniversary-tip" aria-hidden="true">
     🎈 Tap the balloons to reveal milestone counts
   </div>
-
+  
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -2730,7 +2799,6 @@
       const backToTop = document.getElementById("back-to-top");
       const heroImage = document.querySelector(".hero-image img");
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
-      const pressables = document.querySelectorAll(".pressable");
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
       const lyricScrubber = document.getElementById("lyric-scrubber");
@@ -2742,6 +2810,7 @@
       const closeRoadtripGame = document.getElementById("close-roadtrip-game");
       const roadtripMap = document.getElementById("roadtrip-map");
       const roadtripCar = document.getElementById("roadtrip-car");
+      const roadtripCarFallback = document.getElementById("roadtrip-car-fallback");
       const roadtripScore = document.getElementById("roadtrip-score");
       const roadtripFuel = document.getElementById("roadtrip-fuel");
       const roadtripVisited = document.getElementById("roadtrip-visited");
@@ -2752,6 +2821,7 @@
       const roadtripNextStops = document.getElementById("roadtrip-next-stops");
       const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
       const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
+      const roadtripScrollHint = document.getElementById("roadtrip-scroll-hint");
       const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
       const roadtripGoalCopy = document.getElementById("roadtrip-goal-copy");
       const roadtripLevelButtons = Array.from(document.querySelectorAll("[data-roadtrip-level]"));
@@ -2909,6 +2979,7 @@
       let nudgeTimer;
       let tipShown = false;
       let lastInteractionTime = Date.now();
+      let roadtripHintDismissed = false;
 
       const markInteraction = () => {
         lastInteractionTime = Date.now();
@@ -3206,54 +3277,54 @@
           runIdleNudge();
         }, 6200);
       };
-     if (!prefersReducedMotion && photoFlashLink) {
-  let photoFlashTimeout;
-  let photoFlashLoopTimeout;
 
-  const triggerPhotoFlash = () => {
-    photoFlashLink.classList.remove("flash-now");
-    void photoFlashLink.offsetWidth;
-    photoFlashLink.classList.add("flash-now");
+      if (!prefersReducedMotion && photoFlashLink) {
+        let photoFlashTimeout;
+        let photoFlashLoopTimeout;
 
-    clearTimeout(photoFlashTimeout);
-    photoFlashTimeout = setTimeout(() => {
-      photoFlashLink.classList.remove("flash-now");
-    }, 1100);
-  };
+        const triggerPhotoFlash = () => {
+          photoFlashLink.classList.remove("flash-now");
+          void photoFlashLink.offsetWidth;
+          photoFlashLink.classList.add("flash-now");
 
-  const startPhotoFlashLoop = () => {
-    clearTimeout(photoFlashLoopTimeout);
+          clearTimeout(photoFlashTimeout);
+          photoFlashTimeout = setTimeout(() => {
+            photoFlashLink.classList.remove("flash-now");
+          }, 1100);
+        };
 
-    const loop = () => {
-      if (document.visibilityState === "visible") {
+        const startPhotoFlashLoop = () => {
+          clearTimeout(photoFlashLoopTimeout);
+
+          const loop = () => {
+            if (document.visibilityState === "visible") {
+              triggerPhotoFlash();
+            }
+
+            photoFlashLoopTimeout = setTimeout(
+              loop,
+              mobileMedia.matches ? 3200 : 2600
+            );
+          };
+
+          photoFlashLoopTimeout = setTimeout(loop, 1200);
+        };
+
         triggerPhotoFlash();
+        startPhotoFlashLoop();
+
+        photoFlashLink.addEventListener("click", triggerPhotoFlash);
+        photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            triggerPhotoFlash();
+            startPhotoFlashLoop();
+          } else {
+            clearTimeout(photoFlashLoopTimeout);
+          }
+        });
       }
-
-      photoFlashLoopTimeout = setTimeout(
-        loop,
-        mobileMedia.matches ? 3200 : 2600
-      );
-    };
-
-    photoFlashLoopTimeout = setTimeout(loop, 1200);
-  };
-
-  triggerPhotoFlash();
-  startPhotoFlashLoop();
-
-  photoFlashLink.addEventListener("click", triggerPhotoFlash);
-  photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      triggerPhotoFlash();
-      startPhotoFlashLoop();
-    } else {
-      clearTimeout(photoFlashLoopTimeout);
-    }
-  });
-}
-
 
       const resetTiltCard = (card, instant = false) => {
         const stage = card.querySelector(".tilt-stage");
@@ -3392,6 +3463,22 @@
           .filter((state) => state && !roadTrip.visited.has(state.code));
       };
 
+      const updateRoadtripScrollHint = () => {
+        if (!roadtripScrollHint || !roadtripMapScroll) return;
+        const isMobileWidth = window.innerWidth <= 700;
+        const canScroll = roadtripMapScroll.scrollWidth > roadtripMapScroll.clientWidth + 8;
+        const nearEnd = roadtripMapScroll.scrollLeft + roadtripMapScroll.clientWidth >= roadtripMapScroll.scrollWidth - 12;
+        const shouldShow = isMobileWidth && canScroll && !roadtripHintDismissed && !nearEnd;
+        roadtripScrollHint.classList.toggle("show", shouldShow);
+      };
+
+      const positionRoadtripCarFallback = () => {
+        if (!roadtripCarFallback) return;
+        roadtripCarFallback.style.left = roadtripCar.style.left;
+        roadtripCarFallback.style.top = roadtripCar.style.top;
+        roadtripCarFallback.style.transform = roadtripCar.style.transform || "translate(-50%, -50%) scaleX(1)";
+      };
+
       const scrollRoadTripMapToCurrent = () => {
         if (!roadtripMapScroll || !roadtripMap || !roadtripCar) return;
         if (window.innerWidth > 700) return;
@@ -3401,6 +3488,7 @@
         const targetX = (current.x / 100) * mapRect.width - roadtripMapScroll.clientWidth / 2;
         const left = Math.max(0, targetX);
         roadtripMapScroll.scrollTo({ left, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        requestAnimationFrame(updateRoadtripScrollHint);
       };
 
       const renderRoadTripRoute = () => {
@@ -3470,7 +3558,6 @@
       };
 
       const updateRoadTripHUD = () => {
-        const settings = getRoadTripSettings();
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadTrip.fuel;
         roadtripVisited.textContent = roadTrip.visited.size;
@@ -3491,12 +3578,14 @@
         roadtripCar.style.left = `${carX}%`;
         roadtripCar.style.top = `${carY}%`;
         roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
+        positionRoadtripCarFallback();
 
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
         updateRoadTripLevelText();
         scrollRoadTripMapToCurrent();
+        updateRoadtripScrollHint();
       };
 
       const showRoadTripCelebration = (message) => {
@@ -3606,7 +3695,11 @@
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
-        setTimeout(scrollRoadTripMapToCurrent, 60);
+        roadtripHintDismissed = false;
+        setTimeout(() => {
+          scrollRoadTripMapToCurrent();
+          updateRoadtripScrollHint();
+        }, 60);
       };
 
       const closeRoadTripModalFn = () => {
@@ -3630,13 +3723,35 @@
         }
       });
 
+      roadtripMapScroll?.addEventListener("scroll", () => {
+        if (roadtripMapScroll.scrollLeft > 16) {
+          roadtripHintDismissed = true;
+        }
+        updateRoadtripScrollHint();
+      }, { passive: true });
+
+      roadtripCar?.addEventListener("error", () => {
+        roadtripCar.classList.add("car-fallback-hidden");
+        roadtripCarFallback?.classList.add("show");
+        positionRoadtripCarFallback();
+      });
+
+      roadtripCar?.addEventListener("load", () => {
+        roadtripCar.classList.remove("car-fallback-hidden");
+        roadtripCarFallback?.classList.remove("show");
+        positionRoadtripCarFallback();
+      });
+
       renderTopStates();
       renderBonusStops();
       createStateButtons();
       applyRoadTripLevel("beginner");
       enableTiltCards();
+      runIdleNudge();
       window.addEventListener("resize", () => {
         tiltCards.forEach((card) => resetTiltCard(card, true));
+        updateRoadtripScrollHint();
+        positionRoadtripCarFallback();
       });
       pointerFineMedia.addEventListener?.("change", () => {
         tiltCards.forEach((card) => resetTiltCard(card, true));
@@ -3644,9 +3759,10 @@
       syncAudioState();
       updateSongButton();
       renderLyrics();
+      positionRoadtripCarFallback();
+      updateRoadtripScrollHint();
     });
   </script>
-  
- <script src="waffle-chat-module.js" defer></script>
+  <script src="waffle-chat-module.js" defer></script>
 </body>
 </html>
