@@ -1517,6 +1517,26 @@
       animation: celebrationBounce 0.45s ease;
     }
 
+    .roadtrip-toast {
+      display: none;
+      margin: 0 0 12px;
+      padding: 11px 14px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%);
+      border: 1px solid rgba(176, 150, 44, 0.24);
+      box-shadow: 0 10px 18px rgba(92, 77, 19, 0.08);
+      color: #5a4a00;
+      font-size: 0.9rem;
+      font-weight: 800;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .roadtrip-toast.show {
+      display: block;
+      animation: celebrationBounce 0.32s ease;
+    }
+
     @keyframes celebrationBounce {
       0% { transform: scale(0.95); opacity: 0; }
       60% { transform: scale(1.04); opacity: 1; }
@@ -1646,16 +1666,18 @@
 
     .roadtrip-scroll-hint {
       display: none;
-      margin: 0 0 10px;
+      margin: 0 0 14px;
       text-align: center;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
+      line-height: 1.34;
       font-weight: 800;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.02em;
       color: #7b6c00;
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255, 247, 200, 0.9);
+      padding: 12px 16px;
+      border-radius: 28px;
+      background: rgba(255, 247, 200, 0.92);
       border: 1px solid rgba(212, 176, 0, 0.18);
+      box-shadow: 0 8px 18px rgba(92, 77, 19, 0.08);
     }
 
     .roadtrip-scroll-hint.show {
@@ -1818,7 +1840,9 @@
     }
 
     .roadtrip-map-stage .state-node.visited {
-      opacity: 0.62;
+      opacity: 0.9;
+      filter: saturate(0.92) brightness(0.98);
+      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.12);
     }
 
     .roadtrip-map-stage .state-node.available {
@@ -1839,9 +1863,9 @@
     }
 
     .roadtrip-map-stage .state-node.unavailable {
-      opacity: 0.58;
-      filter: saturate(0.46) brightness(1.03);
-      box-shadow: 0 6px 12px rgba(17, 17, 17, 0.06);
+      opacity: 0.5;
+      filter: saturate(0.42) brightness(1.04);
+      box-shadow: 0 6px 12px rgba(17, 17, 17, 0.05);
     }
 
     .roadtrip-map-stage .state-node.unavailable .state-node-label,
@@ -1948,8 +1972,9 @@
 
     .roadtrip-helper {
       font-size: 0.9rem;
+      line-height: 1.5;
       color: #5a5a5a;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
     }
 
     .roadtrip-next-stops {
@@ -2303,6 +2328,12 @@
 
       .roadtrip-helper {
         display: none;
+      }
+
+      .roadtrip-scroll-hint {
+        font-size: 0.78rem;
+        line-height: 1.32;
+        padding: 12px 18px;
       }
 
       .roadtrip-mobile-priority,
@@ -2879,7 +2910,7 @@
   
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
-              <p class="roadtrip-helper">To move from state to state, tap a highlighted state on the map or use these quick-pick buttons.</p>
+              <p class="roadtrip-helper">To move from state to state, tap a highlighted state on the map or use the quick-pick buttons below.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
   
@@ -2957,6 +2988,7 @@
       const roadtripFuel = document.getElementById("roadtrip-fuel");
       const roadtripVisited = document.getElementById("roadtrip-visited");
       const roadtripStatus = document.getElementById("roadtrip-status");
+      const roadtripToast = document.getElementById("roadtrip-toast");
       const roadtripRestart = document.getElementById("roadtrip-restart");
       const roadtripCelebration = document.getElementById("roadtrip-celebration");
       const roadtripTopStates = document.getElementById("roadtrip-top-states");
@@ -3034,6 +3066,13 @@
       };
 
       let currentRoadTripLevel = "beginner";
+      let roadtripToastTimeout;
+      let roadTripPromptFlags = {
+        fuel2: false,
+        fuel1: false,
+        nearGoal: false,
+        bonusNearby: false
+      };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
 
@@ -3682,6 +3721,53 @@
         });
       };
 
+      const hideRoadTripToast = () => {
+        if (!roadtripToast) return;
+        roadtripToast.classList.remove("show");
+        roadtripToast.textContent = "";
+      };
+
+      const showRoadTripToast = (message) => {
+        if (!roadtripToast || !message) return;
+        clearTimeout(roadtripToastTimeout);
+        roadtripToast.textContent = message;
+        roadtripToast.classList.add("show");
+        roadtripToastTimeout = setTimeout(() => {
+          roadtripToast.classList.remove("show");
+        }, 2800);
+      };
+
+      const evaluateRoadTripPrompt = () => {
+        if (roadTrip.gameOver) return;
+        const settings = getRoadTripSettings();
+        const availableMoves = getAvailableMoves();
+        const goalGap = settings.goal - roadTrip.score;
+        const bonusNearby = availableMoves.some((state) => state.fuelBonus);
+
+        if (roadTrip.fuel === 1 && !roadTripPromptFlags.fuel1) {
+          roadTripPromptFlags.fuel1 = true;
+          showRoadTripToast("Last move before the tank runs dry.");
+          return;
+        }
+
+        if (roadTrip.fuel === 2 && !roadTripPromptFlags.fuel2) {
+          roadTripPromptFlags.fuel2 = true;
+          showRoadTripToast("Only 2 moves left. Choose your next stop carefully.");
+          return;
+        }
+
+        if (roadTrip.fuel <= 2 && bonusNearby && !roadTripPromptFlags.bonusNearby) {
+          roadTripPromptFlags.bonusNearby = true;
+          showRoadTripToast("A bonus refuel stop is within reach.");
+          return;
+        }
+
+        if (goalGap > 0 && goalGap <= 2000 && !roadTripPromptFlags.nearGoal) {
+          roadTripPromptFlags.nearGoal = true;
+          showRoadTripToast("Almost there — one strong stop could win the trip.");
+        }
+      };
+
       const updateRoadTripNodes = () => {
         const buttons = roadtripMap.querySelectorAll(".state-node");
         const currentState = roadTripStates[roadTrip.current];
@@ -3796,6 +3882,7 @@
       const finishRoadTrip = (won) => {
         const settings = getRoadTripSettings();
         roadTrip.gameOver = true;
+        hideRoadTripToast();
         updateRoadTripNodes();
         renderRoadTripChoices();
 
@@ -3836,6 +3923,7 @@
         clearRoadTripCelebration();
         setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
         updateRoadTripHUD();
+        evaluateRoadTripPrompt();
 
         if (!prefersReducedMotion && typeof confetti === "function") {
           confetti({
@@ -3874,6 +3962,13 @@
         };
 
         clearRoadTripCelebration();
+        hideRoadTripToast();
+        roadTripPromptFlags = {
+          fuel2: false,
+          fuel1: false,
+          nearGoal: false,
+          bonusNearby: false
+        };
         setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
         updateRoadTripHUD();
       };
