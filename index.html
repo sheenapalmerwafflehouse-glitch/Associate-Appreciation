@@ -2411,6 +2411,18 @@
         top: 76.5% !important;
       }
 
+      .roadtrip-map-stage .state-node.available {
+        opacity: 1 !important;
+        filter: drop-shadow(0 12px 18px rgba(17, 17, 17, 0.24)) saturate(1.18) brightness(1.03) !important;
+        box-shadow: 0 0 0 5px rgba(255, 230, 106, 0.5), 0 18px 30px rgba(17,17,17,0.22) !important;
+      }
+
+      .roadtrip-map-stage .state-node.available .state-node-label,
+      .roadtrip-map-stage .state-node.available .state-node-points,
+      .roadtrip-map-stage .state-node.available .state-node-fuel {
+        opacity: 1 !important;
+      }
+
       .roadtrip-scroll-hint {
         display: block;
       }
@@ -3822,6 +3834,46 @@
         });
       };
 
+      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+
+        const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+
+        for (let i = 0; i < frameCount; i += 1) {
+          const decay = 1 - (i / frameCount);
+          data[i] = (Math.random() * 2 - 1) * decay;
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = "bandpass";
+        bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
+        bandpass.Q.setValueAtTime(q, ctx.currentTime);
+
+        const highpass = ctx.createBiquadFilter();
+        highpass.type = "highpass";
+        highpass.frequency.setValueAtTime(700, ctx.currentTime);
+
+        const gain = ctx.createGain();
+        const startAt = ctx.currentTime + 0.01;
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+
+        source.connect(bandpass);
+        bandpass.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(ctx.destination);
+
+        source.start(startAt);
+        source.stop(startAt + duration + 0.02);
+      };
+
       const playRoadtripMoveSound = () => {
         playRoadtripToneSequence([
           { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
@@ -3845,11 +3897,31 @@
       };
 
       const playBalloonPopSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 740, duration: 0.035, volume: 0.018, type: "triangle", gap: 0.03 },
-          { frequency: 620, duration: 0.045, volume: 0.014, type: "triangle", gap: 0.04 },
-          { frequency: 880, duration: 0.05, volume: 0.012, type: "sine", gap: 0.05 }
-        ]);
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+
+        playNoiseBurst({ duration: 0.05, volume: 0.07, frequency: 1250, q: 0.68 });
+
+        const pop = ctx.createOscillator();
+        const popGain = ctx.createGain();
+        const popFilter = ctx.createBiquadFilter();
+        const startAt = ctx.currentTime + 0.01;
+
+        pop.type = "triangle";
+        pop.frequency.setValueAtTime(175, startAt);
+        pop.frequency.exponentialRampToValueAtTime(68, startAt + 0.055);
+
+        popFilter.type = "lowpass";
+        popFilter.frequency.setValueAtTime(1000, startAt);
+        popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
+
+        popGain.gain.setValueAtTime(0.0001, startAt);
+        popGain.gain.exponentialRampToValueAtTime(0.03, startAt + 0.003);
+        popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
+
+        pop.connect(popFilter).connect(popGain).connect(ctx.destination);
+        pop.start(startAt);
+        pop.stop(startAt + 0.07);
       };
 
       const playRoadtripWinSound = () => {
