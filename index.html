@@ -1605,7 +1605,7 @@
 
     .roadtrip-levels {
       display: grid;
-      grid-template-columns: 1fr 1.22fr 1fr;
+      grid-template-columns: 1fr 1.32fr 1fr;
       gap: 12px;
     }
 
@@ -1759,7 +1759,17 @@
     .zone-west { left: 6%; top: 6%; }
     .zone-midwest { left: 34%; top: 8%; }
     .zone-south { left: 44%; bottom: 8%; }
-    .zone-atlantic { right: 5%; top: 9%; }
+    
+    .zone-atlantic { right: 3%; top: 7%; }
+
+    .roadtrip-map-stage .state-node[data-state="FL"] { left: 84% !important; top: 75.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="IN"] { left: 50.5% !important; top: 22.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="OH"] { left: 60.5% !important; top: 18.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="WV"] { left: 69% !important; top: 30% !important; }
+    .roadtrip-map-stage .state-node[data-state="VA"] { left: 79.5% !important; top: 37.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="NC"] { left: 80.5% !important; top: 49.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="MD"] { left: 88.5% !important; top: 32% !important; }
+    .roadtrip-map-stage .state-node[data-state="DE"] { left: 93.5% !important; top: 23.5% !important; }
 
     .roadtrip-map-stage .state-node {
       position: absolute;
@@ -1828,15 +1838,15 @@
     }
 
     .roadtrip-map-stage .state-node.unavailable {
-      opacity: 1;
-      filter: saturate(0.5) brightness(1.02);
-      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.10);
+      opacity: 0.92;
+      filter: saturate(0.58) brightness(1.01);
+      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
     }
 
     .roadtrip-map-stage .state-node.unavailable .state-node-label,
     .roadtrip-map-stage .state-node.unavailable .state-node-points,
     .roadtrip-map-stage .state-node.unavailable .state-node-fuel {
-      opacity: 0.7;
+      opacity: 0.66;
     }
 
     .roadtrip-map-stage .state-node-label {
@@ -2229,6 +2239,51 @@
       .roadtrip-map-stage {
         width: clamp(560px, 155vw, 760px);
         min-height: 460px;
+      }
+
+      .zone-atlantic {
+        right: 4.5%;
+        top: 6%;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="IN"] {
+        left: 49.5% !important;
+        top: 23.5% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="OH"] {
+        left: 58.5% !important;
+        top: 19.5% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="WV"] {
+        left: 68% !important;
+        top: 31% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="VA"] {
+        left: 80.5% !important;
+        top: 39% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="NC"] {
+        left: 80% !important;
+        top: 50.5% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="MD"] {
+        left: 89% !important;
+        top: 33% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="DE"] {
+        left: 94% !important;
+        top: 24% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="FL"] {
+        left: 84% !important;
+        top: 76.5% !important;
       }
 
       .roadtrip-scroll-hint {
@@ -2782,7 +2837,7 @@
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
   
-            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Swipe left or right to see the full road trip map.</div>
+            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a highlighted state on the map, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
   
             <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
               <div class="game-map roadtrip-map-stage" id="roadtrip-map">
@@ -2818,7 +2873,7 @@
   
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
-              <p class="roadtrip-helper">Tap a glowing state on the map or use these quick-pick buttons.</p>
+              <p class="roadtrip-helper">Tap a highlighted state on the map or use these quick-pick buttons.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
   
