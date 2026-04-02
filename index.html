@@ -4061,276 +4061,78 @@
       updateRoadtripScrollHint();
     });
   </script>
-  <style>
-  .wh-history-launcher {
-    position: fixed;
-    left: 16px;
-    bottom: 18px;
-    z-index: 4700;
-    min-height: 54px;
-    padding: 0 18px;
+<style>
+  body .whhg-launcher {
+    all: unset;
+    box-sizing: border-box;
+    position: fixed !important;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 99990 !important;
+    min-height: 56px;
+    min-width: 206px;
+    padding: 0 20px;
     border: 1px solid rgba(176, 150, 44, 0.18);
     border-radius: 999px;
     background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
     color: #111;
-    font: inherit;
-    font-weight: 800;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 8px 18px rgba(92, 77, 19, 0.14), 0 2px 0 rgba(92, 77, 19, 0.08);
-  }
-
-  .wh-history-panel {
-    position: fixed;
-    left: 16px;
-    bottom: 82px;
-    width: min(400px, calc(100vw - 24px));
-    max-height: min(74vh, 680px);
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(252,248,221,0.96));
-    border: 1px solid rgba(176, 150, 44, 0.16);
-    border-radius: 24px;
-    box-shadow: 0 24px 50px rgba(17, 17, 17, 0.18);
-    overflow: hidden;
-    z-index: 4701;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(16px) scale(0.98);
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-  }
-
-  .wh-history-panel.open {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-  }
-
-  .wh-history-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 16px 16px 14px;
-    border-bottom: 1px solid rgba(176, 150, 44, 0.12);
-    background: linear-gradient(180deg, #fffdf2 0%, #fff8db 100%);
-  }
-
-  .wh-history-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     font-size: 1rem;
     font-weight: 900;
-    letter-spacing: 0.02em;
-  }
-
-  .wh-history-subtitle {
-    font-size: 0.82rem;
-    color: #6b6b6b;
-    margin-top: 2px;
-    line-height: 1.35;
-  }
-
-  .wh-history-close {
-    width: 38px;
-    height: 38px;
-    border: none;
-    border-radius: 50%;
-    background: #fff;
-    color: #111;
-    font-size: 22px;
     line-height: 1;
-    cursor: pointer;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  }
-
-  .wh-history-messages {
-    padding: 14px;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 240px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0));
-  }
-
-  .wh-history-msg {
-    max-width: 90%;
-    padding: 12px 14px;
-    border-radius: 18px;
-    line-height: 1.55;
-    font-size: 0.95rem;
-    white-space: pre-wrap;
-  }
-
-  .wh-history-msg.bot {
-    align-self: flex-start;
-    background: #fff;
-    border: 1px solid rgba(176, 150, 44, 0.12);
-    color: #222;
-  }
-
-  .wh-history-msg.user {
-    align-self: flex-end;
-    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
-    color: #111;
-    font-weight: 700;
-  }
-
-  .wh-history-chips-wrap {
-    padding: 0 14px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .wh-history-chip-label {
-    font-size: 0.76rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #7b6c00;
-  }
-
-  .wh-history-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .wh-history-chip {
-    border: 1px solid rgba(176, 150, 44, 0.14);
-    border-radius: 999px;
-    padding: 8px 12px;
-    background: rgba(255, 247, 200, 0.92);
-    color: #5f5000;
-    font: inherit;
-    font-size: 0.82rem;
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  .wh-history-form {
-    display: flex;
-    gap: 8px;
-    padding: 14px;
-    border-top: 1px solid rgba(176, 150, 44, 0.12);
-    background: rgba(255,255,255,0.92);
-  }
-
-  .wh-history-input {
-    flex: 1;
-    min-width: 0;
-    border: 1px solid rgba(176, 150, 44, 0.18);
-    border-radius: 14px;
-    padding: 12px 14px;
-    font: inherit;
-    color: #111;
-    background: #fff;
-  }
-
-  .wh-history-send {
-    border: none;
-    border-radius: 14px;
-    padding: 0 16px;
-    font: inherit;
-    font-weight: 800;
-    cursor: pointer;
-    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
-    color: #111;
-  }
-
-  .wh-history-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .wh-history-action {
-    border: 1px solid rgba(176, 150, 44, 0.16);
-    border-radius: 999px;
-    padding: 8px 12px;
-    background: rgba(255,255,255,0.92);
-    color: #111;
-    text-decoration: none;
-    font-size: 0.82rem;
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  @media (max-width: 640px) {
-    .wh-history-launcher {
-      left: 12px;
-      bottom: 14px;
-    }
-
-    .wh-history-panel {
-      left: 12px;
-      right: 12px;
-      bottom: 74px;
-      width: auto;
-      max-height: 72vh;
-    }
-  }
-<style>
-  .whhg-launcher {
-    position: fixed;
-    left: 16px;
-    bottom: 18px;
-    z-index: 4700;
-    min-height: 54px;
-    padding: 0 18px;
-    border: 1px solid rgba(176, 150, 44, 0.18);
-    border-radius: 999px;
-    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
-    color: #111;
-    font: inherit;
-    font-weight: 800;
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 10px;
     cursor: pointer;
     box-shadow:
       0 8px 18px rgba(92, 77, 19, 0.14),
       0 2px 0 rgba(92, 77, 19, 0.08);
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .whhg-launcher .whhg-dot {
+  body .whhg-launcher:hover {
+    transform: translateY(-1px);
+  }
+
+  body .whhg-launcher .whhg-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #5fbf5f;
     box-shadow: 0 0 0 4px rgba(95, 191, 95, 0.16);
+    flex: 0 0 auto;
   }
 
-  .whhg-panel {
-    position: fixed;
-    left: 16px;
-    bottom: 82px;
-    width: min(390px, calc(100vw - 24px));
-    height: min(72vh, 640px);
+  body .whhg-panel {
+    box-sizing: border-box;
+    position: fixed !important;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    width: min(410px, calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+    height: min(72vh, 670px);
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(252,248,221,0.96));
+    background: linear-gradient(180deg, rgba(255,255,255,0.985), rgba(252,248,221,0.97));
     border: 1px solid rgba(176, 150, 44, 0.16);
     border-radius: 24px;
     box-shadow: 0 24px 50px rgba(17, 17, 17, 0.18);
     overflow: hidden;
-    z-index: 4701;
+    z-index: 99991 !important;
     opacity: 0;
     visibility: hidden;
     transform: translateY(16px) scale(0.98);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  .whhg-panel.open {
+  body .whhg-panel.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
   }
 
-  .whhg-header {
+  body .whhg-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -4338,27 +4140,30 @@
     padding: 16px 16px 14px;
     border-bottom: 1px solid rgba(176, 150, 44, 0.12);
     background: linear-gradient(180deg, #fffdf2 0%, #fff8db 100%);
+    flex: 0 0 auto;
   }
 
-  .whhg-title {
-    font-size: 1rem;
+  body .whhg-title {
+    font-size: 1.08rem;
     font-weight: 900;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     color: #1e1e1e;
+    margin: 0;
   }
 
-  .whhg-subtitle {
-    font-size: 0.82rem;
+  body .whhg-subtitle {
+    font-size: 0.86rem;
     color: #6b6b6b;
-    margin-top: 3px;
-    line-height: 1.4;
-    max-width: 28ch;
+    margin-top: 4px;
+    line-height: 1.42;
+    max-width: 30ch;
   }
 
-  .whhg-close {
+  body .whhg-close {
+    all: unset;
+    box-sizing: border-box;
     width: 38px;
     height: 38px;
-    border: none;
     border-radius: 50%;
     background: #fff;
     font-size: 22px;
@@ -4367,33 +4172,39 @@
     color: #111;
     box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .whhg-toolbar {
+  body .whhg-toolbar {
     display: flex;
     gap: 8px;
     align-items: center;
     padding: 10px 14px 0;
     flex-wrap: wrap;
+    flex: 0 0 auto;
   }
 
-  .whhg-toolbar-btn {
+  body .whhg-toolbar-btn {
+    all: unset;
+    box-sizing: border-box;
     border: 1px solid rgba(176, 150, 44, 0.14);
     border-radius: 999px;
     padding: 8px 12px;
-    background: rgba(255,255,255,0.86);
+    background: rgba(255,255,255,0.88);
     color: #5f5000;
-    font: inherit;
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 800;
     cursor: pointer;
+    line-height: 1.2;
   }
 
-  .whhg-toolbar-btn:hover {
+  body .whhg-toolbar-btn:hover {
     background: rgba(255,247,200,0.95);
   }
 
-  .whhg-messages {
+  body .whhg-messages {
     flex: 1 1 auto;
     min-height: 0;
     padding: 14px;
@@ -4403,46 +4214,49 @@
     gap: 10px;
   }
 
-  .whhg-msg {
-    max-width: 90%;
+  body .whhg-msg {
+    max-width: 92%;
     padding: 12px 14px;
     border-radius: 18px;
-    line-height: 1.55;
-    font-size: 0.95rem;
+    line-height: 1.58;
+    font-size: 0.97rem;
     white-space: normal;
+    word-break: break-word;
   }
 
-  .whhg-msg.bot {
+  body .whhg-msg.bot {
     align-self: flex-start;
     background: #fff;
     border: 1px solid rgba(176, 150, 44, 0.12);
     color: #272727;
   }
 
-  .whhg-msg.user {
+  body .whhg-msg.user {
     align-self: flex-end;
     background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
     color: #111;
     font-weight: 700;
   }
 
-  .whhg-msg p {
+  body .whhg-msg p {
     margin: 0;
   }
 
-  .whhg-msg p + p {
+  body .whhg-msg p + p {
     margin-top: 8px;
   }
 
-  .whhg-actions {
+  body .whhg-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
   }
 
-  .whhg-action-link,
-  .whhg-action-btn {
+  body .whhg-action-link,
+  body .whhg-action-btn {
+    all: unset;
+    box-sizing: border-box;
     border: 1px solid rgba(176, 150, 44, 0.16);
     border-radius: 999px;
     padding: 8px 12px;
@@ -4457,17 +4271,18 @@
     justify-content: center;
   }
 
-  .whhg-action-link.archivist {
+  body .whhg-action-link.archivist {
     background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
   }
 
-  .whhg-suggestions-wrap {
+  body .whhg-suggestions-wrap {
     border-top: 1px solid rgba(176, 150, 44, 0.10);
     padding: 10px 14px 0;
     background: rgba(255,255,255,0.72);
+    flex: 0 0 auto;
   }
 
-  .whhg-suggestions-label {
+  body .whhg-suggestions-label {
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.06em;
@@ -4476,98 +4291,115 @@
     margin-bottom: 8px;
   }
 
-  .whhg-suggestions {
+  body .whhg-suggestions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    max-height: 120px;
+    max-height: 122px;
     overflow-y: auto;
     padding-bottom: 10px;
   }
 
-  .whhg-chip {
+  body .whhg-chip {
+    all: unset;
+    box-sizing: border-box;
     border: 1px solid rgba(176, 150, 44, 0.14);
     border-radius: 16px;
     padding: 10px 12px;
     background: rgba(255, 247, 200, 0.92);
     color: #5f5000;
-    font: inherit;
-    font-size: 0.82rem;
+    font-size: 0.83rem;
     font-weight: 800;
-    line-height: 1.35;
+    line-height: 1.32;
     text-align: left;
     cursor: pointer;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
   }
 
-  .whhg-chip:hover {
+  body .whhg-chip:hover {
     background: rgba(255, 238, 160, 0.96);
   }
 
-  .whhg-form {
+  body .whhg-form {
     display: flex;
     gap: 8px;
     padding: 12px 14px 14px;
     border-top: 1px solid rgba(176, 150, 44, 0.12);
-    background: rgba(255,255,255,0.94);
+    background: rgba(255,255,255,0.96);
     flex: 0 0 auto;
   }
 
-  .whhg-input {
+  body .whhg-input {
+    all: unset;
+    box-sizing: border-box;
     flex: 1 1 auto;
     min-width: 0;
     border: 1px solid rgba(176, 150, 44, 0.18);
     border-radius: 14px;
     padding: 12px 14px;
-    font: inherit;
     background: #fff;
     color: #111;
+    font-size: 0.95rem;
+    line-height: 1.2;
   }
 
-  .whhg-send {
-    border: none;
+  body .whhg-input::placeholder {
+    color: #7b7b7b;
+  }
+
+  body .whhg-send {
+    all: unset;
+    box-sizing: border-box;
     border-radius: 14px;
     padding: 0 16px;
-    min-width: 72px;
-    font: inherit;
+    min-width: 74px;
+    font-size: 0.95rem;
     font-weight: 800;
     cursor: pointer;
     background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
     color: #111;
     flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .whhg-launcher:focus-visible,
-  .whhg-close:focus-visible,
-  .whhg-toolbar-btn:focus-visible,
-  .whhg-chip:focus-visible,
-  .whhg-send:focus-visible,
-  .whhg-input:focus-visible {
+  body .whhg-launcher:focus-visible,
+  body .whhg-close:focus-visible,
+  body .whhg-toolbar-btn:focus-visible,
+  body .whhg-chip:focus-visible,
+  body .whhg-send:focus-visible,
+  body .whhg-input:focus-visible {
     outline: 3px solid rgba(245, 213, 71, 0.9);
     outline-offset: 2px;
   }
 
   @media (max-width: 640px) {
-    .whhg-launcher {
-      left: 12px;
-      bottom: 14px;
-      min-height: 52px;
+    body .whhg-launcher {
+      left: max(12px, env(safe-area-inset-left));
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      min-height: 54px;
+      min-width: 186px;
       padding: 0 16px;
+      font-size: 0.98rem;
     }
 
-    .whhg-panel {
-      left: 12px;
-      right: 12px;
-      bottom: 74px;
+    body .whhg-panel {
+      left: max(12px, env(safe-area-inset-left));
+      right: max(12px, env(safe-area-inset-right));
+      bottom: calc(74px + env(safe-area-inset-bottom));
       width: auto;
-      height: min(74vh, 680px);
+      height: min(74vh, 690px);
     }
 
-    .whhg-suggestions {
+    body .whhg-suggestions {
       grid-template-columns: 1fr;
-      max-height: 112px;
+      max-height: 104px;
     }
 
-    .whhg-subtitle {
+    body .whhg-subtitle {
       max-width: 24ch;
     }
   }
@@ -4582,7 +4414,7 @@
   <div class="whhg-header">
     <div>
       <div class="whhg-title">Waffle House History Guide</div>
-      <div class="whhg-subtitle">Ask about origins, signs, associate stories, menu milestones, locations, and sales facts.</div>
+      <div class="whhg-subtitle">Honest answers from the approved Waffle House history facts in this guide.</div>
     </div>
     <button id="whhg-close" class="whhg-close" type="button" aria-label="Close history guide">&times;</button>
   </div>
@@ -4598,13 +4430,11 @@
     <div class="whhg-suggestions-label">Try asking</div>
     <div id="whhg-suggestions" class="whhg-suggestions">
       <button type="button" class="whhg-chip">Why is the sign yellow?</button>
-      <button type="button" class="whhg-chip">What was the first franchise?</button>
       <button type="button" class="whhg-chip">Who was Ms. Lucy?</button>
+      <button type="button" class="whhg-chip">What was the first franchise?</button>
       <button type="button" class="whhg-chip">What happened in Indiana?</button>
-      <button type="button" class="whhg-chip">When did Scattered, Smothered, and Covered go on the menu?</button>
       <button type="button" class="whhg-chip">Where is the farthest west location?</button>
       <button type="button" class="whhg-chip">How many waffles do we sell each year?</button>
-      <button type="button" class="whhg-chip">How many locations are there?</button>
     </div>
   </div>
 
@@ -4623,7 +4453,7 @@
 
 <script>
 (() => {
-  const ARCHIVIST_URL = "https://www.surveymonkey.com/r/ARCHIVIST-QUESTION";
+  const ARCHIVIST_URL = https://www.surveymonkey.com/r/ARCHIVIST-QUESTION;
   const STOP_WORDS = new Set([
     "a","an","and","are","as","at","be","but","by","can","did","do","for","from","get","go","how","i","if","in","into","is","it","its","me","my","of","on","or","our","so","tell","that","the","their","them","there","this","to","up","us","was","we","what","when","where","which","who","why","with","you","your","about","please"
   ]);
@@ -4692,7 +4522,7 @@
     {
       id: "berts-chili",
       types: ["who", "what", "when", "where"],
-      phrases: ["bert's chili", "berts chili", "bert thornton", "texas 1984", "who created berts chili"],
+      phrases: ["bert's chili", "berts chili", "bert thornton", "texas 1984", "who created berts chili", "who was bert thornton"],
       answer: "Operator Bert Thornton created the recipe for Bert’s Chili in Texas in 1984, and he worked in operations for 38 years."
     },
     {
@@ -4755,6 +4585,9 @@
   const funFactBtn = document.getElementById("whhg-fun-fact");
   const clearBtn = document.getElementById("whhg-clear-chat");
 
+  let lastBotFingerprint = "";
+  let lastBotTimestamp = 0;
+
   function normalize(text) {
     return String(text || "")
       .toLowerCase()
@@ -4781,7 +4614,19 @@
     return "what";
   }
 
-  function addMessage(html, sender, actions = []) {
+  function escapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function addMessage(html, sender, actions = [], fingerprint = "") {
+    const now = Date.now();
+    if (sender === "bot" && fingerprint && fingerprint === lastBotFingerprint && (now - lastBotTimestamp) < 1200) {
+      return;
+    }
+
     const bubble = document.createElement("div");
     bubble.className = "whhg-msg " + sender;
     bubble.innerHTML = html;
@@ -4800,15 +4645,6 @@
           a.textContent = action.label;
           actionWrap.appendChild(a);
         }
-
-        if (action.type === "button") {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "whhg-action-btn";
-          btn.textContent = action.label;
-          btn.addEventListener("click", action.onClick);
-          actionWrap.appendChild(btn);
-        }
       });
 
       bubble.appendChild(actionWrap);
@@ -4816,17 +4652,15 @@
 
     messages.appendChild(bubble);
     messages.scrollTop = messages.scrollHeight;
+
+    if (sender === "bot" && fingerprint) {
+      lastBotFingerprint = fingerprint;
+      lastBotTimestamp = now;
+    }
   }
 
   function addUserMessage(text) {
     addMessage(escapeHtml(text), "user");
-  }
-
-  function escapeHtml(text) {
-    return String(text || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
   }
 
   function archivistFallback() {
@@ -4839,7 +4673,8 @@
           href: ARCHIVIST_URL,
           archivist: true
         }
-      ]
+      ],
+      fingerprint: "archivist-fallback"
     };
   }
 
@@ -4867,11 +4702,6 @@
       }
     }
 
-    if (questionType === "who") {
-      const whoWords = ["who", "name", "person", "people"];
-      if (!whoWords.some((w) => qNorm.includes(w))) score -= 1;
-    }
-
     if (questionType === "why" && /why|reason/.test(qNorm) && fact.types.includes("why")) {
       score += 2;
     }
@@ -4887,68 +4717,40 @@
     const qNorm = normalize(question);
     if (!qNorm) return null;
 
-    if (qNorm === "show me a fun fact" || qNorm === "fun fact" || qNorm === "surprise me") {
-      return randomFact();
-    }
-
     const questionType = detectQuestionType(question);
     const ranked = facts
       .map((fact) => ({ fact, score: scoreFact(question, fact, questionType) }))
       .sort((a, b) => b.score - a.score);
 
     const best = ranked[0];
-    const second = ranked[1];
-
     if (!best || best.score < 7) {
       return archivistFallback();
     }
 
     if (questionType === "who") {
       const personLike = /\b(ms\.?|lucy|bert|thornton|operator)\b/i.test(best.fact.answer);
-      if (!personLike) {
-        return archivistFallback();
-      }
+      if (!personLike) return archivistFallback();
     }
 
     if (questionType === "when") {
-      const hasYear = /\b(19|20)\d{2}\b/.test(best.fact.answer);
-      if (!hasYear && !/\b1980s\b/i.test(best.fact.answer)) {
-        return archivistFallback();
-      }
+      const hasYear = /\b(19|20)\d{2}\b/.test(best.fact.answer) || /\b1980s\b/i.test(best.fact.answer);
+      if (!hasYear) return archivistFallback();
     }
 
     if (questionType === "where") {
       const hasPlace = /\b(arizona|ohio|indiana|texas|goodyear|austinburg|unit)\b/i.test(best.fact.answer);
-      if (!hasPlace) {
-        return archivistFallback();
-      }
+      if (!hasPlace) return archivistFallback();
     }
 
     if (questionType === "quantity") {
       const hasNumber = /\b\d|million|%|percent|\$\d/.test(best.fact.answer);
-      if (!hasNumber) {
-        return archivistFallback();
-      }
-    }
-
-    let html = "<p>" + escapeHtml(best.fact.answer) + "</p>";
-
-    if (
-      second &&
-      second.score >= 9 &&
-      best.fact.id !== second.fact.id &&
-      (
-        (best.fact.id.includes("sign") && second.fact.id.includes("sign")) ||
-        (best.fact.id.includes("sales") && second.fact.id.includes("sales"))
-      ) &&
-      questionType === "what"
-    ) {
-      html += "<p>" + escapeHtml(second.fact.answer) + "</p>";
+      if (!hasNumber) return archivistFallback();
     }
 
     return {
-      html,
-      actions: []
+      html: "<p>" + escapeHtml(best.fact.answer) + "</p>",
+      actions: [],
+      fingerprint: "fact:" + best.fact.id
     };
   }
 
@@ -4956,7 +4758,8 @@
     const fact = facts[Math.floor(Math.random() * facts.length)];
     return {
       html: "<p>" + escapeHtml(fact.answer) + "</p>",
-      actions: []
+      actions: [],
+      fingerprint: "funfact:" + fact.id
     };
   }
 
@@ -4973,9 +4776,13 @@
 
   function clearChat() {
     messages.innerHTML = "";
+    lastBotFingerprint = "";
+    lastBotTimestamp = 0;
     addMessage(
-      "<p>Hi — I’m the Waffle House History Guide.</p><p>I answer from the approved history facts in this guide. If I don’t have the answer yet, I’ll point you to the archivist.</p>",
-      "bot"
+      "<p>Hi — I’m the Waffle House History Guide.</p><p>I answer from the approved history facts in this guide. When I don’t have the answer yet, I’ll point you to the archivist.</p>",
+      "bot",
+      [],
+      "intro"
     );
   }
 
@@ -4984,7 +4791,7 @@
     if (!trimmed) return;
     addUserMessage(trimmed);
     const reply = answerQuestion(trimmed) || archivistFallback();
-    addMessage(reply.html, "bot", reply.actions || []);
+    addMessage(reply.html, "bot", reply.actions || [], reply.fingerprint || "");
   }
 
   launcher.addEventListener("click", () => {
@@ -5015,7 +4822,7 @@
   funFactBtn.addEventListener("click", () => {
     openPanel();
     const reply = randomFact();
-    addMessage(reply.html, "bot", reply.actions || []);
+    addMessage(reply.html, "bot", reply.actions || [], reply.fingerprint || "");
   });
 
   clearBtn.addEventListener("click", clearChat);
@@ -5029,7 +4836,6 @@
   clearChat();
 })();
 </script>
-
 
 </body>
 </html>
