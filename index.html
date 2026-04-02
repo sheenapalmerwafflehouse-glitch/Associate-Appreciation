@@ -3901,6 +3901,691 @@
       updateRoadtripScrollHint();
     });
   </script>
-  <script src="waffle-chat-module.js" defer></script>
+ <script type="module">
+import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.min.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.mjs";
+
+(() => {
+  "use strict";
+
+  const CHAT_PROXY_URL = ""; // Optional backend/proxy URL, e.g. "/api/fetch?url="
+  const MAX_PDF_PAGES = 8;
+  const MAX_LINKS_TO_INDEX = 16;
+  const MAX_EXTERNAL_LINKS_TO_TRY = 8;
+
+  const STOP_WORDS = new Set([
+    "a","an","and","are","as","at","be","but","by","can","do","for","from","get","go","how",
+    "i","if","in","into","is","it","its","me","my","of","on","or","our","so","that","the",
+    "their","them","there","this","to","up","we","what","when","where","which","who","why",
+    "with","you","your","please","find","open","show","tell","about","will","would","could"
+  ]);
+
+  const state = {
+    sources: [],
+    links: [],
+    milestoneCounts: [],
+    externalUnreadable: [],
+    indexed: false,
+    indexingPromise: null,
+    setStatus: null
+  };
+
+  function normalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .replace(/&/g, " and ")
+      .replace(/[^\w\s:/.-]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function tokens(text) {
+    return normalize(text)
+      .split(" ")
+      .map((s) => s.trim())
+      .filter((s) => s && !STOP_WORDS.has(s) && s.length > 1);
+  }
+
+  function isPdf(url) {
+    return /\.pdf($|[?#])/i.test(url || "");
+  }
+
+  function isHtmlLike(url) {
+    return !isPdf(url) && !/^(mailto:|tel:|javascript:|#)/i.test(url || "");
+  }
+
+  function sameOrigin(url) {
+    try {
+      return new URL(url, location.href).origin === location.origin;
+    } catch {
+      return false;
+    }
+  }
+
+  function makeAbsolute(url) {
+    try {
+      return new URL(url, location.href).href;
+    } catch {
+      return url;
+    }
+  }
+
+  function cleanText(text) {
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .replace(/\u00a0/g, " ")
+      .trim();
+  }
+
+  function splitIntoChunks(text) {
+    const raw = String(text || "")
+      .replace(/\r/g, "\n")
+      .split(/\n+/)
+      .map((s) => cleanText(s))
+      .filter(Boolean);
+
+    const chunks = [];
+    raw.forEach((line) => {
+      const parts = line
+        .split(/(?<=[.!?])\s+(?=[A-Z0-9"“])/)
+        .map((s) => cleanText(s))
+        .filter(Boolean);
+      parts.forEach((p) => chunks.push(p));
+    });
+
+    return chunks.filter((c) => c.length > 10);
+  }
+
+  function dateLike(text) {
+    return /\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec|monday|tuesday|wednesday|thursday|friday|saturday|sunday|\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?|\d{4})\b/i.test(text || "");
+  }
+
+  function numberLike(text) {
+    return /\b\d[\d,]*(?:\.\d+)?\b/.test(text || "");
+  }
+
+  function deadlineLike(text) {
+    return /\b(due|deadline|submit|submission|entries|entry|ends|close|closing)\b/i.test(text || "");
+  }
+
+  function contactLike(text) {
+    return /\b(email|call|phone|contact|support|customer service)\b/i.test(text || "") ||
+      /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(text || "") ||
+      /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/.test(text || "");
+  }
+
+  function questionType(q) {
+    const n = normalize(q);
+    if (/\bhow many\b|\bhow much\b/.test(n)) return "quantity";
+    if (/\bwhen\b|\bdue\b|\bdeadline\b/.test(n)) return "when";
+    if (/\bwhere\b/.test(n)) return "where";
+    if (/\bhow do i\b|\bhow can i\b|\bhow to\b/.test(n)) return "how";
+    if (/\bcontact\b|\bemail\b|\bcall\b|\bphone\b|\bsupport\b/.test(n)) return "contact";
+    return "general";
+  }
+
+  function scoreText(q, text, title = "") {
+    const qTokens = tokens(q);
+    const hay = normalize(title + " " + text);
+    let score = 0;
+
+    qTokens.forEach((t) => {
+      if (hay.includes(t)) score += t.length > 4 ? 4 : 2;
+    });
+
+    if (questionType(q) === "quantity" && numberLike(text)) score += 8;
+    if (questionType(q) === "when" && dateLike(text)) score += 10;
+    if (questionType(q) === "when" && deadlineLike(text)) score += 5;
+    if (questionType(q) === "contact" && contactLike(text)) score += 10;
+    if (/\btouchtunes?\b/i.test(q) && /\bcredit\b/i.test(text)) score += 12;
+    if (/\bsubmit|submission|contest\b/i.test(q) && /\bsubmit|submission|entry|entries|contest\b/i.test(text)) score += 8;
+
+    return score;
+  }
+
+  function ensureStyles() {
+    if (document.getElementById("wh-chat-v3-style")) return;
+    const style = document.createElement("style");
+    style.id = "wh-chat-v3-style";
+    style.textContent = `
+      .whc-launcher{
+        position:fixed;left:16px;bottom:18px;z-index:4700;min-height:54px;padding:0 18px;
+        border:1px solid rgba(176,150,44,.18);border-radius:999px;
+        background:linear-gradient(180deg,#ffe66a 0%,#f5d547 100%);color:#111;
+        font:inherit;font-weight:800;display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+        box-shadow:0 8px 18px rgba(92,77,19,.14),0 2px 0 rgba(92,77,19,.08)
+      }
+      .whc-panel{
+        position:fixed;left:16px;bottom:82px;width:min(420px,calc(100vw - 24px));max-height:min(78vh,700px);
+        display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(252,248,221,.96));
+        border:1px solid rgba(176,150,44,.16);border-radius:24px;box-shadow:0 24px 50px rgba(17,17,17,.18);
+        overflow:hidden;z-index:4701;opacity:0;visibility:hidden;transform:translateY(16px) scale(.98);
+        transition:opacity .22s ease,transform .22s ease,visibility .22s ease
+      }
+      .whc-panel.open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+      .whc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 16px 14px;
+        border-bottom:1px solid rgba(176,150,44,.12);background:linear-gradient(180deg,#fffdf2 0%,#fff8db 100%)}
+      .whc-title{font-size:1rem;font-weight:900;letter-spacing:.02em}
+      .whc-sub{font-size:.82rem;color:#6b6b6b;margin-top:2px}
+      .whc-close{width:38px;height:38px;border:none;border-radius:50%;background:#fff;font-size:22px;cursor:pointer;
+        box-shadow:0 6px 14px rgba(0,0,0,.12)}
+      .whc-body{padding:14px;overflow:auto;display:flex;flex-direction:column;gap:10px;min-height:260px}
+      .whc-msg{max-width:90%;padding:12px 14px;border-radius:18px;line-height:1.55;font-size:.95rem;white-space:pre-wrap}
+      .whc-bot{align-self:flex-start;background:#fff;border:1px solid rgba(176,150,44,.12)}
+      .whc-user{align-self:flex-end;background:linear-gradient(180deg,#ffe66a 0%,#f5d547 100%);color:#111;font-weight:700}
+      .whc-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+      .whc-act{border:1px solid rgba(176,150,44,.16);border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.92);
+        color:#111;text-decoration:none;font-size:.82rem;font-weight:800;cursor:pointer}
+      .whc-form{display:flex;gap:8px;padding:14px;border-top:1px solid rgba(176,150,44,.12);background:rgba(255,255,255,.9)}
+      .whc-input{flex:1;min-width:0;border:1px solid rgba(176,150,44,.18);border-radius:14px;padding:12px 14px;font:inherit}
+      .whc-send{border:none;border-radius:14px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer;
+        background:linear-gradient(180deg,#ffe66a 0%,#f5d547 100%);color:#111}
+      .whc-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 12px}
+      .whc-chip{border:1px solid rgba(176,150,44,.14);border-radius:999px;padding:8px 12px;background:rgba(255,247,200,.92);
+        color:#5f5000;font-size:.82rem;font-weight:800;cursor:pointer}
+      .whc-status{font-size:.8rem;color:#6b6b6b;padding:0 14px 10px}
+      @media (max-width:640px){
+        .whc-launcher{left:12px;bottom:14px}
+        .whc-panel{left:12px;right:12px;bottom:74px;width:auto;max-height:74vh}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function getNameFromUrl(url) {
+    try {
+      const u = new URL(url, location.href);
+      const last = decodeURIComponent(u.pathname.split("/").pop() || "");
+      return last || u.hostname;
+    } catch {
+      return url || "";
+    }
+  }
+
+  function buildUI() {
+    ensureStyles();
+    if (document.getElementById("whc-launcher")) return;
+
+    const launcher = document.createElement("button");
+    launcher.id = "whc-launcher";
+    launcher.className = "whc-launcher";
+    launcher.type = "button";
+    launcher.innerHTML = '🧇 <span>Ask</span>';
+
+    const panel = document.createElement("aside");
+    panel.id = "whc-panel";
+    panel.className = "whc-panel";
+    panel.setAttribute("aria-hidden", "true");
+    panel.innerHTML = `
+      <div class="whc-head">
+        <div>
+          <div class="whc-title">Waffle Help</div>
+          <div class="whc-sub">This version can read page text, PDFs, local pages, and some links.</div>
+        </div>
+        <button id="whc-close" class="whc-close" type="button" aria-label="Close chat">&times;</button>
+      </div>
+      <div id="whc-body" class="whc-body"></div>
+      <div class="whc-chips" id="whc-chips">
+        <button type="button" class="whc-chip">How many TouchTunes credits will I get?</button>
+        <button type="button" class="whc-chip">When are submissions due?</button>
+        <button type="button" class="whc-chip">Where are the Shoes for Crews FAQs?</button>
+        <button type="button" class="whc-chip">How many associates are celebrating 10 years?</button>
+      </div>
+      <div id="whc-status" class="whc-status">Indexing page resources…</div>
+      <form id="whc-form" class="whc-form">
+        <input id="whc-input" class="whc-input" type="text" autocomplete="off" placeholder="Ask a question…" />
+        <button class="whc-send" type="submit">Send</button>
+      </form>
+    `;
+    document.body.appendChild(launcher);
+    document.body.appendChild(panel);
+
+    const body = panel.querySelector("#whc-body");
+    const input = panel.querySelector("#whc-input");
+    const close = panel.querySelector("#whc-close");
+    const form = panel.querySelector("#whc-form");
+    const status = panel.querySelector("#whc-status");
+
+    function addMessage(text, sender, actions = []) {
+      const node = document.createElement("div");
+      node.className = "whc-msg " + (sender === "user" ? "whc-user" : "whc-bot");
+      node.textContent = text;
+
+      if (sender !== "user" && actions.length) {
+        const wrap = document.createElement("div");
+        wrap.className = "whc-actions";
+        actions.forEach((act) => {
+          if (act.type === "scroll") {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "whc-act";
+            btn.textContent = act.label;
+            btn.addEventListener("click", () => {
+              const el = document.querySelector(act.target);
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+            wrap.appendChild(btn);
+          } else if (act.type === "link") {
+            const a = document.createElement("a");
+            a.className = "whc-act";
+            a.textContent = act.label;
+            a.href = act.href;
+            a.target = act.href.startsWith("http") ? "_blank" : "_self";
+            a.rel = "noopener noreferrer";
+            wrap.appendChild(a);
+          }
+        });
+        node.appendChild(wrap);
+      }
+
+      body.appendChild(node);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    async function runQuestion(question) {
+      addMessage(question, "user");
+      const result = await answerQuestion(question);
+      addMessage(result.text, "bot", result.actions);
+    }
+
+    function openPanel() {
+      panel.classList.add("open");
+      panel.setAttribute("aria-hidden", "false");
+      input.focus();
+    }
+
+    function closePanel() {
+      panel.classList.remove("open");
+      panel.setAttribute("aria-hidden", "true");
+    }
+
+    launcher.addEventListener("click", () => {
+      if (panel.classList.contains("open")) closePanel();
+      else openPanel();
+    });
+    close.addEventListener("click", closePanel);
+
+    panel.querySelectorAll(".whc-chip").forEach((chip) => {
+      chip.addEventListener("click", async () => {
+        openPanel();
+        await runQuestion(chip.textContent.trim());
+      });
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const question = input.value.trim();
+      if (!question) return;
+      input.value = "";
+      await runQuestion(question);
+    });
+
+    addMessage("Hi! Ask me about this page. I can also read the PDFs and local linked pages.", "bot");
+    state.setStatus = (txt) => { if (status) status.textContent = txt; };
+  }
+
+  function extractSectionSources() {
+    const sources = [];
+    const sections = [...document.querySelectorAll("section.section, main section, .footer-decor")];
+
+    sections.forEach((section) => {
+      const title = cleanText(
+        section.querySelector("h1, h2, h3, .section-kicker, .footer-thanks")?.textContent || ""
+      );
+      const bodyText = [
+        ...section.querySelectorAll("p, .song-label, .song-title, .video-label, .footer-note, .roadtrip-helper, .hud-label, .hud-value, .game-kicker, .game-subtitle, .game-panel-card h3, .game-panel-card p")
+      ].map((n) => cleanText(n.textContent)).filter(Boolean);
+
+      const links = [...section.querySelectorAll("a[href]")].map((a) => ({
+        label: cleanText(a.textContent) || getNameFromUrl(a.getAttribute("href")),
+        href: makeAbsolute(a.getAttribute("href"))
+      }));
+
+      const buttons = [...section.querySelectorAll("button")].map((b) => cleanText(b.textContent)).filter(Boolean);
+
+      const text = cleanText([title, ...bodyText, ...buttons].join(" "));
+      if (!text) return;
+
+      sources.push({
+        kind: "section",
+        title: title || "Section",
+        text,
+        target: section.id ? "#" + section.id : "",
+        links
+      });
+    });
+
+    return sources;
+  }
+
+  function extractMilestones() {
+    return [...document.querySelectorAll(".balloon-hotspot[data-years][data-count]")].map((btn) => ({
+      years: String(btn.dataset.years),
+      count: Number(btn.dataset.count || 0)
+    }));
+  }
+
+  function gatherLinks() {
+    const seen = new Set();
+    const anchors = [...document.querySelectorAll("a[href]")];
+    const out = [];
+
+    anchors.forEach((a) => {
+      const rawHref = a.getAttribute("href");
+      if (!rawHref || /^(mailto:|tel:|javascript:|#)/i.test(rawHref)) return;
+      const href = makeAbsolute(rawHref);
+      if (seen.has(href)) return;
+      seen.add(href);
+
+      out.push({
+        href,
+        label: cleanText(a.textContent) || getNameFromUrl(href),
+        sameOrigin: sameOrigin(href),
+        pdf: isPdf(href),
+        htmlLike: isHtmlLike(href),
+        sourceTitle: cleanText(a.closest("section, .footer-decor")?.querySelector("h1,h2,h3,.footer-thanks")?.textContent || "")
+      });
+    });
+
+    return out.slice(0, MAX_LINKS_TO_INDEX);
+  }
+
+  async function fetchTextResource(url) {
+    const finalUrl = CHAT_PROXY_URL
+      ? `${CHAT_PROXY_URL}${encodeURIComponent(url)}`
+      : url;
+
+    const res = await fetch(finalUrl, { credentials: "omit" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  }
+
+  async function indexPdf(link) {
+    try {
+      const loadingTask = pdfjsLib.getDocument({ url: link.href, withCredentials: false });
+      const pdf = await loadingTask.promise;
+      const pageCount = Math.min(pdf.numPages, MAX_PDF_PAGES);
+      let allText = "";
+
+      for (let i = 1; i <= pageCount; i += 1) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items.map((item) => item.str).join(" ");
+        allText += " " + pageText;
+      }
+
+      return {
+        kind: "pdf",
+        title: link.label,
+        text: cleanText(allText),
+        link
+      };
+    } catch (err) {
+      return {
+        kind: "pdf-unreadable",
+        title: link.label,
+        text: "",
+        link,
+        unreadable: true,
+        reason: String(err?.message || err)
+      };
+    }
+  }
+
+  async function indexHtml(link) {
+    try {
+      const html = await fetchTextResource(link.href);
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const title = cleanText(
+        doc.querySelector("title, h1, h2, h3")?.textContent || link.label
+      );
+      const textBits = [...doc.querySelectorAll("h1,h2,h3,p,li,button,a")]
+        .map((n) => cleanText(n.textContent))
+        .filter(Boolean);
+
+      return {
+        kind: "html",
+        title,
+        text: cleanText(textBits.join(" ")),
+        link
+      };
+    } catch (err) {
+      return {
+        kind: "html-unreadable",
+        title: link.label,
+        text: "",
+        link,
+        unreadable: true,
+        reason: String(err?.message || err)
+      };
+    }
+  }
+
+  async function buildIndex() {
+    state.setStatus?.("Indexing page resources…");
+
+    const sectionSources = extractSectionSources();
+    const milestones = extractMilestones();
+    const links = gatherLinks();
+
+    const sameOriginHtml = links.filter((l) => l.sameOrigin && l.htmlLike);
+    const pdfLinks = links.filter((l) => l.pdf);
+    const externalHtml = links.filter((l) => !l.sameOrigin && l.htmlLike).slice(0, MAX_EXTERNAL_LINKS_TO_TRY);
+
+    const results = await Promise.all([
+      ...sameOriginHtml.map(indexHtml),
+      ...pdfLinks.map(indexPdf),
+      ...externalHtml.map(indexHtml)
+    ]);
+
+    state.sources = [...sectionSources, ...results.filter((r) => r && r.text)];
+    state.links = links;
+    state.milestoneCounts = milestones;
+    state.externalUnreadable = results.filter((r) => r && r.unreadable).map((r) => r.link);
+    state.indexed = true;
+
+    const readablePdfCount = results.filter((r) => r.kind === "pdf" && r.text).length;
+    const readableHtmlCount = results.filter((r) => r.kind === "html" && r.text).length;
+    const unreadableCount = results.filter((r) => r.unreadable).length;
+
+    state.setStatus?.(
+      `Ready. Read ${sectionSources.length} page sections, ${readablePdfCount} PDFs, ${readableHtmlCount} linked pages${unreadableCount ? `, and skipped ${unreadableCount} blocked external links` : ""}.`
+    );
+  }
+
+  async function ensureIndexed() {
+    if (state.indexed) return;
+    if (!state.indexingPromise) {
+      state.indexingPromise = buildIndex().catch((err) => {
+        state.setStatus?.("I hit a problem indexing some resources.");
+        console.error(err);
+      });
+    }
+    await state.indexingPromise;
+  }
+
+  function relatedLinks(question) {
+    const qTokens = tokens(question);
+    const scored = state.links.map((link) => {
+      let score = 0;
+      const hay = normalize([link.label, link.href, link.sourceTitle].join(" "));
+      qTokens.forEach((t) => { if (hay.includes(t)) score += t.length > 4 ? 4 : 2; });
+      if (/\bsubmit|submission|contest|entry|deadline|due\b/i.test(question) && /\bcontest|submission|form|survey\b/i.test(hay)) score += 10;
+      if (/\btouchtunes?|credits?\b/i.test(question) && /\btouchtunes?\b/i.test(hay)) score += 10;
+      if (/\bfaq|faqs|shoes\b/i.test(question) && /\bfaq|pdf|shoes\b/i.test(hay)) score += 10;
+      return { link, score };
+    }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, 3).map((x) => ({
+      label: x.link.label || getNameFromUrl(x.link.href),
+      type: "link",
+      href: x.link.href
+    }));
+  }
+
+  function relatedSectionAction(source) {
+    if (source?.target) return [{ label: `Go to ${source.title}`, type: "scroll", target: source.target }];
+    if (source?.link?.href) return [{ label: `Open ${source.link.label}`, type: "link", href: source.link.href }];
+    return [];
+  }
+
+  function findBestChunk(question) {
+    const candidates = [];
+
+    state.sources.forEach((source) => {
+      splitIntoChunks(source.text).forEach((chunk) => {
+        const score = scoreText(question, chunk, source.title);
+        if (score > 0) candidates.push({ source, chunk, score });
+      });
+
+      const wholeScore = scoreText(question, source.text, source.title);
+      if (wholeScore > 0) {
+        candidates.push({
+          source,
+          chunk: source.text.length > 260 ? source.text.slice(0, 260).replace(/\s+\S*$/, "") + "…" : source.text,
+          score: wholeScore - 2
+        });
+      }
+    });
+
+    candidates.sort((a, b) => b.score - a.score);
+    return candidates[0] || null;
+  }
+
+  function answerMilestone(question) {
+    const q = normalize(question);
+    const match = q.match(/\b(\d{1,2})\s*(year|years)\b/);
+    if (!match) return null;
+    const years = match[1];
+    const found = state.milestoneCounts.find((m) => m.years === years);
+    if (!found) return null;
+    const noun = found.count === 1 ? "Associate" : "Associates";
+    const verb = found.count === 1 ? "is" : "are";
+    return {
+      text: `${found.count.toLocaleString()} ${noun} ${verb} celebrating ${years} ${years === "1" ? "year" : "years"} of service.`,
+      actions: [{ label: "Go to Anniversaries", type: "scroll", target: "#anniversaries" }]
+    };
+  }
+
+  function answerFromVisibleSpecials(question) {
+    if (/\btouchtunes?\b/i.test(question) && /\bcredit\b/i.test(question)) {
+      const src = state.sources.find((s) => /touchtunes/i.test(s.title + " " + s.text));
+      if (src) {
+        const chunk = splitIntoChunks(src.text).find((c) => /\b15\b.*\bcredit\b|\bcredit\b.*\b15\b/i.test(c)) ||
+          splitIntoChunks(src.text).find((c) => /\bcredit\b/i.test(c));
+        if (chunk) {
+          return {
+            text: chunk,
+            actions: [{ label: "Go to TouchTunes", type: "scroll", target: "#touchtunes" }]
+          };
+        }
+      }
+    }
+
+    if (/\bbonus\b|\brefuel\b|\bfuel stops?\b/i.test(question)) {
+      const src = state.sources.find((s) => /bonus refuel stops/i.test(s.title + " " + s.text));
+      if (src) {
+        const chunk = splitIntoChunks(src.text).find((c) => /\bfuel\b|\bbonus\b|\blouisiana\b|\barkansas\b|\btennessee\b/i.test(c));
+        if (chunk) {
+          return {
+            text: chunk,
+            actions: [{ label: "Go to Anniversaries", type: "scroll", target: "#anniversaries" }]
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  async function answerQuestion(question) {
+    await ensureIndexed();
+
+    const qType = questionType(question);
+
+    const milestone = answerMilestone(question);
+    if (milestone) return milestone;
+
+    const special = answerFromVisibleSpecials(question);
+    if (special) return special;
+
+    const best = findBestChunk(question);
+    if (best && best.score >= 8) {
+      return {
+        text: best.chunk,
+        actions: relatedSectionAction(best.source).concat(relatedLinks(question).slice(0, 2))
+      };
+    }
+
+    const links = relatedLinks(question);
+
+    if (qType === "when") {
+      if (links.length) {
+        return {
+          text: "I don’t see a date or deadline I can confirm from this page or the linked content I could read. You can open the most relevant link here.",
+          actions: links
+        };
+      }
+      return {
+        text: "I don’t see a date or deadline I can confirm from this page.",
+        actions: []
+      };
+    }
+
+    if (qType === "contact" && links.length) {
+      return {
+        text: "I don’t see a direct contact answer I can confirm from readable text, but the most relevant help link is here.",
+        actions: links
+      };
+    }
+
+    if (links.length) {
+      const blockedRelated = state.externalUnreadable.find((l) => links.some((x) => x.href === l.href));
+      if (blockedRelated) {
+        return {
+          text: "I couldn’t fully read one of the relevant external pages from the browser, but you can open the best matching link here.",
+          actions: links
+        };
+      }
+      return {
+        text: "I don’t see a direct answer I can confirm, but these are the most relevant links I found.",
+        actions: links
+      };
+    }
+
+    return {
+      text: "I couldn’t find a reliable answer in the page text or the readable linked resources.",
+      actions: []
+    };
+  }
+
+  function scheduleReindex() {
+    let timer;
+    const debounced = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        state.indexed = false;
+        state.indexingPromise = null;
+        ensureIndexed();
+      }, 500);
+    };
+
+    const observer = new MutationObserver(debounced);
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+
+  function start() {
+    buildUI();
+    ensureIndexed();
+    scheduleReindex();
+  }
+
+  if (document.readyState === "complete") start();
+  else window.addEventListener("load", start, { once: true });
+})();
+</script>
+
 </body>
 </html>
