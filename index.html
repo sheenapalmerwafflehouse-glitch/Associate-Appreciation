@@ -1532,6 +1532,7 @@
 
     .roadtrip-map-outcome-card {
       width: min(430px, calc(100% - 12px));
+      max-width: min(430px, 100%);
       padding: 16px 16px 18px;
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
@@ -1539,6 +1540,7 @@
       box-shadow: 0 18px 34px rgba(17, 17, 17, 0.18);
       text-align: center;
       pointer-events: auto;
+      overflow: hidden;
     }
 
     .roadtrip-map-outcome-kicker {
@@ -1564,13 +1566,16 @@
       line-height: 1.08;
       font-weight: 900;
       color: #181818;
+      overflow-wrap: anywhere;
     }
 
     .roadtrip-map-outcome-text {
-      margin: 0;
+      margin: 0 auto;
+      max-width: 28ch;
       color: #4f4f4f;
       font-size: 0.98rem;
       line-height: 1.55;
+      overflow-wrap: anywhere;
     }
 
     .roadtrip-map-restart {
@@ -1579,6 +1584,10 @@
 
     .roadtrip-side-panel .game-actions {
       display: none;
+    }
+
+    .game-actions {
+      display: none !important;
     }
 
     .roadtrip-toast {
@@ -2577,23 +2586,31 @@
       .roadtrip-route-svg .route-main { stroke-width: 22; }
       .roadtrip-route-svg .route-center { stroke-width: 6; stroke-dasharray: 10 12; }
       .roadtrip-map-outcome {
-        inset: 12px 12px auto 12px;
+        inset: 10px 10px auto 10px;
       }
       .roadtrip-map-outcome-card {
-        width: calc(100% - 2px);
+        width: 100%;
+        max-width: none;
         padding: 14px 12px 15px;
         border-radius: 18px;
       }
+      .roadtrip-map-outcome-kicker {
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        font-size: 0.68rem;
+      }
       .roadtrip-map-outcome-title {
-        font-size: clamp(1.05rem, 5.5vw, 1.45rem);
+        font-size: clamp(1.05rem, 5.2vw, 1.42rem);
       }
       .roadtrip-map-outcome-text {
-        font-size: 0.9rem;
-        line-height: 1.45;
+        font-size: 0.88rem;
+        line-height: 1.42;
+        max-width: 24ch;
       }
       .roadtrip-map-restart {
         min-height: 44px;
         padding-inline: 16px;
+        margin-top: 12px;
       }
     }
 
@@ -3087,7 +3104,7 @@
                 <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
                 <div class="roadtrip-point-popups" id="roadtrip-point-popups" aria-hidden="true"></div>
                 <div class="roadtrip-map-outcome" id="roadtrip-map-outcome" aria-live="polite">
-                  <div class="roadtrip-map-outcome-card">
+                  <div class="roadtrip-map-outcome-card" id="roadtrip-map-outcome-card">
                     <div class="roadtrip-map-outcome-kicker" id="roadtrip-map-outcome-kicker">Trip Update</div>
                     <h3 class="roadtrip-map-outcome-title" id="roadtrip-map-outcome-title">Trip over</h3>
                     <p class="roadtrip-map-outcome-text" id="roadtrip-map-outcome-text">Restart and try a different route.</p>
@@ -3136,9 +3153,6 @@
               <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
   
-            <div class="game-actions">
-              <button class="section-link pressable" id="roadtrip-restart" type="button">Restart Trip</button>
-            </div>
           </div>
         </div>
       </div>
@@ -3188,6 +3202,7 @@
       const roadtripCarFallback = document.getElementById("roadtrip-car-fallback");
       const roadtripPointPopups = document.getElementById("roadtrip-point-popups");
       const roadtripMapOutcome = document.getElementById("roadtrip-map-outcome");
+      const roadtripMapOutcomeCard = document.getElementById("roadtrip-map-outcome-card");
       const roadtripMapOutcomeKicker = document.getElementById("roadtrip-map-outcome-kicker");
       const roadtripMapOutcomeTitle = document.getElementById("roadtrip-map-outcome-title");
       const roadtripMapOutcomeText = document.getElementById("roadtrip-map-outcome-text");
@@ -4256,7 +4271,6 @@
             }
           }
 
-          if (roadtripActions) roadtripMobilePriority.appendChild(roadtripActions);
           if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
           if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
           if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
@@ -4271,7 +4285,6 @@
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
           if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
-          if (roadtripActions) roadtripSidePanel.appendChild(roadtripActions);
 
           if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
           if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
@@ -4310,6 +4323,52 @@
         updateRoadtripScrollHint();
       };
 
+      const syncRoadTripMapOutcomeHost = () => {
+        if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll) return;
+        const targetHost = window.innerWidth <= 700 ? roadtripMapScroll : roadtripMap;
+        if (roadtripMapOutcome.parentElement !== targetHost) {
+          targetHost.appendChild(roadtripMapOutcome);
+        }
+      };
+
+      const updateRoadTripMapOutcomeLayout = () => {
+        if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll) return;
+
+        syncRoadTripMapOutcomeHost();
+
+        roadtripMapOutcome.style.left = "";
+        roadtripMapOutcome.style.right = "";
+        roadtripMapOutcome.style.width = "";
+        roadtripMapOutcome.style.inset = "";
+        roadtripMapOutcome.style.top = "";
+        roadtripMapOutcome.style.justifyContent = "";
+        roadtripMapOutcomeCard.style.width = "";
+        roadtripMapOutcomeCard.style.maxWidth = "";
+        roadtripMapOutcomeCard.style.margin = "";
+
+        if (window.innerWidth > 700) {
+          roadtripMapOutcome.style.inset = "18px 18px auto 18px";
+          roadtripMapOutcome.style.justifyContent = "center";
+          roadtripMapOutcomeCard.style.width = "min(430px, calc(100% - 12px))";
+          roadtripMapOutcomeCard.style.maxWidth = "430px";
+          roadtripMapOutcomeCard.style.margin = "0 auto";
+          return;
+        }
+
+        const viewportWidth = roadtripMapScroll.clientWidth;
+        const cardWidth = Math.max(236, viewportWidth - 20);
+
+        roadtripMapOutcome.style.inset = "10px 10px auto 10px";
+        roadtripMapOutcome.style.top = "10px";
+        roadtripMapOutcome.style.left = "10px";
+        roadtripMapOutcome.style.right = "10px";
+        roadtripMapOutcome.style.width = "auto";
+        roadtripMapOutcome.style.justifyContent = "stretch";
+        roadtripMapOutcomeCard.style.width = "100%";
+        roadtripMapOutcomeCard.style.maxWidth = `${cardWidth}px`;
+        roadtripMapOutcomeCard.style.margin = "0 auto";
+      };
+
       const showRoadTripCelebration = (message) => {
         if (!roadtripCelebration) return;
         roadtripCelebration.textContent = message;
@@ -4327,10 +4386,24 @@
         if (roadtripMapOutcomeText) roadtripMapOutcomeText.textContent = text;
         if (roadtripMapRestart) roadtripMapRestart.textContent = buttonLabel;
         roadtripMapOutcome.classList.add("show");
+        updateRoadTripMapOutcomeLayout();
       };
 
       const hideRoadTripMapOutcome = () => {
         roadtripMapOutcome?.classList.remove("show");
+        if (roadtripMapOutcome) {
+          roadtripMapOutcome.style.left = "";
+          roadtripMapOutcome.style.right = "";
+          roadtripMapOutcome.style.width = "";
+          roadtripMapOutcome.style.inset = "";
+          roadtripMapOutcome.style.top = "";
+          roadtripMapOutcome.style.justifyContent = "";
+        }
+        if (roadtripMapOutcomeCard) {
+          roadtripMapOutcomeCard.style.width = "";
+          roadtripMapOutcomeCard.style.maxWidth = "";
+          roadtripMapOutcomeCard.style.margin = "";
+        }
       };
 
       const finishRoadTrip = (won) => {
@@ -4459,6 +4532,7 @@
 
       const openRoadTripModal = () => {
         syncRoadTripLayout();
+        syncRoadTripMapOutcomeHost();
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
@@ -4467,6 +4541,9 @@
         setTimeout(() => {
           scrollRoadTripMapToCurrent();
           updateRoadtripScrollHint();
+          if (roadtripMapOutcome?.classList.contains("show")) {
+            updateRoadTripMapOutcomeLayout();
+          }
         }, 60);
       };
 
@@ -4514,6 +4591,9 @@
           roadtripHintDismissed = true;
         }
         updateRoadtripScrollHint();
+        if (roadtripMapOutcome?.classList.contains("show")) {
+          updateRoadTripMapOutcomeLayout();
+        }
       }, { passive: true });
 
       roadtripModal?.addEventListener("pointerdown", () => {
@@ -4533,6 +4613,7 @@
       });
 
       syncRoadTripLayout();
+      syncRoadTripMapOutcomeHost();
       renderTopStates();
       renderBonusStops();
       createStateButtons();
@@ -4541,9 +4622,13 @@
       runIdleNudge();
       window.addEventListener("resize", () => {
         syncRoadTripLayout();
+        syncRoadTripMapOutcomeHost();
         tiltCards.forEach((card) => resetTiltCard(card, true));
         updateRoadtripScrollHint();
         positionRoadtripCarFallback();
+        if (roadtripMapOutcome?.classList.contains("show")) {
+          updateRoadTripMapOutcomeLayout();
+        }
       });
       pointerFineMedia.addEventListener?.("change", () => {
         syncRoadTripLayout();
