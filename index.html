@@ -4273,345 +4273,763 @@
       max-height: 72vh;
     }
   }
+<style>
+  .whhg-launcher {
+    position: fixed;
+    left: 16px;
+    bottom: 18px;
+    z-index: 4700;
+    min-height: 54px;
+    padding: 0 18px;
+    border: 1px solid rgba(176, 150, 44, 0.18);
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    font: inherit;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow:
+      0 8px 18px rgba(92, 77, 19, 0.14),
+      0 2px 0 rgba(92, 77, 19, 0.08);
+  }
+
+  .whhg-launcher .whhg-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5fbf5f;
+    box-shadow: 0 0 0 4px rgba(95, 191, 95, 0.16);
+  }
+
+  .whhg-panel {
+    position: fixed;
+    left: 16px;
+    bottom: 82px;
+    width: min(390px, calc(100vw - 24px));
+    height: min(72vh, 640px);
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(252,248,221,0.96));
+    border: 1px solid rgba(176, 150, 44, 0.16);
+    border-radius: 24px;
+    box-shadow: 0 24px 50px rgba(17, 17, 17, 0.18);
+    overflow: hidden;
+    z-index: 4701;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+
+  .whhg-panel.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .whhg-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid rgba(176, 150, 44, 0.12);
+    background: linear-gradient(180deg, #fffdf2 0%, #fff8db 100%);
+  }
+
+  .whhg-title {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    color: #1e1e1e;
+  }
+
+  .whhg-subtitle {
+    font-size: 0.82rem;
+    color: #6b6b6b;
+    margin-top: 3px;
+    line-height: 1.4;
+    max-width: 28ch;
+  }
+
+  .whhg-close {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #111;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    flex: 0 0 auto;
+  }
+
+  .whhg-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px 0;
+    flex-wrap: wrap;
+  }
+
+  .whhg-toolbar-btn {
+    border: 1px solid rgba(176, 150, 44, 0.14);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.86);
+    color: #5f5000;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .whhg-toolbar-btn:hover {
+    background: rgba(255,247,200,0.95);
+  }
+
+  .whhg-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .whhg-msg {
+    max-width: 90%;
+    padding: 12px 14px;
+    border-radius: 18px;
+    line-height: 1.55;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+
+  .whhg-msg.bot {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid rgba(176, 150, 44, 0.12);
+    color: #272727;
+  }
+
+  .whhg-msg.user {
+    align-self: flex-end;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    font-weight: 700;
+  }
+
+  .whhg-msg p {
+    margin: 0;
+  }
+
+  .whhg-msg p + p {
+    margin-top: 8px;
+  }
+
+  .whhg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .whhg-action-link,
+  .whhg-action-btn {
+    border: 1px solid rgba(176, 150, 44, 0.16);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.92);
+    color: #111;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .whhg-action-link.archivist {
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+  }
+
+  .whhg-suggestions-wrap {
+    border-top: 1px solid rgba(176, 150, 44, 0.10);
+    padding: 10px 14px 0;
+    background: rgba(255,255,255,0.72);
+  }
+
+  .whhg-suggestions-label {
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #7b6c00;
+    margin-bottom: 8px;
+  }
+
+  .whhg-suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+    padding-bottom: 10px;
+  }
+
+  .whhg-chip {
+    border: 1px solid rgba(176, 150, 44, 0.14);
+    border-radius: 16px;
+    padding: 10px 12px;
+    background: rgba(255, 247, 200, 0.92);
+    color: #5f5000;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .whhg-chip:hover {
+    background: rgba(255, 238, 160, 0.96);
+  }
+
+  .whhg-form {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(176, 150, 44, 0.12);
+    background: rgba(255,255,255,0.94);
+    flex: 0 0 auto;
+  }
+
+  .whhg-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 1px solid rgba(176, 150, 44, 0.18);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font: inherit;
+    background: #fff;
+    color: #111;
+  }
+
+  .whhg-send {
+    border: none;
+    border-radius: 14px;
+    padding: 0 16px;
+    min-width: 72px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    flex: 0 0 auto;
+  }
+
+  .whhg-launcher:focus-visible,
+  .whhg-close:focus-visible,
+  .whhg-toolbar-btn:focus-visible,
+  .whhg-chip:focus-visible,
+  .whhg-send:focus-visible,
+  .whhg-input:focus-visible {
+    outline: 3px solid rgba(245, 213, 71, 0.9);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .whhg-launcher {
+      left: 12px;
+      bottom: 14px;
+      min-height: 52px;
+      padding: 0 16px;
+    }
+
+    .whhg-panel {
+      left: 12px;
+      right: 12px;
+      bottom: 74px;
+      width: auto;
+      height: min(74vh, 680px);
+    }
+
+    .whhg-suggestions {
+      grid-template-columns: 1fr;
+      max-height: 112px;
+    }
+
+    .whhg-subtitle {
+      max-width: 24ch;
+    }
+  }
 </style>
 
-<script>
-(function () {
-  "use strict";
+<button id="whhg-launcher" class="whhg-launcher" type="button" aria-label="Open Waffle House History Guide">
+  <span class="whhg-dot" aria-hidden="true"></span>
+  <span>🧇 History Guide</span>
+</button>
 
-  const FACTS = [
+<aside id="whhg-panel" class="whhg-panel" aria-hidden="true">
+  <div class="whhg-header">
+    <div>
+      <div class="whhg-title">Waffle House History Guide</div>
+      <div class="whhg-subtitle">Ask about origins, signs, associate stories, menu milestones, locations, and sales facts.</div>
+    </div>
+    <button id="whhg-close" class="whhg-close" type="button" aria-label="Close history guide">&times;</button>
+  </div>
+
+  <div class="whhg-toolbar">
+    <button type="button" class="whhg-toolbar-btn" id="whhg-fun-fact">Show me a fun fact</button>
+    <button type="button" class="whhg-toolbar-btn" id="whhg-clear-chat">Clear chat</button>
+  </div>
+
+  <div id="whhg-messages" class="whhg-messages" aria-live="polite"></div>
+
+  <div class="whhg-suggestions-wrap">
+    <div class="whhg-suggestions-label">Try asking</div>
+    <div id="whhg-suggestions" class="whhg-suggestions">
+      <button type="button" class="whhg-chip">Why is the sign yellow?</button>
+      <button type="button" class="whhg-chip">What was the first franchise?</button>
+      <button type="button" class="whhg-chip">Who was Ms. Lucy?</button>
+      <button type="button" class="whhg-chip">What happened in Indiana?</button>
+      <button type="button" class="whhg-chip">When did Scattered, Smothered, and Covered go on the menu?</button>
+      <button type="button" class="whhg-chip">Where is the farthest west location?</button>
+      <button type="button" class="whhg-chip">How many waffles do we sell each year?</button>
+      <button type="button" class="whhg-chip">How many locations are there?</button>
+    </div>
+  </div>
+
+  <form id="whhg-form" class="whhg-form">
+    <input
+      id="whhg-input"
+      class="whhg-input"
+      type="text"
+      autocomplete="off"
+      placeholder="Type a history question..."
+      aria-label="Ask a Waffle House history question"
+    />
+    <button class="whhg-send" type="submit">Send</button>
+  </form>
+</aside>
+
+<script>
+(() => {
+  const ARCHIVIST_URL = "https://www.surveymonkey.com/r/ARCHIVIST-QUESTION";
+  const STOP_WORDS = new Set([
+    "a","an","and","are","as","at","be","but","by","can","did","do","for","from","get","go","how","i","if","in","into","is","it","its","me","my","of","on","or","our","so","tell","that","the","their","them","there","this","to","up","us","was","we","what","when","where","which","who","why","with","you","your","about","please"
+  ]);
+
+  const facts = [
     {
       id: "unit1-pies-hashbrowns",
-      answer: "At Unit #1, pies and hashbrowns took 2 days to make.",
-      tags: ["unit 1", "pies", "hashbrowns", "2 days", "original unit", "first unit"]
+      types: ["what", "quantity"],
+      phrases: ["unit #1 pies and hashbrowns", "how long did pies and hashbrowns take", "2 days pies hashbrowns", "pies and hashbrowns took 2 days", "unit 1 pies hashbrowns"],
+      answer: "At Unit #1, pies and hashbrowns took 2 days to make."
     },
     {
       id: "unit1-daily-average",
-      answer: "Unit #1’s daily average was $183.",
-      tags: ["unit 1", "daily average", "$183", "sales", "original unit"]
+      types: ["what", "quantity"],
+      phrases: ["daily average", "unit #1 daily average", "183 dollars", "$183", "unit 1 daily average"],
+      answer: "Unit #1’s daily average was $183."
     },
     {
-      id: "no-booths",
-      answer: "When Waffle House opened, it started with no booths, just stools and coffee benches.",
-      tags: ["booths", "stools", "coffee benches", "opened", "original store", "first restaurant"]
+      id: "original-seating",
+      types: ["what"],
+      phrases: ["no booths", "stools and coffee benches", "how did it open", "what did it look like when it opened", "original seating", "first opened no booths"],
+      answer: "When Waffle House first opened, there were no booths — just stools and coffee benches."
     },
     {
-      id: "sign-syrup",
-      answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first location off the highway opened.",
-      tags: ["sign", "dripping syrup", "block logo", "logo", "highway", "original sign"]
+      id: "original-sign",
+      types: ["what", "why"],
+      phrases: ["original sign", "dripping syrup", "block logo", "sign mimic syrup", "what was the original sign like"],
+      answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first highway location opened."
     },
     {
       id: "yellow-sign",
-      answer: "Tom and Joe chose the color yellow for the sign so you could see it from far away, similar to how school buses are easy to spot from a distance.",
-      tags: ["yellow", "sign", "tom", "joe", "school bus", "why yellow"]
+      types: ["why", "what"],
+      phrases: ["why is the sign yellow", "yellow sign", "why yellow", "tom and joe chose yellow", "school buses", "sign color"],
+      answer: "Tom and Joe chose yellow for the sign so it could be seen from far away, similar to how school buses are easy to spot from a distance."
     },
     {
       id: "first-franchise",
-      answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles.",
-      tags: ["first franchise", "quick foods", "1967", "northlake foods", "east coast waffles", "franchise"]
+      types: ["what", "when"],
+      phrases: ["first franchise", "quick foods", "northlake foods", "east coast waffles", "1967 franchise"],
+      answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles."
     },
     {
       id: "indiana-name",
-      answer: "In Indiana, there was already a restaurant using the Waffle House name, so locations first opened there as WH Coffeehouse and Waffle & Steak before the rights to the Waffle House name were secured in that state.",
-      tags: ["indiana", "wh coffeehouse", "waffle and steak", "name rights", "rights to waffle house"]
+      types: ["what", "where", "why"],
+      phrases: ["indiana", "wh coffeehouse", "waffle and steak", "rights to waffle house in indiana", "what happened in indiana", "name in indiana"],
+      answer: "In Indiana, Waffle House first opened as WH Coffeehouse and Waffle & Steak before the company got the rights to use the name “Waffle House” in that state."
     },
     {
       id: "ms-lucy",
-      answer: "Ms. Lucy is one of Waffle House’s longest standing hourly associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004, and she was known as an amazing waitress who took great care of every customer.",
-      tags: ["ms lucy", "47 years", "unit 2", "1957", "2004", "longest standing", "hourly associate", "waitress"]
+      types: ["who", "when", "quantity"],
+      phrases: ["ms lucy", "lucy", "longest standing hourly associate", "47 years", "unit #2", "retired in 2004", "started in 1957"],
+      answer: "Ms. Lucy is one of Waffle House’s longest-standing hourly associates, with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004."
     },
     {
       id: "people-agenda",
-      answer: "Waffle House introduced the People Agenda in the 1980s. It included associate benefits such as health insurance and vacation pay for full-time hourly associates.",
-      tags: ["people agenda", "1980s", "benefits", "health insurance", "vacation pay", "full time hourly"]
+      types: ["what", "when"],
+      phrases: ["people agenda", "1980s benefits", "health insurance", "vacation pay", "full time hourly associates", "associate benefits"],
+      answer: "Waffle House introduced the People Agenda in the 1980s. It included benefits such as health insurance and vacation pay for full-time hourly associates."
     },
     {
-      id: "scattered-smothered-covered",
-      answer: "Scattered, Smothered, and Covered lingo was created by associates and went on the menu in 1984.",
-      tags: ["scattered smothered covered", "1984", "lingo", "menu", "hashbrowns"]
+      id: "scattered-smothered",
+      types: ["what", "when"],
+      phrases: ["scattered smothered covered", "when did scattered smothered covered go on the menu", "1984 menu", "menu lingo", "hashbrown lingo"],
+      answer: "Scattered, Smothered, and Covered lingo was created by associates and appeared on the menu in 1984."
     },
     {
       id: "berts-chili",
-      answer: "Operator Bert Thornton created the recipe for Bert’s Chili in Texas in 1984. Bert worked in operations for 38 years.",
-      tags: ["bert", "bert thornton", "bert's chili", "texas", "1984", "operations", "38 years"]
+      types: ["who", "what", "when", "where"],
+      phrases: ["bert's chili", "berts chili", "bert thornton", "texas 1984", "who created berts chili"],
+      answer: "Operator Bert Thornton created the recipe for Bert’s Chili in Texas in 1984, and he worked in operations for 38 years."
     },
     {
       id: "locations-count",
-      answer: "Waffle House has over 2,000 locations in 25 states.",
-      tags: ["2,000 locations", "25 states", "how many locations", "states", "locations"]
+      types: ["quantity", "what", "where"],
+      phrases: ["how many locations", "2000 locations", "25 states", "how many states", "locations are there"],
+      answer: "Waffle House has more than 2,000 locations in 25 states."
     },
     {
       id: "farthest-west",
-      answer: "The farthest west Waffle House location is Unit #481 in Goodyear, Arizona.",
-      tags: ["farthest west", "goodyear", "arizona", "unit 481", "west location"]
+      types: ["where", "what"],
+      phrases: ["farthest west", "goodyear arizona", "unit 481", "westernmost location"],
+      answer: "The farthest west location is Unit #481 in Goodyear, Arizona."
     },
     {
       id: "farthest-north",
-      answer: "The farthest north Waffle House location is Unit #1830 in Austinburg, Ohio.",
-      tags: ["farthest north", "austinburg", "ohio", "unit 1830", "north location"]
+      types: ["where", "what"],
+      phrases: ["farthest north", "austinburg ohio", "unit 1830", "northernmost location"],
+      answer: "The farthest north location is Unit #1830 in Austinburg, Ohio."
     },
     {
       id: "ownership",
-      answer: "Waffle House is 94% company owned, with about 125 franchise locations.",
-      tags: ["94%", "company owned", "125 franchise", "franchise locations", "ownership"]
+      types: ["quantity", "what"],
+      phrases: ["94 percent company owned", "company owned", "franchise locations", "about 125 franchise locations", "ownership"],
+      answer: "About 94% of locations are company owned, with about 125 franchise locations."
     },
     {
       id: "sales-eggs",
-      answer: "Waffle House sells about 300 million eggs each year.",
-      tags: ["eggs", "300 million eggs", "sales numbers", "yearly sales"]
+      types: ["quantity", "what"],
+      phrases: ["how many eggs", "300 million eggs", "eggs each year", "sell eggs"],
+      answer: "Waffle House sells about 300 million eggs each year."
     },
     {
       id: "sales-waffles",
-      answer: "Waffle House sells about 142 million waffles each year.",
-      tags: ["waffles", "142 million waffles", "sales numbers", "yearly sales"]
+      types: ["quantity", "what"],
+      phrases: ["how many waffles", "142 million waffles", "waffles each year", "sell waffles"],
+      answer: "Waffle House sells about 142 million waffles each year."
     },
     {
       id: "sales-bacon",
-      answer: "Waffle House sells about 328 million slices of bacon each year.",
-      tags: ["bacon", "328 million slices", "sales numbers", "yearly sales"]
+      types: ["quantity", "what"],
+      phrases: ["how much bacon", "how many slices of bacon", "328 million slices of bacon", "bacon each year", "sell bacon"],
+      answer: "Waffle House sells about 328 million slices of bacon each year."
     },
     {
       id: "sales-hashbrowns",
-      answer: "Waffle House sells about 200 million servings of hashbrowns each year.",
-      tags: ["hashbrowns", "200 million", "servings of hashbrowns", "sales numbers", "yearly sales"]
+      types: ["quantity", "what"],
+      phrases: ["how many hashbrowns", "200 million servings of hashbrowns", "hashbrowns each year", "sell hashbrowns"],
+      answer: "Waffle House sells about 200 million servings of hashbrowns each year."
     }
   ];
 
-  const SUGGESTIONS = [
-    "Why is the sign yellow?",
-    "Who was Ms. Lucy?",
-    "What was the first franchise?",
-    "When did scattered smothered and covered go on the menu?",
-    "How many TouchTunes credits do I get?",
-    "How many waffles do we sell each year?",
-    "What is the farthest west location?"
-  ];
-
-  const TITLE = "Waffle House History Guide";
-  const SUBTITLE = "Ask about Waffle House history, milestones, menu moments, and trivia facts.";
+  const launcher = document.getElementById("whhg-launcher");
+  const panel = document.getElementById("whhg-panel");
+  const closeBtn = document.getElementById("whhg-close");
+  const messages = document.getElementById("whhg-messages");
+  const form = document.getElementById("whhg-form");
+  const input = document.getElementById("whhg-input");
+  const chips = Array.from(document.querySelectorAll(".whhg-chip"));
+  const funFactBtn = document.getElementById("whhg-fun-fact");
+  const clearBtn = document.getElementById("whhg-clear-chat");
 
   function normalize(text) {
     return String(text || "")
       .toLowerCase()
       .replace(/&/g, " and ")
-      .replace(/[^\w\s#'$-]/g, " ")
+      .replace(/[^\w\s#]/g, " ")
       .replace(/\s+/g, " ")
       .trim();
   }
 
-  function tokens(text) {
-    return normalize(text).split(" ").filter(Boolean);
+  function tokenize(text) {
+    return normalize(text)
+      .split(" ")
+      .map((t) => t.trim())
+      .filter((t) => t && !STOP_WORDS.has(t) && t.length > 1);
   }
 
-  function createNode(html) {
-    const div = document.createElement("div");
-    div.innerHTML = html.trim();
-    return div.firstElementChild;
+  function detectQuestionType(text) {
+    const q = normalize(text);
+    if (q.startsWith("who ") || q.includes(" who ") || q.startsWith("who's")) return "who";
+    if (q.startsWith("when ") || q.includes(" what year ") || q.includes(" what time ")) return "when";
+    if (q.startsWith("where ") || q.includes(" which location ") || q.includes(" what location ")) return "where";
+    if (q.startsWith("why ")) return "why";
+    if (q.startsWith("how many ") || q.startsWith("how much ") || q.includes(" how many ") || q.includes(" how much ")) return "quantity";
+    return "what";
   }
 
-  function injectUI() {
-    if (document.querySelector(".wh-history-launcher")) return;
+  function addMessage(html, sender, actions = []) {
+    const bubble = document.createElement("div");
+    bubble.className = "whhg-msg " + sender;
+    bubble.innerHTML = html;
 
-    const launcher = createNode(`
-      <button class="wh-history-launcher" type="button" aria-label="Open Waffle House History Guide">
-        <span>🧇</span>
-        <span>History Guide</span>
-      </button>
-    `);
-
-    const panel = createNode(`
-      <aside class="wh-history-panel" aria-hidden="true">
-        <div class="wh-history-header">
-          <div>
-            <div class="wh-history-title">${TITLE}</div>
-            <div class="wh-history-subtitle">${SUBTITLE}</div>
-          </div>
-          <button class="wh-history-close" type="button" aria-label="Close history guide">&times;</button>
-        </div>
-        <div class="wh-history-messages"></div>
-        <div class="wh-history-chips-wrap">
-          <div class="wh-history-chip-label">Try asking</div>
-          <div class="wh-history-chips"></div>
-        </div>
-        <form class="wh-history-form">
-          <input class="wh-history-input" type="text" placeholder="Ask a history question..." autocomplete="off" />
-          <button class="wh-history-send" type="submit">Send</button>
-        </form>
-      </aside>
-    `);
-
-    document.body.appendChild(launcher);
-    document.body.appendChild(panel);
-
-    return { launcher, panel };
-  }
-
-  function addMessage(messagesEl, text, sender, actions) {
-    const msg = document.createElement("div");
-    msg.className = `wh-history-msg ${sender}`;
-    msg.textContent = text;
-
-    if (sender === "bot" && Array.isArray(actions) && actions.length) {
+    if (actions.length && sender === "bot") {
       const actionWrap = document.createElement("div");
-      actionWrap.className = "wh-history-actions";
+      actionWrap.className = "whhg-actions";
+
       actions.forEach((action) => {
-        const btn = document.createElement(action.href ? "a" : "button");
-        btn.className = "wh-history-action";
-        btn.textContent = action.label;
-        if (action.href) {
-          btn.href = action.href;
-          btn.target = action.href.startsWith("http") ? "_blank" : "_self";
-          if (action.href.startsWith("http")) btn.rel = "noopener noreferrer";
-        } else {
-          btn.type = "button";
-          btn.addEventListener("click", action.onClick);
+        if (action.type === "link") {
+          const a = document.createElement("a");
+          a.className = "whhg-action-link" + (action.archivist ? " archivist" : "");
+          a.href = action.href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = action.label;
+          actionWrap.appendChild(a);
         }
-        actionWrap.appendChild(btn);
+
+        if (action.type === "button") {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "whhg-action-btn";
+          btn.textContent = action.label;
+          btn.addEventListener("click", action.onClick);
+          actionWrap.appendChild(btn);
+        }
       });
-      msg.appendChild(actionWrap);
+
+      bubble.appendChild(actionWrap);
     }
 
-    messagesEl.appendChild(msg);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    messages.appendChild(bubble);
+    messages.scrollTop = messages.scrollHeight;
   }
 
-  function scoreFact(question, fact) {
-    const qNorm = normalize(question);
+  function addUserMessage(text) {
+    addMessage(escapeHtml(text), "user");
+  }
+
+  function escapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  function archivistFallback() {
+    return {
+      html: "<p>I don’t have that in the Waffle House History Guide yet.</p><p>Ask the archivist, or submit your question below.</p>",
+      actions: [
+        {
+          type: "link",
+          label: "Submit your question to the archivist here",
+          href: ARCHIVIST_URL,
+          archivist: true
+        }
+      ]
+    };
+  }
+
+  function scoreFact(query, fact, questionType) {
+    const qNorm = normalize(query);
+    const qTokens = tokenize(query);
     let score = 0;
 
-    fact.tags.forEach((tag) => {
-      const tagNorm = normalize(tag);
-      if (qNorm.includes(tagNorm)) {
-        score += tagNorm.includes(" ") ? 10 : 5;
+    fact.phrases.forEach((phrase) => {
+      const pNorm = normalize(phrase);
+      if (qNorm.includes(pNorm)) {
+        score += pNorm.split(" ").length >= 3 ? 8 : 4;
       }
+      const pTokens = tokenize(phrase);
+      pTokens.forEach((token) => {
+        if (qTokens.includes(token)) score += 1.3;
+      });
     });
 
-    const qTokens = tokens(question);
-    const factTokens = new Set(tokens(fact.answer + " " + fact.tags.join(" ")));
-    qTokens.forEach((token) => {
-      if (factTokens.has(token)) score += 1;
-    });
+    if (questionType) {
+      if (fact.types.includes(questionType)) {
+        score += 4;
+      } else {
+        score -= 7;
+      }
+    }
+
+    if (questionType === "who") {
+      const whoWords = ["who", "name", "person", "people"];
+      if (!whoWords.some((w) => qNorm.includes(w))) score -= 1;
+    }
+
+    if (questionType === "why" && /why|reason/.test(qNorm) && fact.types.includes("why")) {
+      score += 2;
+    }
+
+    if (questionType === "quantity" && /\d|many|much|amount|number/.test(qNorm)) {
+      score += 1.5;
+    }
 
     return score;
   }
 
-  function answerForQuestion(question) {
-    const q = normalize(question);
+  function answerQuestion(question) {
+    const qNorm = normalize(question);
+    if (!qNorm) return null;
 
-    if (!q) {
-      return {
-        text: "Ask me about Waffle House history, milestones, menu moments, locations, or sales numbers."
-      };
+    if (qNorm === "show me a fun fact" || qNorm === "fun fact" || qNorm === "surprise me") {
+      return randomFact();
     }
 
-    if (q.includes("touchtunes") || q.includes("credits")) {
-      const touchtunesSection = document.querySelector("#touchtunes p");
-      if (touchtunesSection && touchtunesSection.textContent.trim()) {
-        return {
-          text: touchtunesSection.textContent.trim(),
-          actions: [{
-            label: "Go to TouchTunes",
-            onClick: () => document.querySelector("#touchtunes")?.scrollIntoView({ behavior: "smooth", block: "start" })
-          }]
-        };
+    const questionType = detectQuestionType(question);
+    const ranked = facts
+      .map((fact) => ({ fact, score: scoreFact(question, fact, questionType) }))
+      .sort((a, b) => b.score - a.score);
+
+    const best = ranked[0];
+    const second = ranked[1];
+
+    if (!best || best.score < 7) {
+      return archivistFallback();
+    }
+
+    if (questionType === "who") {
+      const personLike = /\b(ms\.?|lucy|bert|thornton|operator)\b/i.test(best.fact.answer);
+      if (!personLike) {
+        return archivistFallback();
       }
     }
 
-    if (q.includes("submission") || q.includes("submissions") || q.includes("deadline") || q.includes("due") || q.includes("entry due")) {
-      const contestLink = document.querySelector('#photo a[href]');
-      return {
-        text: "I don’t have a submission deadline in the History Guide. You can open Contest Rules & Submission here.",
-        actions: contestLink ? [{ label: "Open Contest Rules & Submission", href: contestLink.href }] : []
-      };
+    if (questionType === "when") {
+      const hasYear = /\b(19|20)\d{2}\b/.test(best.fact.answer);
+      if (!hasYear && !/\b1980s\b/i.test(best.fact.answer)) {
+        return archivistFallback();
+      }
     }
 
-    const ranked = FACTS
-      .map((fact) => ({ fact, score: scoreFact(question, fact) }))
-      .sort((a, b) => b.score - a.score);
+    if (questionType === "where") {
+      const hasPlace = /\b(arizona|ohio|indiana|texas|goodyear|austinburg|unit)\b/i.test(best.fact.answer);
+      if (!hasPlace) {
+        return archivistFallback();
+      }
+    }
 
-    if (ranked[0] && ranked[0].score >= 4) {
-      return { text: ranked[0].fact.answer };
+    if (questionType === "quantity") {
+      const hasNumber = /\b\d|million|%|percent|\$\d/.test(best.fact.answer);
+      if (!hasNumber) {
+        return archivistFallback();
+      }
+    }
+
+    let html = "<p>" + escapeHtml(best.fact.answer) + "</p>";
+
+    if (
+      second &&
+      second.score >= 9 &&
+      best.fact.id !== second.fact.id &&
+      (
+        (best.fact.id.includes("sign") && second.fact.id.includes("sign")) ||
+        (best.fact.id.includes("sales") && second.fact.id.includes("sales"))
+      ) &&
+      questionType === "what"
+    ) {
+      html += "<p>" + escapeHtml(second.fact.answer) + "</p>";
     }
 
     return {
-      text: "I don’t have that in the History Guide yet. Try asking about sign history, Ms. Lucy, menu milestones, locations, or sales numbers."
+      html,
+      actions: []
     };
   }
 
-  function init() {
-    const ui = injectUI();
-    if (!ui) return;
+  function randomFact() {
+    const fact = facts[Math.floor(Math.random() * facts.length)];
+    return {
+      html: "<p>" + escapeHtml(fact.answer) + "</p>",
+      actions: []
+    };
+  }
 
-    const launcher = ui.launcher;
-    const panel = ui.panel;
-    const closeBtn = panel.querySelector(".wh-history-close");
-    const messagesEl = panel.querySelector(".wh-history-messages");
-    const chipsEl = panel.querySelector(".wh-history-chips");
-    const form = panel.querySelector(".wh-history-form");
-    const input = panel.querySelector(".wh-history-input");
+  function openPanel() {
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    setTimeout(() => input.focus(), 10);
+  }
 
-    function openPanel() {
-      panel.classList.add("open");
-      panel.setAttribute("aria-hidden", "false");
-      input.focus();
-    }
+  function closePanel() {
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+  }
 
-    function closePanel() {
-      panel.classList.remove("open");
-      panel.setAttribute("aria-hidden", "true");
-    }
-
-    launcher.addEventListener("click", () => {
-      if (panel.classList.contains("open")) closePanel();
-      else openPanel();
-    });
-
-    closeBtn.addEventListener("click", closePanel);
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && panel.classList.contains("open")) closePanel();
-    });
-
-    SUGGESTIONS.forEach((question) => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "wh-history-chip";
-      chip.textContent = question;
-      chip.addEventListener("click", () => {
-        addMessage(messagesEl, question, "user");
-        const reply = answerForQuestion(question);
-        addMessage(messagesEl, reply.text, "bot", reply.actions || []);
-        openPanel();
-      });
-      chipsEl.appendChild(chip);
-    });
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const question = input.value.trim();
-      if (!question) return;
-
-      addMessage(messagesEl, question, "user");
-      input.value = "";
-
-      const reply = answerForQuestion(question);
-      addMessage(messagesEl, reply.text, "bot", reply.actions || []);
-    });
-
+  function clearChat() {
+    messages.innerHTML = "";
     addMessage(
-      messagesEl,
-      "Hi! I’m the Waffle House History Guide. Ask me about Waffle House history, menu milestones, legacy associates, location facts, or sales numbers.",
+      "<p>Hi — I’m the Waffle House History Guide.</p><p>I answer from the approved history facts in this guide. If I don’t have the answer yet, I’ll point you to the archivist.</p>",
       "bot"
     );
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
-  } else {
-    init();
+  function ask(question) {
+    const trimmed = String(question || "").trim();
+    if (!trimmed) return;
+    addUserMessage(trimmed);
+    const reply = answerQuestion(trimmed) || archivistFallback();
+    addMessage(reply.html, "bot", reply.actions || []);
   }
+
+  launcher.addEventListener("click", () => {
+    if (panel.classList.contains("open")) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+
+  closeBtn.addEventListener("click", closePanel);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const value = input.value.trim();
+    if (!value) return;
+    input.value = "";
+    ask(value);
+  });
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      openPanel();
+      ask(chip.textContent.trim());
+    });
+  });
+
+  funFactBtn.addEventListener("click", () => {
+    openPanel();
+    const reply = randomFact();
+    addMessage(reply.html, "bot", reply.actions || []);
+  });
+
+  clearBtn.addEventListener("click", clearChat);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && panel.classList.contains("open")) {
+      closePanel();
+    }
+  });
+
+  clearChat();
 })();
 </script>
+
 
 </body>
 </html>
