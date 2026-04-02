@@ -4746,6 +4746,342 @@
     }
   }
 </style>
+<style id="whhg-style">
+  body .whhg-launcher {
+    box-sizing: border-box;
+    position: fixed !important;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    z-index: 99990 !important;
+    min-height: 56px;
+    min-width: 206px;
+    padding: 0 20px;
+    border: 1px solid rgba(176, 150, 44, 0.18);
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow:
+      0 8px 18px rgba(92, 77, 19, 0.14),
+      0 2px 0 rgba(92, 77, 19, 0.08);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body .whhg-launcher:hover {
+    transform: translateY(-1px);
+  }
+
+  body .whhg-launcher .whhg-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #5fbf5f;
+    box-shadow: 0 0 0 4px rgba(95, 191, 95, 0.16);
+    flex: 0 0 auto;
+  }
+
+  body .whhg-panel {
+    box-sizing: border-box;
+    position: fixed !important;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    width: min(410px, calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+    height: min(72vh, 670px);
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(255,255,255,0.985), rgba(252,248,221,0.97));
+    border: 1px solid rgba(176, 150, 44, 0.16);
+    border-radius: 24px;
+    box-shadow: 0 24px 50px rgba(17, 17, 17, 0.18);
+    overflow: hidden;
+    z-index: 99991 !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+
+  body .whhg-panel.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  body .whhg-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid rgba(176, 150, 44, 0.12);
+    background: linear-gradient(180deg, #fffdf2 0%, #fff8db 100%);
+    flex: 0 0 auto;
+  }
+
+  body .whhg-title {
+    font-size: 1.08rem;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    color: #1e1e1e;
+    margin: 0;
+  }
+
+  body .whhg-subtitle {
+    font-size: 0.86rem;
+    color: #6b6b6b;
+    margin-top: 4px;
+    line-height: 1.42;
+    max-width: 30ch;
+  }
+
+  body .whhg-close {
+    box-sizing: border-box;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #111;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body .whhg-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 14px 0;
+    flex-wrap: wrap;
+    flex: 0 0 auto;
+  }
+
+  body .whhg-toolbar-btn {
+    box-sizing: border-box;
+    border: 1px solid rgba(176, 150, 44, 0.14);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.88);
+    color: #5f5000;
+    font-size: 0.84rem;
+    font-weight: 800;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+
+  body .whhg-toolbar-btn:hover {
+    background: rgba(255,247,200,0.95);
+  }
+
+  body .whhg-messages {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  body .whhg-msg {
+    max-width: 92%;
+    padding: 12px 14px;
+    border-radius: 18px;
+    line-height: 1.58;
+    font-size: 0.97rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  body .whhg-msg.bot {
+    align-self: flex-start;
+    background: #fff;
+    border: 1px solid rgba(176, 150, 44, 0.12);
+    color: #272727;
+  }
+
+  body .whhg-msg.user {
+    align-self: flex-end;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    font-weight: 700;
+  }
+
+  body .whhg-msg p {
+    margin: 0;
+  }
+
+  body .whhg-msg p + p {
+    margin-top: 8px;
+  }
+
+  body .whhg-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  body .whhg-action-link {
+    box-sizing: border-box;
+    border: 1px solid rgba(176, 150, 44, 0.16);
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.92);
+    color: #111;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body .whhg-action-link.archivist {
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+  }
+
+  body .whhg-suggestions-wrap {
+    border-top: 1px solid rgba(176, 150, 44, 0.10);
+    padding: 10px 14px 0;
+    background: rgba(255,255,255,0.72);
+    flex: 0 0 auto;
+  }
+
+  body .whhg-suggestions-label {
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #7b6c00;
+    margin-bottom: 8px;
+  }
+
+  body .whhg-suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    max-height: 122px;
+    overflow-y: auto;
+    padding-bottom: 10px;
+  }
+
+  body .whhg-chip {
+    box-sizing: border-box;
+    border: 1px solid rgba(176, 150, 44, 0.14);
+    border-radius: 16px;
+    padding: 10px 12px;
+    background: rgba(255, 247, 200, 0.92);
+    color: #5f5000;
+    font-size: 0.83rem;
+    font-weight: 800;
+    line-height: 1.32;
+    text-align: left;
+    cursor: pointer;
+    min-height: 54px;
+    display: flex;
+    align-items: center;
+  }
+
+  body .whhg-chip:hover {
+    background: rgba(255, 238, 160, 0.96);
+  }
+
+  body .whhg-form {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(176, 150, 44, 0.12);
+    background: rgba(255,255,255,0.96);
+    flex: 0 0 auto;
+  }
+
+  body .whhg-input {
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0;
+    border: 1px solid rgba(176, 150, 44, 0.18);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: #fff;
+    color: #111;
+    font-size: 0.95rem;
+    line-height: 1.2;
+  }
+
+  body .whhg-input::placeholder {
+    color: #7b7b7b;
+  }
+
+  body .whhg-send {
+    border: none;
+    border-radius: 14px;
+    padding: 0 16px;
+    min-width: 74px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+    color: #111;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body .whhg-launcher:focus-visible,
+  body .whhg-close:focus-visible,
+  body .whhg-toolbar-btn:focus-visible,
+  body .whhg-chip:focus-visible,
+  body .whhg-send:focus-visible,
+  body .whhg-input:focus-visible {
+    outline: 3px solid rgba(245, 213, 71, 0.9);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    body .whhg-launcher {
+      left: max(12px, env(safe-area-inset-left));
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      min-height: 54px;
+      min-width: 186px;
+      padding: 0 16px;
+      font-size: 0.98rem;
+    }
+
+    body .whhg-panel {
+      left: max(12px, env(safe-area-inset-left));
+      right: max(12px, env(safe-area-inset-right));
+      bottom: calc(74px + env(safe-area-inset-bottom));
+      width: auto;
+      height: min(74vh, 690px);
+    }
+
+    body .whhg-suggestions {
+      grid-template-columns: 1fr;
+      max-height: 104px;
+    }
+
+    body .whhg-subtitle {
+      max-width: 24ch;
+    }
+  }
+</style>
 
 <button id="whhg-launcher" class="whhg-launcher" type="button" aria-label="Open Waffle House History Guide">
   <span class="whhg-dot" aria-hidden="true"></span>
@@ -4794,7 +5130,12 @@
 </aside>
 
 <script>
-(() => {
+(function () {
+  if (window.__WHHG_INITIALIZED__) {
+    return;
+  }
+  window.__WHHG_INITIALIZED__ = true;
+
   const ARCHIVIST_URL = https://www.surveymonkey.com/r/ARCHIVIST-QUESTION;
   const STOP_WORDS = new Set([
     "a","an","and","are","as","at","be","but","by","can","did","do","for","from","get","go","how","i","if","in","into","is","it","its","me","my","of","on","or","our","so","tell","that","the","their","them","there","this","to","up","us","was","we","what","when","where","which","who","why","with","you","your","about","please"
@@ -4846,7 +5187,7 @@
     {
       id: "ms-lucy",
       types: ["who", "when", "quantity"],
-      phrases: ["ms lucy", "lucy", "longest standing hourly associate", "47 years", "unit #2", "retired in 2004", "started in 1957"],
+      phrases: ["ms lucy", "lucy", "longest standing hourly associate", "47 years", "unit #2", "retired in 2004", "started in 1957", "who was ms lucy"],
       answer: "Ms. Lucy is one of Waffle House’s longest-standing hourly associates, with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004."
     },
     {
@@ -4963,7 +5304,7 @@
       .replace(/>/g, "&gt;");
   }
 
-  function addMessage(html, sender, actions = [], fingerprint = "") {
+  function addMessage(html, sender, actions, fingerprint) {
     const now = Date.now();
     if (sender === "bot" && fingerprint && fingerprint === lastBotFingerprint && (now - lastBotTimestamp) < 1200) {
       return;
@@ -4973,7 +5314,7 @@
     bubble.className = "whhg-msg " + sender;
     bubble.innerHTML = html;
 
-    if (actions.length && sender === "bot") {
+    if (actions && actions.length && sender === "bot") {
       const actionWrap = document.createElement("div");
       actionWrap.className = "whhg-actions";
 
@@ -5002,7 +5343,7 @@
   }
 
   function addUserMessage(text) {
-    addMessage(escapeHtml(text), "user");
+    addMessage(escapeHtml(text), "user", [], "");
   }
 
   function archivistFallback() {
@@ -5061,8 +5402,8 @@
 
     const questionType = detectQuestionType(question);
     const ranked = facts
-      .map((fact) => ({ fact, score: scoreFact(question, fact, questionType) }))
-      .sort((a, b) => b.score - a.score);
+      .map(function (fact) { return { fact: fact, score: scoreFact(question, fact, questionType) }; })
+      .sort(function (a, b) { return b.score - a.score; });
 
     const best = ranked[0];
     if (!best || best.score < 7) {
@@ -5101,14 +5442,14 @@
     return {
       html: "<p>" + escapeHtml(fact.answer) + "</p>",
       actions: [],
-      fingerprint: "funfact:" + fact.id
+      fingerprint: "funfact:" + fact.id + ":" + String(Date.now()).slice(-5)
     };
   }
 
   function openPanel() {
     panel.classList.add("open");
     panel.setAttribute("aria-hidden", "false");
-    setTimeout(() => input.focus(), 10);
+    setTimeout(function () { input.focus(); }, 10);
   }
 
   function closePanel() {
@@ -5136,48 +5477,51 @@
     addMessage(reply.html, "bot", reply.actions || [], reply.fingerprint || "");
   }
 
-  launcher.addEventListener("click", () => {
-    if (panel.classList.contains("open")) {
-      closePanel();
-    } else {
-      openPanel();
-    }
-  });
-
-  closeBtn.addEventListener("click", closePanel);
-
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const value = input.value.trim();
-    if (!value) return;
-    input.value = "";
-    ask(value);
-  });
-
-  chips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      openPanel();
-      ask(chip.textContent.trim());
+  if (launcher && panel && closeBtn && messages && form && input && funFactBtn && clearBtn) {
+    launcher.addEventListener("click", function () {
+      if (panel.classList.contains("open")) {
+        closePanel();
+      } else {
+        openPanel();
+      }
     });
-  });
 
-  funFactBtn.addEventListener("click", () => {
-    openPanel();
-    const reply = randomFact();
-    addMessage(reply.html, "bot", reply.actions || [], reply.fingerprint || "");
-  });
+    closeBtn.addEventListener("click", closePanel);
 
-  clearBtn.addEventListener("click", clearChat);
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+      input.value = "";
+      ask(value);
+    });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && panel.classList.contains("open")) {
-      closePanel();
-    }
-  });
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        openPanel();
+        ask(chip.textContent.trim());
+      });
+    });
 
-  clearChat();
+    funFactBtn.addEventListener("click", function () {
+      openPanel();
+      const reply = randomFact();
+      addMessage(reply.html, "bot", reply.actions || [], reply.fingerprint || "");
+    });
+
+    clearBtn.addEventListener("click", clearChat);
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && panel.classList.contains("open")) {
+        closePanel();
+      }
+    });
+
+    clearChat();
+  }
 })();
 </script>
+
 
 
 </body>
