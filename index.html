@@ -1697,6 +1697,7 @@
     }
 
     .roadtrip-map-panel {
+      position: relative;
       padding: 16px;
       background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,252,241,0.98));
     }
@@ -4324,15 +4325,15 @@
       };
 
       const syncRoadTripMapOutcomeHost = () => {
-        if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll) return;
-        const targetHost = window.innerWidth <= 700 ? roadtripMapScroll : roadtripMap;
+        if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll || !roadtripMapPanel) return;
+        const targetHost = window.innerWidth <= 700 ? roadtripMapPanel : roadtripMap;
         if (roadtripMapOutcome.parentElement !== targetHost) {
           targetHost.appendChild(roadtripMapOutcome);
         }
       };
 
       const updateRoadTripMapOutcomeLayout = () => {
-        if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll) return;
+        if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll || !roadtripMapPanel) return;
 
         syncRoadTripMapOutcomeHost();
 
@@ -4357,16 +4358,17 @@
 
         const viewportWidth = roadtripMapScroll.clientWidth;
         const cardWidth = Math.max(236, viewportWidth - 20);
+        const topOffset = (roadtripMapScroll.offsetTop || 0) + 10;
 
-        roadtripMapOutcome.style.inset = "10px 10px auto 10px";
-        roadtripMapOutcome.style.top = "10px";
+        roadtripMapOutcome.style.inset = "auto";
+        roadtripMapOutcome.style.top = `${topOffset}px`;
         roadtripMapOutcome.style.left = "10px";
-        roadtripMapOutcome.style.right = "10px";
-        roadtripMapOutcome.style.width = "auto";
+        roadtripMapOutcome.style.right = "auto";
+        roadtripMapOutcome.style.width = `${cardWidth}px`;
         roadtripMapOutcome.style.justifyContent = "stretch";
         roadtripMapOutcomeCard.style.width = "100%";
         roadtripMapOutcomeCard.style.maxWidth = `${cardWidth}px`;
-        roadtripMapOutcomeCard.style.margin = "0 auto";
+        roadtripMapOutcomeCard.style.margin = "0";
       };
 
       const showRoadTripCelebration = (message) => {
