@@ -1517,6 +1517,70 @@
       animation: celebrationBounce 0.45s ease;
     }
 
+    .roadtrip-map-outcome {
+      position: absolute;
+      inset: 18px 18px auto 18px;
+      z-index: 18;
+      display: none;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .roadtrip-map-outcome.show {
+      display: flex;
+    }
+
+    .roadtrip-map-outcome-card {
+      width: min(430px, calc(100% - 12px));
+      padding: 16px 16px 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      box-shadow: 0 18px 34px rgba(17, 17, 17, 0.18);
+      text-align: center;
+      pointer-events: auto;
+    }
+
+    .roadtrip-map-outcome-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #5d4f00;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 6px 12px rgba(92, 77, 19, 0.08);
+    }
+
+    .roadtrip-map-outcome-title {
+      margin: 0 0 8px;
+      font-size: clamp(1.25rem, 2.3vw, 1.9rem);
+      line-height: 1.08;
+      font-weight: 900;
+      color: #181818;
+    }
+
+    .roadtrip-map-outcome-text {
+      margin: 0;
+      color: #4f4f4f;
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .roadtrip-map-restart {
+      margin-top: 14px;
+    }
+
+    .roadtrip-side-panel .game-actions {
+      display: none;
+    }
+
     .roadtrip-toast {
       display: none;
       margin: 0 0 12px;
@@ -2512,6 +2576,25 @@
       }
       .roadtrip-route-svg .route-main { stroke-width: 22; }
       .roadtrip-route-svg .route-center { stroke-width: 6; stroke-dasharray: 10 12; }
+      .roadtrip-map-outcome {
+        inset: 12px 12px auto 12px;
+      }
+      .roadtrip-map-outcome-card {
+        width: calc(100% - 2px);
+        padding: 14px 12px 15px;
+        border-radius: 18px;
+      }
+      .roadtrip-map-outcome-title {
+        font-size: clamp(1.05rem, 5.5vw, 1.45rem);
+      }
+      .roadtrip-map-outcome-text {
+        font-size: 0.9rem;
+        line-height: 1.45;
+      }
+      .roadtrip-map-restart {
+        min-height: 44px;
+        padding-inline: 16px;
+      }
     }
 
     @media (max-width: 520px) {
@@ -3003,6 +3086,14 @@
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
                 <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
                 <div class="roadtrip-point-popups" id="roadtrip-point-popups" aria-hidden="true"></div>
+                <div class="roadtrip-map-outcome" id="roadtrip-map-outcome" aria-live="polite">
+                  <div class="roadtrip-map-outcome-card">
+                    <div class="roadtrip-map-outcome-kicker" id="roadtrip-map-outcome-kicker">Trip Update</div>
+                    <h3 class="roadtrip-map-outcome-title" id="roadtrip-map-outcome-title">Trip over</h3>
+                    <p class="roadtrip-map-outcome-text" id="roadtrip-map-outcome-text">Restart and try a different route.</p>
+                    <button class="section-link pressable roadtrip-map-restart" id="roadtrip-map-restart" type="button">Restart Trip</button>
+                  </div>
+                </div>
               </div>
             </div>
   
@@ -3096,6 +3187,11 @@
       const roadtripCar = document.getElementById("roadtrip-car");
       const roadtripCarFallback = document.getElementById("roadtrip-car-fallback");
       const roadtripPointPopups = document.getElementById("roadtrip-point-popups");
+      const roadtripMapOutcome = document.getElementById("roadtrip-map-outcome");
+      const roadtripMapOutcomeKicker = document.getElementById("roadtrip-map-outcome-kicker");
+      const roadtripMapOutcomeTitle = document.getElementById("roadtrip-map-outcome-title");
+      const roadtripMapOutcomeText = document.getElementById("roadtrip-map-outcome-text");
+      const roadtripMapRestart = document.getElementById("roadtrip-map-restart");
       const roadtripScore = document.getElementById("roadtrip-score");
       const roadtripFuel = document.getElementById("roadtrip-fuel");
       const roadtripVisited = document.getElementById("roadtrip-visited");
@@ -3941,6 +4037,24 @@
         ]);
       };
 
+      const playRoadtripRestartSound = () => {
+        playNoiseBurst({ duration: 0.045, volume: 0.038, frequency: 920, q: 0.85 });
+        playRoadtripToneSequence([
+          { frequency: 110, duration: 0.055, volume: 0.014, type: "sawtooth", gap: 0.04 },
+          { frequency: 138, duration: 0.06, volume: 0.014, type: "sawtooth", gap: 0.05 },
+          { frequency: 178, duration: 0.065, volume: 0.014, type: "sawtooth", gap: 0.06 },
+          { frequency: 224, duration: 0.08, volume: 0.012, type: "triangle", gap: 0.08 }
+        ]);
+      };
+
+      const playRoadtripLevelSound = () => {
+        playRoadtripToneSequence([
+          { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
+          { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
+          { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
+        ]);
+      };
+
       const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
         if (!roadtripPointPopups || !text) return;
         const popup = document.createElement("div");
@@ -4206,6 +4320,19 @@
         roadtripCelebration?.classList.remove("show");
       };
 
+      const showRoadTripMapOutcome = ({ kicker = "Trip Update", title = "Trip over", text = "Restart and try a different route.", buttonLabel = "Restart Trip" } = {}) => {
+        if (!roadtripMapOutcome) return;
+        if (roadtripMapOutcomeKicker) roadtripMapOutcomeKicker.textContent = kicker;
+        if (roadtripMapOutcomeTitle) roadtripMapOutcomeTitle.textContent = title;
+        if (roadtripMapOutcomeText) roadtripMapOutcomeText.textContent = text;
+        if (roadtripMapRestart) roadtripMapRestart.textContent = buttonLabel;
+        roadtripMapOutcome.classList.add("show");
+      };
+
+      const hideRoadTripMapOutcome = () => {
+        roadtripMapOutcome?.classList.remove("show");
+      };
+
       const finishRoadTrip = (won) => {
         const settings = getRoadTripSettings();
         roadTrip.gameOver = true;
@@ -4216,6 +4343,12 @@
         if (won) {
           showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
           setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+          showRoadTripMapOutcome({
+            kicker: "Trip Complete",
+            title: "You won!",
+            text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
+            buttonLabel: "Play Again"
+          });
           if (!prefersReducedMotion && typeof confetti === "function") {
             confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           }
@@ -4223,6 +4356,12 @@
         } else {
           showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
           setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
+          showRoadTripMapOutcome({
+            kicker: "Trip Over",
+            title: "Out of fuel or moves",
+            text: "Restart and try a different route.",
+            buttonLabel: "Restart Trip"
+          });
           playRoadtripLoseSound();
         }
       };
@@ -4251,6 +4390,7 @@
         }
 
         clearRoadTripCelebration();
+        hideRoadTripMapOutcome();
         setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
         updateRoadTripHUD();
         animateRoadtripTravel(fromState, nextState, nextState.fuelBonus || 0);
@@ -4294,6 +4434,7 @@
 
         clearRoadTripCelebration();
         hideRoadTripToast();
+        hideRoadTripMapOutcome();
         clearTimeout(roadtripTravelTimeout);
         clearTimeout(roadtripArrivalTimeout);
         setRoadtripCarState({ driving: false, arriving: false });
@@ -4321,6 +4462,7 @@
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
+        hideRoadTripMapOutcome();
         roadtripHintDismissed = false;
         setTimeout(() => {
           scrollRoadTripMapToCurrent();
@@ -4334,14 +4476,29 @@
         document.body.classList.remove("lightbox-open");
       };
 
+      const restartRoadTripWithFeedback = () => {
+        unlockRoadtripAudio();
+        playRoadtripRestartSound();
+        resetRoadTrip();
+      };
+
       openRoadtripGame?.addEventListener("click", () => {
         unlockRoadtripAudio();
         openRoadTripModal();
       });
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
-      roadtripRestart?.addEventListener("click", resetRoadTrip);
+      roadtripRestart?.addEventListener("click", restartRoadTripWithFeedback);
+      roadtripMapRestart?.addEventListener("click", restartRoadTripWithFeedback);
       roadtripLevelButtons.forEach((button) => {
-        button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
+        button.addEventListener("click", () => {
+          unlockRoadtripAudio();
+          if (button.dataset.roadtripLevel !== currentRoadTripLevel) {
+            playRoadtripLevelSound();
+          } else {
+            playRoadtripRestartSound();
+          }
+          applyRoadTripLevel(button.dataset.roadtripLevel);
+        });
       });
       roadtripModal?.addEventListener("click", (e) => {
         if (e.target === roadtripModal) closeRoadTripModalFn();
