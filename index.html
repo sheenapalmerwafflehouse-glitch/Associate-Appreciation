@@ -1752,7 +1752,7 @@
       text-transform: uppercase;
       color: #635500;
       pointer-events: none;
-      z-index: 1;
+      z-index: 8;
       box-shadow: 0 6px 14px rgba(92, 77, 19, 0.07);
     }
 
@@ -1760,16 +1760,17 @@
     .zone-midwest { left: 34%; top: 8%; }
     .zone-south { left: 44%; bottom: 8%; }
     
-    .zone-atlantic { right: 3%; top: 7%; }
+    .zone-atlantic { right: 2.2%; top: 6%; }
 
     .roadtrip-map-stage .state-node[data-state="FL"] { left: 84% !important; top: 75.5% !important; }
-    .roadtrip-map-stage .state-node[data-state="IN"] { left: 50.5% !important; top: 22.5% !important; }
-    .roadtrip-map-stage .state-node[data-state="OH"] { left: 60.5% !important; top: 18.5% !important; }
-    .roadtrip-map-stage .state-node[data-state="WV"] { left: 69% !important; top: 30% !important; }
-    .roadtrip-map-stage .state-node[data-state="VA"] { left: 79.5% !important; top: 37.5% !important; }
-    .roadtrip-map-stage .state-node[data-state="NC"] { left: 80.5% !important; top: 49.5% !important; }
-    .roadtrip-map-stage .state-node[data-state="MD"] { left: 88.5% !important; top: 32% !important; }
-    .roadtrip-map-stage .state-node[data-state="DE"] { left: 93.5% !important; top: 23.5% !important; }
+    .roadtrip-map-stage .state-node[data-state="IN"] { left: 49% !important; top: 23.8% !important; }
+    .roadtrip-map-stage .state-node[data-state="OH"] { left: 58.8% !important; top: 19.2% !important; }
+    .roadtrip-map-stage .state-node[data-state="WV"] { left: 70.8% !important; top: 30.8% !important; }
+    .roadtrip-map-stage .state-node[data-state="VA"] { left: 79.2% !important; top: 39.6% !important; }
+    .roadtrip-map-stage .state-node[data-state="NC"] { left: 81.2% !important; top: 51.8% !important; }
+    .roadtrip-map-stage .state-node[data-state="MD"] { left: 89.3% !important; top: 33.2% !important; }
+    .roadtrip-map-stage .state-node[data-state="DE"] { left: 95% !important; top: 23.8% !important; }
+    .roadtrip-map-stage .state-node[data-state="PA"] { left: 77.6% !important; top: 14.8% !important; }
 
     .roadtrip-map-stage .state-node {
       position: absolute;
@@ -1838,15 +1839,15 @@
     }
 
     .roadtrip-map-stage .state-node.unavailable {
-      opacity: 0.92;
-      filter: saturate(0.58) brightness(1.01);
-      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
+      opacity: 0.58;
+      filter: saturate(0.46) brightness(1.03);
+      box-shadow: 0 6px 12px rgba(17, 17, 17, 0.06);
     }
 
     .roadtrip-map-stage .state-node.unavailable .state-node-label,
     .roadtrip-map-stage .state-node.unavailable .state-node-points,
     .roadtrip-map-stage .state-node.unavailable .state-node-fuel {
-      opacity: 0.66;
+      opacity: 1;
     }
 
     .roadtrip-map-stage .state-node-label {
@@ -2242,42 +2243,47 @@
       }
 
       .zone-atlantic {
-        right: 4.5%;
-        top: 6%;
+        right: 2.8%;
+        top: 5.4%;
       }
 
       .roadtrip-map-stage .state-node[data-state="IN"] {
-        left: 49.5% !important;
+        left: 50.5% !important;
         top: 23.5% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="OH"] {
-        left: 58.5% !important;
-        top: 19.5% !important;
+        left: 60% !important;
+        top: 19% !important;
+      }
+
+      .roadtrip-map-stage .state-node[data-state="PA"] {
+        left: 77.2% !important;
+        top: 15% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="WV"] {
-        left: 68% !important;
+        left: 69.5% !important;
         top: 31% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="VA"] {
-        left: 80.5% !important;
-        top: 39% !important;
+        left: 79.5% !important;
+        top: 39.8% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="NC"] {
-        left: 80% !important;
-        top: 50.5% !important;
+        left: 81.2% !important;
+        top: 52.2% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="MD"] {
-        left: 89% !important;
-        top: 33% !important;
+        left: 89.6% !important;
+        top: 33.2% !important;
       }
 
       .roadtrip-map-stage .state-node[data-state="DE"] {
-        left: 94% !important;
+        left: 94.8% !important;
         top: 24% !important;
       }
 
@@ -2837,7 +2843,7 @@
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
   
-            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a highlighted state on the map, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
+            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">To move from state to state, tap a highlighted state on the map or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
   
             <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
               <div class="game-map roadtrip-map-stage" id="roadtrip-map">
@@ -2873,7 +2879,7 @@
   
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
-              <p class="roadtrip-helper">Tap a highlighted state on the map or use these quick-pick buttons.</p>
+              <p class="roadtrip-helper">To move from state to state, tap a highlighted state on the map or use these quick-pick buttons.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
   
@@ -2987,20 +2993,20 @@
         MO: { code: "MO", name: "Missouri", points: 315, region: "midwest", x: 35, y: 42, neighbors: ["AR", "OK", "KS", "IL", "KY", "TN"] },
         MS: { code: "MS", name: "Mississippi", points: 750, region: "south", x: 45, y: 72, neighbors: ["AL", "LA", "TN", "AR"] },
         IL: { code: "IL", name: "Illinois", points: 14, region: "midwest", x: 43, y: 24, neighbors: ["MO", "IN"] },
-        IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 52, y: 22, neighbors: ["IL", "OH", "KY"] },
+        IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 49, y: 24, neighbors: ["IL", "OH", "KY"] },
         TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
         KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
-        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 59, y: 18, neighbors: ["IN", "KY", "PA", "WV"] },
+        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 59, y: 19, neighbors: ["IN", "KY", "PA", "WV"] },
         AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
         GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
-        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 68, y: 29, neighbors: ["OH", "VA", "PA", "MD"] },
-        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 80, y: 47, neighbors: ["SC", "GA", "VA", "TN"] },
-        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 78, y: 37, neighbors: ["NC", "KY", "WV", "MD"] },
-        PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 78, y: 14, neighbors: ["OH", "WV", "MD", "DE"] },
+        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 71, y: 31, neighbors: ["OH", "VA", "PA", "MD"] },
+        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 81, y: 52, neighbors: ["SC", "GA", "VA", "TN"] },
+        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 79, y: 40, neighbors: ["NC", "KY", "WV", "MD"] },
+        PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 78, y: 15, neighbors: ["OH", "WV", "MD", "DE"] },
         SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 83, y: 64, neighbors: ["GA", "NC", "FL"] },
-        MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 86, y: 30, neighbors: ["VA", "WV", "DE", "PA"] },
-        DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 93, y: 22, neighbors: ["MD", "PA"] },
-        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 85, y: 78, neighbors: ["GA", "AL", "SC"] }
+        MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 89, y: 33, neighbors: ["VA", "WV", "DE", "PA"] },
+        DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 95, y: 24, neighbors: ["MD", "PA"] },
+        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 84, y: 76, neighbors: ["GA", "AL", "SC"] }
       };
 
       const ROADTRIP_LEVELS = {
