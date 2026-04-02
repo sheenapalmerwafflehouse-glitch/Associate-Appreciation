@@ -1528,6 +1528,17 @@
       50% { box-shadow: 0 0 0 12px rgba(245,213,71,0), 0 18px 34px rgba(17,17,17,0.18); }
     }
 
+    @keyframes availableStateRing {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 0.35;
+      }
+    }
+
     /* -------- Revised Anniversary Road Trip game overrides -------- */
     .game-modal-inner.game-modal-inner--wide {
       width: min(1180px, 98vw);
@@ -1554,7 +1565,7 @@
     }
 
     .roadtrip-board {
-      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.92fr);
+      grid-template-columns: minmax(0, 1.42fr) minmax(380px, 0.98fr);
       align-items: stretch;
     }
 
@@ -1594,21 +1605,21 @@
 
     .roadtrip-levels {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: 1fr 1.22fr 1fr;
+      gap: 12px;
     }
 
     .roadtrip-level-btn {
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 16px;
-      min-height: 88px;
+      min-height: 96px;
       padding: 12px 10px;
       background: linear-gradient(180deg, #fffef6, #fff9df);
       color: #5d4f00;
       font-weight: 900;
-      letter-spacing: 0.02em;
-      line-height: 1.12;
-      font-size: clamp(0.9rem, 1vw, 1.05rem);
+      letter-spacing: 0.01em;
+      line-height: 1.08;
+      font-size: clamp(0.84rem, 0.94vw, 0.98rem);
       cursor: pointer;
       box-shadow: 0 8px 14px rgba(92, 77, 19, 0.06);
       transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
@@ -1617,6 +1628,7 @@
       justify-content: center;
       text-align: center;
       white-space: normal;
+      word-break: keep-all;
     }
 
     .roadtrip-level-btn:hover,
@@ -1800,13 +1812,31 @@
 
     .roadtrip-map-stage .state-node.available {
       animation: pulseRoadTrip 1.2s ease-in-out infinite;
-      box-shadow: 0 0 0 0 rgba(255,230,106,0.4), 0 16px 28px rgba(17,17,17,0.18);
+      box-shadow: 0 0 0 4px rgba(255, 230, 106, 0.42), 0 16px 28px rgba(17,17,17,0.18);
+    }
+
+    .roadtrip-map-stage .state-node.available::before {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 28px;
+      border: 3px solid rgba(255, 230, 106, 0.9);
+      box-shadow: 0 0 18px rgba(255, 230, 106, 0.65);
+      opacity: 1;
+      pointer-events: none;
+      animation: availableStateRing 1.2s ease-in-out infinite;
     }
 
     .roadtrip-map-stage .state-node.unavailable {
-      opacity: 0.92;
-      filter: saturate(0.95) brightness(0.98);
-      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.12);
+      opacity: 1;
+      filter: saturate(0.5) brightness(1.02);
+      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.10);
+    }
+
+    .roadtrip-map-stage .state-node.unavailable .state-node-label,
+    .roadtrip-map-stage .state-node.unavailable .state-node-points,
+    .roadtrip-map-stage .state-node.unavailable .state-node-fuel {
+      opacity: 0.7;
     }
 
     .roadtrip-map-stage .state-node-label {
@@ -2072,6 +2102,18 @@
       flex-wrap: wrap;
     }
 
+    .roadtrip-mobile-priority,
+    .roadtrip-mobile-next {
+      display: none;
+      width: 100%;
+      gap: 12px;
+    }
+
+    .roadtrip-mobile-priority:empty,
+    .roadtrip-mobile-next:empty {
+      display: none;
+    }
+
     @media (hover: none), (pointer: coarse) {
       .tilt-card::after,
       .tilt-glare {
@@ -2101,6 +2143,7 @@
       .tilt-glare,
       .tilt-card::after,
       .state-node.available,
+      .roadtrip-map-stage .state-node.available::before,
       .game-celebration.show {
         transition: none !important;
         animation: none !important;
@@ -2197,41 +2240,30 @@
         grid-template-columns: 1fr;
       }
 
-      .roadtrip-side-panel {
+      .roadtrip-helper {
+        display: none;
+      }
+
+      .roadtrip-mobile-priority,
+      .roadtrip-mobile-next {
+        display: grid;
+      }
+
+      .roadtrip-mobile-priority {
         order: 1;
-        padding-bottom: calc(18px + env(safe-area-inset-bottom));
       }
 
       .roadtrip-map-panel {
         order: 2;
       }
 
-      .roadtrip-side-panel .game-panel-card:nth-of-type(1) {
-        order: 1;
-      }
-
-      .roadtrip-side-panel .game-panel-card:nth-of-type(2) {
-        order: 2;
-      }
-
-      .roadtrip-side-panel .game-panel-card:nth-of-type(6) {
+      .roadtrip-mobile-next {
         order: 3;
       }
 
-      .roadtrip-side-panel .game-actions {
+      .roadtrip-side-panel {
         order: 4;
-      }
-
-      .roadtrip-side-panel .game-panel-card:nth-of-type(3) {
-        order: 5;
-      }
-
-      .roadtrip-side-panel .game-panel-card:nth-of-type(5) {
-        order: 6;
-      }
-
-      .roadtrip-side-panel .game-panel-card:nth-of-type(4) {
-        order: 7;
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
       }
     }
 
@@ -2874,6 +2906,20 @@
       const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
       const roadtripGoalCopy = document.getElementById("roadtrip-goal-copy");
       const roadtripLevelButtons = Array.from(document.querySelectorAll("[data-roadtrip-level]"));
+      const roadtripBoard = roadtripModal?.querySelector(".roadtrip-board");
+      const roadtripMapPanel = roadtripBoard?.querySelector(".roadtrip-map-panel");
+      const roadtripSidePanel = roadtripBoard?.querySelector(".roadtrip-side-panel");
+      const roadtripDifficultyCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(1)");
+      const roadtripNextCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(2)");
+      const roadtripRouteCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(3)");
+      const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
+      const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(5)");
+      const roadtripTripGoalCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(6)");
+      const roadtripActions = roadtripSidePanel?.querySelector(".game-actions");
+      const roadtripMobilePriority = document.createElement("div");
+      const roadtripMobileNext = document.createElement("div");
+      roadtripMobilePriority.className = "roadtrip-mobile-priority";
+      roadtripMobileNext.className = "roadtrip-mobile-next";
 
       const roadTripStates = {
         CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
@@ -2889,17 +2935,17 @@
         IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 52, y: 22, neighbors: ["IL", "OH", "KY"] },
         TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
         KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
-        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 62, y: 20, neighbors: ["IN", "KY", "PA", "WV"] },
+        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 59, y: 18, neighbors: ["IN", "KY", "PA", "WV"] },
         AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
         GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
-        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 70, y: 27, neighbors: ["OH", "VA", "PA", "MD"] },
+        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 68, y: 29, neighbors: ["OH", "VA", "PA", "MD"] },
         NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 80, y: 47, neighbors: ["SC", "GA", "VA", "TN"] },
-        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 77, y: 35, neighbors: ["NC", "KY", "WV", "MD"] },
+        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 78, y: 37, neighbors: ["NC", "KY", "WV", "MD"] },
         PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 78, y: 14, neighbors: ["OH", "WV", "MD", "DE"] },
         SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 83, y: 64, neighbors: ["GA", "NC", "FL"] },
         MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 86, y: 30, neighbors: ["VA", "WV", "DE", "PA"] },
         DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 93, y: 22, neighbors: ["MD", "PA"] },
-        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 85, y: 85, neighbors: ["GA", "AL", "SC"] }
+        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 85, y: 78, neighbors: ["GA", "AL", "SC"] }
       };
 
       const ROADTRIP_LEVELS = {
@@ -3606,6 +3652,45 @@
         });
       };
 
+      const syncRoadTripLayout = () => {
+        if (!roadtripBoard || !roadtripMapPanel || !roadtripSidePanel) return;
+        const isMobileRoadTrip = window.innerWidth <= 700;
+
+        if (isMobileRoadTrip) {
+          if (!roadtripMobilePriority.isConnected) {
+            roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
+          }
+
+          if (!roadtripMobileNext.isConnected) {
+            if (roadtripMapPanel.nextSibling) {
+              roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
+            } else {
+              roadtripBoard.appendChild(roadtripMobileNext);
+            }
+          }
+
+          if (roadtripActions) roadtripMobilePriority.appendChild(roadtripActions);
+          if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
+          if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
+          if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
+
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+        } else {
+          if (roadtripDifficultyCard) roadtripSidePanel.appendChild(roadtripDifficultyCard);
+          if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+          if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
+          if (roadtripActions) roadtripSidePanel.appendChild(roadtripActions);
+
+          if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
+          if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
+        }
+      };
+
       const updateRoadTripHUD = () => {
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadTrip.fuel;
@@ -3741,6 +3826,7 @@
       };
 
       const openRoadTripModal = () => {
+        syncRoadTripLayout();
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
@@ -3791,6 +3877,7 @@
         positionRoadtripCarFallback();
       });
 
+      syncRoadTripLayout();
       renderTopStates();
       renderBonusStops();
       createStateButtons();
@@ -3798,11 +3885,13 @@
       enableTiltCards();
       runIdleNudge();
       window.addEventListener("resize", () => {
+        syncRoadTripLayout();
         tiltCards.forEach((card) => resetTiltCard(card, true));
         updateRoadtripScrollHint();
         positionRoadtripCarFallback();
       });
       pointerFineMedia.addEventListener?.("change", () => {
+        syncRoadTripLayout();
         tiltCards.forEach((card) => resetTiltCard(card, true));
       });
       syncAudioState();
