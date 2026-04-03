@@ -1668,12 +1668,13 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(92, 74, 16, 0.18);
-  stroke-width: 1.05;
+  stroke: rgba(92, 74, 16, 0.22);
+  stroke-width: 1.08;
 }
 
 .roadtrip-route-svg .route-network-center {
-  display: none;
+  stroke: rgba(255, 251, 232, 0.34);
+  stroke-width: 0.42;
 }
 
 .roadtrip-route-svg .route-option-main {
@@ -2358,6 +2359,366 @@
     }
 
     .challenge-badge { display: inline-flex; margin: 0; }
+  
+
+    /* ----- Waffle House History floating chat ----- */
+    .history-fab-wrap {
+      position: fixed;
+      right: 16px;
+      bottom: 84px;
+      z-index: 4550;
+      display: flex;
+      justify-content: flex-end;
+      pointer-events: none;
+    }
+
+    .history-fab {
+      pointer-events: auto;
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      border-radius: 999px;
+      min-height: 58px;
+      padding: 10px 16px 10px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,247,200,0.98));
+      color: #111;
+      font-weight: 900;
+      font-size: 0.94rem;
+      box-shadow: 0 14px 28px rgba(17,17,17,0.14);
+      cursor: pointer;
+      max-width: min(92vw, 320px);
+      text-align: left;
+    }
+
+    .history-fab-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      box-shadow: 0 6px 12px rgba(92, 77, 19, 0.12);
+      flex: 0 0 auto;
+      font-size: 1rem;
+    }
+
+    .history-fab-label {
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+
+    .history-chat-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.34);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.22s ease, visibility 0.22s ease;
+      z-index: 4590;
+    }
+
+    .history-chat-panel {
+      position: fixed;
+      right: 16px;
+      bottom: 152px;
+      width: min(420px, calc(100vw - 24px));
+      max-height: min(76vh, 760px);
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,251,233,0.98));
+      border: 1px solid rgba(176, 150, 44, 0.2);
+      border-radius: 28px;
+      box-shadow: 0 26px 60px rgba(17,17,17,0.2);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(14px) scale(0.98);
+      transition: opacity 0.22s ease, visibility 0.22s ease, transform 0.22s ease;
+      overflow: hidden;
+      z-index: 4600;
+    }
+
+    .history-chat-panel.open,
+    .history-chat-overlay.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .history-chat-panel.open {
+      transform: translateY(0) scale(1);
+    }
+
+    .history-chat-top {
+      position: relative;
+      padding: 22px 20px 18px;
+      background: linear-gradient(135deg, rgba(217, 0, 27, 0.14), rgba(255,255,255,0.92) 46%, rgba(0,55,135,0.16));
+      border-bottom: 1px solid rgba(176, 150, 44, 0.16);
+    }
+
+    .history-chat-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #6f5f00;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .history-chat-top h3 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.7rem);
+      line-height: 1.08;
+      text-transform: none;
+      letter-spacing: 0.01em;
+      text-align: left;
+    }
+
+    .history-chat-top p {
+      margin: 10px 0 0;
+      max-width: none;
+      text-align: left;
+      color: #494949;
+      line-height: 1.55;
+      font-size: 0.96rem;
+    }
+
+    .history-chat-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      color: #111;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.12);
+    }
+
+    .history-quick-asks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 14px 16px 0;
+    }
+
+    .history-quick-ask {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 999px;
+      background: #fff;
+      color: #333;
+      padding: 9px 12px;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(17,17,17,0.05);
+      transition: transform 0.16s ease, background 0.16s ease;
+    }
+
+    .history-quick-ask:hover {
+      transform: translateY(-1px);
+      background: #fff7cf;
+    }
+
+    .history-chat-log {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      overflow: auto;
+      min-height: 220px;
+      max-height: 36vh;
+      scroll-behavior: smooth;
+    }
+
+    .history-msg {
+      max-width: 94%;
+      padding: 14px 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      line-height: 1.58;
+      box-shadow: 0 8px 18px rgba(17,17,17,0.05);
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+    }
+
+    .history-msg.user {
+      margin-left: auto;
+      background: #fff;
+      border-bottom-right-radius: 10px;
+    }
+
+    .history-msg.bot {
+      background: #fff6c9;
+      border-bottom-left-radius: 10px;
+    }
+
+    .history-msg small {
+      display: block;
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      color: #6f5f00;
+      font-size: 0.7rem;
+    }
+
+    .history-chat-followup {
+      margin: 0 16px 14px;
+      padding: 14px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fffef8, #fff7d8);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      box-shadow: 0 10px 20px rgba(17,17,17,0.05);
+    }
+
+    .history-chat-followup[hidden] {
+      display: none;
+    }
+
+    .history-followup-copy {
+      color: #494949;
+      line-height: 1.55;
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+    }
+
+    .history-followup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .history-followup-grid input,
+    .history-chat-composer input {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(176, 150, 44, 0.2);
+      padding: 13px 14px;
+      font: inherit;
+      font-size: 0.96rem;
+      background: #fff;
+      color: #111;
+      outline: none;
+    }
+
+    .history-followup-grid input:focus,
+    .history-chat-composer input:focus {
+      border-color: rgba(217,179,0,0.45);
+      box-shadow: 0 0 0 4px rgba(245,213,71,0.18);
+    }
+
+    .history-followup-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .history-followup-note {
+      font-size: 0.82rem;
+      color: #6a6a6a;
+      line-height: 1.45;
+      flex: 1 1 180px;
+    }
+
+    .history-send-btn,
+    .history-ask-btn {
+      border: none;
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+      box-shadow: 0 10px 20px rgba(17,17,17,0.08);
+    }
+
+    .history-chat-composer {
+      padding: 16px;
+      border-top: 1px solid rgba(176, 150, 44, 0.16);
+      background: rgba(255,255,255,0.84);
+    }
+
+    .history-chat-composer-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .history-chat-helper {
+      margin-top: 10px;
+      color: #666;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      .history-fab-wrap {
+        right: 12px;
+        bottom: 76px;
+      }
+
+      .history-fab {
+        min-height: 54px;
+        padding: 10px 14px 10px 12px;
+        max-width: calc(100vw - 24px);
+      }
+
+      .history-fab-label {
+        font-size: 0.88rem;
+      }
+
+      .history-chat-panel {
+        right: 12px;
+        left: 12px;
+        bottom: 138px;
+        width: auto;
+        max-height: min(72vh, 680px);
+      }
+
+      .history-chat-top {
+        padding: 20px 16px 16px;
+      }
+
+      .history-chat-log {
+        padding: 14px 12px;
+        max-height: 34vh;
+      }
+
+      .history-quick-asks {
+        padding: 12px 12px 0;
+      }
+
+      .history-chat-followup {
+        margin: 0 12px 12px;
+      }
+
+      .history-followup-grid,
+      .history-chat-composer-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -4149,6 +4510,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
+        renderRoadTripNetwork();
         updateRoadTripLevelText();
         scrollRoadTripMapToCurrent();
         updateRoadtripScrollHint();
@@ -4249,7 +4611,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       };
 
       const scrollRoadtripMapPanelIntoView = () => {
-        const scrollTarget = roadtripMapScroll || roadtripMapPanel;
+        const scrollTarget = roadtripMapPanel || roadtripStatusStrip || roadtripMapScroll;
         if (!scrollTarget) return;
         if (window.innerWidth <= 900) {
           scrollTarget.scrollIntoView({
@@ -4456,7 +4818,9 @@ const applyRoadTripLayout = (levelKey = "base") => {
         hideRoadtripIntro();
         window.setTimeout(() => {
           scrollRoadtripMapPanelIntoView();
-          scrollRoadTripMapToCurrent();
+          window.setTimeout(() => {
+            scrollRoadTripMapToCurrent();
+          }, prefersReducedMotion ? 0 : 90);
         }, prefersReducedMotion ? 0 : 40);
       });
 
@@ -4527,6 +4891,293 @@ const applyRoadTripLayout = (levelKey = "base") => {
       updateRoadtripScrollHint();
     });
   </script>
-  <script src="waffle-chat-module.js" defer></script>
+
+  <div class="history-fab-wrap" aria-live="polite">
+    <button class="history-fab pressable" id="history-chat-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="history-chat-panel">
+      <span class="history-fab-icon" aria-hidden="true">📚</span>
+      <span class="history-fab-label">Explore Waffle House History</span>
+    </button>
+  </div>
+
+  <div class="history-chat-overlay" id="history-chat-overlay"></div>
+
+  <aside class="history-chat-panel" id="history-chat-panel" aria-hidden="true" role="dialog" aria-label="Explore Waffle House History">
+    <div class="history-chat-top">
+      <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history chat">&times;</button>
+      <div class="history-chat-eyebrow">Waffle House History</div>
+      <h3>Explore Waffle House History</h3>
+      <p>Tap a quick question for an instant answer, or ask your own question and send it to our history team.</p>
+    </div>
+
+    <div class="history-quick-asks" id="history-quick-asks">
+      <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
+      <button class="history-quick-ask" type="button" data-question="Why was the sign yellow?">Why the sign was yellow</button>
+      <button class="history-quick-ask" type="button" data-question="Tell me about Ms. Lucy.">Ms. Lucy</button>
+      <button class="history-quick-ask" type="button" data-question="What happened in Indiana with the Waffle House name?">Indiana name story</button>
+      <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
+      <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
+    </div>
+
+    <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
+
+    <div class="history-chat-followup" id="history-chat-followup" hidden>
+      <div class="history-followup-copy" id="history-followup-copy">Thanks for your question. Enter your name and email below, then tap the button to email your question to our history team.</div>
+      <div class="history-followup-grid">
+        <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
+        <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
+      </div>
+      <div class="history-followup-actions">
+        <div class="history-followup-note">This version opens a pre-addressed email draft to <strong>example@example.com</strong>.</div>
+        <button class="history-send-btn" id="history-send-email" type="button">Email My Question</button>
+      </div>
+    </div>
+
+    <div class="history-chat-composer">
+      <div class="history-chat-composer-row">
+        <input id="history-question-input" type="text" placeholder="Ask a Waffle House history question" aria-label="Ask a Waffle House history question" />
+        <button class="history-ask-btn" id="history-ask-btn" type="button">Ask</button>
+      </div>
+      <div class="history-chat-helper">After you ask a custom question, the chat will prompt for your name and email so you can send it to the history team.</div>
+    </div>
+  </aside>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const historyFacts = [
+        { answer: "At Unit #1, pies and hashbrowns took 2 days to make.", keywords: ["unit 1", "pies", "hashbrowns", "two days", "2 days", "prep", "make", "took"] },
+        { answer: "Unit #1’s daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
+        { answer: "When Waffle House opened, it started with no booths, just stools and coffee benches.", keywords: ["booths", "stools", "coffee benches", "opened", "seating", "original seating"] },
+        { answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first off-highway location opened.", keywords: ["original sign", "dripping syrup", "block logo", "highway", "off highway", "sign changed"] },
+        { answer: "Tom and Joe chose yellow for the sign so you could see it from far away, just like school buses are easy to see from far away.", keywords: ["yellow", "sign", "why yellow", "school bus", "far away", "visibility"] },
+        { answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles.", keywords: ["quick foods", "first franchise", "1967", "northlake foods", "east coast waffles", "franchise"] },
+        { answer: "In Indiana, there was already a restaurant using the Waffle House name. Waffle House first opened there as WH Coffeehouse and Waffle & Steak before getting the rights to use the Waffle House name in that state.", keywords: ["indiana", "wh coffeehouse", "waffle and steak", "waffle steak", "rights", "name", "already a restaurant"] },
+        { answer: "Ms. Lucy is one of Waffle House’s longest-standing hourly associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004. She was known as an amazing waitress who took great care of every customer.", keywords: ["ms lucy", "lucy", "47 years", "unit 2", "1957", "retired", "2004", "waitress"] },
+        { answer: "Waffle House introduced the People Agenda in the 1980s. It included associate benefits such as health insurance and vacation pay for full-time hourly associates.", keywords: ["people agenda", "1980s", "benefits", "health insurance", "vacation pay", "full time", "hourly associates"] },
+        { answer: "Scattered, Smothered, and Covered lingo was created by associates and was added to the menu in 1984.", keywords: ["scattered", "smothered", "covered", "lingo", "menu", "1984", "hashbrown lingo"] },
+        { answer: "Operator Bert Thornton created the recipe for Bert’s Chili in Texas in 1984. Bert worked in operations for 38 years.", keywords: ["bert", "bert thornton", "bert's chili", "chili", "texas", "1984", "operations", "38 years"] },
+        { answer: "Waffle House has over 2,000 locations in 25 states.", keywords: ["locations", "how many locations", "2,000", "2000", "25 states", "states"] },
+        { answer: "The farthest west location is Unit #481 in Goodyear, Arizona.", keywords: ["farthest west", "goodyear", "arizona", "unit 481"] },
+        { answer: "The farthest north location is Unit #1830 in Austinburg, Ohio.", keywords: ["farthest north", "austinburg", "ohio", "unit 1830"] },
+        { answer: "Waffle House is about 94% company owned, with about 125 franchise locations.", keywords: ["94%", "company owned", "franchise locations", "125 franchise", "ownership"] },
+        { answer: "Waffle House sells about 300 million eggs each year.", keywords: ["eggs", "300 million", "sell each year", "sales numbers", "annual sales"] },
+        { answer: "Waffle House sells about 142 million waffles each year.", keywords: ["waffles", "142 million", "sell each year", "annual sales"] },
+        { answer: "Waffle House sells about 328 million slices of bacon each year.", keywords: ["bacon", "328 million", "slices of bacon", "sell each year", "annual sales"] },
+        { answer: "Waffle House sells about 200 million servings of hashbrowns each year.", keywords: ["hashbrowns", "200 million", "servings", "sell each year", "annual sales"] }
+      ];
+
+      const launcher = document.getElementById("history-chat-launcher");
+      const panel = document.getElementById("history-chat-panel");
+      const overlay = document.getElementById("history-chat-overlay");
+      const closeBtn = document.getElementById("history-chat-close");
+      const log = document.getElementById("history-chat-log");
+      const askBtn = document.getElementById("history-ask-btn");
+      const input = document.getElementById("history-question-input");
+      const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
+      const followup = document.getElementById("history-chat-followup");
+      const followupCopy = document.getElementById("history-followup-copy");
+      const nameInput = document.getElementById("history-contact-name");
+      const emailInput = document.getElementById("history-contact-email");
+      const sendEmailBtn = document.getElementById("history-send-email");
+
+      let pendingQuestion = "";
+
+      const suggestedTopics = [
+        "Unit #1",
+        "the original sign",
+        "the yellow sign",
+        "Indiana naming story",
+        "Ms. Lucy",
+        "the People Agenda",
+        "Scattered, Smothered, and Covered",
+        "Bert’s Chili",
+        "location count",
+        "annual sales"
+      ];
+
+      const escapeHtml = (text) =>
+        text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+
+      const normalize = (text) =>
+        (text || "")
+          .toLowerCase()
+          .replace(/&/g, " and ")
+          .replace(/[^a-z0-9#\s$]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+      const scoreFact = (question, fact) => {
+        const q = normalize(question);
+        let score = 0;
+
+        fact.keywords.forEach((keyword) => {
+          const k = normalize(keyword);
+          if (!k) return;
+          if (q.includes(k)) score += k.split(" ").length > 1 ? 4 : 2;
+        });
+
+        const qWords = new Set(q.split(" "));
+        fact.keywords.forEach((keyword) => {
+          normalize(keyword).split(" ").forEach((word) => {
+            if (word && qWords.has(word)) score += 1;
+          });
+        });
+
+        if (/how many|how much|annual|each year|sell/i.test(question)) {
+          if (/million|sell each year|annual sales|sales numbers/.test(fact.keywords.join(" "))) score += 2;
+        }
+
+        if (/who|tell me about/i.test(question) && /ms lucy|bert|tom|joe/.test(normalize(fact.answer))) score += 1;
+        return score;
+      };
+
+      const findAnswer = (question) => {
+        const ranked = historyFacts
+          .map((fact) => ({ fact, score: scoreFact(question, fact) }))
+          .sort((a, b) => b.score - a.score);
+
+        const top = ranked[0];
+        const second = ranked[1];
+
+        if (!top || top.score < 2) {
+          return "I could not confidently match that question to the built-in history facts. Try asking about " + suggestedTopics.slice(0, 5).join(", ") + ".";
+        }
+
+        if (top.score >= 5 && (!second || top.score >= second.score + 2)) {
+          return top.fact.answer;
+        }
+
+        const related = ranked
+          .filter((item) => item.score >= Math.max(3, top.score - 1))
+          .slice(0, 3)
+          .map((item) => "• " + item.fact.answer)
+          .join("\n");
+
+        return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
+      };
+
+      const addMessage = (role, text) => {
+        const msg = document.createElement("div");
+        msg.className = `history-msg ${role}`;
+        const label = role === "bot" ? "History Chatbot" : "You";
+        msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
+        log.appendChild(msg);
+        log.scrollTop = log.scrollHeight;
+      };
+
+      const hideFollowup = () => {
+        if (followup) followup.hidden = true;
+      };
+
+      const showFollowup = (question) => {
+        pendingQuestion = question;
+        if (!followup) return;
+        followup.hidden = false;
+        followupCopy.textContent = "Thanks for your question. Enter your name and email below, then tap the button to email this question to our history team.";
+        window.setTimeout(() => nameInput?.focus(), 40);
+      };
+
+      const seedWelcome = () => {
+        if (!log) return;
+        log.innerHTML = "";
+        hideFollowup();
+        addMessage("bot", "Welcome to Waffle House History. Tap a quick question for an instant answer, or ask your own question below.");
+      };
+
+      const askHistoryQuestion = (question, { promptForEmail = false } = {}) => {
+        const q = (question || "").trim();
+        if (!q) return;
+        addMessage("user", q);
+        const answer = findAnswer(q);
+        window.setTimeout(() => {
+          addMessage("bot", answer);
+          if (promptForEmail) {
+            addMessage("bot", "Want to send that question to our history team? Enter your name and email below, then tap Email My Question.");
+            showFollowup(q);
+          }
+        }, 110);
+      };
+
+      const openPanel = () => {
+        panel?.classList.add("open");
+        overlay?.classList.add("open");
+        panel?.setAttribute("aria-hidden", "false");
+        launcher?.setAttribute("aria-expanded", "true");
+        document.body.classList.add("lightbox-open");
+        window.setTimeout(() => input?.focus(), 40);
+      };
+
+      const closePanel = () => {
+        panel?.classList.remove("open");
+        overlay?.classList.remove("open");
+        panel?.setAttribute("aria-hidden", "true");
+        launcher?.setAttribute("aria-expanded", "false");
+        document.body.classList.remove("lightbox-open");
+      };
+
+      launcher?.addEventListener("click", openPanel);
+      closeBtn?.addEventListener("click", closePanel);
+      overlay?.addEventListener("click", closePanel);
+
+      askBtn?.addEventListener("click", () => {
+        const q = input?.value?.trim() || "";
+        if (!q) return;
+        askHistoryQuestion(q, { promptForEmail: true });
+        input.value = "";
+      });
+
+      input?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          askBtn?.click();
+        }
+      });
+
+      quickAskButtons.forEach((button) => {
+        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
+      });
+
+      sendEmailBtn?.addEventListener("click", () => {
+        const name = (nameInput?.value || "").trim();
+        const email = (emailInput?.value || "").trim();
+        const question = (pendingQuestion || "").trim();
+
+        if (!question) {
+          addMessage("bot", "Ask a question first, then I can help you send it.");
+          return;
+        }
+
+        if (!name || !email) {
+          addMessage("bot", "Please enter both your name and email before sending your question.");
+          if (!name) nameInput?.focus();
+          else emailInput?.focus();
+          return;
+        }
+
+        const subject = `Waffle House History Question from ${name}`;
+        const body = [
+          `Name: ${name}`,
+          `Email: ${email}`,
+          "",
+          "Question:",
+          question
+        ].join("\n");
+
+        const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+        addMessage("bot", `Your email draft is ready to send to example@example.com.`);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && panel?.classList.contains("open")) closePanel();
+      });
+
+      seedWelcome();
+    });
+  </script>
 </body>
 </html>
