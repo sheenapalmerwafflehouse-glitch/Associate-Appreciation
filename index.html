@@ -1843,7 +1843,7 @@
       position: absolute;
       transform: translate(-50%, -50%);
       transform-origin: center center;
-      width: 74px;
+      width: 56px;
       height: auto;
       z-index: 8;
       pointer-events: none;
@@ -1853,9 +1853,11 @@
       opacity: 1;
       transition: left 0.42s ease, top 0.42s ease, transform 0.3s ease, opacity 0.2s ease;
       filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
-      background: transparent;
-      border: none;
-      box-shadow: none;
+      background: rgba(255, 255, 255, 0.96);
+      border: 2px solid rgba(176, 150, 44, 0.22);
+      border-radius: 18px;
+      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.18);
+      padding: 6px;
       object-fit: contain;
       max-width: none;
       display: block;
@@ -2307,7 +2309,7 @@
       .roadtrip-map-stage .state-node { width: 66px; min-height: 66px; border-radius: 18px; padding: 7px 5px 8px; }
       .roadtrip-map-stage .state-node-label { font-size: 0.86rem; }
       .roadtrip-map-stage .state-node-points { font-size: 0.66rem; }
-      .roadtrip-map-stage .state-car { width: 58px; }
+      .roadtrip-map-stage .state-car { width: 52px; padding: 5px; border-radius: 16px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
       .roadtrip-route-svg .route-network-main { stroke-width: 1.02; }
@@ -2334,7 +2336,7 @@
       .roadtrip-route-chips { max-height: 108px; overflow: auto; }
       .roadtrip-point-popup { font-size: 0.8rem; padding: 7px 10px; min-width: 66px; }
       .roadtrip-map-stage .state-node { width: 60px; min-height: 60px; }
-      .roadtrip-map-stage .state-car { width: 52px; }
+      .roadtrip-map-stage .state-car { width: 48px; padding: 4px; border-radius: 14px; }
       .roadtrip-scroll-hint { font-size: 0.74rem; line-height: 1.4; padding: 12px 14px; }
       .roadtrip-map-hud { gap: 6px; margin-bottom: 8px; }
       .roadtrip-map-hud .hud-card {
@@ -2689,6 +2691,33 @@
       box-shadow: 0 10px 20px rgba(17,17,17,0.08);
     }
 
+    .history-cancel-btn {
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      background: #fff;
+      color: #4c4300;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.06);
+    }
+
+    .history-chat-panel.history-panel--followup .history-quick-asks,
+    .history-chat-panel.history-panel--followup .history-more-facts-row,
+    .history-chat-panel.history-panel--followup .history-chat-composer {
+      display: none;
+    }
+
+    .history-chat-panel.history-panel--followup .history-chat-followup {
+      display: block;
+      overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+
     .history-chat-composer {
       padding: 16px;
       border-top: 1px solid rgba(176, 150, 44, 0.16);
@@ -2874,6 +2903,10 @@
         padding: 12px 12px 0;
         display: grid;
         gap: 12px;
+        max-height: min(52dvh, 420px);
+        overflow: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
       }
 
       .history-followup-grid {
@@ -2901,13 +2934,27 @@
       }
 
       .history-followup-note {
-        order: 2;
+        order: 3;
         flex: 1 1 100%;
       }
 
+      .history-cancel-btn,
       .history-send-btn {
         width: 100%;
         min-height: 54px;
+      }
+
+      .history-chat-panel.history-panel--followup .history-chat-log {
+        flex: 0 0 auto;
+        max-height: 18dvh;
+      }
+
+      .history-chat-panel.history-panel--followup .history-chat-followup {
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        margin: 0 12px 12px;
+        padding: 12px 12px 0;
       }
 
       .history-chat-composer {
@@ -3555,6 +3602,152 @@
       let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
+
+      const updateSongButton = () => {
+        if (!songToggle || !audioPlayer) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        songToggle.textContent = playing ? "❚❚" : "🧇";
+        songToggle.setAttribute("aria-label", playing ? "Pause appreciation song" : "Play appreciation song");
+      };
+
+      const syncLyricVideo = () => {
+        if (!audioPlayer || !lyricBgVideo) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        if (playing) {
+          const playPromise = lyricBgVideo.play();
+          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+        } else {
+          lyricBgVideo.pause();
+        }
+      };
+
+      const syncAudioState = () => {
+        if (!audioPlayer || !audioCard) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        audioCard.classList.toggle("audio-playing", playing);
+        updateSongButton();
+        syncLyricVideo();
+      };
+
+      const unlockRoadtripAudio = () => {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!roadtripAudioContext) roadtripAudioContext = new AudioCtx();
+        if (roadtripAudioContext.state === "suspended") roadtripAudioContext.resume().catch(() => {});
+        roadtripAudioUnlocked = true;
+        return roadtripAudioContext;
+      };
+
+      const playRoadtripToneSequence = (steps = []) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx || !steps.length) return;
+        let startAt = ctx.currentTime + 0.01;
+        steps.forEach((step) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = step.type || "sine";
+          osc.frequency.setValueAtTime(step.frequency, startAt);
+          gain.gain.setValueAtTime(0.0001, startAt);
+          gain.gain.exponentialRampToValueAtTime(step.volume || 0.015, startAt + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(startAt);
+          osc.stop(startAt + (step.duration || 0.08) + 0.02);
+          startAt += (step.gap ?? step.duration ?? 0.08);
+        });
+      };
+
+      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < frameCount; i += 1) {
+          const decay = 1 - (i / frameCount);
+          data[i] = (Math.random() * 2 - 1) * decay;
+        }
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = "bandpass";
+        bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
+        bandpass.Q.setValueAtTime(q, ctx.currentTime);
+        const highpass = ctx.createBiquadFilter();
+        highpass.type = "highpass";
+        highpass.frequency.setValueAtTime(700, ctx.currentTime);
+        const gain = ctx.createGain();
+        const startAt = ctx.currentTime + 0.01;
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+        source.connect(bandpass);
+        bandpass.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(ctx.destination);
+        source.start(startAt);
+        source.stop(startAt + duration + 0.02);
+      };
+
+      const playRoadtripMoveSound = () => playRoadtripToneSequence([
+        { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
+        { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
+        { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
+      ]);
+      const playRoadtripPointsSound = () => playRoadtripToneSequence([
+        { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
+        { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
+      ]);
+      const playRoadtripFuelSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
+        { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
+      ]);
+      const playBalloonPopSound = () => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        playNoiseBurst({ duration: 0.05, volume: 0.07, frequency: 1250, q: 0.68 });
+        const pop = ctx.createOscillator();
+        const popGain = ctx.createGain();
+        const popFilter = ctx.createBiquadFilter();
+        const startAt = ctx.currentTime + 0.01;
+        pop.type = "triangle";
+        pop.frequency.setValueAtTime(175, startAt);
+        pop.frequency.exponentialRampToValueAtTime(68, startAt + 0.055);
+        popFilter.type = "lowpass";
+        popFilter.frequency.setValueAtTime(1000, startAt);
+        popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
+        popGain.gain.setValueAtTime(0.0001, startAt);
+        popGain.gain.exponentialRampToValueAtTime(0.03, startAt + 0.003);
+        popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
+        pop.connect(popFilter).connect(popGain).connect(ctx.destination);
+        pop.start(startAt);
+        pop.stop(startAt + 0.07);
+      };
+      const playRoadtripWinSound = () => playRoadtripToneSequence([
+        { frequency: 523.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 659.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.09 },
+        { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
+      ]);
+      const playRoadtripLoseSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
+        { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
+        { frequency: 261.63, duration: 0.14, volume: 0.016, type: "sine", gap: 0.14 }
+      ]);
+      const playRoadtripRestartSound = () => {
+        playNoiseBurst({ duration: 0.045, volume: 0.038, frequency: 920, q: 0.85 });
+        playRoadtripToneSequence([
+          { frequency: 110, duration: 0.055, volume: 0.014, type: "sawtooth", gap: 0.04 },
+          { frequency: 138, duration: 0.06, volume: 0.014, type: "sawtooth", gap: 0.05 },
+          { frequency: 178, duration: 0.065, volume: 0.014, type: "sawtooth", gap: 0.06 },
+          { frequency: 224, duration: 0.08, volume: 0.012, type: "triangle", gap: 0.08 }
+        ]);
+      };
+      const playRoadtripLevelSound = () => playRoadtripToneSequence([
+        { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
+        { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
+        { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
+      ]);
       const clampRoadTripValue = (value, min, max) => Math.min(max, Math.max(min, value));
       const createRoadTripSeededRandom = (seed) => {
         let t = seed >>> 0;
@@ -3699,9 +3892,111 @@
       };
 
       const sortedTopStates = Object.values(roadTripStates).sort((a, b) => b.points - a.points).slice(0, 5);
-      const lyricLines = [];
-      const lyricNodes = lyricLineHost ? lyricLines.map((line) => { const el = document.createElement("div"); el.className = "lyric-line"; el.textContent = line.text; el.style.top = line.top; lyricLineHost.appendChild(el); return { el, line }; }) : [];
-      const renderLyrics = () => { if (!audioPlayer || !lyricNodes.length) return; };
+      const lyricLines = [
+        { start: 10.6, end: 13.1, top: "16%", text: "Globe light glowing\non the corner booth" },
+        { start: 13.2, end: 15.7, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
+        { start: 16.0, end: 17.8, top: "22%", text: "You remember how\nI like my food" },
+        { start: 18.0, end: 20.9, top: "42%", text: "Starting early mornings off\nwith what I need" },
+        { start: 21.2, end: 23.8, top: "26%", text: "But I see more than\nwhat’s in sight" },
+        { start: 24.0, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
+        { start: 27.0, end: 30.7, top: "66%", text: "Keeping everything\nworking right" },
+        { start: 31.0, end: 32.0, top: "18%", text: "So here’s to you" },
+        { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 33.6, end: 35.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
+        { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
+        { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
+        { start: 60.1, end: 62.9, top: "52%", text: "Callbacks hit\nright on time" },
+        { start: 63.2, end: 65.4, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
+        { start: 65.5, end: 67.8, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
+        { start: 67.9, end: 68.8, top: "18%", text: "So here’s to you" },
+        { start: 68.9, end: 70.7, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 70.9, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 76.1, end: 78.7, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 78.8, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 83.1, end: 85.2, top: "24%", text: "Thank you for everything" },
+        { start: 94.5, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
+        { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
+        { start: 100.1, end: 105.0, top: "52%", text: "Prepping, cleaning,\ncoaching strong" },
+        { start: 105.1, end: 107.7, top: "24%", text: "The hospitality,\nthe attention you give" },
+        { start: 107.8, end: 112.0, top: "46%", text: "It all comes together\nin America’s Place" },
+        { start: 112.1, end: 117.0, top: "68%", text: "Because of you each day" },
+        { start: 117.6, end: 122.0, top: "22%", text: "So here’s to you" },
+        { start: 122.2, end: 124.0, top: "40%", text: "Serving up egg-cellence" },
+        { start: 124.1, end: 126.9, top: "56%", text: "Serving up egg-cellence" },
+        { start: 127.0, end: 129.9, top: "72%", text: "Serving up egg-cellence" },
+        { start: 136.8, end: 149.0, top: "42%", text: "Thank you" }
+      ];
+      const lyricNodes = lyricLineHost
+        ? lyricLines.map((line) => {
+            const el = document.createElement("div");
+            el.className = "lyric-line";
+            el.textContent = line.text;
+            el.style.top = line.top;
+            lyricLineHost.appendChild(el);
+            return { el, line };
+          })
+        : [];
+      const renderLyrics = () => {
+        if (!audioPlayer || !lyricNodes.length) return;
+        const t = audioPlayer.currentTime || 0;
+        lyricNodes.forEach(({ el, line }) => {
+          const active = t >= line.start && t < line.end;
+          const progress = active ? (t - line.start) / Math.max(0.01, line.end - line.start) : 0;
+          el.classList.toggle("active", active);
+          el.classList.toggle("exiting", active && progress > 0.84);
+          if (active) {
+            const driftX = -50 + progress * 2.2;
+            const driftY = progress < 0.5 ? 5 - progress * 10 : -5 + (progress - 0.5) * 6;
+            el.style.transform = `translateX(${driftX}%) translateY(${driftY}px)`;
+            el.style.opacity = progress < 0.10 ? (progress / 0.10).toFixed(3) : progress > 0.90 ? ((1 - progress) / 0.10).toFixed(3) : "1";
+          } else {
+            el.style.transform = "translateX(-50%) translateY(18px)";
+            el.style.opacity = "0";
+          }
+        });
+        if (lyricScrubber) lyricScrubber.value = t;
+      };
+
+      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
+      audioPlayer?.addEventListener("play", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("pause", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("ended", () => {
+        if (lyricBgVideo) {
+          lyricBgVideo.pause();
+          lyricBgVideo.currentTime = 0;
+        }
+        syncAudioState();
+        renderLyrics();
+      });
+      audioPlayer?.addEventListener("timeupdate", renderLyrics);
+      audioPlayer?.addEventListener("seeked", renderLyrics);
+      audioPlayer?.addEventListener("loadedmetadata", () => {
+        if (lyricScrubber && lyricLines.length) lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
+        renderLyrics();
+      });
+      lyricBgVideo?.addEventListener("loadedmetadata", () => {
+        if (lyricBgVideo.videoWidth && lyricBgVideo.videoHeight && lyricStage) {
+          lyricStage.style.aspectRatio = `${lyricBgVideo.videoWidth} / ${lyricBgVideo.videoHeight}`;
+        }
+      });
+      lyricScrubber?.addEventListener("input", (e) => {
+        if (!audioPlayer) return;
+        audioPlayer.currentTime = Number(e.target.value);
+        renderLyrics();
+      });
+      songToggle?.addEventListener("click", async () => {
+        if (!audioPlayer) return;
+        try {
+          if (audioPlayer.paused) await audioPlayer.play();
+          else audioPlayer.pause();
+        } catch (err) {}
+        syncAudioState();
+      });
 
       let confettiFired = false;
       let nudgeTimer;
@@ -3886,13 +4181,14 @@
         }
       };
       const scrollRoadTripMapToCurrent = (behavior = "auto") => {
-        if (!roadtripMapScroll || !roadtripMap || window.innerWidth > 700) return;
+        if (!roadtripMapScroll || !roadtripMap) return;
+        if (window.innerWidth > 700) return;
         const currentNode = roadtripMap.querySelector(`.state-node[data-state="${roadTrip.current}"]`);
         if (!currentNode) return;
         const viewportWidth = roadtripMapScroll.clientWidth;
         const mapWidth = roadtripMap.scrollWidth || roadtripMap.offsetWidth;
         const currentCenter = currentNode.offsetLeft + (currentNode.offsetWidth / 2);
-        const targetLeft = Math.max(0, Math.min(mapWidth - viewportWidth, currentCenter - (viewportWidth * 0.62)));
+        const targetLeft = Math.max(0, Math.min(mapWidth - viewportWidth, currentCenter - (viewportWidth * 0.56)));
         roadtripMapScroll.scrollTo({ left: targetLeft, behavior });
       };
       const queueRoadTripMapFocus = (behavior = "auto") => {
@@ -3900,10 +4196,43 @@
           window.setTimeout(() => scrollRoadTripMapToCurrent(behavior), delay);
         });
       };
+      const positionRoadtripCarFallback = () => {
+        if (!roadtripCarFallback || !roadtripCar) return;
+        roadtripCarFallback.style.left = roadtripCar.style.left;
+        roadtripCarFallback.style.top = roadtripCar.style.top;
+        roadtripCarFallback.style.transform = roadtripCar.style.transform || "translate(-50%, -50%) scaleX(1)";
+      };
+
       const updateRoadTripHUD = () => {
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadtripHasChosenLevel ? roadTrip.fuel : "—";
         roadtripVisited.textContent = roadTrip.visited.size;
+
+        const current = roadTripStates[roadTrip.current];
+        const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
+        const previous = roadTripStates[previousCode];
+        const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
+        const facingScale = movingLeft ? -1 : 1;
+
+        const currentNode = roadtripMap?.querySelector(`.state-node[data-state="${roadTrip.current}"]`);
+
+        let carX = current.x;
+        let carY = Math.min(90, current.y + (window.innerWidth <= 700 ? 6 : 5));
+
+        if (currentNode && roadtripMap) {
+          const mapRect = roadtripMap.getBoundingClientRect();
+          const nodeRect = currentNode.getBoundingClientRect();
+          if (mapRect.width && mapRect.height) {
+            carX = ((nodeRect.left - mapRect.left) + (nodeRect.width / 2)) / mapRect.width * 100;
+            carY = ((nodeRect.top - mapRect.top) + (nodeRect.height * 0.86)) / mapRect.height * 100;
+          }
+        }
+
+        roadtripCar.style.left = `${carX}%`;
+        roadtripCar.style.top = `${carY}%`;
+        roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
+        positionRoadtripCarFallback();
+
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
@@ -3937,20 +4266,76 @@
         updateRoadTripStatusVisibility();
         resetRoadTrip();
       };
+      const finishRoadTrip = (won) => {
+        roadTrip.gameOver = true;
+        updateRoadTripNodes();
+        renderRoadTripChoices();
+        if (won) {
+          roadtripCelebration.textContent = `🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`;
+          roadtripCelebration.classList.add("show");
+          setRoadTripStatus(`<strong>You won!</strong> You reached the ${getRoadTripSettings().goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+          roadtripMapOutcomeKicker.textContent = "Trip Complete";
+          roadtripMapOutcomeTitle.textContent = "You won!";
+          roadtripMapOutcomeText.textContent = `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`;
+          roadtripMapRestart.textContent = "Play Again";
+          roadtripMapOutcome.classList.add("show");
+          playRoadtripWinSound();
+        } else {
+          roadtripCelebration.textContent = `🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`;
+          roadtripCelebration.classList.add("show");
+          setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
+          roadtripMapOutcomeKicker.textContent = "Trip Over";
+          roadtripMapOutcomeTitle.textContent = "Out of fuel or moves";
+          roadtripMapOutcomeText.textContent = "Restart and try a different route.";
+          roadtripMapRestart.textContent = "Restart Trip";
+          roadtripMapOutcome.classList.add("show");
+          playRoadtripLoseSound();
+        }
+      };
+
+      const spawnRoadtripPopup = (text, x, y) => {
+        if (!roadtripPointPopups || !text) return;
+        const popup = document.createElement("div");
+        popup.className = "roadtrip-point-popup";
+        popup.textContent = text;
+        popup.style.left = `${x}%`;
+        popup.style.top = `${y}%`;
+        roadtripPointPopups.appendChild(popup);
+        window.setTimeout(() => popup.remove(), 1050);
+      };
+
       const attemptRoadTripMove = (code) => {
         if (!roadtripHasChosenLevel || roadTrip.gameOver) return;
         if (roadTrip.visited.has(code)) return;
         const currentState = roadTripStates[roadTrip.current];
         if (!currentState.neighbors.includes(code) || roadTrip.fuel <= 0) return;
+
         const nextState = roadTripStates[code];
         roadTrip.current = code;
         roadTrip.fuel -= 1;
         roadTrip.score += nextState.points;
         roadTrip.visited.add(code);
         roadTrip.route.push(code);
-        if (nextState.fuelBonus) roadTrip.fuel += nextState.fuelBonus;
-        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${nextState.fuelBonus ? ` and refueled +${nextState.fuelBonus}` : ""}. Pick another connected stop.`);
+
+        const fuelBonus = nextState.fuelBonus || 0;
+        if (fuelBonus) roadTrip.fuel += fuelBonus;
+
+        roadtripCelebration.classList.remove("show");
+        roadtripMapOutcome.classList.remove("show");
+        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelBonus ? ` and refueled +${fuelBonus}` : ""}. Pick another connected stop.`);
         updateRoadTripHUD();
+
+        playRoadtripMoveSound();
+        window.setTimeout(() => playRoadtripPointsSound(), 40);
+        if (fuelBonus) window.setTimeout(() => playRoadtripFuelSound(), 140);
+
+        spawnRoadtripPopup(`+${nextState.points.toLocaleString()}`, Math.min(92, nextState.x + 1.8), Math.max(10, nextState.y - 2));
+        if (fuelBonus) spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, nextState.x + 6), Math.max(8, nextState.y - 8));
+
+        if (roadTrip.score >= getRoadTripSettings().goal) return finishRoadTrip(true);
+        if (roadTrip.fuel <= 0 || !getAvailableMoves().length) return finishRoadTrip(false);
+        if (roadTrip.fuel === 2) showRoadTripToast("Only 2 moves left. Choose your next stop carefully.");
+        if (roadTrip.fuel === 1) showRoadTripToast("Last move before the tank runs dry.");
       };
       const openRoadTripModal = () => {
         syncRoadTripLayout();
@@ -3965,16 +4350,26 @@
         document.body.classList.remove("lightbox-open");
       };
 
-      openRoadtripGame?.addEventListener("click", openRoadTripModal);
+      openRoadtripGame?.addEventListener("click", () => {
+        unlockRoadtripAudio();
+        openRoadTripModal();
+      });
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
       roadtripMapRestart?.addEventListener("click", () => {
+        unlockRoadtripAudio();
+        playRoadtripRestartSound();
         resetRoadTrip();
         queueRoadTripMapFocus("auto");
       });
       roadtripLevelButtons.forEach((button) => {
-        button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
+        button.addEventListener("click", () => {
+          unlockRoadtripAudio();
+          playRoadtripLevelSound();
+          applyRoadTripLevel(button.dataset.roadtripLevel);
+        });
       });
       roadtripModal?.addEventListener("click", (e) => { if (e.target === roadtripModal) closeRoadTripModalFn(); });
+      roadtripModal?.addEventListener("pointerdown", () => unlockRoadtripAudio(), { passive: true });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
         if (e.key === "Escape" && milestoneModal?.classList.contains("open")) milestoneModal.classList.remove("open");
@@ -4000,6 +4395,9 @@
       syncRoadTripLayout();
       prepareRoadTripLevelSelection();
       updateRoadTripStatusVisibility();
+      syncAudioState();
+      updateSongButton();
+      renderLyrics();
       updateProgressBar();
       setActiveMiniNav();
     });
@@ -4044,8 +4442,9 @@
         <div class="history-field history-field--full"><input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" /></div>
       </div>
       <div class="history-followup-actions">
-        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>archivist@wafflehouse.com</strong>.</div>
+        <button class="history-cancel-btn" id="history-cancel-followup" type="button">Cancel</button>
         <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
+        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>archivist@wafflehouse.com</strong>.</div>
       </div>
     </div>
 
@@ -4097,6 +4496,7 @@
       const unitInput = document.getElementById("history-contact-unit");
       const emailInput = document.getElementById("history-contact-email");
       const sendEmailBtn = document.getElementById("history-send-email");
+      const cancelFollowupBtn = document.getElementById("history-cancel-followup");
 
       let pendingQuestion = "";
 
@@ -4115,11 +4515,12 @@
           return;
         }
         const vv = window.visualViewport;
-        const visibleHeight = vv ? vv.height : window.innerHeight;
+        const layoutHeight = window.innerHeight;
+        const visibleHeight = vv ? vv.height : layoutHeight;
         const offsetTop = vv ? vv.offsetTop : 0;
-        const safeHeight = Math.max(320, visibleHeight - 16);
-        const panelHeight = Math.min(720, safeHeight);
-        const panelTop = offsetTop + (visibleHeight / 2);
+        const keyboardOpen = (layoutHeight - visibleHeight) > 140;
+        const panelHeight = Math.max(360, Math.min(keyboardOpen ? (visibleHeight - 8) : (visibleHeight - 16), 760));
+        const panelTop = keyboardOpen ? offsetTop + 6 + (panelHeight / 2) : offsetTop + (visibleHeight / 2);
         panel.style.setProperty("--history-panel-top", `${panelTop}px`);
         panel.style.setProperty("--history-panel-height", `${panelHeight}px`);
       };
@@ -4163,12 +4564,18 @@
         log.scrollTop = log.scrollHeight;
       };
 
-      const hideFollowup = () => { if (followup) followup.hidden = true; };
+      const hideFollowup = () => {
+        if (followup) followup.hidden = true;
+        panel?.classList.remove("history-panel--followup");
+        syncHistoryPanelViewport();
+      };
       const showFollowup = (question) => {
         pendingQuestion = question;
         if (!followup) return;
         followup.hidden = false;
+        panel?.classList.add("history-panel--followup");
         followupCopy.textContent = "Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
+        syncHistoryPanelViewport();
         window.setTimeout(() => nameInput?.focus(), 40);
       };
       const seedWelcome = () => {
@@ -4209,6 +4616,7 @@
 
       const closePanel = () => {
         panel?.classList.remove("open");
+        panel?.classList.remove("history-panel--followup");
         overlay?.classList.remove("open");
         panel?.setAttribute("aria-hidden", "true");
         launcher?.setAttribute("aria-expanded", "false");
@@ -4218,6 +4626,10 @@
       launcher?.addEventListener("click", openPanel);
       closeBtn?.addEventListener("click", closePanel);
       overlay?.addEventListener("click", closePanel);
+      cancelFollowupBtn?.addEventListener("click", () => {
+        hideFollowup();
+        window.setTimeout(() => input?.focus(), 40);
+      });
 
       askBtn?.addEventListener("click", () => {
         const q = input?.value?.trim() || "";
@@ -4254,6 +4666,11 @@
         field?.addEventListener("focus", () => {
           window.setTimeout(() => {
             syncHistoryPanelViewport();
+            const followupScroller = field.closest(".history-chat-followup");
+            if (followupScroller) {
+              const targetTop = Math.max(0, field.offsetTop - 24);
+              followupScroller.scrollTo({ top: targetTop, behavior: "auto" });
+            }
             field.scrollIntoView({ block: "nearest", inline: "nearest" });
           }, 80);
         });
