@@ -2364,11 +2364,11 @@
     /* ----- Waffle House History floating chat ----- */
     .history-fab-wrap {
       position: fixed;
-      right: 16px;
+      left: 16px;
       bottom: 84px;
       z-index: 4550;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       pointer-events: none;
     }
 
@@ -2376,24 +2376,24 @@
       pointer-events: auto;
       border: 1px solid rgba(176, 150, 44, 0.22);
       border-radius: 999px;
-      min-height: 58px;
-      padding: 10px 16px 10px 12px;
+      min-height: 50px;
+      padding: 8px 14px 8px 10px;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,247,200,0.98));
       color: #111;
       font-weight: 900;
-      font-size: 0.94rem;
-      box-shadow: 0 14px 28px rgba(17,17,17,0.14);
+      font-size: 0.86rem;
+      box-shadow: 0 12px 22px rgba(17,17,17,0.14);
       cursor: pointer;
-      max-width: min(92vw, 320px);
+      max-width: min(84vw, 264px);
       text-align: left;
     }
 
     .history-fab-icon {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
@@ -2405,8 +2405,9 @@
     }
 
     .history-fab-label {
-      line-height: 1.2;
+      line-height: 1.15;
       letter-spacing: 0.01em;
+      font-size: 0.84rem;
     }
 
     .history-chat-overlay {
@@ -2422,20 +2423,22 @@
 
     .history-chat-panel {
       position: fixed;
-      right: 16px;
-      bottom: 152px;
-      width: min(420px, calc(100vw - 24px));
-      max-height: min(76vh, 760px);
+      top: 50%;
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      width: min(420px, calc(100vw - 28px));
+      height: min(78dvh, 760px);
       display: flex;
       flex-direction: column;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,251,233,0.98));
+      background: linear-gradient(180deg, rgba(255,255,255,0.985), rgba(255,251,233,0.985));
       border: 1px solid rgba(176, 150, 44, 0.2);
       border-radius: 28px;
       box-shadow: 0 26px 60px rgba(17,17,17,0.2);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transform: translateY(14px) scale(0.98);
+      transform: translate(-50%, calc(-50% + 14px)) scale(0.98);
       transition: opacity 0.22s ease, visibility 0.22s ease, transform 0.22s ease;
       overflow: hidden;
       z-index: 4600;
@@ -2449,13 +2452,13 @@
     }
 
     .history-chat-panel.open {
-      transform: translateY(0) scale(1);
+      transform: translate(-50%, -50%) scale(1);
     }
 
     .history-chat-top {
       position: relative;
       padding: 22px 20px 18px;
-      background: linear-gradient(135deg, rgba(217, 0, 27, 0.14), rgba(255,255,255,0.92) 46%, rgba(0,55,135,0.16));
+      background: linear-gradient(180deg, rgba(255, 230, 106, 0.96), rgba(245, 213, 71, 0.9));
       border-bottom: 1px solid rgba(176, 150, 44, 0.16);
     }
 
@@ -2488,17 +2491,17 @@
       margin: 10px 0 0;
       max-width: none;
       text-align: left;
-      color: #494949;
-      line-height: 1.55;
-      font-size: 0.96rem;
+      color: #3f3f3f;
+      line-height: 1.52;
+      font-size: 0.94rem;
     }
 
     .history-chat-close {
       position: absolute;
       top: 12px;
       right: 12px;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border: none;
       border-radius: 50%;
       background: #fff;
@@ -2540,8 +2543,8 @@
       display: grid;
       gap: 12px;
       overflow: auto;
-      min-height: 220px;
-      max-height: 36vh;
+      min-height: 0;
+      flex: 1 1 auto;
       scroll-behavior: smooth;
     }
 
@@ -2655,7 +2658,9 @@
     .history-chat-composer {
       padding: 16px;
       border-top: 1px solid rgba(176, 150, 44, 0.16);
-      background: rgba(255,255,255,0.84);
+      background: rgba(255,255,255,0.92);
+      position: sticky;
+      bottom: 0;
     }
 
     .history-chat-composer-row {
@@ -2674,26 +2679,30 @@
 
     @media (max-width: 700px) {
       .history-fab-wrap {
-        right: 12px;
+        left: 12px;
+        right: auto;
         bottom: 76px;
       }
 
       .history-fab {
-        min-height: 54px;
-        padding: 10px 14px 10px 12px;
-        max-width: calc(100vw - 24px);
+        min-height: 46px;
+        padding: 8px 12px 8px 10px;
+        max-width: 228px;
       }
 
       .history-fab-label {
-        font-size: 0.88rem;
+        font-size: 0.8rem;
       }
 
       .history-chat-panel {
-        right: 12px;
-        left: 12px;
-        bottom: 138px;
-        width: auto;
-        max-height: min(72vh, 680px);
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        width: min(94vw, 420px);
+        height: min(82dvh, 720px);
+        max-height: none;
+        border-radius: 24px;
       }
 
       .history-chat-top {
@@ -2702,7 +2711,6 @@
 
       .history-chat-log {
         padding: 14px 12px;
-        max-height: 34vh;
       }
 
       .history-quick-asks {
@@ -2713,15 +2721,31 @@
         margin: 0 12px 12px;
       }
 
-      .history-followup-grid,
-      .history-chat-composer-row {
+      .history-followup-grid {
         grid-template-columns: 1fr;
+      }
+
+      .history-chat-composer-row {
+        grid-template-columns: 1fr auto;
+        align-items: stretch;
+      }
+
+      .history-ask-btn {
+        min-width: 86px;
+        padding-inline: 14px;
       }
     }
 
   </style>
 </head>
 <body>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", () => {
+      window.scrollTo(0, 0);
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    });
+  </script>
   <div id="scroll-progress"></div>
 
   <header class="topbar">
@@ -3069,7 +3093,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-            Celebration points match the actual number of Associates we're celebrating in each state across Waffle Nation. Every trip starts in Georgia, so your score begins with Georgia's 3,596 points at every level. Each new state adds that state's points, and bonus refuel stops help you keep the trip going until you reach the goal before Wilson's tank runs dry.
+            Wilson Waffle is heading out from Georgia on a celebration run. Every stop adds real anniversary points from that state, a few bonus refuel stops can keep the trip alive, and your route choices decide how far the journey goes before the tank runs dry.
           </p>
         </div>
 
@@ -3151,11 +3175,6 @@
             <div class="game-panel-card">
               <h3>Bonus Refuel Stops</h3>
               <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
-            </div>
-
-            <div class="game-panel-card" id="roadtrip-tripgoal-card">
-              <h3>Trip Goal</h3>
-              <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
 
             <div class="game-panel-card" id="roadtrip-difficulty-card">
@@ -3517,15 +3536,12 @@ const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
   const dx = toState.x - fromState.x;
   const dy = toState.y - fromState.y;
   const dist = Math.hypot(dx, dy) || 0.001;
-  const direction = ((fromState.y + toState.y) / 2) < ROADTRIP_GA_ANCHOR.y ? 1 : -1;
-  const bend = clampRoadTripValue((dist * 0.028 + Math.abs(dy) * 0.012) * emphasis, 0.08, 0.72);
-  const normalX = (-dy / dist) * bend * direction;
-  const normalY = (dx / dist) * bend * direction;
-  const c1x = fromState.x + (dx * 0.32) + normalX;
-  const c1y = fromState.y + (dy * 0.32) + normalY;
-  const c2x = fromState.x + (dx * 0.68) + normalX;
-  const c2y = fromState.y + (dy * 0.68) + normalY;
-  return `M ${fromState.x.toFixed(2)} ${fromState.y.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${toState.x.toFixed(2)} ${toState.y.toFixed(2)}`;
+  const pad = clampRoadTripValue(4.15 * emphasis, 3.35, 4.9);
+  const startX = fromState.x + (dx / dist) * pad;
+  const startY = fromState.y + (dy / dist) * pad;
+  const endX = toState.x - (dx / dist) * pad;
+  const endY = toState.y - (dy / dist) * pad;
+  return `M ${startX.toFixed(2)} ${startY.toFixed(2)} L ${endX.toFixed(2)} ${endY.toFixed(2)}`;
 };
 
 const renderRoadTripNetwork = () => {
@@ -3541,13 +3557,13 @@ const renderRoadTripNetwork = () => {
   ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    const path = getRoadTripCurvePath(fromState, toState, 0.34);
+    const path = getRoadTripCurvePath(fromState, toState, 0.98);
     networkSegments.push(`<path class="route-network-main" d="${path}" />`);
 
     const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
     const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
     if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      const optionPath = getRoadTripCurvePath(fromState, toState, 0.42);
+      const optionPath = getRoadTripCurvePath(fromState, toState, 1.02);
       optionSegments.push(`<path class="route-option-main" d="${optionPath}" />`);
       optionSegments.push(`<path class="route-option-center" d="${optionPath}" />`);
     }
@@ -3564,7 +3580,7 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    const path = getRoadTripCurvePath(fromState, toState, 0.48);
+    const path = getRoadTripCurvePath(fromState, toState, 1.04);
     traveledSegments.push(`<path class="route-traveled-main" d="${path}" />`);
     traveledSegments.push(`<path class="route-traveled-center" d="${path}" />`);
   }
@@ -4054,15 +4070,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         });
       };
 
-      const updateRoadTripLevelText = () => {
-        if (!roadtripGoalCopy) return;
-        if (!roadtripHasChosenLevel) {
-          roadtripGoalCopy.innerHTML = `Choose <strong>Beginner</strong>, <strong>Intermediate</strong>, or <strong>Advanced</strong> to set your fuel and target score.`;
-          return;
-        }
-        const settings = getRoadTripSettings();
-        roadtripGoalCopy.innerHTML = `Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>${settings.goal.toLocaleString()}</strong> before fuel hits zero.`;
-      };
+      const updateRoadTripLevelText = () => {};
 
       const getRoadTripBannerLevel = () => `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
 
@@ -4597,8 +4605,8 @@ const applyRoadTripLayout = (levelKey = "base") => {
         const settings = getRoadTripSettings();
         return {
           kicker: `${settings.label} Level`,
-          title: `Reach ${settings.goal.toLocaleString()} before you run out of fuel`,
-          text: `You start in Georgia with 3,596 points and ${settings.startFuel} fuel. Pick only yellow-highlighted connected states, collect bonus fuel in Louisiana, Arkansas, and Tennessee, and watch your score, fuel, and stops right on the map.`
+          title: `Georgia is your starting stop`,
+          text: `Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel. Follow the yellow-highlighted connected stops, grab bonus fuel in Louisiana, Arkansas, and Tennessee, and chase ${settings.goal.toLocaleString()} points before the tank runs dry.`
         };
       };
 
@@ -4906,7 +4914,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history chat">&times;</button>
       <div class="history-chat-eyebrow">Waffle House History</div>
       <h3>Explore Waffle House History</h3>
-      <p>Tap a quick question for an instant answer, or ask your own question and send it to our history team.</p>
+      <p>Tap a quick question for an instant answer, or ask your own question and I’ll package it for Art &amp; Archivist.</p>
     </div>
 
     <div class="history-quick-asks" id="history-quick-asks">
@@ -4921,23 +4929,23 @@ const applyRoadTripLayout = (levelKey = "base") => {
     <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
     <div class="history-chat-followup" id="history-chat-followup" hidden>
-      <div class="history-followup-copy" id="history-followup-copy">Thanks for your question. Enter your name and email below, then tap the button to email your question to our history team.</div>
+      <div class="history-followup-copy" id="history-followup-copy">Thanks for your question. Enter your name and email below, then tap the button to email your question to Art &amp; Archivist.</div>
       <div class="history-followup-grid">
         <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
         <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
       </div>
       <div class="history-followup-actions">
-        <div class="history-followup-note">This version opens a pre-addressed email draft to <strong>example@example.com</strong>.</div>
-        <button class="history-send-btn" id="history-send-email" type="button">Email My Question</button>
+        <div class="history-followup-note">I’ll package your note for <strong>Art &amp; Archivist</strong>, then open a pre-addressed draft to <strong>example@example.com</strong>.</div>
+        <button class="history-send-btn" id="history-send-email" type="button">Send to Art & Archivist</button>
       </div>
     </div>
 
     <div class="history-chat-composer">
       <div class="history-chat-composer-row">
-        <input id="history-question-input" type="text" placeholder="Ask a Waffle House history question" aria-label="Ask a Waffle House history question" />
+        <input id="history-question-input" type="text" placeholder="Ask Art & Archivist a history question" aria-label="Ask Art & Archivist a history question" />
         <button class="history-ask-btn" id="history-ask-btn" type="button">Ask</button>
       </div>
-      <div class="history-chat-helper">After you ask a custom question, the chat will prompt for your name and email so you can send it to the history team.</div>
+      <div class="history-chat-helper">After you ask a custom question, the chat will prompt for your name and email so you can send it to Art &amp; Archivist.</div>
     </div>
   </aside>
 
@@ -5063,7 +5071,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       const addMessage = (role, text) => {
         const msg = document.createElement("div");
         msg.className = `history-msg ${role}`;
-        const label = role === "bot" ? "History Chatbot" : "You";
+        const label = role === "bot" ? "Art & Archivist Bot" : "You";
         msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
         log.appendChild(msg);
         log.scrollTop = log.scrollHeight;
@@ -5077,7 +5085,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         pendingQuestion = question;
         if (!followup) return;
         followup.hidden = false;
-        followupCopy.textContent = "Thanks for your question. Enter your name and email below, then tap the button to email this question to our history team.";
+        followupCopy.textContent = "Add your name and email, then I’ll package your question for Art & Archivist and open a ready-to-send draft.";
         window.setTimeout(() => nameInput?.focus(), 40);
       };
 
@@ -5096,7 +5104,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         window.setTimeout(() => {
           addMessage("bot", answer);
           if (promptForEmail) {
-            addMessage("bot", "Want to send that question to our history team? Enter your name and email below, then tap Email My Question.");
+            addMessage("bot", "Want to send that question to Art &amp; Archivist? Enter your name and email below, then tap Send to Art & Archivist.");
             showFollowup(q);
           }
         }, 110);
@@ -5167,9 +5175,12 @@ const applyRoadTripLayout = (levelKey = "base") => {
           question
         ].join("\n");
 
+        addMessage("bot", `Thanks, ${name}. I’m packaging your question for Art & Archivist now.`);
         const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.location.href = mailto;
-        addMessage("bot", `Your email draft is ready to send to example@example.com.`);
+        window.setTimeout(() => {
+          window.location.href = mailto;
+          addMessage("bot", `Your draft for Art & Archivist is ready in your email app — just review and send.`);
+        }, 520);
       });
 
       document.addEventListener("keydown", (e) => {
