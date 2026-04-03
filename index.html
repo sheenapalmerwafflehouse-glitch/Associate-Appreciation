@@ -1843,7 +1843,7 @@
       position: absolute;
       transform: translate(-50%, -50%);
       transform-origin: center center;
-      width: 56px;
+      width: 52px;
       height: auto;
       z-index: 8;
       pointer-events: none;
@@ -1852,12 +1852,12 @@
       touch-action: none;
       opacity: 1;
       transition: left 0.42s ease, top 0.42s ease, transform 0.3s ease, opacity 0.2s ease;
-      filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
-      background: rgba(255, 255, 255, 0.96);
-      border: 2px solid rgba(176, 150, 44, 0.22);
-      border-radius: 18px;
-      box-shadow: 0 10px 18px rgba(17, 17, 17, 0.18);
-      padding: 6px;
+      filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.22));
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
       object-fit: contain;
       max-width: none;
       display: block;
@@ -2309,7 +2309,7 @@
       .roadtrip-map-stage .state-node { width: 66px; min-height: 66px; border-radius: 18px; padding: 7px 5px 8px; }
       .roadtrip-map-stage .state-node-label { font-size: 0.86rem; }
       .roadtrip-map-stage .state-node-points { font-size: 0.66rem; }
-      .roadtrip-map-stage .state-car { width: 52px; padding: 5px; border-radius: 16px; }
+      .roadtrip-map-stage .state-car { width: 50px; padding: 0; border-radius: 0; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
       .roadtrip-route-svg .route-network-main { stroke-width: 1.02; }
@@ -2336,7 +2336,7 @@
       .roadtrip-route-chips { max-height: 108px; overflow: auto; }
       .roadtrip-point-popup { font-size: 0.8rem; padding: 7px 10px; min-width: 66px; }
       .roadtrip-map-stage .state-node { width: 60px; min-height: 60px; }
-      .roadtrip-map-stage .state-car { width: 48px; padding: 4px; border-radius: 14px; }
+      .roadtrip-map-stage .state-car { width: 46px; padding: 0; border-radius: 0; }
       .roadtrip-scroll-hint { font-size: 0.74rem; line-height: 1.4; padding: 12px 14px; }
       .roadtrip-map-hud { gap: 6px; margin-bottom: 8px; }
       .roadtrip-map-hud .hud-card {
@@ -2463,6 +2463,14 @@
 
     .history-chat-panel.open {
       transform: translate(-50%, -50%) scale(1);
+    }
+
+    .history-chat-panel.history-panel--keyboard {
+      top: var(--history-panel-top);
+    }
+
+    .history-chat-panel.history-panel--keyboard.open {
+      transform: translate(-50%, 0) scale(1);
     }
 
     .history-chat-top {
@@ -2716,6 +2724,14 @@
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
       touch-action: pan-y;
+    }
+
+    .history-chat-panel.history-panel--keyboard.history-panel--followup .history-chat-top {
+      padding: 14px 16px 10px;
+    }
+
+    .history-chat-panel.history-panel--keyboard.history-panel--followup .history-chat-log {
+      display: none;
     }
 
     .history-chat-composer {
@@ -4060,6 +4076,47 @@
       lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox(); });
 
+      const formatCount = (count) => Number(count).toLocaleString();
+      const openMilestoneModal = (years, count) => {
+        if (!milestoneModal || !milestoneTitle || !milestoneText) return;
+        const numericCount = Number(count);
+        const associateWord = numericCount === 1 ? "Associate" : "Associates";
+        const verbWord = numericCount === 1 ? "is" : "are";
+        const yearWord = years === "1" ? "year" : "years";
+        milestoneTitle.textContent = `${years} ${yearWord}`;
+        milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
+        milestoneModal.classList.add("open");
+        milestoneModal.setAttribute("aria-hidden", "false");
+      };
+      const closeMilestoneModal = () => {
+        if (!milestoneModal) return;
+        milestoneModal.classList.remove("open");
+        milestoneModal.setAttribute("aria-hidden", "true");
+      };
+      const popBalloonEffect = (spot) => {
+        if (!spot) return;
+        spot.classList.remove("popping");
+        void spot.offsetWidth;
+        spot.classList.add("popping");
+        window.setTimeout(() => spot.classList.remove("popping"), 220);
+      };
+      milestoneClose?.addEventListener("click", closeMilestoneModal);
+      milestoneModal?.addEventListener("click", (e) => { if (e.target === milestoneModal) closeMilestoneModal(); });
+      balloonHotspots.forEach((spot) => {
+        const years = spot.dataset.years;
+        const count = spot.dataset.count;
+        spot.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          unlockRoadtripAudio();
+          playBalloonPopSound();
+          hideAnniversaryTip();
+          spot.classList.remove("hinting");
+          popBalloonEffect(spot);
+          window.setTimeout(() => openMilestoneModal(years, count), 80);
+        });
+      });
+
       const updateRoadTripMapLock = () => {
         if (!roadtripMapLock) return;
         const locked = !roadtripHasChosenLevel;
@@ -4372,7 +4429,7 @@
       roadtripModal?.addEventListener("pointerdown", () => unlockRoadtripAudio(), { passive: true });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
-        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) milestoneModal.classList.remove("open");
+        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) closeMilestoneModal();
       });
       roadtripIntroButton?.addEventListener("click", () => {
         roadtripMapPanel?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start", inline: "nearest" });
@@ -4416,7 +4473,7 @@
     <div class="history-chat-top">
       <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history chat">&times;</button>
       <div class="history-chat-eyebrow">Waffle House History</div>
-      <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.</p>
+      <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archives team.</p>
     </div>
 
     <div class="history-quick-asks" id="history-quick-asks">
@@ -4435,7 +4492,7 @@
     <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
     <div class="history-chat-followup" id="history-chat-followup" hidden>
-      <div class="history-followup-copy" id="history-followup-copy">Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.</div>
+      <div class="history-followup-copy" id="history-followup-copy">Add your name, unit number, and email, then I’ll package your question for the archives team and open a ready-to-send draft.</div>
       <div class="history-followup-grid">
         <div class="history-field"><input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" /></div>
         <div class="history-field"><input id="history-contact-unit" class="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Unit number" aria-label="Unit number" /></div>
@@ -4443,8 +4500,8 @@
       </div>
       <div class="history-followup-actions">
         <button class="history-cancel-btn" id="history-cancel-followup" type="button">Cancel</button>
-        <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
-        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>archivist@wafflehouse.com</strong>.</div>
+        <button class="history-send-btn" id="history-send-email" type="button">Send to Archives</button>
+        <div class="history-followup-note">I’ll package your note for <strong>the archives team</strong>, then open a pre-addressed draft to <strong>archives@wafflehouse.com</strong>.</div>
       </div>
     </div>
 
@@ -4510,6 +4567,7 @@
       const syncHistoryPanelViewport = () => {
         if (!panel) return;
         if (window.innerWidth > 700) {
+          panel.classList.remove("history-panel--keyboard");
           panel.style.removeProperty("--history-panel-top");
           panel.style.removeProperty("--history-panel-height");
           return;
@@ -4519,8 +4577,9 @@
         const visibleHeight = vv ? vv.height : layoutHeight;
         const offsetTop = vv ? vv.offsetTop : 0;
         const keyboardOpen = (layoutHeight - visibleHeight) > 140;
-        const panelHeight = Math.max(360, Math.min(keyboardOpen ? (visibleHeight - 8) : (visibleHeight - 16), 760));
-        const panelTop = keyboardOpen ? offsetTop + 6 + (panelHeight / 2) : offsetTop + (visibleHeight / 2);
+        const panelHeight = Math.max(320, Math.min(visibleHeight - (keyboardOpen ? 8 : 16), 760));
+        const panelTop = keyboardOpen ? offsetTop + 8 : offsetTop + (visibleHeight / 2);
+        panel.classList.toggle("history-panel--keyboard", keyboardOpen);
         panel.style.setProperty("--history-panel-top", `${panelTop}px`);
         panel.style.setProperty("--history-panel-height", `${panelHeight}px`);
       };
@@ -4574,7 +4633,7 @@
         if (!followup) return;
         followup.hidden = false;
         panel?.classList.add("history-panel--followup");
-        followupCopy.textContent = "Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
+        followupCopy.textContent = "Add your name, unit number, and email, then I’ll package your question for the archives team and open a ready-to-send draft.";
         syncHistoryPanelViewport();
         window.setTimeout(() => nameInput?.focus(), 40);
       };
@@ -4598,7 +4657,7 @@
         window.setTimeout(() => {
           addMessage("bot", answer);
           if (promptForEmail) {
-            addMessage("bot", "Want me to send that to the archivist? Add your name, unit number, and email below, then tap Send to Archivist.");
+            addMessage("bot", "Want me to send that to the archives team? Add your name, unit number, and email below, then tap Send to Archives.");
             showFollowup(q);
           }
         }, 110);
@@ -4668,11 +4727,13 @@
             syncHistoryPanelViewport();
             const followupScroller = field.closest(".history-chat-followup");
             if (followupScroller) {
-              const targetTop = Math.max(0, field.offsetTop - 24);
-              followupScroller.scrollTo({ top: targetTop, behavior: "auto" });
+              const fieldRect = field.getBoundingClientRect();
+              const scrollerRect = followupScroller.getBoundingClientRect();
+              const targetTop = followupScroller.scrollTop + (fieldRect.top - scrollerRect.top) - 20;
+              followupScroller.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
             }
-            field.scrollIntoView({ block: "nearest", inline: "nearest" });
-          }, 80);
+            field.scrollIntoView({ block: "center", inline: "nearest" });
+          }, 120);
         });
       });
 
@@ -4709,11 +4770,11 @@
 
         const subject = `Waffle House History Question from ${name} (Unit ${unit})`;
         const body = [`Name: ${name}`, `Unit Number: ${unit}`, `Email: ${email}`, "", "Question:", question].join("\n");
-        addMessage("bot", `Thanks, ${name}. I’m packaging your question from Unit ${unit} for the archivist now.`);
-        const mailto = `mailto:archivist@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        addMessage("bot", `Thanks, ${name}. I’m packaging your question from Unit ${unit} for the archives team now.`);
+        const mailto = `mailto:archives@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
-          addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
+          addMessage("bot", "Your draft for the archives team is ready in your email app — just review and send.");
         }, 220);
       });
 
