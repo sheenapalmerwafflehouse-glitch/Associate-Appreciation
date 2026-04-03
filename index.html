@@ -1512,6 +1512,8 @@
     .roadtrip-map-panel {
       position: relative;
       padding: 16px;
+      display: grid;
+      gap: 12px;
       background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,252,241,0.98));
     }
 
@@ -1624,24 +1626,20 @@
     .roadtrip-map-stage::after { content: none; display: none; }
 
     .roadtrip-map-hud {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
+      position: relative;
       z-index: 14;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
-      pointer-events: none;
+      margin: 0 0 10px;
     }
 
     .roadtrip-map-hud .hud-card {
       padding: 10px 8px;
       margin: 0;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.94);
       backdrop-filter: blur(4px);
       box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);
-      pointer-events: auto;
     }
 
     .roadtrip-map-hud .hud-label { font-size: 0.68rem; margin-bottom: 4px; }
@@ -2265,7 +2263,11 @@
       .roadtrip-map-stage .state-node { width: 60px; min-height: 60px; }
       .roadtrip-map-stage .state-car { width: 52px; }
       .roadtrip-scroll-hint { font-size: 0.74rem; line-height: 1.4; padding: 12px 14px; }
-      .roadtrip-map-hud .hud-card { padding: 8px 6px; }
+      .roadtrip-map-hud { gap: 6px; margin-bottom: 8px; }
+      .roadtrip-map-hud .hud-card {
+        padding: 8px 6px;
+        border-radius: 16px;
+      }
       .roadtrip-map-hud .hud-label { font-size: 0.62rem; }
       .roadtrip-map-hud .hud-value { font-size: 0.94rem; }
     }
@@ -2648,23 +2650,23 @@
 
             <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
 
+            <div class="roadtrip-map-hud game-hud">
+              <div class="hud-card">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="roadtrip-score">0</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Fuel</div>
+                <div class="hud-value" id="roadtrip-fuel">18</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Stops</div>
+                <div class="hud-value" id="roadtrip-visited">1</div>
+              </div>
+            </div>
+
             <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
               <div class="game-map roadtrip-map-stage" id="roadtrip-map">
-                <div class="roadtrip-map-hud game-hud">
-                  <div class="hud-card">
-                    <div class="hud-label">Score</div>
-                    <div class="hud-value" id="roadtrip-score">0</div>
-                  </div>
-                  <div class="hud-card">
-                    <div class="hud-label">Fuel</div>
-                    <div class="hud-value" id="roadtrip-fuel">18</div>
-                  </div>
-                  <div class="hud-card">
-                    <div class="hud-label">Stops</div>
-                    <div class="hud-value" id="roadtrip-visited">1</div>
-                  </div>
-                </div>
-
                 <div class="roadtrip-sun" aria-hidden="true"></div>
                 <div class="roadtrip-hill hill-a" aria-hidden="true"></div>
                 <div class="roadtrip-hill hill-b" aria-hidden="true"></div>
