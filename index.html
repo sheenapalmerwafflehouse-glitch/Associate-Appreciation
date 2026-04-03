@@ -1668,8 +1668,8 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(102, 92, 72, 0.14);
-  stroke-width: 0.82;
+  stroke: rgba(102, 92, 72, 0.16);
+  stroke-width: 0.92;
 }
 
 .roadtrip-route-svg .route-network-center {
@@ -1677,7 +1677,7 @@
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(103, 84, 36, 0.72);
+  stroke: rgba(103, 84, 36, 0.76);
   stroke-width: 3.25;
   filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
 }
@@ -2307,7 +2307,7 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-network-main { stroke-width: 0.72; }
+      .roadtrip-route-svg .route-network-main { stroke-width: 0.78; }
       .roadtrip-route-svg .route-network-center { display: none; }
       .roadtrip-route-svg .route-option-main { stroke-width: 2.7; }
       .roadtrip-route-svg .route-option-center { stroke-width: 0.78; stroke-dasharray: 0.16 1.34; }
@@ -2406,7 +2406,7 @@
     .history-fab-label {
       line-height: 1;
       letter-spacing: 0.005em;
-      font-size: 0.76rem;
+      font-size: clamp(0.64rem, 1.9vw, 0.74rem);
       white-space: nowrap;
       flex: 0 1 auto;
     }
@@ -2549,6 +2549,12 @@
       scroll-behavior: smooth;
     }
 
+    .history-chat-log:empty {
+      display: none;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
     .history-msg {
       max-width: 94%;
       padding: 14px 15px;
@@ -2683,13 +2689,19 @@
       }
 
       .history-fab {
-        min-height: 44px;
-        padding: 7px 11px 7px 9px;
-        gap: 7px;
+        min-height: 42px;
+        padding: 6px 10px 6px 8px;
+        gap: 6px;
+      }
+
+      .history-fab-icon {
+        width: 27px;
+        height: 27px;
+        font-size: 0.9rem;
       }
 
       .history-fab-label {
-        font-size: 0.72rem;
+        font-size: 0.67rem;
       }
 
       .history-chat-panel {
@@ -3091,7 +3103,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-            Real anniversary counts power this road trip. Wilson Waffle starts in Georgia with 3,596 points, then every connected stop adds that state’s real celebration total as you build the best route before the fuel runs out.
+            Each state shows the real number of associates we’re celebrating. Wilson Waffle starts in Georgia with 3,596 points, and every connected stop adds that state’s real anniversary total before the fuel runs out.
           </p>
         </div>
 
@@ -3544,7 +3556,7 @@ const getRoadTripBadgeHalfSize = (code) => {
   };
 };
 
-const getRoadTripBadgeAnchor = (fromState, toState, code, inset = 0.38) => {
+const getRoadTripBadgeAnchor = (fromState, toState, code, inset = -0.12) => {
   const half = getRoadTripBadgeHalfSize(code);
   const dx = toState.x - fromState.x;
   const dy = toState.y - fromState.y;
@@ -3556,25 +3568,15 @@ const getRoadTripBadgeAnchor = (fromState, toState, code, inset = 0.38) => {
   };
 };
 
-const getRoadTripCurveSign = (codeA, codeB) => {
-  const seed = `${[codeA, codeB].sort().join("")}`.split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
-  return seed % 2 === 0 ? 1 : -1;
+const getRoadTripLineEndpoints = (fromState, toState) => {
+  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, -0.12);
+  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, -0.12);
+  return { start, end };
 };
 
-const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
-  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, 0.42 * emphasis);
-  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, 0.42 * emphasis);
-  const dx = end.x - start.x;
-  const dy = end.y - start.y;
-  const dist = Math.hypot(dx, dy) || 0.001;
-  const nx = -dy / dist;
-  const ny = dx / dist;
-  const bend = clampRoadTripValue(dist * 0.12, 0.8, 2.8) * getRoadTripCurveSign(fromState.code, toState.code);
-  const c1x = start.x + dx * 0.34 + nx * bend;
-  const c1y = start.y + dy * 0.34 + ny * bend;
-  const c2x = end.x - dx * 0.34 + nx * bend;
-  const c2y = end.y - dy * 0.34 + ny * bend;
-  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
+const getRoadTripLineMarkup = (fromState, toState, className) => {
+  const { start, end } = getRoadTripLineEndpoints(fromState, toState);
+  return `<line class="${className}" x1="${start.x.toFixed(2)}" y1="${start.y.toFixed(2)}" x2="${end.x.toFixed(2)}" y2="${end.y.toFixed(2)}" />`;
 };
 
 const renderRoadTripNetwork = () => {
@@ -3590,15 +3592,13 @@ const renderRoadTripNetwork = () => {
   ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    const path = getRoadTripCurvePath(fromState, toState, 0.98);
-    networkSegments.push(`<path class="route-network-main" d="${path}" />`);
+    networkSegments.push(getRoadTripLineMarkup(fromState, toState, "route-network-main"));
 
     const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
     const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
     if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      const optionPath = getRoadTripCurvePath(fromState, toState, 1.02);
-      optionSegments.push(`<path class="route-option-main" d="${optionPath}" />`);
-      optionSegments.push(`<path class="route-option-center" d="${optionPath}" />`);
+      optionSegments.push(getRoadTripLineMarkup(fromState, toState, "route-option-main"));
+      optionSegments.push(getRoadTripLineMarkup(fromState, toState, "route-option-center"));
     }
   });
 
@@ -3613,9 +3613,8 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    const path = getRoadTripCurvePath(fromState, toState, 1.04);
-    traveledSegments.push(`<path class="route-traveled-main" d="${path}" />`);
-    traveledSegments.push(`<path class="route-traveled-center" d="${path}" />`);
+    traveledSegments.push(getRoadTripLineMarkup(fromState, toState, "route-traveled-main"));
+    traveledSegments.push(getRoadTripLineMarkup(fromState, toState, "route-traveled-center"));
   }
   roadtripRouteTraveled.innerHTML = traveledSegments.join("");
 };
@@ -4974,7 +4973,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
     <div class="history-chat-composer">
       <div class="history-chat-composer-row">
-        <input id="history-question-input" type="text" placeholder="Ask the archivist a Waffle House history question" aria-label="Ask the archivist a Waffle House history question" />
+        <input id="history-question-input" type="text" placeholder="Ask a Waffle House history question" aria-label="Ask a Waffle House history question" />
         <button class="history-ask-btn" id="history-ask-btn" type="button">Ask</button>
       </div>
     </div>
@@ -5124,7 +5123,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
         if (!log) return;
         log.innerHTML = "";
         hideFollowup();
-        addMessage("bot", "Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.");
       };
 
       const askHistoryQuestion = (question, { promptForEmail = false } = {}) => {
