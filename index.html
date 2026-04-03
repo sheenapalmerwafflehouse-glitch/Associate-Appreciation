@@ -1671,24 +1671,39 @@
     .roadtrip-hill.hill-b { width: 46%; height: 19%; left: 26%; bottom: 10%; }
     .roadtrip-hill.hill-c { width: 42%; height: 18%; right: -3%; bottom: 11%; }
 
-    .map-path.roadtrip-route-svg { inset: 0; z-index: 1; }
-    .roadtrip-route-svg .route-main {
-      fill: none;
-      stroke: rgba(96, 73, 9, 0.78);
-      stroke-width: 22;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 10px 12px rgba(39, 31, 7, 0.16));
-    }
+    .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; }
 
-    .roadtrip-route-svg .route-center {
-      fill: none;
-      stroke: rgba(255,255,255,0.86);
-      stroke-width: 6;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-dasharray: 10 14;
-    }
+.roadtrip-route-svg path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.roadtrip-route-svg .route-network-main {
+  stroke: rgba(108, 82, 11, 0.34);
+  stroke-width: 4.2;
+  filter: drop-shadow(0 7px 10px rgba(39, 31, 7, 0.10));
+}
+
+.roadtrip-route-svg .route-network-center {
+  stroke: rgba(255,255,255,0.40);
+  stroke-width: 1.12;
+  stroke-dasharray: 1.2 1.8;
+  opacity: 0.78;
+}
+
+.roadtrip-route-svg .route-traveled-main {
+  stroke: rgba(115, 85, 6, 0.9);
+  stroke-width: 5.1;
+  filter: drop-shadow(0 8px 12px rgba(39, 31, 7, 0.16));
+}
+
+.roadtrip-route-svg .route-traveled-center {
+  stroke: rgba(255, 243, 180, 0.96);
+  stroke-width: 1.28;
+  stroke-dasharray: 1.35 1.8;
+}
 
     .roadtrip-zone-label {
       position: absolute;
@@ -1865,7 +1880,7 @@
 
     .roadtrip-car-fallback.show { display: flex; }
 
-    .roadtrip-map-stage.car-traveling .route-center { animation: roadtripStripeDrift 320ms linear infinite; }
+    .roadtrip-map-stage.car-traveling .route-traveled-center { animation: roadtripStripeDrift 320ms linear infinite; }
 
     .roadtrip-map-stage .state-car.is-driving,
     .roadtrip-car-fallback.is-driving { animation: roadtripCarBob 180ms ease-in-out infinite alternate; }
@@ -2111,7 +2126,7 @@
       .state-node.available, .roadtrip-map-stage .state-node.available::before,
       .roadtrip-map-stage .state-car.is-driving, .roadtrip-map-stage .state-car.is-arriving,
       .roadtrip-car-fallback.is-driving, .roadtrip-car-fallback.is-arriving,
-      .roadtrip-point-popup.show, .roadtrip-map-stage.car-traveling .route-center,
+      .roadtrip-point-popup.show, .roadtrip-map-stage.car-traveling .route-traveled-center,
       .game-celebration.show {
         transition: none !important;
         animation: none !important;
@@ -2241,8 +2256,10 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-main { stroke-width: 22; }
-      .roadtrip-route-svg .route-center { stroke-width: 6; stroke-dasharray: 10 12; }
+      .roadtrip-route-svg .route-network-main { stroke-width: 3.8; }
+      .roadtrip-route-svg .route-network-center { stroke-width: 1.02; stroke-dasharray: 1.0 1.5; }
+      .roadtrip-route-svg .route-traveled-main { stroke-width: 4.6; }
+      .roadtrip-route-svg .route-traveled-center { stroke-width: 1.18; stroke-dasharray: 1.15 1.55; }
       .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
       .roadtrip-map-outcome-card { width: 100%; max-width: none; padding: 14px 12px 15px; border-radius: 18px; }
       .roadtrip-map-outcome-kicker { margin-bottom: 8px; padding: 5px 10px; font-size: 0.68rem; }
@@ -2675,9 +2692,9 @@
                 <div class="roadtrip-zone-label zone-midwest">Midwest</div>
                 <div class="roadtrip-zone-label zone-south">South</div>
                 <div class="roadtrip-zone-label zone-atlantic">Atlantic</div>
-                <svg class="map-path roadtrip-route-svg" viewBox="0 0 860 560" preserveAspectRatio="none" aria-hidden="true">
-                  <path class="route-main" d="M 77.4 313.6 C 81.7 287.5, 83.1 169.9, 103.2 156.8 C 123.3 143.7, 164.8 222.1, 197.8 235.2 C 230.8 248.3, 263.7 252.0, 301.0 235.2 C 338.3 218.4, 387.0 155.9, 421.4 134.4 C 455.8 112.9, 465.8 114.8, 507.4 106.4 C 549.0 98.0, 619.2 79.3, 670.8 84.0 C 722.4 88.7, 801.2 117.6, 817.0 134.4 C 832.8 151.2, 788.3 169.9, 765.4 184.8 C 742.5 199.7, 690.9 206.3, 679.4 224.0 C 667.9 241.7, 690.9 268.8, 696.6 291.2 C 702.3 313.6, 709.5 336.0, 713.8 358.4 C 718.1 380.8, 743.9 423.7, 722.4 425.6 C 700.9 427.5, 624.9 376.1, 584.8 369.6 C 544.7 363.1, 534.6 374.3, 481.6 386.4 C 428.6 398.5, 321.1 432.1, 266.6 442.4 C 212.1 452.7, 169.1 465.7, 154.8 448.0 C 140.5 430.3, 159.1 356.5, 180.6 336.0 C 202.1 315.5, 235.1 334.1, 283.8 324.8 C 332.5 315.5, 418.5 305.2, 473.0 280.0 C 527.5 254.8, 587.7 191.3, 610.6 173.6" />
-                  <path class="route-center" d="M 77.4 313.6 C 81.7 287.5, 83.1 169.9, 103.2 156.8 C 123.3 143.7, 164.8 222.1, 197.8 235.2 C 230.8 248.3, 263.7 252.0, 301.0 235.2 C 338.3 218.4, 387.0 155.9, 421.4 134.4 C 455.8 112.9, 465.8 114.8, 507.4 106.4 C 549.0 98.0, 619.2 79.3, 670.8 84.0 C 722.4 88.7, 801.2 117.6, 817.0 134.4 C 832.8 151.2, 788.3 169.9, 765.4 184.8 C 742.5 199.7, 690.9 206.3, 679.4 224.0 C 667.9 241.7, 690.9 268.8, 696.6 291.2 C 702.3 313.6, 709.5 336.0, 713.8 358.4 C 718.1 380.8, 743.9 423.7, 722.4 425.6 C 700.9 427.5, 624.9 376.1, 584.8 369.6 C 544.7 363.1, 534.6 374.3, 481.6 386.4 C 428.6 398.5, 321.1 432.1, 266.6 442.4 C 212.1 452.7, 169.1 465.7, 154.8 448.0 C 140.5 430.3, 159.1 356.5, 180.6 336.0 C 202.1 315.5, 235.1 334.1, 283.8 324.8 C 332.5 315.5, 418.5 305.2, 473.0 280.0 C 527.5 254.8, 587.7 191.3, 610.6 173.6" />
+                <svg class="map-path roadtrip-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <g id="roadtrip-route-network"></g>
+                  <g id="roadtrip-route-traveled"></g>
                 </svg>
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
                 <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
@@ -2777,6 +2794,8 @@
       const openRoadtripGame = document.getElementById("open-roadtrip-game");
       const closeRoadtripGame = document.getElementById("close-roadtrip-game");
       const roadtripMap = document.getElementById("roadtrip-map");
+      const roadtripRouteNetwork = document.getElementById("roadtrip-route-network");
+      const roadtripRouteTraveled = document.getElementById("roadtrip-route-traveled");
       const roadtripCar = document.getElementById("roadtrip-car");
       const roadtripCarFallback = document.getElementById("roadtrip-car-fallback");
       const roadtripPointPopups = document.getElementById("roadtrip-point-popups");
@@ -2847,6 +2866,39 @@
         FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 84, y: 76, neighbors: ["GA", "AL", "SC"] }
       };
 
+      const ROADTRIP_STATE_CODES = Object.keys(roadTripStates);
+      const roadTripStateValues = Object.values(roadTripStates);
+      const roadTripBasePositions = {};
+      roadTripStateValues.forEach((state) => {
+        state.baseX = state.x;
+        state.baseY = state.y;
+        roadTripBasePositions[state.code] = { x: state.x, y: state.y };
+      });
+
+      const ROADTRIP_EDGE_PAIRS = (() => {
+        const seen = new Set();
+        const pairs = [];
+        roadTripStateValues.forEach((state) => {
+          state.neighbors.forEach((neighborCode) => {
+            const key = [state.code, neighborCode].sort().join("-");
+            if (seen.has(key) || !roadTripStates[neighborCode]) return;
+            seen.add(key);
+            pairs.push([state.code, neighborCode]);
+          });
+        });
+        return pairs;
+      })();
+
+      const ROADTRIP_LAYOUTS = {
+        base: { key: "base", jitter: 0, anchor: 0.12, angleDrift: 0, radialDrift: 0, settle: 150 },
+        beginner: { key: "beginner", jitter: 5.5, anchor: 0.072, angleDrift: 0.34, radialDrift: 7, settle: 170 },
+        intermediate: { key: "intermediate", jitter: 10.5, anchor: 0.04, angleDrift: 0.72, radialDrift: 11, settle: 200 },
+        advanced: { key: "advanced", jitter: 15.5, anchor: 0.018, angleDrift: 1.08, radialDrift: 15, settle: 235 }
+      };
+
+      const ROADTRIP_LAYOUT_BOUNDS = { minX: 7, maxX: 95, minY: 15, maxY: 80 };
+      const ROADTRIP_GA_ANCHOR = { x: roadTripBasePositions.GA.x, y: roadTripBasePositions.GA.y };
+
       const ROADTRIP_LEVELS = {
         beginner: { key: "beginner", label: "Beginner", goal: 12000, startFuel: 22, description: "More fuel and a lower score target for an easier first trip." },
         intermediate: { key: "intermediate", label: "Intermediate", goal: 14000, startFuel: 19, description: "Balanced fuel and score target for a standard challenge." },
@@ -2855,6 +2907,8 @@
 
       let currentRoadTripLevel = "beginner";
       let roadtripHasChosenLevel = false;
+      let roadtripLayoutCounter = 0;
+      let currentRoadTripLayoutKey = "base";
       let roadtripToastTimeout;
       let roadtripTravelTimeout;
       let roadtripArrivalTimeout;
@@ -2863,6 +2917,233 @@
       let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
+
+
+const clampRoadTripValue = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const createRoadTripSeededRandom = (seed) => {
+  let t = seed >>> 0;
+  return () => {
+    t += 0x6D2B79F5;
+    let r = Math.imul(t ^ (t >>> 15), t | 1);
+    r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const getRoadTripLayoutConfig = (levelKey = "base") => ROADTRIP_LAYOUTS[levelKey] || ROADTRIP_LAYOUTS.base;
+
+const getRoadTripPairKey = (codeA, codeB) => [codeA, codeB].sort().join("-");
+
+const setRoadTripStatePosition = (code, x, y) => {
+  const state = roadTripStates[code];
+  if (!state) return;
+  state.x = Number(x.toFixed(2));
+  state.y = Number(y.toFixed(2));
+  const node = roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
+  if (node) {
+    node.style.setProperty("left", `${state.x}%`, "important");
+    node.style.setProperty("top", `${state.y}%`, "important");
+  }
+};
+
+const getRoadTripLayoutScore = (layoutPositions) => {
+  let score = 0;
+  const codes = Object.keys(layoutPositions);
+
+  for (let i = 0; i < codes.length; i += 1) {
+    const a = layoutPositions[codes[i]];
+    for (let j = i + 1; j < codes.length; j += 1) {
+      const b = layoutPositions[codes[j]];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy) || 0.001;
+      if (dist < 7.8) score += (7.8 - dist) * 90;
+    }
+  }
+
+  ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+    const a = layoutPositions[codeA];
+    const b = layoutPositions[codeB];
+    const dist = Math.hypot(b.x - a.x, b.y - a.y) || 0.001;
+    const baseA = roadTripBasePositions[codeA];
+    const baseB = roadTripBasePositions[codeB];
+    const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+    score += Math.abs(dist - baseDist) * 1.5;
+  });
+
+  return score;
+};
+
+const applyRoadTripLayoutPositions = (layoutPositions) => {
+  roadTripStateValues.forEach((state) => {
+    const next = layoutPositions[state.code] || roadTripBasePositions[state.code];
+    setRoadTripStatePosition(state.code, next.x, next.y);
+  });
+};
+
+const buildRoadTripLayout = (levelKey = "base") => {
+  const config = getRoadTripLayoutConfig(levelKey);
+
+  if (levelKey === "base" || !config.jitter) {
+    return Object.fromEntries(
+      roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
+    );
+  }
+
+  const baseSeed = Date.now() + (roadtripLayoutCounter * 997) + (levelKey === "beginner" ? 11 : levelKey === "intermediate" ? 29 : 53);
+  let bestLayout = null;
+  let bestScore = Number.POSITIVE_INFINITY;
+
+  for (let attempt = 0; attempt < 7; attempt += 1) {
+    const random = createRoadTripSeededRandom(baseSeed + (attempt * 131));
+    const positions = {};
+
+    roadTripStateValues.forEach((state) => {
+      if (state.code === "GA") {
+        positions[state.code] = { x: ROADTRIP_GA_ANCHOR.x, y: ROADTRIP_GA_ANCHOR.y };
+        return;
+      }
+
+      const fromGAx = state.baseX - ROADTRIP_GA_ANCHOR.x;
+      const fromGAy = state.baseY - ROADTRIP_GA_ANCHOR.y;
+      const baseRadius = Math.hypot(fromGAx, fromGAy);
+      const baseAngle = Math.atan2(fromGAy, fromGAx);
+      const angle = baseAngle + ((random() - 0.5) * 2 * config.angleDrift);
+      const radius = Math.max(7, baseRadius + ((random() - 0.5) * 2 * config.radialDrift));
+      const jitterX = (random() - 0.5) * config.jitter;
+      const jitterY = (random() - 0.5) * config.jitter;
+
+      positions[state.code] = {
+        x: clampRoadTripValue(ROADTRIP_GA_ANCHOR.x + Math.cos(angle) * radius + jitterX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX),
+        y: clampRoadTripValue(ROADTRIP_GA_ANCHOR.y + Math.sin(angle) * radius + jitterY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY)
+      };
+    });
+
+    for (let step = 0; step < config.settle; step += 1) {
+      const nudges = Object.fromEntries(
+        ROADTRIP_STATE_CODES.map((code) => [code, { x: 0, y: 0 }])
+      );
+
+      ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+        const posA = positions[codeA];
+        const posB = positions[codeB];
+        const dx = posB.x - posA.x;
+        const dy = posB.y - posA.y;
+        const dist = Math.hypot(dx, dy) || 0.001;
+        const baseA = roadTripBasePositions[codeA];
+        const baseB = roadTripBasePositions[codeB];
+        const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+        const target = clampRoadTripValue(baseDist, 7.6, 18.5);
+        const delta = dist - target;
+        const force = delta * 0.022;
+        const nx = (dx / dist) * force;
+        const ny = (dy / dist) * force;
+        nudges[codeA].x += nx;
+        nudges[codeA].y += ny;
+        nudges[codeB].x -= nx;
+        nudges[codeB].y -= ny;
+      });
+
+      for (let i = 0; i < ROADTRIP_STATE_CODES.length; i += 1) {
+        const codeA = ROADTRIP_STATE_CODES[i];
+        const posA = positions[codeA];
+        for (let j = i + 1; j < ROADTRIP_STATE_CODES.length; j += 1) {
+          const codeB = ROADTRIP_STATE_CODES[j];
+          const posB = positions[codeB];
+          const dx = posB.x - posA.x;
+          const dy = posB.y - posA.y;
+          const dist = Math.hypot(dx, dy) || 0.001;
+          const minDist = codeA === "GA" || codeB === "GA" ? 8.8 : 7.7;
+          if (dist >= minDist) continue;
+          const force = ((minDist - dist) / minDist) * 0.32;
+          const nx = (dx / dist) * force;
+          const ny = (dy / dist) * force;
+          nudges[codeA].x -= nx;
+          nudges[codeA].y -= ny;
+          nudges[codeB].x += nx;
+          nudges[codeB].y += ny;
+        }
+      }
+
+      roadTripStateValues.forEach((state) => {
+        if (state.code === "GA") return;
+        const pos = positions[state.code];
+        const pullX = (state.baseX - pos.x) * config.anchor;
+        const pullY = (state.baseY - pos.y) * config.anchor;
+        pos.x = clampRoadTripValue(pos.x + nudges[state.code].x + pullX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX);
+        pos.y = clampRoadTripValue(pos.y + nudges[state.code].y + pullY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY);
+      });
+
+      positions.GA.x = ROADTRIP_GA_ANCHOR.x;
+      positions.GA.y = ROADTRIP_GA_ANCHOR.y;
+    }
+
+    const score = getRoadTripLayoutScore(positions);
+    if (score < bestScore) {
+      bestScore = score;
+      bestLayout = JSON.parse(JSON.stringify(positions));
+    }
+  }
+
+  return bestLayout || Object.fromEntries(
+    roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
+  );
+};
+
+const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
+  const dx = toState.x - fromState.x;
+  const dy = toState.y - fromState.y;
+  const dist = Math.hypot(dx, dy) || 0.001;
+  const midX = (fromState.x + toState.x) / 2;
+  const midY = (fromState.y + toState.y) / 2;
+  const pairHash = getRoadTripPairKey(fromState.code, toState.code)
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const direction = pairHash % 2 === 0 ? 1 : -1;
+  const bend = clampRoadTripValue((dist * 0.18) * emphasis, 1.0, 3.8);
+  const normalX = (-dy / dist) * bend * direction;
+  const normalY = (dx / dist) * bend * direction;
+  const controlX = midX + normalX;
+  const controlY = midY + normalY;
+  return `M ${fromState.x.toFixed(2)} ${fromState.y.toFixed(2)} Q ${controlX.toFixed(2)} ${controlY.toFixed(2)} ${toState.x.toFixed(2)} ${toState.y.toFixed(2)}`;
+};
+
+const renderRoadTripNetwork = () => {
+  if (!roadtripRouteNetwork || !roadtripRouteTraveled) return;
+
+  roadtripRouteNetwork.innerHTML = ROADTRIP_EDGE_PAIRS.map(([codeA, codeB]) => {
+    const fromState = roadTripStates[codeA];
+    const toState = roadTripStates[codeB];
+    const path = getRoadTripCurvePath(fromState, toState, 0.88);
+    return [
+      `<path class="route-network-main" d="${path}" />`,
+      `<path class="route-network-center" d="${path}" />`
+    ].join("");
+  }).join("");
+
+  if (roadTrip.route.length < 2) {
+    roadtripRouteTraveled.innerHTML = "";
+    return;
+  }
+
+  const traveledSegments = [];
+  for (let i = 1; i < roadTrip.route.length; i += 1) {
+    const fromState = roadTripStates[roadTrip.route[i - 1]];
+    const toState = roadTripStates[roadTrip.route[i]];
+    const path = getRoadTripCurvePath(fromState, toState, 1.05);
+    traveledSegments.push(`<path class="route-traveled-main" d="${path}" />`);
+    traveledSegments.push(`<path class="route-traveled-center" d="${path}" />`);
+  }
+  roadtripRouteTraveled.innerHTML = traveledSegments.join("");
+};
+
+const applyRoadTripLayout = (levelKey = "base") => {
+  currentRoadTripLayoutKey = levelKey;
+  const layout = buildRoadTripLayout(levelKey);
+  applyRoadTripLayoutPositions(layout);
+  renderRoadTripNetwork();
+};
 
       let roadTrip = {
         current: "GA",
@@ -3358,13 +3639,11 @@
 
       const createStateButtons = () => {
         if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
-        Object.values(roadTripStates).forEach((state) => {
+        roadTripStateValues.forEach((state) => {
           const button = document.createElement("button");
           button.type = "button";
           button.className = `state-node ${regionClassName(state.region)}`;
           button.dataset.state = state.code;
-          button.style.left = `${state.x}%`;
-          button.style.top = `${state.y}%`;
           button.innerHTML = `
             <span class="state-node-label">${state.code}</span>
             <span class="state-node-points">${state.points.toLocaleString()}</span>
@@ -3373,7 +3652,9 @@
           button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
           button.addEventListener("click", () => attemptRoadTripMove(state.code));
           roadtripMap.appendChild(button);
+          setRoadTripStatePosition(state.code, state.x, state.y);
         });
+        renderRoadTripNetwork();
       };
 
       const getAvailableMoves = () => {
@@ -3597,8 +3878,10 @@
       };
 
       const renderRoadTripRoute = () => {
-        if (!roadtripRouteChips) return;
-        roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
+        if (roadtripRouteChips) {
+          roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
+        }
+        renderRoadTripNetwork();
       };
 
       const renderRoadTripChoices = () => {
@@ -3988,6 +4271,8 @@
         if (!ROADTRIP_LEVELS[level]) return;
         currentRoadTripLevel = level;
         roadtripHasChosenLevel = true;
+        roadtripLayoutCounter += 1;
+        applyRoadTripLayout(level);
         updateRoadTripLevelUI();
         updateRoadTripLevelText();
         resetRoadTrip();
@@ -3995,6 +4280,7 @@
 
       const prepareRoadTripLevelSelection = () => {
         roadtripHasChosenLevel = false;
+        applyRoadTripLayout("base");
         updateRoadTripLevelUI();
         updateRoadTripLevelText();
         hideRoadtripIntro();
@@ -4088,6 +4374,7 @@
       renderTopStates();
       renderBonusStops();
       createStateButtons();
+      applyRoadTripLayout("base");
       prepareRoadTripLevelSelection();
       enableTiltCards();
       runIdleNudge();
