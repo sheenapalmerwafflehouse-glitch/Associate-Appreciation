@@ -1660,7 +1660,8 @@
 
     .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; }
 
-.roadtrip-route-svg path {
+.roadtrip-route-svg path,
+.roadtrip-route-svg line {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1668,8 +1669,8 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(102, 92, 72, 0.16);
-  stroke-width: 0.92;
+  stroke: rgba(102, 92, 72, 0.22);
+  stroke-width: 1.12;
 }
 
 .roadtrip-route-svg .route-network-center {
@@ -1677,27 +1678,27 @@
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(103, 84, 36, 0.76);
-  stroke-width: 3.25;
+  stroke: rgba(103, 84, 36, 0.78);
+  stroke-width: 3.35;
   filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
 }
 
 .roadtrip-route-svg .route-option-center {
   stroke: rgba(255, 252, 237, 0.96);
-  stroke-width: 0.92;
-  stroke-dasharray: 0.18 1.58;
+  stroke-width: 0.98;
+  stroke-dasharray: 0.16 1.2;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(82, 67, 30, 0.9);
-  stroke-width: 3.8;
+  stroke: rgba(82, 67, 30, 0.92);
+  stroke-width: 3.95;
   filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
 }
 
 .roadtrip-route-svg .route-traveled-center {
   stroke: rgba(255, 252, 238, 0.98);
-  stroke-width: 1.04;
-  stroke-dasharray: 0.16 1.46;
+  stroke-width: 1.08;
+  stroke-dasharray: 0.16 1.14;
 }
 
     .roadtrip-mobile-difficulty {
@@ -2307,12 +2308,12 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-network-main { stroke-width: 0.78; }
+      .roadtrip-route-svg .route-network-main { stroke-width: 1.02; }
       .roadtrip-route-svg .route-network-center { display: none; }
-      .roadtrip-route-svg .route-option-main { stroke-width: 2.7; }
-      .roadtrip-route-svg .route-option-center { stroke-width: 0.78; stroke-dasharray: 0.16 1.34; }
-      .roadtrip-route-svg .route-traveled-main { stroke-width: 3.12; }
-      .roadtrip-route-svg .route-traveled-center { stroke-width: 0.86; stroke-dasharray: 0.14 1.22; }
+      .roadtrip-route-svg .route-option-main { stroke-width: 2.95; }
+      .roadtrip-route-svg .route-option-center { stroke-width: 0.86; stroke-dasharray: 0.14 1.08; }
+      .roadtrip-route-svg .route-traveled-main { stroke-width: 3.28; }
+      .roadtrip-route-svg .route-traveled-center { stroke-width: 0.92; stroke-dasharray: 0.12 1.04; }
       .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
       .roadtrip-map-outcome-card { width: 100%; max-width: none; padding: 14px 12px 15px; border-radius: 18px; }
       .roadtrip-map-outcome-kicker { margin-bottom: 8px; padding: 5px 10px; font-size: 0.68rem; }
@@ -3556,27 +3557,36 @@ const getRoadTripBadgeHalfSize = (code) => {
   };
 };
 
-const getRoadTripBadgeAnchor = (fromState, toState, code, inset = -0.12) => {
-  const half = getRoadTripBadgeHalfSize(code);
+const getRoadTripDirectionVector = (fromState, toState) => {
   const dx = toState.x - fromState.x;
   const dy = toState.y - fromState.y;
-  const divisor = Math.max(Math.abs(dx) / Math.max(1, half.x - inset), Math.abs(dy) / Math.max(1, half.y - inset)) || 1;
-  const t = 1 / divisor;
+  const length = Math.hypot(dx, dy) || 1;
+  return { dx, dy, nx: dx / length, ny: dy / length, length };
+};
+
+const getRoadTripBadgeAnchor = (state, towardState, code) => {
+  const half = getRoadTripBadgeHalfSize(code);
+  const { nx, ny } = getRoadTripDirectionVector(state, towardState);
+  const edgeDistance = 1 / Math.max(
+    Math.abs(nx) / Math.max(0.001, half.x),
+    Math.abs(ny) / Math.max(0.001, half.y)
+  );
+  const tuckInside = Math.min(1.35, Math.max(0.72, edgeDistance * 0.24));
   return {
-    x: fromState.x + dx * t,
-    y: fromState.y + dy * t
+    x: state.x + nx * (edgeDistance - tuckInside),
+    y: state.y + ny * (edgeDistance - tuckInside)
   };
 };
 
 const getRoadTripLineEndpoints = (fromState, toState) => {
-  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, -0.12);
-  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, -0.12);
+  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code);
+  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code);
   return { start, end };
 };
 
-const getRoadTripLineMarkup = (fromState, toState, className) => {
+const getRoadTripPathMarkup = (fromState, toState, className) => {
   const { start, end } = getRoadTripLineEndpoints(fromState, toState);
-  return `<line class="${className}" x1="${start.x.toFixed(2)}" y1="${start.y.toFixed(2)}" x2="${end.x.toFixed(2)}" y2="${end.y.toFixed(2)}" />`;
+  return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} L ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
 };
 
 const renderRoadTripNetwork = () => {
@@ -3592,13 +3602,13 @@ const renderRoadTripNetwork = () => {
   ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    networkSegments.push(getRoadTripLineMarkup(fromState, toState, "route-network-main"));
+    networkSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main"));
 
     const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
     const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
     if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      optionSegments.push(getRoadTripLineMarkup(fromState, toState, "route-option-main"));
-      optionSegments.push(getRoadTripLineMarkup(fromState, toState, "route-option-center"));
+      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main"));
+      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center"));
     }
   });
 
@@ -3613,8 +3623,8 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    traveledSegments.push(getRoadTripLineMarkup(fromState, toState, "route-traveled-main"));
-    traveledSegments.push(getRoadTripLineMarkup(fromState, toState, "route-traveled-center"));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main"));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center"));
   }
   roadtripRouteTraveled.innerHTML = traveledSegments.join("");
 };
@@ -5205,7 +5215,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         ].join("\n");
 
         addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
-        const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailto = `mailto:archivist@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", `Your draft for the archivist is ready in your email app — just review and send.`);
