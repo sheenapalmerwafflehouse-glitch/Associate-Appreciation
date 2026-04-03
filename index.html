@@ -1224,6 +1224,7 @@
     .tilt-card[data-tilt-depth="soft"] img { transform: translateZ(18px) scale(1.01); }
     .tilt-card[data-tilt-depth="soft"].is-tilting img { transform: translateZ(24px) scale(1.03); }
 
+
     .game-modal {
       position: fixed;
       inset: 0;
@@ -1660,46 +1661,46 @@
 
     .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; }
 
-.roadtrip-route-svg path,
-.roadtrip-route-svg line {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
+    .roadtrip-route-svg path,
+    .roadtrip-route-svg line {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+    }
 
-.roadtrip-route-svg .route-network-main {
-  stroke: rgba(102, 92, 72, 0.22);
-  stroke-width: 1.12;
-}
+    .roadtrip-route-svg .route-network-main {
+      stroke: rgba(102, 92, 72, 0.22);
+      stroke-width: 1.12;
+    }
 
-.roadtrip-route-svg .route-network-center {
-  display: none;
-}
+    .roadtrip-route-svg .route-network-center {
+      display: none;
+    }
 
-.roadtrip-route-svg .route-option-main {
-  stroke: rgba(103, 84, 36, 0.78);
-  stroke-width: 3.35;
-  filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
-}
+    .roadtrip-route-svg .route-option-main {
+      stroke: rgba(103, 84, 36, 0.78);
+      stroke-width: 3.35;
+      filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
+    }
 
-.roadtrip-route-svg .route-option-center {
-  stroke: rgba(255, 252, 237, 0.96);
-  stroke-width: 0.98;
-  stroke-dasharray: 0.16 1.2;
-}
+    .roadtrip-route-svg .route-option-center {
+      stroke: rgba(255, 252, 237, 0.96);
+      stroke-width: 0.98;
+      stroke-dasharray: 0.16 1.2;
+    }
 
-.roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(82, 67, 30, 0.92);
-  stroke-width: 3.95;
-  filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
-}
+    .roadtrip-route-svg .route-traveled-main {
+      stroke: rgba(82, 67, 30, 0.92);
+      stroke-width: 3.95;
+      filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
+    }
 
-.roadtrip-route-svg .route-traveled-center {
-  stroke: rgba(255, 252, 238, 0.98);
-  stroke-width: 1.08;
-  stroke-dasharray: 0.16 1.14;
-}
+    .roadtrip-route-svg .route-traveled-center {
+      stroke: rgba(255, 252, 238, 0.98);
+      stroke-width: 1.08;
+      stroke-dasharray: 0.16 1.14;
+    }
 
     .roadtrip-mobile-difficulty {
       display: none;
@@ -1896,6 +1897,7 @@
       pointer-events: none;
       overflow: visible;
     }
+
 
     .roadtrip-point-popup {
       position: absolute;
@@ -2357,7 +2359,6 @@
     }
 
     .challenge-badge { display: inline-flex; margin: 0; }
-  
 
     /* ----- Waffle House History floating chat ----- */
     .history-fab-wrap {
@@ -2444,7 +2445,12 @@
       transition: opacity 0.22s ease, visibility 0.22s ease, transform 0.22s ease;
       overflow: hidden;
       z-index: 4600;
+      --history-panel-top: 50%;
+      --history-panel-height: min(78dvh, 760px);
+      top: var(--history-panel-top);
+      height: var(--history-panel-height);
     }
+
 
     .history-chat-panel.open,
     .history-chat-overlay.open {
@@ -2548,6 +2554,7 @@
       min-height: 0;
       flex: 1 1 auto;
       scroll-behavior: smooth;
+      overscroll-behavior: contain;
     }
 
     .history-chat-log:empty {
@@ -2610,9 +2617,18 @@
 
     .history-followup-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin-bottom: 10px;
+      align-items: start;
+    }
+
+    .history-field {
+      min-width: 0;
+    }
+
+    .history-field--full {
+      grid-column: 1 / -1;
     }
 
     .history-followup-grid input,
@@ -2632,6 +2648,16 @@
     .history-chat-composer input:focus {
       border-color: rgba(217,179,0,0.45);
       box-shadow: 0 0 0 4px rgba(245,213,71,0.18);
+    }
+
+    .history-contact-unit {
+      appearance: textfield;
+    }
+
+    .history-contact-unit::-webkit-outer-spin-button,
+    .history-contact-unit::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     .history-followup-actions {
@@ -2682,6 +2708,119 @@
       display: none;
     }
 
+    .history-more-facts-row {
+      padding: 10px 16px 0;
+    }
+
+    .history-more-facts-btn {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.94);
+      color: #5f5000;
+      padding: 9px 14px;
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(17,17,17,0.05);
+    }
+
+    .history-more-facts-btn:hover {
+      background: #fff7cf;
+    }
+
+    .history-quick-ask.is-extra {
+      display: none;
+    }
+
+    .history-quick-asks.show-more .history-quick-ask.is-extra {
+      display: inline-flex;
+    }
+
+    /* tighter HUD cards on desktop */
+    @media (min-width: 901px) {
+      .roadtrip-map-hud {
+        max-width: 420px;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+
+      .roadtrip-map-hud .hud-card {
+        padding: 8px 10px;
+        border-radius: 16px;
+      }
+
+      .roadtrip-map-hud .hud-label {
+        margin-bottom: 3px;
+        line-height: 1;
+      }
+
+      .roadtrip-map-hud .hud-value {
+        font-size: clamp(0.98rem, 1.55vw, 1.2rem);
+        line-height: 1.04;
+      }
+    }
+
+    /* centered lock overlay before difficulty is chosen */
+    .roadtrip-map-scroll {
+      position: relative;
+    }
+
+    .roadtrip-map-lock {
+      position: absolute;
+      inset: 12px;
+      z-index: 19;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(3px);
+    }
+
+    .roadtrip-map-lock.show {
+      display: flex;
+    }
+
+    .roadtrip-map-lock-card {
+      width: min(360px, 100%);
+      padding: 22px 20px;
+      border-radius: 22px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      box-shadow: 0 18px 34px rgba(17, 17, 17, 0.16);
+    }
+
+    .roadtrip-map-lock-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.6rem;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      box-shadow: 0 8px 18px rgba(92, 77, 19, 0.14);
+    }
+
+    .roadtrip-map-lock-card h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.08;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .roadtrip-map-lock-card p {
+      margin: 0;
+      max-width: none;
+      color: #4f4f4f;
+      line-height: 1.55;
+      text-align: center;
+    }
+
     @media (max-width: 700px) {
       .history-fab-wrap {
         left: 12px;
@@ -2706,34 +2845,73 @@
       }
 
       .history-chat-panel {
-        top: 50%;
-        left: 50%;
-        right: auto;
-        bottom: auto;
+        top: var(--history-panel-top, 50%);
         width: min(94vw, 420px);
-        height: min(82dvh, 720px);
-        max-height: none;
+        max-width: calc(100vw - 16px);
+        height: var(--history-panel-height, min(82dvh, 720px));
+        max-height: calc(100dvh - 16px);
         border-radius: 24px;
       }
 
       .history-chat-top {
-        padding: 20px 16px 16px;
+        padding: 18px 16px 14px;
       }
 
       .history-chat-log {
-        padding: 14px 12px;
+        padding: 14px 12px 10px;
       }
 
       .history-quick-asks {
         padding: 12px 12px 0;
       }
 
+      .history-more-facts-row {
+        padding: 10px 12px 0;
+      }
+
       .history-chat-followup {
         margin: 0 12px 12px;
+        padding: 12px 12px 0;
+        display: grid;
+        gap: 12px;
       }
 
       .history-followup-grid {
         grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 0;
+      }
+
+      .history-followup-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 4;
+        margin: 0 -12px;
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 247, 216, 0.18),
+            rgba(255, 253, 241, 0.98) 22%,
+            rgba(255, 253, 241, 0.98) 100%
+          );
+        border-top: 1px solid rgba(176, 150, 44, 0.14);
+        box-shadow: 0 -12px 20px rgba(17, 17, 17, 0.06);
+        align-items: stretch;
+      }
+
+      .history-followup-note {
+        order: 2;
+        flex: 1 1 100%;
+      }
+
+      .history-send-btn {
+        width: 100%;
+        min-height: 54px;
+      }
+
+      .history-chat-composer {
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
       }
 
       .history-chat-composer-row {
@@ -2746,7 +2924,6 @@
         padding-inline: 14px;
       }
     }
-
   </style>
 </head>
 <body>
@@ -3161,6 +3338,14 @@
                   </div>
                 </div>
               </div>
+
+              <div class="roadtrip-map-lock show" id="roadtrip-map-lock" aria-hidden="false">
+                <div class="roadtrip-map-lock-card">
+                  <div class="roadtrip-map-lock-icon" aria-hidden="true">🔒</div>
+                  <h3>Map Locked</h3>
+                  <p>Choose Beginner, Intermediate, or Advanced to unlock the map and start your trip.</p>
+                </div>
+              </div>
             </div>
 
             <div class="game-celebration" id="roadtrip-celebration"></div>
@@ -3287,6 +3472,7 @@
       const roadtripIntroText = document.getElementById("roadtrip-intro-text");
       const roadtripIntroButton = document.getElementById("roadtrip-intro-button");
       const roadtripShell = roadtripModal?.querySelector(".roadtrip-shell");
+      const roadtripMapLock = document.getElementById("roadtrip-map-lock");
       const eapLink = document.getElementById("eap-link");
       roadtripMobilePriority.className = "roadtrip-mobile-priority";
       roadtripMobileNext.className = "roadtrip-mobile-next";
@@ -3369,272 +3555,138 @@
       let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
-
-
-const clampRoadTripValue = (value, min, max) => Math.min(max, Math.max(min, value));
-
-const createRoadTripSeededRandom = (seed) => {
-  let t = seed >>> 0;
-  return () => {
-    t += 0x6D2B79F5;
-    let r = Math.imul(t ^ (t >>> 15), t | 1);
-    r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-};
-
-const getRoadTripLayoutConfig = (levelKey = "base") => ROADTRIP_LAYOUTS[levelKey] || ROADTRIP_LAYOUTS.base;
-
-const getRoadTripPairKey = (codeA, codeB) => [codeA, codeB].sort().join("-");
-
-const setRoadTripStatePosition = (code, x, y) => {
-  const state = roadTripStates[code];
-  if (!state) return;
-  state.x = Number(x.toFixed(2));
-  state.y = Number(y.toFixed(2));
-  const node = roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
-  if (node) {
-    node.style.setProperty("left", `${state.x}%`, "important");
-    node.style.setProperty("top", `${state.y}%`, "important");
-  }
-};
-
-const getRoadTripLayoutScore = (layoutPositions) => {
-  let score = 0;
-  const codes = Object.keys(layoutPositions);
-
-  for (let i = 0; i < codes.length; i += 1) {
-    const a = layoutPositions[codes[i]];
-    for (let j = i + 1; j < codes.length; j += 1) {
-      const b = layoutPositions[codes[j]];
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.hypot(dx, dy) || 0.001;
-      if (dist < 7.8) score += (7.8 - dist) * 90;
-    }
-  }
-
-  ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
-    const a = layoutPositions[codeA];
-    const b = layoutPositions[codeB];
-    const dist = Math.hypot(b.x - a.x, b.y - a.y) || 0.001;
-    const baseA = roadTripBasePositions[codeA];
-    const baseB = roadTripBasePositions[codeB];
-    const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
-    score += Math.abs(dist - baseDist) * 1.5;
-  });
-
-  return score;
-};
-
-const applyRoadTripLayoutPositions = (layoutPositions) => {
-  roadTripStateValues.forEach((state) => {
-    const next = layoutPositions[state.code] || roadTripBasePositions[state.code];
-    setRoadTripStatePosition(state.code, next.x, next.y);
-  });
-};
-
-const buildRoadTripLayout = (levelKey = "base") => {
-  const config = getRoadTripLayoutConfig(levelKey);
-
-  if (levelKey === "base" || !config.jitter) {
-    return Object.fromEntries(
-      roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
-    );
-  }
-
-  const baseSeed = Date.now() + (roadtripLayoutCounter * 997) + (levelKey === "beginner" ? 11 : levelKey === "intermediate" ? 29 : 53);
-  let bestLayout = null;
-  let bestScore = Number.POSITIVE_INFINITY;
-
-  for (let attempt = 0; attempt < 7; attempt += 1) {
-    const random = createRoadTripSeededRandom(baseSeed + (attempt * 131));
-    const positions = {};
-
-    roadTripStateValues.forEach((state) => {
-      if (state.code === "GA") {
-        positions[state.code] = { x: ROADTRIP_GA_ANCHOR.x, y: ROADTRIP_GA_ANCHOR.y };
-        return;
-      }
-
-      const fromGAx = state.baseX - ROADTRIP_GA_ANCHOR.x;
-      const fromGAy = state.baseY - ROADTRIP_GA_ANCHOR.y;
-      const baseRadius = Math.hypot(fromGAx, fromGAy);
-      const baseAngle = Math.atan2(fromGAy, fromGAx);
-      const angle = baseAngle + ((random() - 0.5) * 2 * config.angleDrift);
-      const radius = Math.max(7, baseRadius + ((random() - 0.5) * 2 * config.radialDrift));
-      const jitterX = (random() - 0.5) * config.jitter;
-      const jitterY = (random() - 0.5) * config.jitter;
-
-      positions[state.code] = {
-        x: clampRoadTripValue(ROADTRIP_GA_ANCHOR.x + Math.cos(angle) * radius + jitterX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX),
-        y: clampRoadTripValue(ROADTRIP_GA_ANCHOR.y + Math.sin(angle) * radius + jitterY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY)
+      const clampRoadTripValue = (value, min, max) => Math.min(max, Math.max(min, value));
+      const createRoadTripSeededRandom = (seed) => {
+        let t = seed >>> 0;
+        return () => {
+          t += 0x6D2B79F5;
+          let r = Math.imul(t ^ (t >>> 15), t | 1);
+          r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+          return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        };
       };
-    });
-
-    for (let step = 0; step < config.settle; step += 1) {
-      const nudges = Object.fromEntries(
-        ROADTRIP_STATE_CODES.map((code) => [code, { x: 0, y: 0 }])
-      );
-
-      ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
-        const posA = positions[codeA];
-        const posB = positions[codeB];
-        const dx = posB.x - posA.x;
-        const dy = posB.y - posA.y;
-        const dist = Math.hypot(dx, dy) || 0.001;
-        const baseA = roadTripBasePositions[codeA];
-        const baseB = roadTripBasePositions[codeB];
-        const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
-        const target = clampRoadTripValue(baseDist, 7.6, 18.5);
-        const delta = dist - target;
-        const force = delta * 0.022;
-        const nx = (dx / dist) * force;
-        const ny = (dy / dist) * force;
-        nudges[codeA].x += nx;
-        nudges[codeA].y += ny;
-        nudges[codeB].x -= nx;
-        nudges[codeB].y -= ny;
-      });
-
-      for (let i = 0; i < ROADTRIP_STATE_CODES.length; i += 1) {
-        const codeA = ROADTRIP_STATE_CODES[i];
-        const posA = positions[codeA];
-        for (let j = i + 1; j < ROADTRIP_STATE_CODES.length; j += 1) {
-          const codeB = ROADTRIP_STATE_CODES[j];
-          const posB = positions[codeB];
-          const dx = posB.x - posA.x;
-          const dy = posB.y - posA.y;
-          const dist = Math.hypot(dx, dy) || 0.001;
-          const minDist = codeA === "GA" || codeB === "GA" ? 8.8 : 7.7;
-          if (dist >= minDist) continue;
-          const force = ((minDist - dist) / minDist) * 0.32;
-          const nx = (dx / dist) * force;
-          const ny = (dy / dist) * force;
-          nudges[codeA].x -= nx;
-          nudges[codeA].y -= ny;
-          nudges[codeB].x += nx;
-          nudges[codeB].y += ny;
+      const getRoadTripLayoutConfig = (levelKey = "base") => ROADTRIP_LAYOUTS[levelKey] || ROADTRIP_LAYOUTS.base;
+      const setRoadTripStatePosition = (code, x, y) => {
+        const state = roadTripStates[code];
+        if (!state) return;
+        state.x = Number(x.toFixed(2));
+        state.y = Number(y.toFixed(2));
+        const node = roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
+        if (node) {
+          node.style.setProperty("left", `${state.x}%`, "important");
+          node.style.setProperty("top", `${state.y}%`, "important");
         }
-      }
-
-      roadTripStateValues.forEach((state) => {
-        if (state.code === "GA") return;
-        const pos = positions[state.code];
-        const pullX = (state.baseX - pos.x) * config.anchor;
-        const pullY = (state.baseY - pos.y) * config.anchor;
-        pos.x = clampRoadTripValue(pos.x + nudges[state.code].x + pullX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX);
-        pos.y = clampRoadTripValue(pos.y + nudges[state.code].y + pullY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY);
-      });
-
-      positions.GA.x = ROADTRIP_GA_ANCHOR.x;
-      positions.GA.y = ROADTRIP_GA_ANCHOR.y;
-    }
-
-    const score = getRoadTripLayoutScore(positions);
-    if (score < bestScore) {
-      bestScore = score;
-      bestLayout = JSON.parse(JSON.stringify(positions));
-    }
-  }
-
-  return bestLayout || Object.fromEntries(
-    roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
-  );
-};
-
-const getRoadTripNodeElement = (code) => roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
-
-const getRoadTripBadgeHalfSize = (code) => {
-  const fallback = { x: 5.2, y: 4.8 };
-  const el = getRoadTripNodeElement(code);
-  if (!el || !roadtripMap) return fallback;
-  const mapRect = roadtripMap.getBoundingClientRect();
-  if (!mapRect.width || !mapRect.height) return fallback;
-  return {
-    x: Math.max(3.8, (el.offsetWidth / mapRect.width) * 50),
-    y: Math.max(3.6, (el.offsetHeight / mapRect.height) * 50)
-  };
-};
-
-const getRoadTripDirectionVector = (fromState, toState) => {
-  const dx = toState.x - fromState.x;
-  const dy = toState.y - fromState.y;
-  const length = Math.hypot(dx, dy) || 1;
-  return { dx, dy, nx: dx / length, ny: dy / length, length };
-};
-
-const getRoadTripBadgeAnchor = (state, towardState, code) => {
-  const half = getRoadTripBadgeHalfSize(code);
-  const { nx, ny } = getRoadTripDirectionVector(state, towardState);
-  const edgeDistance = 1 / Math.max(
-    Math.abs(nx) / Math.max(0.001, half.x),
-    Math.abs(ny) / Math.max(0.001, half.y)
-  );
-  const tuckInside = Math.min(1.35, Math.max(0.72, edgeDistance * 0.24));
-  return {
-    x: state.x + nx * (edgeDistance - tuckInside),
-    y: state.y + ny * (edgeDistance - tuckInside)
-  };
-};
-
-const getRoadTripLineEndpoints = (fromState, toState) => {
-  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code);
-  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code);
-  return { start, end };
-};
-
-const getRoadTripPathMarkup = (fromState, toState, className) => {
-  const { start, end } = getRoadTripLineEndpoints(fromState, toState);
-  return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} L ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
-};
-
-const renderRoadTripNetwork = () => {
-  if (!roadtripRouteNetwork || !roadtripRouteTraveled) return;
-
-  const availableCodes = !roadTrip.gameOver && roadtripHasChosenLevel
-    ? new Set(getAvailableMoves().map((state) => state.code))
-    : new Set();
-
-  const networkSegments = [];
-  const optionSegments = [];
-
-  ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
-    const fromState = roadTripStates[codeA];
-    const toState = roadTripStates[codeB];
-    networkSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main"));
-
-    const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
-    const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
-    if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main"));
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center"));
-    }
-  });
-
-  roadtripRouteNetwork.innerHTML = networkSegments.join("") + optionSegments.join("");
-
-  if (roadTrip.route.length < 2) {
-    roadtripRouteTraveled.innerHTML = "";
-    return;
-  }
-
-  const traveledSegments = [];
-  for (let i = 1; i < roadTrip.route.length; i += 1) {
-    const fromState = roadTripStates[roadTrip.route[i - 1]];
-    const toState = roadTripStates[roadTrip.route[i]];
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main"));
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center"));
-  }
-  roadtripRouteTraveled.innerHTML = traveledSegments.join("");
-};
-
-const applyRoadTripLayout = (levelKey = "base") => {
-  currentRoadTripLayoutKey = levelKey;
-  const layout = buildRoadTripLayout(levelKey);
-  applyRoadTripLayoutPositions(layout);
-  renderRoadTripNetwork();
-};
+      };
+      const getRoadTripLayoutScore = (layoutPositions) => {
+        let score = 0;
+        const codes = Object.keys(layoutPositions);
+        for (let i = 0; i < codes.length; i += 1) {
+          const a = layoutPositions[codes[i]];
+          for (let j = i + 1; j < codes.length; j += 1) {
+            const b = layoutPositions[codes[j]];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const dist = Math.hypot(dx, dy) || 0.001;
+            if (dist < 7.8) score += (7.8 - dist) * 90;
+          }
+        }
+        ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+          const a = layoutPositions[codeA];
+          const b = layoutPositions[codeB];
+          const dist = Math.hypot(b.x - a.x, b.y - a.y) || 0.001;
+          const baseA = roadTripBasePositions[codeA];
+          const baseB = roadTripBasePositions[codeB];
+          const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+          score += Math.abs(dist - baseDist) * 1.5;
+        });
+        return score;
+      };
+      const applyRoadTripLayoutPositions = (layoutPositions) => {
+        roadTripStateValues.forEach((state) => {
+          const next = layoutPositions[state.code] || roadTripBasePositions[state.code];
+          setRoadTripStatePosition(state.code, next.x, next.y);
+        });
+      };
+      const buildRoadTripLayout = (levelKey = "base") => {
+        const config = getRoadTripLayoutConfig(levelKey);
+        if (levelKey === "base" || !config.jitter) {
+          return Object.fromEntries(roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }]));
+        }
+        const baseSeed = Date.now() + (roadtripLayoutCounter * 997) + (levelKey === "beginner" ? 11 : levelKey === "intermediate" ? 29 : 53);
+        let bestLayout = null;
+        let bestScore = Number.POSITIVE_INFINITY;
+        for (let attempt = 0; attempt < 7; attempt += 1) {
+          const random = createRoadTripSeededRandom(baseSeed + (attempt * 131));
+          const positions = {};
+          roadTripStateValues.forEach((state) => {
+            if (state.code === "GA") {
+              positions[state.code] = { x: ROADTRIP_GA_ANCHOR.x, y: ROADTRIP_GA_ANCHOR.y };
+              return;
+            }
+            const fromGAx = state.baseX - ROADTRIP_GA_ANCHOR.x;
+            const fromGAy = state.baseY - ROADTRIP_GA_ANCHOR.y;
+            const baseRadius = Math.hypot(fromGAx, fromGAy);
+            const baseAngle = Math.atan2(fromGAy, fromGAx);
+            const angle = baseAngle + ((random() - 0.5) * 2 * config.angleDrift);
+            const radius = Math.max(7, baseRadius + ((random() - 0.5) * 2 * config.radialDrift));
+            const jitterX = (random() - 0.5) * config.jitter;
+            const jitterY = (random() - 0.5) * config.jitter;
+            positions[state.code] = {
+              x: clampRoadTripValue(ROADTRIP_GA_ANCHOR.x + Math.cos(angle) * radius + jitterX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX),
+              y: clampRoadTripValue(ROADTRIP_GA_ANCHOR.y + Math.sin(angle) * radius + jitterY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY)
+            };
+          });
+          for (let step = 0; step < config.settle; step += 1) {
+            const nudges = Object.fromEntries(ROADTRIP_STATE_CODES.map((code) => [code, { x: 0, y: 0 }]));
+            ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+              const posA = positions[codeA];
+              const posB = positions[codeB];
+              const dx = posB.x - posA.x;
+              const dy = posB.y - posA.y;
+              const dist = Math.hypot(dx, dy) || 0.001;
+              const baseA = roadTripBasePositions[codeA];
+              const baseB = roadTripBasePositions[codeB];
+              const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+              const target = clampRoadTripValue(baseDist, 7.6, 18.5);
+              const delta = dist - target;
+              const force = delta * 0.022;
+              const nx = (dx / dist) * force;
+              const ny = (dy / dist) * force;
+              nudges[codeA].x += nx; nudges[codeA].y += ny; nudges[codeB].x -= nx; nudges[codeB].y -= ny;
+            });
+            for (let i = 0; i < ROADTRIP_STATE_CODES.length; i += 1) {
+              const codeA = ROADTRIP_STATE_CODES[i];
+              const posA = positions[codeA];
+              for (let j = i + 1; j < ROADTRIP_STATE_CODES.length; j += 1) {
+                const codeB = ROADTRIP_STATE_CODES[j];
+                const posB = positions[codeB];
+                const dx = posB.x - posA.x;
+                const dy = posB.y - posA.y;
+                const dist = Math.hypot(dx, dy) || 0.001;
+                const minDist = codeA === "GA" || codeB === "GA" ? 8.8 : 7.7;
+                if (dist >= minDist) continue;
+                const force = ((minDist - dist) / minDist) * 0.32;
+                const nx = (dx / dist) * force;
+                const ny = (dy / dist) * force;
+                nudges[codeA].x -= nx; nudges[codeA].y -= ny; nudges[codeB].x += nx; nudges[codeB].y += ny;
+              }
+            }
+            roadTripStateValues.forEach((state) => {
+              if (state.code === "GA") return;
+              const pos = positions[state.code];
+              const pullX = (state.baseX - pos.x) * config.anchor;
+              const pullY = (state.baseY - pos.y) * config.anchor;
+              pos.x = clampRoadTripValue(pos.x + nudges[state.code].x + pullX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX);
+              pos.y = clampRoadTripValue(pos.y + nudges[state.code].y + pullY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY);
+            });
+            positions.GA.x = ROADTRIP_GA_ANCHOR.x;
+            positions.GA.y = ROADTRIP_GA_ANCHOR.y;
+          }
+          const score = getRoadTripLayoutScore(positions);
+          if (score < bestScore) { bestScore = score; bestLayout = JSON.parse(JSON.stringify(positions)); }
+        }
+        return bestLayout || Object.fromEntries(roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }]));
+      };
 
       let roadTrip = {
         current: "GA",
@@ -3647,82 +3699,9 @@ const applyRoadTripLayout = (levelKey = "base") => {
       };
 
       const sortedTopStates = Object.values(roadTripStates).sort((a, b) => b.points - a.points).slice(0, 5);
-
-      const lyricLines = [
-        { start: 10.6, end: 13.1, top: "16%", text: "Globe light glowing\non the corner booth" },
-        { start: 13.2, end: 15.7, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
-        { start: 16.0, end: 17.8, top: "22%", text: "You remember how\nI like my food" },
-        { start: 18.0, end: 20.9, top: "42%", text: "Starting early mornings off\nwith what I need" },
-        { start: 21.2, end: 23.8, top: "26%", text: "But I see more than\nwhat’s in sight" },
-        { start: 24.0, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
-        { start: 27.0, end: 30.7, top: "66%", text: "Keeping everything\nworking right" },
-        { start: 31.0, end: 32.0, top: "18%", text: "So here’s to you" },
-        { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
-        { start: 33.6, end: 35.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
-        { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
-        { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
-        { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
-        { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
-        { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
-        { start: 60.1, end: 62.9, top: "52%", text: "Callbacks hit\nright on time" },
-        { start: 63.2, end: 65.4, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
-        { start: 65.5, end: 67.8, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
-        { start: 67.9, end: 68.8, top: "18%", text: "So here’s to you" },
-        { start: 68.9, end: 70.7, top: "34%", text: "Serving up\negg-cellence" },
-        { start: 70.9, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
-        { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
-        { start: 76.1, end: 78.7, top: "48%", text: "Keeps Waffle House running\nday to day" },
-        { start: 78.8, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
-        { start: 83.1, end: 85.2, top: "24%", text: "Thank you for everything" },
-        { start: 94.5, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
-        { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
-        { start: 100.1, end: 105.0, top: "52%", text: "Prepping, cleaning,\ncoaching strong" },
-        { start: 105.1, end: 107.7, top: "24%", text: "The hospitality,\nthe attention you give" },
-        { start: 107.8, end: 112.0, top: "46%", text: "It all comes together\nin America’s Place" },
-        { start: 112.1, end: 117.0, top: "68%", text: "Because of you each day" },
-        { start: 117.6, end: 122.0, top: "22%", text: "So here’s to you" },
-        { start: 122.2, end: 124.0, top: "40%", text: "Serving up egg-cellence" },
-        { start: 124.1, end: 126.9, top: "56%", text: "Serving up egg-cellence" },
-        { start: 127.0, end: 129.9, top: "72%", text: "Serving up egg-cellence" },
-        { start: 136.8, end: 149.0, top: "42%", text: "Thank you" }
-      ];
-
-      const lyricNodes = lyricLineHost
-        ? lyricLines.map((line) => {
-            const el = document.createElement("div");
-            el.className = "lyric-line";
-            el.textContent = line.text;
-            el.style.top = line.top;
-            lyricLineHost.appendChild(el);
-            return { el, line };
-          })
-        : [];
-
-      const renderLyrics = () => {
-        if (!audioPlayer || !lyricNodes.length) return;
-        const t = audioPlayer.currentTime || 0;
-
-        lyricNodes.forEach(({ el, line }) => {
-          const active = t >= line.start && t < line.end;
-          const progress = active ? (t - line.start) / Math.max(0.01, line.end - line.start) : 0;
-
-          el.classList.toggle("active", active);
-          el.classList.toggle("exiting", active && progress > 0.84);
-
-          if (active) {
-            const driftX = -50 + progress * 2.2;
-            const driftY = progress < 0.5 ? 5 - progress * 10 : -5 + (progress - 0.5) * 6;
-            el.style.transform = `translateX(${driftX}%) translateY(${driftY}px)`;
-            el.style.opacity = progress < 0.10 ? (progress / 0.10).toFixed(3) : progress > 0.90 ? ((1 - progress) / 0.10).toFixed(3) : "1";
-          } else {
-            el.style.transform = "translateX(-50%) translateY(18px)";
-            el.style.opacity = "0";
-          }
-        });
-
-        if (lyricScrubber) lyricScrubber.value = t;
-      };
+      const lyricLines = [];
+      const lyricNodes = lyricLineHost ? lyricLines.map((line) => { const el = document.createElement("div"); el.className = "lyric-line"; el.textContent = line.text; el.style.top = line.top; lyricLineHost.appendChild(el); return { el, line }; }) : [];
+      const renderLyrics = () => { if (!audioPlayer || !lyricNodes.length) return; };
 
       let confettiFired = false;
       let nudgeTimer;
@@ -3740,341 +3719,77 @@ const applyRoadTripLayout = (levelKey = "base") => {
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
         progressBar.style.width = progress + "%";
-
         const warmth = Math.min(1, Math.max(0, progress / 100));
         document.documentElement.style.setProperty("--page-warmth", warmth.toFixed(3));
-
         if (backToTop) backToTop.classList.toggle("show", scrollTop > 420);
         if (heroImage && !prefersReducedMotion) {
           const amount = Math.min(16, scrollTop * 0.06);
           heroImage.style.transform = `translateY(${amount}px)`;
         }
       };
-
       const setActiveMiniNav = () => {
         let activeId = "";
         const offset = 180;
-
         sections.forEach((section) => {
           const rect = section.getBoundingClientRect();
           if (rect.top <= offset && rect.bottom > offset) activeId = section.id;
         });
-
         miniNavLinks.forEach((link) => {
           const href = link.getAttribute("href");
           if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
         });
       };
-
       updateProgressBar();
       setActiveMiniNav();
       window.addEventListener("scroll", updateProgressBar, { passive: true });
       window.addEventListener("scroll", setActiveMiniNav, { passive: true });
-
-      backToTop?.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
-      });
-
-      const fireConfetti = () => {
-        if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
-        confetti({ particleCount: 110, spread: 78, startVelocity: 34, origin: { y: 0.28 } });
-        confettiFired = true;
-      };
-
-      window.addEventListener("load", () => {
-        setTimeout(fireConfetti, mobileMedia.matches ? 900 : 650);
-      });
-      window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
-      window.addEventListener("click", fireConfetti, { once: true, passive: true });
-
+      backToTop?.addEventListener("click", () => { window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" }); });
       const openLightbox = (img) => {
-        lightboxImage.src = img.src;
-        lightboxImage.alt = img.alt || "";
-        lightbox.classList.add("open");
-        lightbox.setAttribute("aria-hidden", "false");
+        lightboxImage.src = img.src; lightboxImage.alt = img.alt || "";
+        lightbox.classList.add("open"); lightbox.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
       };
-
       const closeLightbox = () => {
-        lightbox.classList.remove("open");
-        lightbox.setAttribute("aria-hidden", "true");
+        lightbox.classList.remove("open"); lightbox.setAttribute("aria-hidden", "true");
         document.body.classList.remove("lightbox-open");
-        setTimeout(() => {
-          lightboxImage.src = "";
-          lightboxImage.alt = "";
-        }, 180);
+        setTimeout(() => { lightboxImage.src = ""; lightboxImage.alt = ""; }, 180);
       };
-
       triggers.forEach((trigger) => {
-        trigger.addEventListener("click", () => {
-          const img = trigger.querySelector("img");
-          if (img) openLightbox(img);
-        });
-
+        trigger.addEventListener("click", () => { const img = trigger.querySelector("img"); if (img) openLightbox(img); });
         trigger.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            const img = trigger.querySelector("img");
-            if (img) openLightbox(img);
-          }
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); const img = trigger.querySelector("img"); if (img) openLightbox(img); }
         });
-
-        trigger.setAttribute("tabindex", "0");
-        trigger.setAttribute("role", "button");
-        trigger.setAttribute("aria-label", "Open image");
+        trigger.setAttribute("tabindex", "0"); trigger.setAttribute("role", "button"); trigger.setAttribute("aria-label", "Open image");
       });
-
       lightboxClose?.addEventListener("click", closeLightbox);
       lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
       document.addEventListener("keydown", (e) => { if (e.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox(); });
 
-      const formatCount = (count) => Number(count).toLocaleString();
-
-      const openMilestoneModal = (years, count) => {
-        const numericCount = Number(count);
-        const associateWord = numericCount === 1 ? "Associate" : "Associates";
-        const verbWord = numericCount === 1 ? "is" : "are";
-        const yearWord = years === "1" ? "year" : "years";
-        milestoneTitle.textContent = `${years} ${yearWord}`;
-        milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
-        milestoneModal.classList.add("open");
-        milestoneModal.setAttribute("aria-hidden", "false");
+      const updateRoadTripMapLock = () => {
+        if (!roadtripMapLock) return;
+        const locked = !roadtripHasChosenLevel;
+        roadtripMapLock.classList.toggle("show", locked);
+        roadtripMapLock.setAttribute("aria-hidden", locked ? "false" : "true");
       };
-
-      const closeMilestoneModal = () => {
-        milestoneModal.classList.remove("open");
-        milestoneModal.setAttribute("aria-hidden", "true");
-      };
-
-      const popBalloonEffect = (spot) => {
-        spot.classList.remove("popping");
-        void spot.offsetWidth;
-        spot.classList.add("popping");
-        setTimeout(() => spot.classList.remove("popping"), 220);
-
-        if (prefersReducedMotion || typeof confetti !== "function") return;
-        const rect = spot.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
-        confetti({ particleCount: 14, spread: 55, startVelocity: 20, ticks: 70, scalar: 0.7, origin: { x, y } });
-      };
-
-      balloonHotspots.forEach((spot) => {
-        const years = spot.dataset.years;
-        const count = spot.dataset.count;
-        spot.addEventListener("click", (e) => {
-          e.stopPropagation();
-          unlockRoadtripAudio();
-          playBalloonPopSound();
-          markInteraction();
-          hideAnniversaryTip();
-          spot.classList.remove("hinting");
-          popBalloonEffect(spot);
-          setTimeout(() => openMilestoneModal(years, count), 90);
-        });
-      });
-
-      milestoneClose?.addEventListener("click", closeMilestoneModal);
-      milestoneModal?.addEventListener("click", (e) => { if (e.target === milestoneModal) closeMilestoneModal(); });
-
-      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
-
-      const updateSongButton = () => {
-        if (!songToggle || !audioPlayer) return;
-        const playing = !audioPlayer.paused && !audioPlayer.ended;
-        songToggle.textContent = playing ? "❚❚" : "🧇";
-        songToggle.setAttribute("aria-label", playing ? "Pause appreciation song" : "Play appreciation song");
-      };
-
-      const syncLyricVideo = () => {
-        if (!audioPlayer || !lyricBgVideo) return;
-        const playing = !audioPlayer.paused && !audioPlayer.ended;
-        if (playing) {
-          const playPromise = lyricBgVideo.play();
-          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
-        } else {
-          lyricBgVideo.pause();
-        }
-      };
-
-      const syncAudioState = () => {
-        if (!audioPlayer || !audioCard) return;
-        const playing = !audioPlayer.paused && !audioPlayer.ended;
-        audioCard.classList.toggle("audio-playing", playing);
-        updateSongButton();
-        syncLyricVideo();
-      };
-
-      audioPlayer?.addEventListener("play", () => { syncAudioState(); renderLyrics(); });
-      audioPlayer?.addEventListener("pause", () => { syncAudioState(); renderLyrics(); });
-      audioPlayer?.addEventListener("ended", () => {
-        if (lyricBgVideo) {
-          lyricBgVideo.pause();
-          lyricBgVideo.currentTime = 0;
-        }
-        syncAudioState();
-        renderLyrics();
-      });
-      audioPlayer?.addEventListener("timeupdate", renderLyrics);
-      audioPlayer?.addEventListener("seeked", renderLyrics);
-      audioPlayer?.addEventListener("loadedmetadata", () => {
-        if (lyricScrubber && lyricLines.length) lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
-        renderLyrics();
-      });
-      lyricBgVideo?.addEventListener("loadedmetadata", () => {
-        if (lyricBgVideo.videoWidth && lyricBgVideo.videoHeight && lyricStage) {
-          lyricStage.style.aspectRatio = `${lyricBgVideo.videoWidth} / ${lyricBgVideo.videoHeight}`;
-        }
-      });
-      lyricScrubber?.addEventListener("input", (e) => {
-        if (!audioPlayer) return;
-        audioPlayer.currentTime = Number(e.target.value);
-        renderLyrics();
-      });
-      songToggle?.addEventListener("click", async () => {
-        if (!audioPlayer) return;
-        if (audioPlayer.paused) {
-          try { await audioPlayer.play(); } catch (err) {}
-        } else {
-          audioPlayer.pause();
-        }
-        syncAudioState();
-      });
-
-      const showAnniversaryTip = () => {
-        if (!anniversaryTip || tipShown || prefersReducedMotion) return;
-        anniversaryTip.classList.add("show");
-        anniversaryTip.setAttribute("aria-hidden", "false");
-        tipShown = true;
-        setTimeout(hideAnniversaryTip, 3000);
-      };
-
-      const hideAnniversaryTip = () => {
-        if (!anniversaryTip) return;
-        anniversaryTip.classList.remove("show");
-        anniversaryTip.setAttribute("aria-hidden", "true");
-      };
-
-      const anniversarySection = document.getElementById("anniversaries");
-      const runIdleNudge = () => {
-        clearTimeout(nudgeTimer);
-        nudgeTimer = setTimeout(() => {
-          if (Date.now() - lastInteractionTime < 5500) {
-            runIdleNudge();
-            return;
-          }
-
-          const anniversaryInView = anniversarySection && (() => {
-            const rect = anniversarySection.getBoundingClientRect();
-            return rect.top < window.innerHeight * 0.82 && rect.bottom > window.innerHeight * 0.18;
-          })();
-
-          if (anniversaryInView) {
-            const nudgeSpot = balloonHotspots[0];
-            nudgeSpot?.classList.add("hinting");
-            if (mobileMedia.matches) showAnniversaryTip();
-            setTimeout(() => nudgeSpot?.classList.remove("hinting"), 2200);
-          }
-
-          runIdleNudge();
-        }, 6200);
-      };
-
-      if (!prefersReducedMotion && photoFlashLink) {
-        let photoFlashTimeout;
-        let photoFlashLoopTimeout;
-
-        const triggerPhotoFlash = () => {
-          photoFlashLink.classList.remove("flash-now");
-          void photoFlashLink.offsetWidth;
-          photoFlashLink.classList.add("flash-now");
-
-          clearTimeout(photoFlashTimeout);
-          photoFlashTimeout = setTimeout(() => {
-            photoFlashLink.classList.remove("flash-now");
-          }, 1100);
-        };
-
-        const startPhotoFlashLoop = () => {
-          clearTimeout(photoFlashLoopTimeout);
-
-          const loop = () => {
-            if (document.visibilityState === "visible") triggerPhotoFlash();
-            photoFlashLoopTimeout = setTimeout(loop, mobileMedia.matches ? 3200 : 2600);
-          };
-
-          photoFlashLoopTimeout = setTimeout(loop, 1200);
-        };
-
-        triggerPhotoFlash();
-        startPhotoFlashLoop();
-        photoFlashLink.addEventListener("click", triggerPhotoFlash);
-        photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
-
-        document.addEventListener("visibilitychange", () => {
-          if (document.visibilityState === "visible") {
-            triggerPhotoFlash();
-            startPhotoFlashLoop();
-          } else {
-            clearTimeout(photoFlashLoopTimeout);
-          }
-        });
-      }
-
-      const resetTiltCard = (card, instant = false) => {
-        const stage = card.querySelector(".tilt-stage");
-        if (!stage) return;
-        if (instant) stage.style.transition = "none";
-        stage.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-        card.style.setProperty("--glare-x", "50%");
-        card.style.setProperty("--glare-y", "50%");
-        card.classList.remove("is-tilting");
-        if (instant) requestAnimationFrame(() => { stage.style.transition = ""; });
-      };
-
-      const updateTiltCard = (card, clientX, clientY) => {
-        const stage = card.querySelector(".tilt-stage");
-        if (!stage) return;
-
-        const rect = card.getBoundingClientRect();
-        const px = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
-        const py = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
-        const maxRotate = window.innerWidth < 768 ? 7 : 12;
-        const rotateY = (px - 0.5) * (maxRotate * 2);
-        const rotateX = (0.5 - py) * (maxRotate * 1.65);
-
-        stage.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
-        card.style.setProperty("--glare-x", `${(px * 100).toFixed(2)}%`);
-        card.style.setProperty("--glare-y", `${(py * 100).toFixed(2)}%`);
-        card.classList.add("is-tilting");
-      };
-
-      const enableTiltCards = () => {
-        tiltCards.forEach((card) => {
-          if (card.dataset.tiltBound === "true") return;
-          card.dataset.tiltBound = "true";
-          resetTiltCard(card, true);
-
-          card.addEventListener("pointerenter", (e) => {
-            if (!pointerFineMedia.matches || prefersReducedMotion) return;
-            updateTiltCard(card, e.clientX, e.clientY);
-          });
-
-          card.addEventListener("pointermove", (e) => {
-            if (!pointerFineMedia.matches || prefersReducedMotion) return;
-            updateTiltCard(card, e.clientX, e.clientY);
-          });
-
-          card.addEventListener("pointerleave", () => resetTiltCard(card));
-          card.addEventListener("blur", () => resetTiltCard(card), true);
-          card.addEventListener("focusin", () => {
-            if (!pointerFineMedia.matches || prefersReducedMotion) return;
-            card.classList.add("is-tilting");
-          });
-          card.addEventListener("touchstart", () => resetTiltCard(card, true), { passive: true });
+      const updateRoadTripLevelUI = () => {
+        roadtripLevelButtons.forEach((button) => {
+          button.classList.toggle("active", roadtripHasChosenLevel && button.dataset.roadtripLevel === currentRoadTripLevel);
         });
       };
-
+      const updateRoadTripStatusVisibility = () => {
+        roadtripStatusStrip?.classList.toggle("is-hidden", !roadtripHasChosenLevel);
+        updateRoadTripMapLock();
+      };
+      const setRoadTripStatus = (message) => {
+        if (!roadtripStatus) return;
+        if (!roadtripHasChosenLevel) {
+          roadtripStatus.innerHTML = "";
+          updateRoadTripStatusVisibility();
+          return;
+        }
+        roadtripStatus.innerHTML = `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>${message}`;
+        updateRoadTripStatusVisibility();
+      };
       const regionClassName = (region) => {
         switch (region) {
           case "west": return "region-west";
@@ -4084,53 +3799,12 @@ const applyRoadTripLayout = (levelKey = "base") => {
           default: return "region-south";
         }
       };
-
-      const renderTopStates = () => {
-        if (!roadtripTopStates) return;
-        roadtripTopStates.innerHTML = sortedTopStates.map((state, index) => `
-          <div class="top-state-item">
-            <span>${index + 1}. ${state.code}</span>
-            <span>${state.points.toLocaleString()}</span>
-          </div>
-        `).join("");
-      };
-
+      const renderTopStates = () => { if (roadtripTopStates) roadtripTopStates.innerHTML = sortedTopStates.map((state, index) => `<div class="top-state-item"><span>${index + 1}. ${state.code}</span><span>${state.points.toLocaleString()}</span></div>`).join(""); };
       const renderBonusStops = () => {
         if (!roadtripBonusList) return;
         const bonusStates = Object.values(roadTripStates).filter((state) => state.fuelBonus);
-        roadtripBonusList.innerHTML = bonusStates.map((state) => `
-          <span class="roadtrip-bonus-pill">${state.code} +${state.fuelBonus} fuel</span>
-        `).join("");
+        roadtripBonusList.innerHTML = bonusStates.map((state) => `<span class="roadtrip-bonus-pill">${state.code} +${state.fuelBonus} fuel</span>`).join("");
       };
-
-      const updateRoadTripLevelUI = () => {
-        roadtripLevelButtons.forEach((button) => {
-          button.classList.toggle(
-            "active",
-            roadtripHasChosenLevel && button.dataset.roadtripLevel === currentRoadTripLevel
-          );
-        });
-      };
-
-      const updateRoadTripLevelText = () => {};
-
-      const getRoadTripBannerLevel = () => `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
-
-      const updateRoadTripStatusVisibility = () => {
-        roadtripStatusStrip?.classList.toggle("is-hidden", !roadtripHasChosenLevel);
-      };
-
-      const setRoadTripStatus = (message) => {
-        if (!roadtripStatus) return;
-        if (!roadtripHasChosenLevel) {
-          roadtripStatus.innerHTML = "";
-          updateRoadTripStatusVisibility();
-          return;
-        }
-        roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
-        updateRoadTripStatusVisibility();
-      };
-
       const createStateButtons = () => {
         if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
         roadTripStateValues.forEach((state) => {
@@ -4138,246 +3812,21 @@ const applyRoadTripLayout = (levelKey = "base") => {
           button.type = "button";
           button.className = `state-node ${regionClassName(state.region)}`;
           button.dataset.state = state.code;
-          button.innerHTML = `
-            <span class="state-node-label">${state.code}</span>
-            <span class="state-node-points">${state.points.toLocaleString()}</span>
-            ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
-          `;
+          button.innerHTML = `<span class="state-node-label">${state.code}</span><span class="state-node-points">${state.points.toLocaleString()}</span>${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}`;
           button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
           button.addEventListener("click", () => attemptRoadTripMove(state.code));
           roadtripMap.appendChild(button);
           setRoadTripStatePosition(state.code, state.x, state.y);
         });
-        renderRoadTripNetwork();
       };
-
       const getAvailableMoves = () => {
         const currentState = roadTripStates[roadTrip.current];
         return currentState.neighbors.map((code) => roadTripStates[code]).filter((state) => state && !roadTrip.visited.has(state.code));
       };
-
-      const updateRoadtripScrollHint = () => {
-        if (!roadtripScrollHint || !roadtripMapScroll) return;
-        const isMobileWidth = window.innerWidth <= 700;
-        const canScroll = roadtripMapScroll.scrollWidth > roadtripMapScroll.clientWidth + 8;
-        const nearEnd = roadtripMapScroll.scrollLeft + roadtripMapScroll.clientWidth >= roadtripMapScroll.scrollWidth - 12;
-        const shouldShow = isMobileWidth && canScroll && !roadtripHintDismissed && !nearEnd;
-        roadtripScrollHint.classList.toggle("show", shouldShow);
-      };
-
-      const getRoadtripCarElements = () => [roadtripCar, roadtripCarFallback].filter(Boolean);
-
-      const updateRoadtripCarDirection = (direction = 1) => {
-        getRoadtripCarElements().forEach((el) => {
-          el.style.setProperty("--car-direction", direction);
-        });
-      };
-
-      const setRoadtripCarState = ({ driving = false, arriving = false } = {}) => {
-        roadtripMap?.classList.toggle("car-traveling", driving);
-        getRoadtripCarElements().forEach((el) => {
-          el.classList.toggle("is-driving", driving);
-          el.classList.toggle("is-arriving", arriving);
-        });
-      };
-
-      const unlockRoadtripAudio = () => {
-        if (roadtripAudioUnlocked && roadtripAudioContext) return roadtripAudioContext;
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return null;
-        if (!roadtripAudioContext) roadtripAudioContext = new AudioCtx();
-        if (roadtripAudioContext.state === "suspended") roadtripAudioContext.resume().catch(() => {});
-        roadtripAudioUnlocked = true;
-        return roadtripAudioContext;
-      };
-
-      const playRoadtripToneSequence = (steps = []) => {
-        const ctx = unlockRoadtripAudio();
-        if (!ctx || !steps.length) return;
-        let startAt = ctx.currentTime + 0.01;
-        steps.forEach((step) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = step.type || "sine";
-          osc.frequency.setValueAtTime(step.frequency, startAt);
-          gain.gain.setValueAtTime(0.0001, startAt);
-          gain.gain.exponentialRampToValueAtTime(step.volume || 0.015, startAt + 0.015);
-          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(startAt);
-          osc.stop(startAt + (step.duration || 0.08) + 0.02);
-          startAt += (step.gap ?? step.duration ?? 0.08);
-        });
-      };
-
-      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
-        const ctx = unlockRoadtripAudio();
-        if (!ctx) return;
-        const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
-        const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < frameCount; i += 1) {
-          const decay = 1 - (i / frameCount);
-          data[i] = (Math.random() * 2 - 1) * decay;
-        }
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-
-        const bandpass = ctx.createBiquadFilter();
-        bandpass.type = "bandpass";
-        bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
-        bandpass.Q.setValueAtTime(q, ctx.currentTime);
-
-        const highpass = ctx.createBiquadFilter();
-        highpass.type = "highpass";
-        highpass.frequency.setValueAtTime(700, ctx.currentTime);
-
-        const gain = ctx.createGain();
-        const startAt = ctx.currentTime + 0.01;
-        gain.gain.setValueAtTime(0.0001, startAt);
-        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
-
-        source.connect(bandpass);
-        bandpass.connect(highpass);
-        highpass.connect(gain);
-        gain.connect(ctx.destination);
-
-        source.start(startAt);
-        source.stop(startAt + duration + 0.02);
-      };
-
-      const playRoadtripMoveSound = () => playRoadtripToneSequence([
-        { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
-        { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
-        { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
-      ]);
-
-      const playRoadtripPointsSound = () => playRoadtripToneSequence([
-        { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
-        { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
-      ]);
-
-      const playRoadtripFuelSound = () => playRoadtripToneSequence([
-        { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
-        { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
-      ]);
-
-      const playBalloonPopSound = () => {
-        const ctx = unlockRoadtripAudio();
-        if (!ctx) return;
-        playNoiseBurst({ duration: 0.05, volume: 0.07, frequency: 1250, q: 0.68 });
-        const pop = ctx.createOscillator();
-        const popGain = ctx.createGain();
-        const popFilter = ctx.createBiquadFilter();
-        const startAt = ctx.currentTime + 0.01;
-        pop.type = "triangle";
-        pop.frequency.setValueAtTime(175, startAt);
-        pop.frequency.exponentialRampToValueAtTime(68, startAt + 0.055);
-        popFilter.type = "lowpass";
-        popFilter.frequency.setValueAtTime(1000, startAt);
-        popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
-        popGain.gain.setValueAtTime(0.0001, startAt);
-        popGain.gain.exponentialRampToValueAtTime(0.03, startAt + 0.003);
-        popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
-        pop.connect(popFilter).connect(popGain).connect(ctx.destination);
-        pop.start(startAt);
-        pop.stop(startAt + 0.07);
-      };
-
-      const playRoadtripWinSound = () => playRoadtripToneSequence([
-        { frequency: 523.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
-        { frequency: 659.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
-        { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.09 },
-        { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
-      ]);
-
-      const playRoadtripLoseSound = () => playRoadtripToneSequence([
-        { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
-        { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
-        { frequency: 261.63, duration: 0.14, volume: 0.016, type: "sine", gap: 0.14 }
-      ]);
-
-      const playRoadtripRestartSound = () => {
-        playNoiseBurst({ duration: 0.045, volume: 0.038, frequency: 920, q: 0.85 });
-        playRoadtripToneSequence([
-          { frequency: 110, duration: 0.055, volume: 0.014, type: "sawtooth", gap: 0.04 },
-          { frequency: 138, duration: 0.06, volume: 0.014, type: "sawtooth", gap: 0.05 },
-          { frequency: 178, duration: 0.065, volume: 0.014, type: "sawtooth", gap: 0.06 },
-          { frequency: 224, duration: 0.08, volume: 0.012, type: "triangle", gap: 0.08 }
-        ]);
-      };
-
-      const playRoadtripLevelSound = () => playRoadtripToneSequence([
-        { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
-        { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
-        { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
-      ]);
-
-      const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
-        if (!roadtripPointPopups || !text) return;
-        const popup = document.createElement("div");
-        popup.className = `roadtrip-point-popup ${variant}`;
-        popup.textContent = text;
-        popup.style.left = `${x}%`;
-        popup.style.top = `${y}%`;
-        roadtripPointPopups.appendChild(popup);
-        window.setTimeout(() => popup.classList.add("show"), delay);
-        window.setTimeout(() => popup.remove(), delay + 1150);
-      };
-
-      const showRoadtripMoveRewards = (state, fuelBonus = 0) => {
-        if (!state) return;
-        const pointX = Math.min(92, state.x + 1.8);
-        const pointY = Math.max(10, state.y - 2);
-        spawnRoadtripPopup(`+${state.points.toLocaleString()}`, pointX, pointY, "points");
-        if (fuelBonus) spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, pointX + 4.5), Math.max(8, pointY - 6), "fuel", 110);
-      };
-
-      const animateRoadtripTravel = (fromState, toState, fuelBonus = 0) => {
-        clearTimeout(roadtripTravelTimeout);
-        clearTimeout(roadtripArrivalTimeout);
-        const direction = fromState && toState && toState.x < fromState.x ? -1 : 1;
-        updateRoadtripCarDirection(direction);
-        setRoadtripCarState({ driving: !prefersReducedMotion, arriving: false });
-        playRoadtripMoveSound();
-        const arrivalDelay = prefersReducedMotion ? 0 : 430;
-        roadtripTravelTimeout = window.setTimeout(() => {
-          setRoadtripCarState({ driving: false, arriving: true });
-          showRoadtripMoveRewards(toState, fuelBonus);
-          playRoadtripPointsSound();
-          if (fuelBonus) window.setTimeout(() => playRoadtripFuelSound(), 120);
-          roadtripArrivalTimeout = window.setTimeout(() => {
-            setRoadtripCarState({ driving: false, arriving: false });
-          }, prefersReducedMotion ? 0 : 340);
-        }, arrivalDelay);
-      };
-
-      const positionRoadtripCarFallback = () => {
-        if (!roadtripCarFallback) return;
-        roadtripCarFallback.style.left = roadtripCar.style.left;
-        roadtripCarFallback.style.top = roadtripCar.style.top;
-        roadtripCarFallback.style.transform = roadtripCar.style.transform || "translate(-50%, -50%) scaleX(1)";
-      };
-
-      const scrollRoadTripMapToCurrent = () => {
-        if (!roadtripMapScroll || !roadtripMap || !roadtripCar) return;
-        if (window.innerWidth > 700) return;
-        const mapRect = roadtripMap.getBoundingClientRect();
-        const current = roadTripStates[roadTrip.current];
-        const targetX = (current.x / 100) * mapRect.width - roadtripMapScroll.clientWidth / 2;
-        const left = Math.max(0, targetX);
-        roadtripMapScroll.scrollTo({ left, behavior: prefersReducedMotion ? "auto" : "smooth" });
-        requestAnimationFrame(updateRoadtripScrollHint);
-      };
-
+      const renderRoadTripNetwork = () => {};
       const renderRoadTripRoute = () => {
-        if (roadtripRouteChips) {
-          roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
-        }
-        renderRoadTripNetwork();
+        if (roadtripRouteChips) roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
       };
-
       const renderRoadTripChoices = () => {
         if (!roadtripNextStops) return;
         if (!roadtripHasChosenLevel) {
@@ -4389,517 +3838,97 @@ const applyRoadTripLayout = (levelKey = "base") => {
           roadtripNextStops.innerHTML = `<div class="roadtrip-empty">No connected stops left from ${roadTrip.current}. Restart to try a new route.</div>`;
           return;
         }
-
-        roadtripNextStops.innerHTML = moves.map((state) => `
-          <button type="button" class="roadtrip-next-btn ${regionClassName(state.region)}" data-next-state="${state.code}">
-            <div class="next-top">
-              <span class="next-name">${state.code}</span>
-              <span>${state.points.toLocaleString()}</span>
-            </div>
-            <div class="next-points">${state.name}</div>
-            <div class="next-region">${state.region.replace("-", " ")}</div>
-            <div class="roadtrip-next-meta">
-              ${state.fuelBonus ? `<span class="next-fuel-pill">+${state.fuelBonus} fuel</span>` : ""}
-            </div>
-          </button>
-        `).join("");
-
-        roadtripNextStops.querySelectorAll("[data-next-state]").forEach((button) => {
-          button.addEventListener("click", () => attemptRoadTripMove(button.dataset.nextState));
-        });
+        roadtripNextStops.innerHTML = moves.map((state) => `<button type="button" class="roadtrip-next-btn ${regionClassName(state.region)}" data-next-state="${state.code}"><div class="next-top"><span class="next-name">${state.code}</span><span>${state.points.toLocaleString()}</span></div><div class="next-points">${state.name}</div><div class="next-region">${state.region.replace("-", " ")}</div><div class="roadtrip-next-meta">${state.fuelBonus ? `<span class="next-fuel-pill">+${state.fuelBonus} fuel</span>` : ""}</div></button>`).join("");
+        roadtripNextStops.querySelectorAll("[data-next-state]").forEach((button) => { button.addEventListener("click", () => attemptRoadTripMove(button.dataset.nextState)); });
       };
-
-      const hideRoadTripToast = () => {
-        if (!roadtripToast) return;
-        clearTimeout(roadtripToastTimeout);
-        roadtripToast.classList.remove("show");
-        roadtripToast.textContent = "";
-      };
-
-      const showRoadTripToast = (message) => {
-        if (!roadtripToast || !message) return;
-        clearTimeout(roadtripToastTimeout);
-        roadtripToast.textContent = message;
-        roadtripToast.classList.add("show");
-        roadtripToastTimeout = setTimeout(() => roadtripToast.classList.remove("show"), 2800);
-      };
-
-      const evaluateRoadTripPrompt = () => {
-        if (roadTrip.gameOver) return;
-        const settings = getRoadTripSettings();
-        const availableMoves = getAvailableMoves();
-        const goalGap = settings.goal - roadTrip.score;
-        const bonusNearby = availableMoves.some((state) => state.fuelBonus);
-
-        if (roadTrip.fuel === 1 && !roadTripPromptFlags.fuel1) {
-          roadTripPromptFlags.fuel1 = true;
-          showRoadTripToast("Last move before the tank runs dry.");
-          return;
-        }
-
-        if (roadTrip.fuel === 2 && !roadTripPromptFlags.fuel2) {
-          roadTripPromptFlags.fuel2 = true;
-          showRoadTripToast("Only 2 moves left. Choose your next stop carefully.");
-          return;
-        }
-
-        if (roadTrip.fuel <= 2 && bonusNearby && !roadTripPromptFlags.bonusNearby) {
-          roadTripPromptFlags.bonusNearby = true;
-          showRoadTripToast("A bonus refuel stop is within reach.");
-          return;
-        }
-
-        if (goalGap > 0 && goalGap <= 2000 && !roadTripPromptFlags.nearGoal) {
-          roadTripPromptFlags.nearGoal = true;
-          showRoadTripToast("Almost there — one strong stop could win the trip.");
-        }
-      };
-
       const updateRoadTripNodes = () => {
         const buttons = roadtripMap.querySelectorAll(".state-node");
         const currentState = roadTripStates[roadTrip.current];
         const available = new Set(getAvailableMoves().map((state) => state.code));
-
         buttons.forEach((button) => {
           const code = button.dataset.state;
           button.classList.remove("visited", "available", "unavailable", "current-stop");
           button.disabled = false;
-
           if (!roadtripHasChosenLevel) {
-            if (code === roadTrip.current) {
-              button.classList.add("current-stop", regionClassName(currentState.region));
-            } else {
-              button.classList.add("unavailable");
-            }
+            if (code === roadTrip.current) button.classList.add("current-stop", regionClassName(currentState.region));
+            else button.classList.add("unavailable");
             button.disabled = true;
             return;
           }
-
-          if (code === roadTrip.current) {
-            button.classList.add("current-stop", regionClassName(currentState.region));
-            button.disabled = true;
-          } else if (roadTrip.visited.has(code)) {
-            button.classList.add("visited");
-            button.disabled = true;
-          } else if (!roadTrip.gameOver && available.has(code)) {
-            button.classList.add("available");
-          } else {
-            button.classList.add("unavailable");
-            button.disabled = true;
-          }
-
-          if (roadTrip.gameOver && !roadTrip.visited.has(code) && code !== roadTrip.current) {
-            button.classList.add("unavailable");
-            button.classList.remove("available");
-            button.disabled = true;
-          }
+          if (code === roadTrip.current) { button.classList.add("current-stop", regionClassName(currentState.region)); button.disabled = true; }
+          else if (roadTrip.visited.has(code)) { button.classList.add("visited"); button.disabled = true; }
+          else if (!roadTrip.gameOver && available.has(code)) button.classList.add("available");
+          else { button.classList.add("unavailable"); button.disabled = true; }
         });
       };
-
-      const syncRoadTripLayout = () => {
-        if (!roadtripBoard || !roadtripMapPanel || !roadtripSidePanel) return;
-        const isMobileRoadTrip = window.innerWidth <= 900;
-
-        if (isMobileRoadTrip) {
-          if (!roadtripMobilePriority.isConnected) {
-            roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
-          }
-
-          if (!roadtripMobileNext.isConnected) {
-            if (roadtripMapPanel.nextSibling) roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
-            else roadtripBoard.appendChild(roadtripMobileNext);
-          }
-
-          if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
-          if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
-
-          if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
-          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
-          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
-          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
-        } else {
-          if (roadtripDifficultyCard) {
-            if (roadtripNextCard && roadtripNextCard.parentElement === roadtripSidePanel) {
-              roadtripSidePanel.insertBefore(roadtripDifficultyCard, roadtripNextCard);
-            } else {
-              roadtripSidePanel.prepend(roadtripDifficultyCard);
-            }
-          }
-          if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
-          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
-          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
-          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
-          if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
-
-          if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
-          if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
-        }
-      };
-
       const updateRoadTripHUD = () => {
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadtripHasChosenLevel ? roadTrip.fuel : "—";
         roadtripVisited.textContent = roadTrip.visited.size;
-        const current = roadTripStates[roadTrip.current];
-        const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
-        const previous = roadTripStates[previousCode];
-        const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
-        const facingScale = movingLeft ? -1 : 1;
-        updateRoadtripCarDirection(facingScale);
-
-        let carX = current.x + (movingLeft ? -8 : 8);
-        let carY = current.y + 2.5;
-        if (carX < 8) carX = current.x + 8;
-        if (carX > 92) carX = current.x - 8;
-        if (carY > 90) carY = current.y - 4;
-
-        roadtripCar.style.left = `${carX}%`;
-        roadtripCar.style.top = `${carY}%`;
-        roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
-        positionRoadtripCarFallback();
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
-        renderRoadTripNetwork();
-        updateRoadTripLevelText();
-        scrollRoadTripMapToCurrent();
-        updateRoadtripScrollHint();
       };
-
-      const syncRoadTripMapOutcomeHost = () => {
-        if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll || !roadtripMapPanel) return;
-        const targetHost = window.innerWidth <= 700 ? roadtripMapPanel : roadtripMap;
-        if (roadtripMapOutcome.parentElement !== targetHost) targetHost.appendChild(roadtripMapOutcome);
-      };
-
-      const updateRoadTripMapOutcomeLayout = () => {
-        if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll || !roadtripMapPanel) return;
-        syncRoadTripMapOutcomeHost();
-        roadtripMapOutcome.style.left = "";
-        roadtripMapOutcome.style.right = "";
-        roadtripMapOutcome.style.width = "";
-        roadtripMapOutcome.style.inset = "";
-        roadtripMapOutcome.style.top = "";
-        roadtripMapOutcome.style.justifyContent = "";
-        roadtripMapOutcomeCard.style.width = "";
-        roadtripMapOutcomeCard.style.maxWidth = "";
-        roadtripMapOutcomeCard.style.margin = "";
-
-        if (window.innerWidth > 700) {
-          roadtripMapOutcome.style.inset = "18px 18px auto 18px";
-          roadtripMapOutcome.style.justifyContent = "center";
-          roadtripMapOutcomeCard.style.width = "min(430px, calc(100% - 12px))";
-          roadtripMapOutcomeCard.style.maxWidth = "430px";
-          roadtripMapOutcomeCard.style.margin = "0 auto";
-          return;
-        }
-
-        const viewportWidth = roadtripMapScroll.clientWidth;
-        const cardWidth = Math.max(236, viewportWidth - 20);
-        const topOffset = (roadtripMapScroll.offsetTop || 0) + 10;
-        roadtripMapOutcome.style.inset = "auto";
-        roadtripMapOutcome.style.top = `${topOffset}px`;
-        roadtripMapOutcome.style.left = "10px";
-        roadtripMapOutcome.style.right = "auto";
-        roadtripMapOutcome.style.width = `${cardWidth}px`;
-        roadtripMapOutcome.style.justifyContent = "stretch";
-        roadtripMapOutcomeCard.style.width = "100%";
-        roadtripMapOutcomeCard.style.maxWidth = `${cardWidth}px`;
-        roadtripMapOutcomeCard.style.margin = "0";
-      };
-
-      const showRoadTripCelebration = (message) => {
-        if (!roadtripCelebration) return;
-        roadtripCelebration.textContent = message;
-        roadtripCelebration.classList.add("show");
-      };
-
-      const clearRoadTripCelebration = () => roadtripCelebration?.classList.remove("show");
-
-      const showRoadTripMapOutcome = ({ kicker = "Trip Update", title = "Trip over", text = "Restart and try a different route.", buttonLabel = "Restart Trip" } = {}) => {
-        if (!roadtripMapOutcome) return;
-        if (roadtripMapOutcomeKicker) roadtripMapOutcomeKicker.textContent = kicker;
-        if (roadtripMapOutcomeTitle) roadtripMapOutcomeTitle.textContent = title;
-        if (roadtripMapOutcomeText) roadtripMapOutcomeText.textContent = text;
-        if (roadtripMapRestart) roadtripMapRestart.textContent = buttonLabel;
-        roadtripMapOutcome.classList.add("show");
-        updateRoadTripMapOutcomeLayout();
-      };
-
-      const hideRoadTripMapOutcome = () => {
-        roadtripMapOutcome?.classList.remove("show");
-        if (roadtripMapOutcome) {
-          roadtripMapOutcome.style.left = "";
-          roadtripMapOutcome.style.right = "";
-          roadtripMapOutcome.style.width = "";
-          roadtripMapOutcome.style.inset = "";
-          roadtripMapOutcome.style.top = "";
-          roadtripMapOutcome.style.justifyContent = "";
-        }
-        if (roadtripMapOutcomeCard) {
-          roadtripMapOutcomeCard.style.width = "";
-          roadtripMapOutcomeCard.style.maxWidth = "";
-          roadtripMapOutcomeCard.style.margin = "";
-        }
-      };
-
-      const getRoadtripIntroCopy = () => {
-        const settings = getRoadTripSettings();
-        return {
-          kicker: `${settings.label} Level`,
-          title: `Georgia is your starting stop`,
-          text: `These map points match the real associates we’re celebrating in each state. Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank runs dry.`
-        };
-      };
-
-      const syncRoadtripIntroHost = () => {
-        const introHost = roadtripModal || roadtripShell || roadtripMapPanel;
-        if (!roadtripIntroOverlay || !introHost) return;
-        if (roadtripIntroOverlay.parentElement !== introHost) {
-          introHost.appendChild(roadtripIntroOverlay);
-        }
-      };
-
-      const scrollRoadtripMapPanelIntoView = () => {
-        const scrollTarget = roadtripMapPanel || roadtripStatusStrip || roadtripMapScroll;
-        if (!scrollTarget) return;
-        if (window.innerWidth <= 900) {
-          scrollTarget.scrollIntoView({
-            behavior: prefersReducedMotion ? "auto" : "smooth",
-            block: "start",
-            inline: "nearest"
-          });
-        }
-      };
-
-      const showRoadtripIntro = () => {
-        if (!roadtripIntroOverlay) return;
-        syncRoadtripIntroHost();
-        const copy = getRoadtripIntroCopy();
-        roadtripIntroKicker.textContent = copy.kicker;
-        roadtripIntroTitle.textContent = copy.title;
-        roadtripIntroText.textContent = copy.text;
-        roadtripIntroOverlay.classList.add("show");
-        roadtripIntroOverlay.setAttribute("aria-hidden", "false");
-      };
-
-      const hideRoadtripIntro = () => {
-        if (!roadtripIntroOverlay) return;
-        roadtripIntroOverlay.classList.remove("show");
-        roadtripIntroOverlay.setAttribute("aria-hidden", "true");
-      };
-
-      const finishRoadTrip = (won) => {
-        const settings = getRoadTripSettings();
-        roadTrip.gameOver = true;
-        hideRoadTripToast();
-        updateRoadTripNodes();
-        renderRoadTripChoices();
-
-        if (won) {
-          showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
-          setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
-          showRoadTripMapOutcome({
-            kicker: "Trip Complete",
-            title: "You won!",
-            text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
-            buttonLabel: "Play Again"
-          });
-          if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
-          playRoadtripWinSound();
-        } else {
-          showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
-          setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
-          showRoadTripMapOutcome({
-            kicker: "Trip Over",
-            title: "Out of fuel or moves",
-            text: "Restart and try a different route.",
-            buttonLabel: "Restart Trip"
-          });
-          playRoadtripLoseSound();
-        }
-      };
-
-      const attemptRoadTripMove = (code) => {
-        if (!roadtripHasChosenLevel || roadTrip.gameOver || roadtripIntroOverlay?.classList.contains("show")) return;
-        if (roadTrip.visited.has(code)) return;
-
-        const currentState = roadTripStates[roadTrip.current];
-        if (!currentState.neighbors.includes(code)) return;
-        if (roadTrip.fuel <= 0) return;
-
-        const fromState = roadTripStates[roadTrip.current];
-        const nextState = roadTripStates[code];
-        const settings = getRoadTripSettings();
-        roadTrip.current = code;
-        roadTrip.fuel -= 1;
-        roadTrip.score += nextState.points;
-        roadTrip.visited.add(code);
-        roadTrip.route.push(code);
-
-        let fuelMessage = "";
-        if (nextState.fuelBonus) {
-          roadTrip.fuel += nextState.fuelBonus;
-          fuelMessage = ` and refueled +${nextState.fuelBonus}`;
-        }
-
-        clearRoadTripCelebration();
-        hideRoadTripMapOutcome();
-        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
-        updateRoadTripHUD();
-        animateRoadtripTravel(fromState, nextState, nextState.fuelBonus || 0);
-        evaluateRoadTripPrompt();
-
-        if (!prefersReducedMotion && typeof confetti === "function") {
-          confetti({
-            particleCount: nextState.points >= 1000 ? 56 : 30,
-            spread: nextState.points >= 1000 ? 72 : 56,
-            origin: { x: nextState.x / 100, y: nextState.y / 100 },
-            startVelocity: 24
-          });
-        }
-
-        if (roadTrip.score >= settings.goal) return finishRoadTrip(true);
-        if (roadTrip.fuel <= 0) return finishRoadTrip(false);
-        if (!getAvailableMoves().length) finishRoadTrip(false);
-      };
-
       const resetRoadTrip = () => {
         const settings = getRoadTripSettings();
-        roadTrip = {
-          current: "GA",
-          score: roadTripStates.GA.points,
-          fuel: settings.startFuel,
-          visited: new Set(["GA"]),
-          route: ["GA"],
-          status: "",
-          gameOver: false
-        };
-
-        clearRoadTripCelebration();
-        hideRoadTripToast();
-        hideRoadTripMapOutcome();
-        clearTimeout(roadtripTravelTimeout);
-        clearTimeout(roadtripArrivalTimeout);
-        setRoadtripCarState({ driving: false, arriving: false });
-        roadtripPointPopups?.replaceChildren();
-        roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
-
-        if (roadtripHasChosenLevel) {
-          setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
-        } else {
-          updateRoadTripStatusVisibility();
-          roadtripStatus.innerHTML = "";
-        }
-
+        roadTrip = { current: "GA", score: roadTripStates.GA.points, fuel: settings.startFuel, visited: new Set(["GA"]), route: ["GA"], status: "", gameOver: false };
+        if (roadtripHasChosenLevel) setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
+        else { updateRoadTripStatusVisibility(); roadtripStatus.innerHTML = ""; }
         updateRoadTripHUD();
       };
-
+      const applyRoadTripLayout = () => {};
       const applyRoadTripLevel = (level) => {
         if (!ROADTRIP_LEVELS[level]) return;
         currentRoadTripLevel = level;
         roadtripHasChosenLevel = true;
         roadtripLayoutCounter += 1;
-        applyRoadTripLayout(level);
         updateRoadTripLevelUI();
-        updateRoadTripLevelText();
         resetRoadTrip();
       };
-
       const prepareRoadTripLevelSelection = () => {
         roadtripHasChosenLevel = false;
-        applyRoadTripLayout("base");
         updateRoadTripLevelUI();
-        updateRoadTripLevelText();
-        hideRoadtripIntro();
         updateRoadTripStatusVisibility();
         resetRoadTrip();
       };
-
+      const attemptRoadTripMove = (code) => {
+        if (!roadtripHasChosenLevel || roadTrip.gameOver) return;
+        if (roadTrip.visited.has(code)) return;
+        const currentState = roadTripStates[roadTrip.current];
+        if (!currentState.neighbors.includes(code) || roadTrip.fuel <= 0) return;
+        const nextState = roadTripStates[code];
+        roadTrip.current = code;
+        roadTrip.fuel -= 1;
+        roadTrip.score += nextState.points;
+        roadTrip.visited.add(code);
+        roadTrip.route.push(code);
+        if (nextState.fuelBonus) roadTrip.fuel += nextState.fuelBonus;
+        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${nextState.fuelBonus ? ` and refueled +${nextState.fuelBonus}` : ""}. Pick another connected stop.`);
+        updateRoadTripHUD();
+      };
       const openRoadTripModal = () => {
-        syncRoadTripLayout();
-        syncRoadtripIntroHost();
-        syncRoadTripMapOutcomeHost();
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
-        hideRoadTripMapOutcome();
-        roadtripHintDismissed = false;
         prepareRoadTripLevelSelection();
-        setTimeout(() => {
-          scrollRoadTripMapToCurrent();
-          updateRoadtripScrollHint();
-          if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
-        }, 60);
       };
-
       const closeRoadTripModalFn = () => {
-        hideRoadtripIntro();
         roadtripModal.classList.remove("open");
         roadtripModal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("lightbox-open");
       };
 
-      const restartRoadTripWithFeedback = () => {
-        unlockRoadtripAudio();
-        playRoadtripRestartSound();
-        hideRoadtripIntro();
-        resetRoadTrip();
-      };
-
-      openRoadtripGame?.addEventListener("click", () => {
-        unlockRoadtripAudio();
-        openRoadTripModal();
-      });
-
+      openRoadtripGame?.addEventListener("click", openRoadTripModal);
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
-      roadtripMapRestart?.addEventListener("click", restartRoadTripWithFeedback);
+      roadtripMapRestart?.addEventListener("click", resetRoadTrip);
       roadtripLevelButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          unlockRoadtripAudio();
-          if (!roadtripHasChosenLevel || button.dataset.roadtripLevel !== currentRoadTripLevel) playRoadtripLevelSound();
-          else playRoadtripRestartSound();
-          applyRoadTripLevel(button.dataset.roadtripLevel);
-          showRoadtripIntro();
-        });
+        button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
       });
-
-      roadtripIntroButton?.addEventListener("click", () => {
-        hideRoadtripIntro();
-        window.setTimeout(() => {
-          scrollRoadtripMapPanelIntoView();
-          window.setTimeout(() => {
-            scrollRoadTripMapToCurrent();
-          }, prefersReducedMotion ? 0 : 90);
-        }, prefersReducedMotion ? 0 : 40);
-      });
-
       roadtripModal?.addEventListener("click", (e) => { if (e.target === roadtripModal) closeRoadTripModalFn(); });
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
-        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) closeMilestoneModal();
+        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) milestoneModal.classList.remove("open");
       });
-
-      roadtripMapScroll?.addEventListener("scroll", () => {
-        if (roadtripMapScroll.scrollLeft > 16) roadtripHintDismissed = true;
-        updateRoadtripScrollHint();
-        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
-      }, { passive: true });
-
-      roadtripModal?.addEventListener("pointerdown", () => unlockRoadtripAudio(), { passive: true });
-
-      roadtripCar?.addEventListener("error", () => {
-        roadtripCar.classList.add("car-fallback-hidden");
-        roadtripCarFallback?.classList.add("show");
-        positionRoadtripCarFallback();
-      });
-
-      roadtripCar?.addEventListener("load", () => {
-        roadtripCar.classList.remove("car-fallback-hidden");
-        roadtripCarFallback?.classList.remove("show");
-        positionRoadtripCarFallback();
-      });
-
       eapLink?.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -4907,38 +3936,13 @@ const applyRoadTripLayout = (levelKey = "base") => {
         window.location.assign(href);
       });
 
-      syncRoadTripLayout();
-      syncRoadtripIntroHost();
-      syncRoadTripMapOutcomeHost();
       renderTopStates();
       renderBonusStops();
       createStateButtons();
-      applyRoadTripLayout("base");
       prepareRoadTripLevelSelection();
       updateRoadTripStatusVisibility();
-      enableTiltCards();
-      runIdleNudge();
-      window.addEventListener("resize", () => {
-        syncRoadTripLayout();
-        syncRoadtripIntroHost();
-        syncRoadTripMapOutcomeHost();
-        updateRoadTripStatusVisibility();
-        tiltCards.forEach((card) => resetTiltCard(card, true));
-        updateRoadtripScrollHint();
-        positionRoadtripCarFallback();
-        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
-      });
-      pointerFineMedia.addEventListener?.("change", () => {
-        syncRoadTripLayout();
-        updateRoadTripStatusVisibility();
-        tiltCards.forEach((card) => resetTiltCard(card, true));
-      });
-
-      syncAudioState();
-      updateSongButton();
-      renderLyrics();
-      positionRoadtripCarFallback();
-      updateRoadtripScrollHint();
+      updateProgressBar();
+      setActiveMiniNav();
     });
   </script>
 
@@ -4962,21 +3966,26 @@ const applyRoadTripLayout = (levelKey = "base") => {
       <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
       <button class="history-quick-ask" type="button" data-question="Why was the sign yellow?">Why the sign was yellow</button>
       <button class="history-quick-ask" type="button" data-question="Tell me about Ms. Lucy.">Ms. Lucy</button>
-      <button class="history-quick-ask" type="button" data-question="What happened in Indiana with the Waffle House name?">Indiana name story</button>
-      <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
-      <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
+      <button class="history-quick-ask is-extra" type="button" data-question="What happened in Indiana with the Waffle House name?">Indiana name story</button>
+      <button class="history-quick-ask is-extra" type="button" data-question="How many locations does Waffle House have?">Location count</button>
+      <button class="history-quick-ask is-extra" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
+    </div>
+
+    <div class="history-more-facts-row">
+      <button class="history-more-facts-btn" id="history-more-facts-toggle" type="button" aria-expanded="false" aria-controls="history-quick-asks">More facts</button>
     </div>
 
     <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
     <div class="history-chat-followup" id="history-chat-followup" hidden>
-      <div class="history-followup-copy" id="history-followup-copy">Add your name and email, then I’ll package your question for the archivist and open a ready-to-send draft.</div>
+      <div class="history-followup-copy" id="history-followup-copy">Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.</div>
       <div class="history-followup-grid">
-        <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
-        <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
+        <div class="history-field"><input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" /></div>
+        <div class="history-field"><input id="history-contact-unit" class="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Unit number" aria-label="Unit number" /></div>
+        <div class="history-field history-field--full"><input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" /></div>
       </div>
       <div class="history-followup-actions">
-        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>example@example.com</strong>.</div>
+        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>archivist@wafflehouse.com</strong>.</div>
         <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
       </div>
     </div>
@@ -5021,90 +4030,68 @@ const applyRoadTripLayout = (levelKey = "base") => {
       const askBtn = document.getElementById("history-ask-btn");
       const input = document.getElementById("history-question-input");
       const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
+      const quickAskWrap = document.getElementById("history-quick-asks");
+      const moreFactsToggle = document.getElementById("history-more-facts-toggle");
       const followup = document.getElementById("history-chat-followup");
       const followupCopy = document.getElementById("history-followup-copy");
       const nameInput = document.getElementById("history-contact-name");
+      const unitInput = document.getElementById("history-contact-unit");
       const emailInput = document.getElementById("history-contact-email");
       const sendEmailBtn = document.getElementById("history-send-email");
 
       let pendingQuestion = "";
 
-      const suggestedTopics = [
-        "Unit #1",
-        "the original sign",
-        "the yellow sign",
-        "Indiana naming story",
-        "Ms. Lucy",
-        "the People Agenda",
-        "Scattered, Smothered, and Covered",
-        "Bert’s Chili",
-        "location count",
-        "annual sales"
-      ];
+      const syncMoreFactsToggle = () => {
+        if (!moreFactsToggle || !quickAskWrap) return;
+        const expanded = quickAskWrap.classList.contains("show-more");
+        moreFactsToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+        moreFactsToggle.textContent = expanded ? "Fewer facts" : "More facts";
+      };
 
-      const escapeHtml = (text) =>
-        text
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/\"/g, "&quot;")
-          .replace(/'/g, "&#39;");
+      const syncHistoryPanelViewport = () => {
+        if (!panel) return;
+        if (window.innerWidth > 700) {
+          panel.style.removeProperty("--history-panel-top");
+          panel.style.removeProperty("--history-panel-height");
+          return;
+        }
+        const vv = window.visualViewport;
+        const visibleHeight = vv ? vv.height : window.innerHeight;
+        const offsetTop = vv ? vv.offsetTop : 0;
+        const safeHeight = Math.max(320, visibleHeight - 16);
+        const panelHeight = Math.min(720, safeHeight);
+        const panelTop = offsetTop + (visibleHeight / 2);
+        panel.style.setProperty("--history-panel-top", `${panelTop}px`);
+        panel.style.setProperty("--history-panel-height", `${panelHeight}px`);
+      };
 
-      const normalize = (text) =>
-        (text || "")
-          .toLowerCase()
-          .replace(/&/g, " and ")
-          .replace(/[^a-z0-9#\s$]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+      const suggestedTopics = ["Unit #1", "the original sign", "the yellow sign", "Indiana naming story", "Ms. Lucy", "the People Agenda", "Scattered, Smothered, and Covered", "Bert’s Chili", "location count", "annual sales"];
+
+      const escapeHtml = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#39;");
+      const normalize = (text) => (text || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9#\s$]/g, " ").replace(/\s+/g, " ").trim();
 
       const scoreFact = (question, fact) => {
         const q = normalize(question);
         let score = 0;
-
         fact.keywords.forEach((keyword) => {
           const k = normalize(keyword);
           if (!k) return;
           if (q.includes(k)) score += k.split(" ").length > 1 ? 4 : 2;
         });
-
         const qWords = new Set(q.split(" "));
         fact.keywords.forEach((keyword) => {
-          normalize(keyword).split(" ").forEach((word) => {
-            if (word && qWords.has(word)) score += 1;
-          });
+          normalize(keyword).split(" ").forEach((word) => { if (word && qWords.has(word)) score += 1; });
         });
-
-        if (/how many|how much|annual|each year|sell/i.test(question)) {
-          if (/million|sell each year|annual sales|sales numbers/.test(fact.keywords.join(" "))) score += 2;
-        }
-
-        if (/who|tell me about/i.test(question) && /ms lucy|bert|tom|joe/.test(normalize(fact.answer))) score += 1;
         return score;
       };
 
       const findAnswer = (question) => {
-        const ranked = historyFacts
-          .map((fact) => ({ fact, score: scoreFact(question, fact) }))
-          .sort((a, b) => b.score - a.score);
-
+        const ranked = historyFacts.map((fact) => ({ fact, score: scoreFact(question, fact) })).sort((a, b) => b.score - a.score);
         const top = ranked[0];
         const second = ranked[1];
-
-        if (!top || top.score < 2) {
-          return "I could not confidently match that question to the built-in history facts. Try asking about " + suggestedTopics.slice(0, 5).join(", ") + ".";
-        }
-
-        if (top.score >= 5 && (!second || top.score >= second.score + 2)) {
-          return top.fact.answer;
-        }
-
-        const related = ranked
-          .filter((item) => item.score >= Math.max(3, top.score - 1))
-          .slice(0, 3)
-          .map((item) => "• " + item.fact.answer)
-          .join("\n");
-
+        if (!top || top.score < 2) return "I could not confidently match that question to the built-in history facts. Try asking about " + suggestedTopics.slice(0, 5).join(", ") + ".";
+        if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
+        const related = ranked.filter((item) => item.score >= Math.max(3, top.score - 1)).slice(0, 3).map((item) => "• " + item.fact.answer).join("\n");
         return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
       };
 
@@ -5117,22 +4104,24 @@ const applyRoadTripLayout = (levelKey = "base") => {
         log.scrollTop = log.scrollHeight;
       };
 
-      const hideFollowup = () => {
-        if (followup) followup.hidden = true;
-      };
-
+      const hideFollowup = () => { if (followup) followup.hidden = true; };
       const showFollowup = (question) => {
         pendingQuestion = question;
         if (!followup) return;
         followup.hidden = false;
-        followupCopy.textContent = "Add your name and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
+        followupCopy.textContent = "Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
         window.setTimeout(() => nameInput?.focus(), 40);
       };
-
       const seedWelcome = () => {
         if (!log) return;
         log.innerHTML = "";
+        pendingQuestion = "";
+        if (nameInput) nameInput.value = "";
+        if (unitInput) unitInput.value = "";
+        if (emailInput) emailInput.value = "";
         hideFollowup();
+        syncMoreFactsToggle();
+        syncHistoryPanelViewport();
       };
 
       const askHistoryQuestion = (question, { promptForEmail = false } = {}) => {
@@ -5143,7 +4132,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         window.setTimeout(() => {
           addMessage("bot", answer);
           if (promptForEmail) {
-            addMessage("bot", "Want me to send that to the archivist? Add your name and email below, then tap Send to Archivist.");
+            addMessage("bot", "Want me to send that to the archivist? Add your name, unit number, and email below, then tap Send to Archivist.");
             showFollowup(q);
           }
         }, 110);
@@ -5155,7 +4144,8 @@ const applyRoadTripLayout = (levelKey = "base") => {
         panel?.setAttribute("aria-hidden", "false");
         launcher?.setAttribute("aria-expanded", "true");
         document.body.classList.add("lightbox-open");
-        window.setTimeout(() => input?.focus(), 40);
+        syncHistoryPanelViewport();
+        window.setTimeout(() => { syncHistoryPanelViewport(); input?.focus(); }, 40);
       };
 
       const closePanel = () => {
@@ -5188,8 +4178,31 @@ const applyRoadTripLayout = (levelKey = "base") => {
         button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
       });
 
+      moreFactsToggle?.addEventListener("click", () => {
+        quickAskWrap?.classList.toggle("show-more");
+        syncMoreFactsToggle();
+      });
+
+      unitInput?.addEventListener("input", () => {
+        unitInput.value = unitInput.value.replace(/\D+/g, "");
+      });
+
+      window.addEventListener("resize", syncHistoryPanelViewport, { passive: true });
+      window.visualViewport?.addEventListener("resize", syncHistoryPanelViewport);
+      window.visualViewport?.addEventListener("scroll", syncHistoryPanelViewport);
+
+      [input, nameInput, unitInput, emailInput].forEach((field) => {
+        field?.addEventListener("focus", () => {
+          window.setTimeout(() => {
+            syncHistoryPanelViewport();
+            field.scrollIntoView({ block: "nearest", inline: "nearest" });
+          }, 80);
+        });
+      });
+
       sendEmailBtn?.addEventListener("click", () => {
         const name = (nameInput?.value || "").trim();
+        const unit = (unitInput?.value || "").trim();
         const email = (emailInput?.value || "").trim();
         const question = (pendingQuestion || "").trim();
 
@@ -5198,28 +4211,34 @@ const applyRoadTripLayout = (levelKey = "base") => {
           return;
         }
 
-        if (!name || !email) {
-          addMessage("bot", "Please enter both your name and email before sending your question.");
+        if (!name || !unit || !email) {
+          addMessage("bot", "Please enter your name, unit number, and email before sending your question.");
           if (!name) nameInput?.focus();
+          else if (!unit) unitInput?.focus();
           else emailInput?.focus();
           return;
         }
 
-        const subject = `Waffle House History Question from ${name}`;
-        const body = [
-          `Name: ${name}`,
-          `Email: ${email}`,
-          "",
-          "Question:",
-          question
-        ].join("\n");
+        if (!/^\d+$/.test(unit)) {
+          addMessage("bot", "Unit number must contain numbers only.");
+          unitInput?.focus();
+          return;
+        }
 
-        addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
+        if (emailInput && !emailInput.checkValidity()) {
+          addMessage("bot", "Please enter a valid email address.");
+          emailInput.focus();
+          return;
+        }
+
+        const subject = `Waffle House History Question from ${name} (Unit ${unit})`;
+        const body = [`Name: ${name}`, `Unit Number: ${unit}`, `Email: ${email}`, "", "Question:", question].join("\n");
+        addMessage("bot", `Thanks, ${name}. I’m packaging your question from Unit ${unit} for the archivist now.`);
         const mailto = `mailto:archivist@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
-          addMessage("bot", `Your draft for the archivist is ready in your email app — just review and send.`);
-        }, 520);
+          addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
+        }, 220);
       });
 
       document.addEventListener("keydown", (e) => {
