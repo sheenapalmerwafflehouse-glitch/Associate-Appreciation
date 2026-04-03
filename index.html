@@ -1613,12 +1613,12 @@
       aspect-ratio: 16 / 10;
       width: 100%;
       border-radius: 24px;
-      border: 1px solid rgba(245, 213, 71, 0.22);
-      background: linear-gradient(135deg, #0f0f10 0%, #181818 34%, #2b2405 60%, #6e5700 82%, #c79e10 100%);
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      background: linear-gradient(135deg, #fffaf0 0%, #fff2c2 26%, #ffe66a 58%, #f5d547 82%, #e2ba2f 100%);
       overflow: hidden;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        inset 0 -18px 28px rgba(0,0,0,0.12);
+        inset 0 1px 0 rgba(255,255,255,0.58),
+        inset 0 -10px 18px rgba(120, 88, 0, 0.06);
     }
 
     .roadtrip-map-stage::before,
@@ -1666,9 +1666,8 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(255, 227, 125, 0.16);
-  stroke-width: 1.18;
-  stroke-dasharray: 0.8 1.7;
+  stroke: rgba(92, 74, 16, 0.18);
+  stroke-width: 1.05;
 }
 
 .roadtrip-route-svg .route-network-center {
@@ -1676,27 +1675,27 @@
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(24, 24, 24, 0.88);
-  stroke-width: 3.8;
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.16));
+  stroke: rgba(87, 66, 10, 0.84);
+  stroke-width: 3.4;
+  filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
 }
 
 .roadtrip-route-svg .route-option-center {
-  stroke: rgba(255, 226, 92, 0.92);
-  stroke-width: 0.95;
-  stroke-dasharray: 1.2 1.7;
+  stroke: rgba(255, 251, 230, 0.92);
+  stroke-width: 0.9;
+  stroke-dasharray: 1.05 1.45;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(13, 13, 13, 0.96);
-  stroke-width: 5.5;
-  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.24));
+  stroke: rgba(58, 43, 6, 0.94);
+  stroke-width: 4.9;
+  filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
 }
 
 .roadtrip-route-svg .route-traveled-center {
-  stroke: rgba(255, 236, 145, 0.98);
-  stroke-width: 1.3;
-  stroke-dasharray: 1.45 1.9;
+  stroke: rgba(255, 251, 232, 0.98);
+  stroke-width: 1.15;
+  stroke-dasharray: 1.25 1.75;
 }
 
     .roadtrip-mobile-difficulty {
@@ -1708,7 +1707,7 @@
       position: absolute;
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.74);
+      background: rgba(255,255,255,0.9);
       border: 1px solid rgba(176, 150, 44, 0.14);
       font-size: 0.74rem;
       font-weight: 800;
@@ -2137,6 +2136,12 @@
       .section { max-width: 760px; }
       .game-board { grid-template-columns: 1fr; }
       .game-map { min-height: 460px; }
+      .roadtrip-mobile-difficulty {
+        display: grid;
+        gap: 12px;
+        margin: 0 0 12px;
+      }
+      .roadtrip-mobile-difficulty .game-panel-card { margin: 0; }
     }
 
     @media (max-width: 700px) {
@@ -2672,7 +2677,16 @@
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
 
-            <div class="roadtrip-mobile-difficulty" id="roadtrip-mobile-difficulty"></div>
+            <div class="roadtrip-mobile-difficulty" id="roadtrip-mobile-difficulty">
+              <div class="game-panel-card" id="roadtrip-difficulty-card">
+                <h3>Difficulty</h3>
+                <div class="roadtrip-levels" id="roadtrip-levels">
+                  <button type="button" class="roadtrip-level-btn" data-roadtrip-level="beginner">Beginner Level</button>
+                  <button type="button" class="roadtrip-level-btn" data-roadtrip-level="intermediate">Intermediate Level</button>
+                  <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
+                </div>
+              </div>
+            </div>
 
             <div class="roadtrip-toast" id="roadtrip-toast" aria-live="polite"></div>
 
@@ -2725,15 +2739,6 @@
           </div>
 
           <div class="game-side-panel roadtrip-side-panel">
-            <div class="game-panel-card">
-              <h3>Difficulty</h3>
-              <div class="roadtrip-levels" id="roadtrip-levels">
-                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="beginner">Beginner Level</button>
-                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="intermediate">Intermediate Level</button>
-                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
-              </div>
-            </div>
-
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
               <p class="roadtrip-helper">Tap a state with the yellow highlight ring on the map or use these quick-pick buttons.</p>
@@ -2755,7 +2760,7 @@
               <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
             </div>
 
-            <div class="game-panel-card">
+            <div class="game-panel-card" id="roadtrip-tripgoal-card">
               <h3>Trip Goal</h3>
               <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
@@ -2833,12 +2838,12 @@
       const roadtripBoard = roadtripModal?.querySelector(".roadtrip-board");
       const roadtripMapPanel = roadtripBoard?.querySelector(".roadtrip-map-panel");
       const roadtripSidePanel = roadtripBoard?.querySelector(".roadtrip-side-panel");
-      const roadtripDifficultyCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(1)");
-      const roadtripNextCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(2)");
-      const roadtripRouteCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(3)");
-      const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
-      const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(5)");
-      const roadtripTripGoalCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(6)");
+      const roadtripDifficultyCard = document.getElementById("roadtrip-difficulty-card");
+      const roadtripNextCard = roadtripSidePanel?.querySelector(".roadtrip-next-card");
+      const roadtripRouteCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(2)");
+      const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(3)");
+      const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
+      const roadtripTripGoalCard = document.getElementById("roadtrip-tripgoal-card");
       const roadtripMobileDifficulty = document.getElementById("roadtrip-mobile-difficulty");
       const roadtripMobilePriority = document.createElement("div");
       const roadtripMobileNext = document.createElement("div");
@@ -3108,7 +3113,7 @@ const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
   const dy = toState.y - fromState.y;
   const dist = Math.hypot(dx, dy) || 0.001;
   const direction = ((fromState.y + toState.y) / 2) < ROADTRIP_GA_ANCHOR.y ? 1 : -1;
-  const bend = clampRoadTripValue((dist * 0.055 + Math.abs(dy) * 0.025) * emphasis, 0.24, 1.35);
+  const bend = clampRoadTripValue((dist * 0.028 + Math.abs(dy) * 0.012) * emphasis, 0.08, 0.72);
   const normalX = (-dy / dist) * bend * direction;
   const normalY = (dx / dist) * bend * direction;
   const c1x = fromState.x + (dx * 0.32) + normalX;
@@ -3131,13 +3136,13 @@ const renderRoadTripNetwork = () => {
   ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    const path = getRoadTripCurvePath(fromState, toState, 0.54);
+    const path = getRoadTripCurvePath(fromState, toState, 0.34);
     networkSegments.push(`<path class="route-network-main" d="${path}" />`);
 
     const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
     const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
     if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      const optionPath = getRoadTripCurvePath(fromState, toState, 0.62);
+      const optionPath = getRoadTripCurvePath(fromState, toState, 0.42);
       optionSegments.push(`<path class="route-option-main" d="${optionPath}" />`);
       optionSegments.push(`<path class="route-option-center" d="${optionPath}" />`);
     }
@@ -3154,7 +3159,7 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    const path = getRoadTripCurvePath(fromState, toState, 0.72);
+    const path = getRoadTripCurvePath(fromState, toState, 0.48);
     traveledSegments.push(`<path class="route-traveled-main" d="${path}" />`);
     traveledSegments.push(`<path class="route-traveled-center" d="${path}" />`);
   }
@@ -4027,7 +4032,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
       const syncRoadTripLayout = () => {
         if (!roadtripBoard || !roadtripMapPanel || !roadtripSidePanel) return;
-        const isMobileRoadTrip = window.innerWidth <= 700;
+        const isMobileRoadTrip = window.innerWidth <= 900;
 
         if (isMobileRoadTrip) {
           if (!roadtripMobileNext.isConnected) {
@@ -4047,14 +4052,19 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
           if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
         } else {
-          if (roadtripDifficultyCard) roadtripSidePanel.appendChild(roadtripDifficultyCard);
+          if (roadtripDifficultyCard) {
+            if (roadtripNextCard && roadtripNextCard.parentElement === roadtripSidePanel) {
+              roadtripSidePanel.insertBefore(roadtripDifficultyCard, roadtripNextCard);
+            } else {
+              roadtripSidePanel.prepend(roadtripDifficultyCard);
+            }
+          }
           if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
           if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
           if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
 
-          if (roadtripMobileDifficulty) roadtripMobileDifficulty.replaceChildren();
           if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
           if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
         }
