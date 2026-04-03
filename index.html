@@ -5255,7 +5255,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         ].join("\n");
 
         addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
-        const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailto = `mailto:archivist@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", `Your draft for the archivist is ready in your email app — just review and send.`);
