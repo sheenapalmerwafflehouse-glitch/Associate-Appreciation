@@ -4,54 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
- 
+
   <style>
     :root {
-      --bg: #f3f3f1;
-      --card: #ffffff;
       --text: #111111;
-      --muted: #5e5e5e;
+      --muted: #4f4f4f;
+      --muted-soft: #6b6b6b;
       --yellow: #f5d547;
       --yellow-dark: #d4b000;
       --yellow-soft: #fff7c8;
-      --green-tint: #f0f6df;
-      --border: rgba(0, 0, 0, 0.08);
-      --shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-      --radius: 20px;
+      --border: rgba(176, 150, 44, 0.18);
+      --shadow: 0 10px 24px rgba(92, 77, 19, 0.08);
+      --shadow-hover: 0 18px 38px rgba(92, 77, 19, 0.12);
       --max: 1120px;
+      --media-width: 560px;
+      --media-frame-min-height: 320px;
+      --page-warmth: 0;
+      --tilt-perspective: 1400px;
+      --tilt-max-rotate: 12deg;
+      --tilt-scale: 1.02;
+      --game-card-shadow: 0 16px 30px rgba(17, 17, 17, 0.12);
     }
- 
-    * {
-      box-sizing: border-box;
-    }
- 
+
+    * { box-sizing: border-box; }
+
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: 80px;
+      scroll-padding-top: 132px;
     }
- 
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
-      background: radial-gradient(circle at top left, #faf9ee 0%, #f6f6f4 38%, #efefe9 100%);
+      background:
+        radial-gradient(
+          circle at top left,
+          color-mix(in srgb, #fffdf3 calc(100% - (var(--page-warmth) * 16%)), #fff2b1 calc(var(--page-warmth) * 16%)) 0%,
+          color-mix(in srgb, #f9f5e9 calc(100% - (var(--page-warmth) * 18%)), #fff1b5 calc(var(--page-warmth) * 18%)) 32%,
+          color-mix(in srgb, #f3efdf calc(100% - (var(--page-warmth) * 16%)), #f6e8b4 calc(var(--page-warmth) * 16%)) 100%
+        );
+      min-height: 100vh;
+      transition: background 0.35s ease;
     }
- 
-    body.lightbox-open,
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(255, 237, 152, 0.28) 0%, rgba(255, 237, 152, 0) 20%),
+        radial-gradient(circle at 84% 10%, rgba(255, 232, 131, 0.2) 0%, rgba(255, 232, 131, 0) 16%),
+        radial-gradient(circle at 86% 72%, rgba(245, 213, 71, 0.15) 0%, rgba(245, 213, 71, 0) 18%);
+      z-index: -1;
+    }
+
+    body.lightbox-open {
+      overflow: hidden;
+    }
+
+    html.milestone-open,
     body.milestone-open {
       overflow: hidden;
     }
- 
+
     img {
       max-width: 100%;
       height: auto;
       display: block;
     }
- 
-    button {
-      font: inherit;
-    }
- 
+
+    button { font: inherit; }
+
     #scroll-progress {
       position: fixed;
       top: 0;
@@ -62,168 +88,335 @@
       z-index: 9999;
       box-shadow: 0 2px 10px rgba(245, 213, 71, 0.45);
     }
- 
+
     .topbar {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 4px 16px rgba(92, 77, 19, 0.05);
     }
- 
+
     .topbar-inner {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 8px 16px;
+      padding: 10px 16px 8px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
+      gap: 8px;
     }
- 
+
     .logo-link {
       display: flex;
       align-items: center;
       justify-content: center;
     }
- 
+
     .nav-logo {
       height: 90px;
       width: auto;
       object-fit: contain;
       transition: transform 0.3s ease;
     }
- 
-    .nav-logo:hover {
-      transform: scale(1.05);
+
+    .nav-logo:hover { transform: scale(1.05); }
+
+    .mini-nav-wrap {
+      width: 100%;
+      max-width: 900px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
- 
+
+    .mini-nav-wrap::-webkit-scrollbar { display: none; }
+
+    .mini-nav {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      min-width: max-content;
+      padding: 2px 2px 8px;
+    }
+
+    .mini-nav a {
+      text-decoration: none;
+      color: #343434;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(92, 77, 19, 0.05);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .mini-nav a:hover,
+    .mini-nav a.active {
+      background: rgba(255, 247, 200, 0.96);
+      border-color: rgba(212, 176, 0, 0.28);
+      transform: translateY(-1px);
+    }
+
     .sections {
       max-width: var(--max);
       margin: 0 auto;
-      padding: 16px;
+      padding: 24px 24px 18px;
     }
- 
+
+    .divider-sparkle {
+      width: min(240px, 65vw);
+      height: 16px;
+      margin: 0 auto 22px;
+      position: relative;
+      opacity: 0.92;
+    }
+
+    .divider-sparkle::before {
+      content: "";
+      position: absolute;
+      inset: 7px 0 auto 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(245, 213, 71, 0),
+        rgba(245, 213, 71, 0.28),
+        rgba(255, 236, 145, 0.9),
+        rgba(245, 213, 71, 0.28),
+        rgba(245, 213, 71, 0)
+      );
+      overflow: hidden;
+    }
+
+    .divider-sparkle::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: -18%;
+      width: 28%;
+      height: 10px;
+      background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,244,182,0.75) 35%, rgba(255,244,182,0) 72%);
+      filter: blur(1px);
+      animation: dividerShimmer 4.8s linear infinite;
+    }
+
+    @keyframes dividerShimmer {
+      0% { left: -20%; }
+      100% { left: 92%; }
+    }
+
     .section {
       width: 100%;
       max-width: 900px;
-      margin: 0 auto 28px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(240, 246, 223, 0.5));
+      margin: 0 auto 30px;
+      padding: 22px 20px 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 249, 235, 0.74));
       border: 1px solid var(--border);
-      border-radius: 26px;
+      border-radius: 28px;
       box-shadow: var(--shadow);
-      transition:
-        transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-        box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-        border-color 0.4s ease,
-        opacity 0.7s ease;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.3s ease;
       position: relative;
       overflow: hidden;
     }
- 
+
     .section:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-      border-color: var(--yellow);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(212, 176, 0, 0.28);
     }
- 
-    .reveal {
-      opacity: 0;
-      transform: translateY(34px);
+
+    .section.featured-section {
+      border-color: rgba(245, 213, 71, 0.42);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(252, 248, 221, 0.84));
     }
- 
-    .reveal.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
- 
+
     .section-head {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 22px;
       flex-wrap: wrap;
     }
- 
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      line-height: 1;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255, 247, 200, 0.92);
+      color: #6f5f00;
+      border: 1px solid rgba(212, 176, 0, 0.18);
+      box-shadow: 0 4px 12px rgba(92, 77, 19, 0.06);
+    }
+
     .section h2 {
-      margin: 0;
+      margin: 0 0 2px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       font-size: clamp(1.18rem, 2vw, 1.8rem);
       text-align: center;
     }
- 
+
+    .section h3 {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      letter-spacing: 0.01em;
+    }
+
     .section p {
       color: var(--muted);
-      line-height: 1.65;
-      margin: 14px auto 18px;
-      max-width: 680px;
+      line-height: 1.78;
+      margin: 22px auto 0;
+      max-width: 40ch;
       text-align: center;
+      font-size: 1rem;
     }
- 
+
     .section-image-wrap {
       width: 100%;
-      max-width: 560px;
+      max-width: var(--media-width);
       margin: 0 auto;
     }
- 
+
     .section-image-link {
       display: block;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: white;
+      width: 100%;
+      border-radius: 20px;
+      overflow: visible;
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      background: #fff;
       cursor: zoom-in;
+      position: relative;
+      box-shadow: 0 8px 22px rgba(92, 77, 19, 0.06);
     }
- 
-    .section-image-link img {
+
+    .media-frame {
+      width: 100%;
+      min-height: clamp(220px, 42vw, var(--media-frame-min-height));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #ffffff 0%, #fcfcf8 100%);
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .media-frame img {
       width: 100%;
       height: auto;
+      object-fit: contain;
       transition: transform 0.4s ease;
     }
- 
-    .section-image-link:hover img {
+
+    .section-image-link:hover .media-frame img {
       transform: scale(1.03);
     }
- 
-    .links {
+
+    .section-copy { margin-top: 20px; }
+
+    .links,
+    .actions {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin-top: 12px;
+      margin-top: 22px;
       justify-content: center;
     }
- 
-    .pill,
-    .section-link {
+
+    .section-link,
+    .song-toggle {
       text-decoration: none;
       color: #111;
       background: var(--yellow);
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
-      transition: all 0.18s ease;
-      display: inline-block;
-      text-align: center;
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow:
+        0 2px 0 rgba(92, 77, 19, 0.1),
+        0 8px 18px rgba(92, 77, 19, 0.08);
     }
- 
-    .pill:hover,
-    .section-link:hover {
+
+    .section-link {
+      padding: 12px 18px;
+      min-height: 46px;
+      border-radius: 999px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .section-link:hover,
+    .song-toggle:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      box-shadow:
+        0 2px 0 rgba(92, 77, 19, 0.1),
+        0 12px 22px rgba(92, 77, 19, 0.12);
       background: #ffe66a;
     }
- 
+
     .section-link.secondary {
-      background: white;
+      background: rgba(255, 255, 255, 0.92);
+      color: #2b2b2b;
+      border-color: rgba(212, 176, 0, 0.28);
     }
- 
+
+    .pressable { will-change: transform; }
+
+    .pressable.is-pressing {
+      transform: scale(0.965);
+      box-shadow:
+        0 1px 0 rgba(92, 77, 19, 0.08),
+        0 4px 10px rgba(92, 77, 19, 0.1);
+    }
+
+    .pressable.rebound { animation: pressRebound 220ms ease-out; }
+
+    @keyframes pressRebound {
+      0% { transform: scale(0.97); }
+      55% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.55);
+      animation: rippleAnim 520ms ease-out forwards;
+    }
+
+    @keyframes rippleAnim {
+      to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+      }
+    }
+
     .hero-card {
-      background: #fff;
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 28px;
       padding: 18px;
       display: flex;
@@ -233,23 +426,17 @@
       max-width: 760px;
       width: 100%;
       position: relative;
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      box-shadow: 0 14px 30px rgba(92, 77, 19, 0.06);
     }
- 
+
     .hero-copy {
       width: 100%;
       max-width: 760px;
       margin: 0 auto 18px;
       text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
     }
- 
-    .hero-copy.animate {
-      opacity: 1;
-      transform: translateY(0);
-    }
- 
+
     #hero .eyebrow {
       display: block;
       text-transform: uppercase;
@@ -261,7 +448,7 @@
       margin-bottom: 10px;
       white-space: normal;
     }
- 
+
     #hero h1 {
       margin: 0;
       font-size: clamp(32px, 4vw, 56px);
@@ -271,22 +458,15 @@
       text-align: center;
       text-wrap: balance;
     }
- 
+
     .hero-image {
       width: 100%;
       display: flex;
       justify-content: center;
       margin-top: 8px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      position: relative;
     }
- 
-    .hero-image.animate {
-      opacity: 1;
-      transform: translateY(0);
-    }
- 
+
     .hero-image img {
       display: block;
       width: 100%;
@@ -294,64 +474,91 @@
       height: auto;
       margin: 0 auto;
       border-radius: 24px;
+      will-change: transform;
     }
- 
-    .audio-card {
+
+    .song-card {
       width: 100%;
       max-width: 760px;
-      margin: 18px auto 0;
-      padding: 20px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 22px;
-      background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-      text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
- 
-    .audio-card.animate {
-      opacity: 1;
-      transform: translateY(0);
-    }
- 
-    .audio-card h3 {
-      margin: 0 0 8px;
-      font-size: 1.05rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
- 
-    .audio-card p {
-      margin: 0 0 14px;
-      color: var(--muted);
-      text-align: center;
-    }
- 
-    .audio-player-wrap {
-      max-width: 520px;
       margin: 0 auto;
-      padding: 12px 14px;
-      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 999px;
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.75),
-        0 2px 0 rgba(0, 0, 0, 0.08),
-        0 10px 18px rgba(0, 0, 0, 0.1);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      padding: 20px;
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffdf2 0%, #f9f8eb 52%, #f2f6e0 100%);
+      box-shadow: 0 10px 24px rgba(92, 77, 19, 0.06);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
- 
-    .audio-player-wrap:hover {
-      transform: translateY(-2px);
+
+    .song-card.audio-playing {
+      border-color: rgba(245, 213, 71, 0.9);
       box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.8),
-        0 2px 0 rgba(0, 0, 0, 0.08),
-        0 14px 24px rgba(0, 0, 0, 0.14);
-      background: linear-gradient(180deg, #fff07f 0%, #ffe15a 100%);
+        0 12px 30px rgba(92, 77, 19, 0.08),
+        0 0 0 1px rgba(245, 213, 71, 0.45),
+        0 0 28px rgba(245, 213, 71, 0.2);
     }
- 
+
+    .song-layout {
+      width: 100%;
+      max-width: 560px;
+      margin: 20px auto 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 14px;
+      align-items: center;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      border-radius: 22px;
+      padding: 14px;
+    }
+
+    .song-toggle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+      font-size: 1.8rem;
+      line-height: 1;
+      font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    }
+
+    .song-meta {
+      min-width: 0;
+      text-align: center;
+    }
+
+    .song-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7b6c00;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .song-title {
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #1f1f1f;
+    }
+
+    .audio-player-wrap {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .audio-player {
       width: 100%;
       display: block;
@@ -359,59 +566,186 @@
       accent-color: #111111;
       filter: saturate(1.02) contrast(1.02);
     }
- 
-    #ceo-message {
-      text-align: center;
-    }
- 
-    .ceo-video-wrap {
+
+    .video-shell {
       width: 100%;
       max-width: 760px;
       margin: 24px auto 0;
+      padding: 12px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 247, 237, 0.92));
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 14px 28px rgba(92, 77, 19, 0.07);
     }
- 
-    .ceo-video-wrap iframe {
+
+    .video-label-row {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .video-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 247, 200, 0.94);
+      color: #6b5b00;
+      border: 1px solid rgba(212, 176, 0, 0.16);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      box-shadow: 0 6px 14px rgba(92, 77, 19, 0.06);
+    }
+
+    .video-frame {
       width: 100%;
+      overflow: hidden;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff 0%, #f9f9f2 100%);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      position: relative;
       aspect-ratio: 16 / 9;
-      height: auto;
+    }
+
+    .video-frame iframe {
+      width: 100%;
+      height: 100%;
       border: 0;
       display: block;
-      border-radius: 12px;
+      border-radius: 18px;
     }
- 
-    .museum-video-wrap {
+
+    .lyric-video-shell {
+      width: 100%;
+      max-width: 560px;
+      margin: 36px auto 0;
+      padding: 12px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,247,237,0.92));
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 14px 28px rgba(92, 77, 19, 0.07);
+    }
+
+    .lyric-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 720 / 706;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      background: #dfeaf6;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+    }
+
+    .lyric-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .lyric-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(34, 49, 74, 0.20), rgba(34, 49, 74, 0.28)),
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 36%, rgba(10,17,30,0.10) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .lyric-stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 28%;
+      background: linear-gradient(180deg, rgba(10,17,30,0), rgba(10,17,30,0.18));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .lyric-line-host {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .lyric-line {
+      position: absolute;
+      left: 50%;
+      width: calc(100% - 36px);
+      max-width: 92%;
+      transform: translateX(-50%) translateY(18px);
+      opacity: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.98);
+      font-weight: 800;
+      font-size: clamp(16px, 4.4vw, 30px);
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      white-space: pre-line;
+      text-shadow:
+        0 2px 10px rgba(0,0,0,0.30),
+        0 0 12px rgba(0,0,0,0.18);
+      transition:
+        opacity 0.40s ease,
+        transform 0.40s ease,
+        filter 0.40s ease;
+      filter: blur(1px);
+      will-change: transform, opacity;
+    }
+
+    .lyric-line.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      filter: blur(0);
+    }
+
+    .lyric-line.exiting {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-12px);
+      filter: blur(2px);
+    }
+
+    .lyric-scrubber-wrap {
       width: 100%;
       max-width: 760px;
-      margin: 18px auto 0;
+      margin: 12px auto 0;
     }
- 
-    .museum-video-wrap iframe {
+
+    .lyric-scrubber {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      height: auto;
-      border: 0;
-      display: block;
-      border-radius: 12px;
-    }
- 
-    .anniversary-image {
-      max-width: 700px;
+      accent-color: #111111;
     }
 
     .anniversary-interactive {
       position: relative;
       display: block;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--border);
+      width: 100%;
+      border-radius: 20px;
+      overflow: visible;
+      border: 1px solid rgba(176, 150, 44, 0.14);
       background: #fff;
       cursor: default;
       transition: transform 0.35s ease, box-shadow 0.35s ease;
+      box-shadow: 0 10px 24px rgba(92, 77, 19, 0.07);
     }
 
     .anniversary-interactive:hover {
       transform: translateY(-3px);
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 16px 30px rgba(92, 77, 19, 0.11);
     }
 
     .anniversary-image-layer {
@@ -419,6 +753,11 @@
       z-index: 1;
       overflow: hidden;
       cursor: zoom-in;
+      border-radius: 20px;
+    }
+
+    .anniversary-image-layer .media-frame {
+      min-height: clamp(220px, 42vw, var(--media-frame-min-height));
     }
 
     .anniversary-image-layer img {
@@ -436,18 +775,41 @@
     .anniversary-hotspots {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 3;
       pointer-events: none;
+      border-radius: 20px;
     }
- 
-    .anniversary-instruction {
+
+    .anniversary-tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 247, 200, 0.95);
+      color: #6b5b00;
+      font-weight: 800;
+      box-shadow: 0 8px 22px rgba(92, 77, 19, 0.09);
+      border: 1px solid rgba(212, 176, 0, 0.18);
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      translate: -50% 0;
+      z-index: 4500;
+      max-width: calc(100vw - 24px);
       text-align: center;
-      font-weight: 700;
-      color: #7b6c00;
-      margin: 8px 0 14px;
-      line-height: 1.5;
     }
- 
+
+    .anniversary-tip.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
     .balloon-hotspot {
       position: absolute;
       width: 10.5%;
@@ -458,45 +820,29 @@
       cursor: pointer;
       pointer-events: auto;
       -webkit-tap-highlight-color: transparent;
-      transition: transform 0.22s ease;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
     }
- 
+
     .balloon-hotspot:focus-visible {
       outline: 3px solid rgba(245, 213, 71, 0.95);
       outline-offset: 2px;
       box-shadow: 0 0 0 6px rgba(245, 213, 71, 0.25);
     }
 
-    .balloon-hotspot::before {
-      content: "";
-      position: absolute;
-      inset: 18%;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0);
-      opacity: 0;
-      transition: opacity 0.22s ease, transform 0.22s ease;
-    }
- 
     .balloon-hotspot::after {
       content: "";
       position: absolute;
       inset: -8%;
       border-radius: 50%;
       background: rgba(245, 213, 71, 0);
-      transition: background 0.18s ease, transform 0.18s ease;
+      transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
     }
- 
+
     .balloon-hotspot:hover,
     .balloon-hotspot:focus-visible {
       transform: translateY(-3px);
     }
 
-    .balloon-hotspot:hover::before,
-    .balloon-hotspot:focus-visible::before {
-      opacity: 1;
-      transform: scale(1.08);
-    }
- 
     .balloon-hotspot:hover::after,
     .balloon-hotspot:focus-visible::after,
     .balloon-hotspot:active::after {
@@ -506,6 +852,23 @@
 
     .balloon-hotspot.popping {
       animation: balloonPop 0.22s ease;
+    }
+
+    .balloon-hotspot.hinting::after {
+      background: rgba(245, 213, 71, 0.12);
+      box-shadow: 0 0 0 0 rgba(245, 213, 71, 0.38);
+      animation: balloonHintPulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes balloonHintPulse {
+      0%, 100% {
+        transform: scale(0.96);
+        box-shadow: 0 0 0 0 rgba(245, 213, 71, 0.34);
+      }
+      50% {
+        transform: scale(1.14);
+        box-shadow: 0 0 0 12px rgba(245, 213, 71, 0);
+      }
     }
 
     @keyframes balloonPop {
@@ -518,38 +881,13 @@
       .balloon-hotspot {
         animation: balloonFloat 3.2s ease-in-out infinite;
       }
-
-      .balloon-hotspot:nth-child(2n) {
-        animation-duration: 3.8s;
-        animation-delay: 0.25s;
-      }
-
-      .balloon-hotspot:nth-child(3n) {
-        animation-duration: 4.1s;
-        animation-delay: 0.45s;
-      }
-
-      .balloon-hotspot:nth-child(4n) {
-        animation-duration: 3.5s;
-        animation-delay: 0.15s;
-      }
-
-      .anniversary-interactive:hover .balloon-hotspot,
-      .anniversary-interactive:focus-within .balloon-hotspot {
-        animation-play-state: paused;
-      }
     }
 
     @keyframes balloonFloat {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-4px);
-      }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
     }
- 
+
     .balloon-1  { top: 7.5%;  left: 10.2%; }
     .balloon-2  { top: 5.2%;  left: 20.8%; }
     .balloon-3  { top: 6.1%;  left: 32.0%; }
@@ -557,7 +895,6 @@
     .balloon-5  { top: 5.8%;  left: 54.2%; }
     .balloon-10 { top: 4.8%;  left: 65.2%; }
     .balloon-15 { top: 8.0%;  left: 76.0%; }
- 
     .balloon-20 { top: 20.8%; left: 9.0%; }
     .balloon-25 { top: 17.2%; left: 20.8%; }
     .balloon-30 { top: 18.0%; left: 32.2%; }
@@ -565,75 +902,229 @@
     .balloon-40 { top: 16.8%; left: 55.5%; }
     .balloon-45 { top: 18.5%; left: 66.5%; }
     .balloon-50 { top: 18.6%; left: 77.0%; }
- 
-    .anniversary-summary {
-      margin-top: 16px;
+
+    .photo-flash-link {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      border-radius: 20px;
     }
- 
-    .hero-links {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
+
+    .photo-flash-link .tilt-stage {
+      position: relative;
+      z-index: 1;
     }
- 
+
+    .photo-flash-link::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 16.5%;
+      width: 24%;
+      height: 18%;
+      transform: translate(-50%, -50%) scale(0.78);
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(255,255,255,1) 0%,
+        rgba(255,255,255,0.92) 18%,
+        rgba(255,255,255,0.38) 36%,
+        rgba(255,255,255,0.08) 52%,
+        rgba(255,255,255,0) 74%
+      );
+      opacity: 0;
+      pointer-events: none;
+      z-index: 6;
+      filter: blur(0.5px);
+    }
+
+    .photo-flash-link::after {
+      content: "";
+      position: absolute;
+      left: 30%;
+      top: 11%;
+      width: 40%;
+      height: 10%;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.28) 18%,
+        rgba(255,255,255,1) 50%,
+        rgba(255,255,255,0.28) 82%,
+        rgba(255,255,255,0) 100%
+      );
+      opacity: 0;
+      transform: translateX(-110%);
+      pointer-events: none;
+      z-index: 7;
+      filter: blur(1.2px);
+    }
+
+    .photo-flash-link:hover::before,
+    .photo-flash-link:focus-visible::before {
+      animation: photoFlashPulse 1.05s ease-out;
+    }
+
+    .photo-flash-link:hover::after,
+    .photo-flash-link:focus-visible::after {
+      animation: photoFlashSweep 1.05s ease-out;
+    }
+
+    
+
+    .photo-flash-link.attention::before {
+      animation: photoFlashPulse 1.35s ease-out infinite;
+    }
+
+    .photo-flash-link.attention::after {
+      animation: photoFlashSweep 1.35s ease-out infinite;
+    }
+
+    @keyframes photoFlashPulse {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.78);
+      }
+      16% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.02);
+      }
+      42% {
+        opacity: 0.26;
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.14);
+      }
+    }
+
+    @keyframes photoFlashSweep {
+      0% {
+        transform: translateX(-110%);
+        opacity: 0;
+      }
+      18% {
+        opacity: 1;
+      }
+      72% {
+        transform: translateX(110%);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(110%);
+        opacity: 0;
+      }
+    }
+
+    .footer-decor {
+      margin-top: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,245,200,0.24) 18%, rgba(248,239,201,0.62) 100%);
+      border-top: 1px solid rgba(212, 176, 0, 0.14);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-decor::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 35%, rgba(245, 213, 71, 0.13) 0%, rgba(245, 213, 71, 0) 20%),
+        radial-gradient(circle at 85% 26%, rgba(245, 213, 71, 0.09) 0%, rgba(245, 213, 71, 0) 18%);
+      pointer-events: none;
+    }
+
+    .footer-decor-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 34px 20px 42px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-thanks {
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      font-weight: 800;
+      color: #534400;
+      letter-spacing: 0.02em;
+      margin: 0 0 8px;
+    }
+
+    .footer-note {
+      color: var(--muted-soft);
+      max-width: 44ch;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
     .footer {
       text-align: center;
-      color: var(--muted);
-      padding: 0 18px 36px;
+      color: var(--muted-soft);
+      padding: 6px 18px 40px;
       font-size: 0.94rem;
     }
- 
+
     .lightbox,
     .milestone-modal {
       position: fixed;
       inset: 0;
       background: rgba(17, 17, 17, 0.82);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .lightbox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
       z-index: 5000;
     }
- 
+
+    .milestone-modal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 99999;
+    }
+
     .lightbox.open,
-    .milestone-modal.open {
+    .milestone-modal.open,
+    .game-modal.open {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
     }
- 
+
     .lightbox-inner {
       position: relative;
-      max-width: min(1100px, 96vw);
+      width: min(1100px, 96vw);
       max-height: 92vh;
-      transform: scale(0.96);
-      transition: transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
- 
-    .lightbox.open .lightbox-inner,
-    .milestone-modal.open .milestone-modal-inner {
-      transform: scale(1);
-    }
- 
+
     .lightbox img {
       display: block;
       max-width: 100%;
-      max-height: 92vh;
+      max-height: calc(92vh - 74px);
       border-radius: 18px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
       background: #fff;
     }
- 
+
     .lightbox-close,
-    .milestone-close {
-      position: absolute;
-      top: -14px;
-      right: -14px;
+    .milestone-close,
+    .game-modal-close {
       width: 42px;
       height: 42px;
       border: none;
@@ -645,20 +1136,31 @@
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
     }
- 
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+    }
+
     .milestone-modal-inner {
       position: relative;
       width: min(420px, 92vw);
+      margin: 0;
       background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(176, 150, 44, 0.14);
       border-radius: 24px;
       padding: 28px 24px 24px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
       text-align: center;
-      transform: scale(0.96);
-      transition: transform 0.25s ease;
     }
- 
+
+    .milestone-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
     .milestone-badge {
       display: inline-block;
       margin-bottom: 12px;
@@ -669,9 +1171,9 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       text-transform: uppercase;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.10);
+      box-shadow: 0 6px 14px rgba(92, 77, 19, 0.1);
     }
- 
+
     .milestone-modal h3 {
       margin: 0 0 10px;
       font-size: clamp(1.25rem, 3vw, 1.7rem);
@@ -679,370 +1181,1415 @@
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
- 
+
     .milestone-modal p {
       margin: 0;
       color: var(--muted);
       font-size: 1.04rem;
       line-height: 1.65;
     }
- 
-    @media (max-width: 900px) {
-      .nav-logo {
-        height: 68px;
-      }
- 
-      .section {
-        max-width: 760px;
-      }
- 
-      .hero-card,
-      .hero-copy,
-      .hero-image img,
-      .ceo-video-wrap,
-      .museum-video-wrap,
-      .audio-card {
-        max-width: 100%;
-      }
+
+    .back-to-top {
+      position: fixed;
+      right: 16px;
+      bottom: 18px;
+      z-index: 4600;
+      border: none;
+      border-radius: 999px;
+      min-width: 52px;
+      min-height: 52px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+      color: #111;
+      font-weight: 800;
+      box-shadow:
+        0 8px 18px rgba(92, 77, 19, 0.14),
+        0 2px 0 rgba(92, 77, 19, 0.08);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px) scale(0.94);
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
     }
- 
-    @media (max-width: 640px) {
-      .sections {
-        padding: 12px;
-      }
- 
-      .section {
-        padding: 14px 12px;
-        border-radius: 22px;
-      }
- 
-      .hero-card {
-        padding: 14px;
-      }
- 
-      .section-image-wrap,
-      .anniversary-image {
-        max-width: 100%;
-      }
- 
-      .hero-image img {
-        max-width: 100%;
-      }
- 
-      .links,
-      .hero-links {
-        justify-content: center;
-      }
- 
-      #hero .eyebrow {
-        font-size: 11px;
-        letter-spacing: 0.12em;
-        margin-bottom: 8px;
-      }
- 
-      #hero h1 {
-        font-size: clamp(28px, 8vw, 42px);
-        line-height: 1;
-        letter-spacing: -0.02em;
-      }
- 
-      .section p,
-      .anniversary-summary,
-      .audio-card p {
-        max-width: 100%;
-        padding-inline: 6px;
-        text-align: center;
-      }
- 
-      .audio-player-wrap {
-        border-radius: 20px;
-        padding: 10px 12px;
-      }
- 
-      .balloon-hotspot {
-        width: 12.5%;
-        height: 16%;
-      }
- 
-      .lightbox,
-      .milestone-modal {
-        padding: 16px;
-      }
- 
-      .lightbox-close,
-      .milestone-close {
-        top: -10px;
-        right: -6px;
-      }
- 
-      .milestone-modal-inner {
-        padding: 26px 18px 20px;
-      }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
     }
- 
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
+
+    .tilt-card {
+      position: relative;
+      isolation: isolate;
+      transform-style: preserve-3d;
+      perspective: var(--tilt-perspective);
+      border-radius: 20px;
+    }
+
+    .tilt-stage {
+      position: relative;
+      border-radius: inherit;
+      transform-style: preserve-3d;
+      transition:
+        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 260ms ease,
+        filter 260ms ease;
+      will-change: transform;
+    }
+
+    .tilt-card::after {
+      content: "";
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -20px;
+      height: 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(27, 21, 5, 0.26) 0%, rgba(27, 21, 5, 0) 72%);
+      filter: blur(16px);
+      opacity: 0;
+      transform: translateY(0) scale(0.94);
+      transition: opacity 260ms ease, transform 260ms ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .tilt-card.is-tilting::after,
+    .tilt-card:hover::after {
+      opacity: 0.46;
+      transform: translateY(6px) scale(1);
+    }
+
+    .tilt-card .media-frame,
+    .tilt-card .anniversary-hotspots,
+    .tilt-card .anniversary-image-layer,
+    .tilt-card img,
+    .tilt-card .tilt-glare {
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+    }
+
+    .tilt-card .media-frame,
+    .tilt-card .anniversary-image-layer {
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .tilt-card img {
+      transform: translateZ(24px) scale(1.01);
+      transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+      transform-origin: center center;
+    }
+
+    .tilt-card.is-tilting img {
+      transform: translateZ(34px) scale(1.04);
+    }
+
+    .tilt-glare {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      background:
+        radial-gradient(
+          circle at var(--glare-x, 50%) var(--glare-y, 50%),
+          rgba(255, 255, 255, 0.54) 0%,
+          rgba(255, 255, 255, 0.2) 16%,
+          rgba(255, 255, 255, 0) 44%
+        );
+      transition: opacity 220ms ease;
+      mix-blend-mode: screen;
+    }
+
+    .tilt-card.is-tilting .tilt-glare {
+      opacity: 0.95;
+    }
+
+    .tilt-card:focus-within .tilt-stage {
+      transform: rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1);
+      box-shadow: 0 18px 34px rgba(92, 77, 19, 0.14);
+    }
+
+    .tilt-card.is-tilting .tilt-stage {
+      box-shadow: 0 18px 34px rgba(92, 77, 19, 0.16);
+      filter: saturate(1.02);
+    }
+
+    .tilt-card[data-tilt-depth="soft"] .tilt-stage {
+      transition-duration: 220ms;
+    }
+
+    .tilt-card[data-tilt-depth="soft"] img {
+      transform: translateZ(18px) scale(1.01);
+    }
+
+    .tilt-card[data-tilt-depth="soft"].is-tilting img {
+      transform: translateZ(24px) scale(1.03);
+    }
+
+    .game-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.86);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 7000;
+    }
+
+    .game-modal-inner {
+      position: relative;
+      width: min(980px, 96vw);
+      max-height: 92vh;
+      overflow: auto;
+      border-radius: 28px;
+      background: linear-gradient(180deg, #fffef7 0%, #fff7cf 100%);
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+      padding: 22px;
+    }
+
+    .game-modal-close {
+      position: sticky;
+      top: 0;
+      float: right;
+      z-index: 4;
+    }
+
+    .game-shell {
+      margin-top: 12px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fffefb 0%, #fff6cf 100%);
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+      overflow: hidden;
+    }
+
+    .game-top {
+      padding: 20px 18px 12px;
+      text-align: center;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.9), rgba(255,255,255,0) 24%),
+        radial-gradient(circle at 80% 0%, rgba(255,255,255,0.75), rgba(255,255,255,0) 20%),
+        linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
+      border-bottom: 1px solid rgba(176, 150, 44, 0.16);
+    }
+
+    .game-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      color: #5d4e00;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .game-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 3.5vw, 2.3rem);
+      line-height: 1.02;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .game-subtitle {
+      max-width: 46ch;
+      margin: 12px auto 0;
+      color: #4f4f4f;
+      line-height: 1.65;
+    }
+
+    .game-board {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.82fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .game-map-panel,
+    .game-side-panel {
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      border-radius: 22px;
+      box-shadow: 0 10px 22px rgba(92, 77, 19, 0.07);
+    }
+
+    .game-map-panel { padding: 18px; }
+    .game-side-panel {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .game-hud {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .hud-card {
+      background: linear-gradient(180deg, #fffdf5, #fff8db);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .hud-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #726200;
+      margin-bottom: 6px;
+    }
+
+    .hud-value {
+      font-size: clamp(1.05rem, 2.3vw, 1.5rem);
+      font-weight: 900;
+      color: #151515;
+    }
+
+    .game-map {
+      position: relative;
+      min-height: 500px;
+      padding: 18px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,255,255,0.8), rgba(255,255,255,0) 28%),
+        linear-gradient(180deg, #cbe8ff 0%, #b5ddf7 58%, #c9ecb5 58%, #a8d48d 100%);
+      overflow: hidden;
+    }
+
+    .map-path {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .game-banner {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff 0%, #fff9e5 100%);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      font-weight: 700;
+      color: #4f4f4f;
+      text-align: center;
+    }
+
+    .game-banner strong {
+      color: #1a1a1a;
+    }
+
+    .game-celebration {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff7cb 0%, #ffe66a 100%);
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      box-shadow: 0 14px 24px rgba(92, 77, 19, 0.08);
+      text-align: center;
+      font-weight: 800;
+      display: none;
+    }
+
+    .game-celebration.show {
+      display: block;
+      animation: celebrationBounce 0.45s ease;
+    }
+
+    @keyframes celebrationBounce {
+      0% { transform: scale(0.95); opacity: 0; }
+      60% { transform: scale(1.04); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulseRoadTrip {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245,213,71,0.22), var(--game-card-shadow); }
+      50% { box-shadow: 0 0 0 12px rgba(245,213,71,0), 0 18px 34px rgba(17,17,17,0.18); }
+    }
+
+    /* -------- Revised Anniversary Road Trip game overrides -------- */
+    .game-modal-inner.game-modal-inner--wide {
+      width: min(1180px, 98vw);
+      max-height: 94vh;
+      padding: 14px;
+      background: linear-gradient(180deg, #fffef7 0%, #fff7d6 55%, #fff2b8 100%);
+    }
+
+    .roadtrip-shell {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,250,231,0.98) 100%);
+    }
+
+    .roadtrip-top {
+      padding: 22px 18px 16px;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,0.95), rgba(255,255,255,0) 23%),
+        radial-gradient(circle at 82% 12%, rgba(255,255,255,0.78), rgba(255,255,255,0) 20%),
+        linear-gradient(135deg, #ffe66a 0%, #f5d547 55%, #ffd84c 100%);
+    }
+
+    .roadtrip-top .game-subtitle {
+      max-width: 54ch;
+      font-size: 1rem;
+    }
+
+    .roadtrip-board {
+      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.92fr);
+      align-items: stretch;
+    }
+
+    .roadtrip-map-panel {
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,252,241,0.98));
+    }
+
+    .roadtrip-side-panel {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,248,227,0.98));
+    }
+
+    .roadtrip-status-strip {
+      margin-bottom: 12px;
+    }
+
+    .roadtrip-status-level {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #5f5000;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 6px 12px rgba(92, 77, 19, 0.08);
+    }
+
+    .roadtrip-levels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .roadtrip-level-btn {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 16px;
+      padding: 10px 8px;
+      background: linear-gradient(180deg, #fffef6, #fff9df);
+      color: #5d4f00;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 8px 14px rgba(92, 77, 19, 0.06);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .roadtrip-level-btn:hover,
+    .roadtrip-level-btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 18px rgba(92, 77, 19, 0.1);
+      outline: none;
+    }
+
+    .roadtrip-level-btn.active {
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+      box-shadow: 0 12px 20px rgba(92, 77, 19, 0.14);
+    }
+
+    .roadtrip-scroll-hint {
+      display: none;
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #7b6c00;
+    }
+
+    .roadtrip-map-scroll {
+      overflow: auto;
+      border-radius: 22px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(122, 97, 8, 0.28) rgba(255,255,255,0.55);
+    }
+
+    .roadtrip-map-stage {
+      position: relative;
+      min-height: 560px;
+      aspect-ratio: 16 / 10;
+      width: 100%;
+      border-radius: 24px;
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,0.68), rgba(255,255,255,0) 16%),
+        radial-gradient(circle at 84% 14%, rgba(255,255,255,0.58), rgba(255,255,255,0) 18%),
+        linear-gradient(180deg, #bfe7ff 0%, #cdeaff 46%, #c3e5a6 46%, #9ed780 100%);
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
+    }
+
+    .roadtrip-map-stage::before,
+    .roadtrip-map-stage::after {
+      content: none;
+      display: none;
+    }
+
+    .roadtrip-sun {
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      right: 6.5%;
+      top: 7%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,250,214,0.98) 0%, rgba(255,230,120,0.96) 42%, rgba(255,230,120,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(0.2px);
+    }
+
+    .roadtrip-hill {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background: linear-gradient(180deg, rgba(116, 181, 95, 0.95), rgba(83, 148, 63, 0.92));
+      box-shadow: inset 0 10px 18px rgba(255,255,255,0.12);
+    }
+
+    .roadtrip-hill.hill-a { width: 40%; height: 18%; left: -4%; bottom: 12%; }
+    .roadtrip-hill.hill-b { width: 46%; height: 19%; left: 26%; bottom: 10%; }
+    .roadtrip-hill.hill-c { width: 42%; height: 18%; right: -3%; bottom: 11%; }
+
+    .map-path.roadtrip-route-svg {
+      inset: 0;
+      z-index: 1;
+    }
+
+    .roadtrip-route-svg .route-main {
+      fill: none;
+      stroke: rgba(96, 73, 9, 0.78);
+      stroke-width: 26;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 10px 12px rgba(39, 31, 7, 0.16));
+    }
+
+    .roadtrip-route-svg .route-center {
+      fill: none;
+      stroke: rgba(255,255,255,0.86);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 14 16;
+    }
+
+    .roadtrip-zone-label {
+      position: absolute;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #635500;
+      pointer-events: none;
+      z-index: 1;
+      box-shadow: 0 6px 14px rgba(92, 77, 19, 0.07);
+    }
+
+    .zone-west { left: 6%; top: 6%; }
+    .zone-midwest { left: 34%; top: 8%; }
+    .zone-south { left: 44%; bottom: 8%; }
+    .zone-atlantic { right: 5%; top: 9%; }
+
+    .roadtrip-map-stage .state-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      z-index: 4;
+      width: 86px;
+      min-height: 86px;
+      padding: 10px 8px 11px;
+      border-radius: 22px;
+      border: 2px solid rgba(255,255,255,0.35);
+      box-shadow: 0 14px 24px rgba(17, 17, 17, 0.16);
+      backdrop-filter: blur(2px);
+      line-height: 1;
+      transition: left 0.42s ease, top 0.42s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      filter: drop-shadow(0 10px 14px rgba(17, 17, 17, 0.22));
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .roadtrip-map-stage .state-node:hover,
+    .roadtrip-map-stage .state-node:focus-visible {
+      transform: translate(-50%, -50%) scale(1.07);
+      box-shadow: 0 20px 34px rgba(17, 17, 17, 0.22);
+      outline: none;
+    }
+
+    .roadtrip-map-stage .state-node.current-stop {
+      box-shadow: 0 0 0 5px rgba(255,255,255,0.68), 0 18px 34px rgba(17,17,17,0.22);
+      z-index: 5;
+    }
+
+    .roadtrip-map-stage .state-node.visited {
+      opacity: 0.62;
+    }
+
+    .roadtrip-map-stage .state-node.available {
+      animation: pulseRoadTrip 1.2s ease-in-out infinite;
+      box-shadow: 0 0 0 0 rgba(255,230,106,0.4), 0 16px 28px rgba(17,17,17,0.18);
+    }
+
+    .roadtrip-map-stage .state-node.unavailable {
+      opacity: 0.28;
+      filter: grayscale(0.16);
+    }
+
+    .roadtrip-map-stage .state-node-label {
+      font-size: 1.02rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      margin-bottom: 5px;
+    }
+
+    .roadtrip-map-stage .state-node-points {
+      font-size: 0.82rem;
+      font-weight: 800;
+      opacity: 0.95;
+    }
+
+    .state-node.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); color: #111; }
+    .state-node.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
+    .state-node.region-midwest { background: linear-gradient(180deg, #8de58a, #2ea44f); color: #fff; }
+    .state-node.region-mid-atlantic,
+    .state-node.region-northeast { background: linear-gradient(180deg, #b48aff, #7a3ff2); color: #fff; }
+
+    .state-node-fuel,
+    .next-fuel-pill,
+    .roadtrip-bonus-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #6c5a00;
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 5px 10px rgba(92, 77, 19, 0.08);
+    }
+
+    .state-node-fuel {
+      margin-top: 2px;
+      font-size: 0.62rem;
+      padding: 3px 7px;
+      color: #624f00;
+    }
+
+    .roadtrip-map-stage .state-car {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 74px;
+      height: auto;
+      z-index: 7;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+      touch-action: none;
+      opacity: 0.82;
+      transition:
+        left 0.42s ease,
+        top 0.42s ease,
+        transform 0.3s ease,
+        opacity 0.2s ease;
+      filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    .roadtrip-map-stage .state-car::before,
+    .roadtrip-map-stage .state-car::after {
+      content: none;
+      display: none;
+    }
+
+    .roadtrip-helper {
+      font-size: 0.9rem;
+      color: #5a5a5a;
+      margin-bottom: 10px;
+    }
+
+    .roadtrip-next-stops {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .roadtrip-next-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 12px 12px 11px;
+      text-align: left;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(17,17,17,0.10);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      min-height: 76px;
+    }
+
+    .roadtrip-next-btn:hover,
+    .roadtrip-next-btn:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 24px rgba(17,17,17,0.14);
+      outline: none;
+    }
+
+    .roadtrip-next-btn .next-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+
+    .roadtrip-next-btn .next-name {
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .roadtrip-next-btn .next-points {
+      font-size: 0.84rem;
+      opacity: 0.88;
+      font-weight: 800;
+    }
+
+    .roadtrip-next-btn .next-region {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+      font-weight: 900;
+    }
+
+    .roadtrip-next-meta {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .roadtrip-bonus-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .roadtrip-bonus-pill {
+      background: linear-gradient(180deg, #fff8d5, #ffe66a);
+      color: #4b3f00;
+    }
+
+    .roadtrip-next-btn.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); }
+    .roadtrip-next-btn.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
+    .roadtrip-next-btn.region-midwest { background: linear-gradient(180deg, #8de58a, #2ea44f); color: #fff; }
+    .roadtrip-next-btn.region-mid-atlantic,
+    .roadtrip-next-btn.region-northeast { background: linear-gradient(180deg, #b48aff, #7a3ff2); color: #fff; }
+
+    .roadtrip-empty {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.82);
+      border: 1px dashed rgba(176, 150, 44, 0.28);
+      text-align: center;
+      color: #5f5f5f;
+      font-weight: 700;
+    }
+
+    .roadtrip-route-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .roadtrip-route-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      font-weight: 800;
+      color: #5f5000;
+      box-shadow: 0 6px 14px rgba(92, 77, 19, 0.06);
+    }
+
+    .roadtrip-route-chip.current {
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+    }
+
+    .top-state-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .top-state-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(176, 150, 44, 0.12);
+      font-weight: 800;
+    }
+
+    .game-panel-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fffdf5, #fff8dd);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+    }
+
+    .game-panel-card h3 {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.9rem;
+      color: #6f5f00;
+      text-align: left;
+    }
+
+    .game-panel-card p,
+    .game-panel-card ul {
+      margin: 0;
+      max-width: none;
+      text-align: left;
+      line-height: 1.6;
+      color: #4f4f4f;
+      font-size: 0.95rem;
+    }
+
+    .game-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .tilt-card::after,
+      .tilt-glare {
+        display: none;
       }
- 
-      *,
-      *::before,
-      *::after {
-        animation: none !important;
-        transition: none !important;
+
+      .tilt-card .tilt-stage,
+      .tilt-card.is-tilting .tilt-stage {
+        transform: none !important;
+        box-shadow: none;
+        filter: none;
       }
- 
-      .reveal,
-      .hero-copy,
-      .hero-image,
-      .audio-card {
-        opacity: 1 !important;
+
+      .tilt-card img,
+      .tilt-card.is-tilting img {
         transform: none !important;
       }
+
+      .tilt-card:active .tilt-stage {
+        transform: translateY(-3px) scale(1.01) !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tilt-stage,
+      .tilt-card img,
+      .tilt-glare,
+      .tilt-card::after,
+      .state-node.available,
+      .game-celebration.show {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .nav-logo { height: 68px; }
+      .section { max-width: 760px; }
+      .game-board { grid-template-columns: 1fr; }
+      .game-map { min-height: 460px; }
+    }
+
+    @media (max-width: 700px) {
+      .game-modal {
+        padding: 0;
+        align-items: stretch;
+      }
+
+      .game-modal-inner.game-modal-inner--wide {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+      }
+
+      .game-shell.roadtrip-shell {
+        min-height: 100dvh;
+        border-radius: 0;
+      }
+
+      .game-modal-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        float: none;
+        width: 52px;
+        height: 52px;
+      }
+
+      .roadtrip-top {
+        padding: 22px 16px 16px;
+      }
+
+      .roadtrip-top .game-title {
+        font-size: clamp(1.7rem, 8vw, 2.4rem);
+      }
+
+      .roadtrip-board {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .roadtrip-map-panel,
+      .roadtrip-side-panel {
+        width: 100%;
+        min-width: 0;
+        padding: 12px;
+      }
+
+      .game-hud {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .game-banner {
+        font-size: clamp(0.95rem, 4.3vw, 1.1rem);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .roadtrip-map-scroll {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-inline: -2px;
+        padding-bottom: 4px;
+      }
+
+      .roadtrip-map-stage {
+        width: 760px;
+        min-height: 500px;
+      }
+
+      .roadtrip-next-stops,
+      .roadtrip-levels {
+        grid-template-columns: 1fr;
+      }
+
+      .roadtrip-side-panel {
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root { --media-frame-min-height: 260px; }
+      html { scroll-padding-top: 126px; }
+      .topbar-inner { padding-top: 8px; gap: 6px; }
+      .sections { padding: 18px 14px 14px; }
+      .divider-sparkle { width: min(180px, 54vw); margin-bottom: 18px; }
+      .section { padding: 18px 14px 20px; border-radius: 24px; margin-bottom: 24px; }
+      .hero-card { padding: 14px; }
+      .section-image-wrap { max-width: 100%; }
+      .section p { line-height: 1.72; margin: 18px auto 0; max-width: 31ch; }
+      .song-toggle { width: 74px; height: 74px; font-size: 2rem; }
+      .lyric-video-shell { max-width: 92%; margin-top: 24px; }
+      .lyric-line { width: calc(100% - 24px); max-width: 94%; font-size: clamp(15px, 5vw, 24px); line-height: 1.12; }
+      .back-to-top { right: 12px; bottom: 14px; min-width: 50px; min-height: 50px; padding: 0 14px; }
+      .back-to-top .label { display: none; }
+      .photo-flash-link.attention::before,
+      .photo-flash-link.attention::after { animation-duration: 1.55s; }
+      .game-modal { padding: 10px; }
+      .game-modal-inner { padding: 14px; border-radius: 20px; }
+      .game-top { padding: 16px 14px 10px; }
+      .game-board { padding: 14px; gap: 14px; }
+      .state-node { width: 62px; min-height: 62px; border-radius: 16px; padding: 6px 4px 8px; }
+      .state-node-label { font-size: 0.92rem; }
+      .state-node-points { font-size: 0.68rem; }
+      .game-map { min-height: 430px; }
+    }
+
+    @media (max-width: 520px) {
+      .roadtrip-map-panel,
+      .roadtrip-side-panel { padding: 10px; }
+      .hud-card { padding: 10px 8px; }
+      .roadtrip-map-stage { width: 720px; min-height: 470px; }
+      .roadtrip-route-chips { max-height: 108px; overflow: auto; }
+    }
+
+    @media (max-width: 900px) and (orientation: landscape) {
+      .game-modal { padding: 0; }
+      .game-modal-inner.game-modal-inner--wide {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+      }
+      .roadtrip-board { padding: 12px; }
+      .roadtrip-map-stage { width: 820px; min-height: 500px; }
+    }
+    .game-banner {
+      display: flex;
+      flex-direction: column;
+      align-tems: center;
+      gap: 12px;
+    }
+
+    .challenge-badge {
+      display: inline-flex;
+      margin: 0;
     }
   </style>
 </head>
 <body>
   <div id="scroll-progress"></div>
- 
+
   <header class="topbar">
     <div class="topbar-inner">
       <div class="logo-link">
         <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
       </div>
+
+      <div class="mini-nav-wrap" aria-label="Section Navigation">
+        <nav class="mini-nav" id="mini-nav">
+          <a href="about.html">Employee Assistance Program</a>
+          <a href="#trivia">Museum Tour &amp; Trivia</a>
+          <a href="#appreciation">Appreciation Song</a>
+          <a href="#shoes-for-crews">Shoes for Crews</a>
+          <a href="#anniversaries">Anniversaries</a>
+          <a href="#touchtunes">TouchTunes</a>
+          <a href="#dressup">Dress-Up Days</a>
+          <a href="#photo">Photo Contest</a>
+          <a href="#hero">Welcome</a>
+        </nav>
+      </div>
     </div>
   </header>
- 
+
   <main class="sections">
- 
-    <section id="hero" class="section reveal">
+    <section id="hero" class="section">
       <div class="section-image-wrap hero-card">
         <div class="hero-copy">
           <div class="eyebrow">Welcome to Our</div>
           <h1>Celebration Page</h1>
         </div>
- 
+
         <div class="section-image-link hero-image lightbox-trigger">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
- 
-        <div class="audio-card">
-          <h3>Appreciation Song</h3>
-          <p>Click to listen.</p>
- 
-          <div class="audio-player-wrap">
-            <audio
-              class="audio-player"
-              controls
-              controlsList="nodownload noplaybackrate"
-              preload="metadata"
-              oncontextmenu="return false;"
-            >
-              <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
+      </div>
+    </section>
+
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="appreciation" class="section featured-section">
+      <div class="section-head">
+        <div class="section-kicker">Featured</div>
+        <h2>Appreciation Song</h2>
+      </div>
+
+      <div class="song-card" id="audio-card">
+        <p>POV: Your hard work does not go unnoticed.</p>
+
+        <div class="song-layout">
+          <button
+            class="song-toggle pressable"
+            id="song-toggle"
+            type="button"
+            aria-label="Play appreciation song"
+          >🧇</button>
+
+          <div class="song-meta">
+            <div class="song-label">Tap the waffle to play/pause</div>
+            <div class="song-title">🎵 "Serving Up Egg-cellence"</div>
           </div>
+        </div>
+
+        <div class="audio-player-wrap">
+          <audio
+            class="audio-player"
+            id="audio-player"
+            controls
+            controlsList="nodownload noplaybackrate"
+            preload="metadata"
+            oncontextmenu="return false;"
+          >
+            <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+
+        <div class="lyric-video-shell">
+          <div class="lyric-stage" id="lyric-stage">
+            <video
+              class="lyric-bg-video"
+              id="lyric-bg-video"
+              muted
+              playsinline
+              loop
+              preload="metadata"
+              poster="Images/Wilson-preview.png"
+              aria-hidden="true"
+            >
+              <source src="Images/Wilson.mp4" type="video/mp4" />
+              <source src="Images/Wilson.webm" type="video/webm" />
+            </video>
+
+            <div class="lyric-line-host" id="lyric-line-host"></div>
+          </div>
+        </div>
+
+        <div class="lyric-scrubber-wrap">
+          <input
+            type="range"
+            id="lyric-scrubber"
+            class="lyric-scrubber"
+            min="0"
+            max="152"
+            step="0.1"
+            value="0"
+            aria-label="Lyric timing scrubber"
+          />
         </div>
       </div>
     </section>
- 
-    <section id="ceo-message" class="section reveal">
-      <h2>From the CEO: Thank You!</h2>
-      <div class="ceo-video-wrap">
-        <iframe
-          src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
-          title="Associate Appreciation Kits Info"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </section>
- 
-    <section id="dressup" class="section reveal">
+
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="dressup" class="section">
       <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
- 
+
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/2026 Associate Appreciation Dress-Up Days (2).png" alt="Dress-up Schedule" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
+          </div>
         </div>
- 
-        <p>Dress up and show your Waffle House pride.</p>
- 
-        <div class="links">
-          <a class="section-link" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
+
+        <div class="section-copy">
+          <p>Dress up and show your Waffle House pride.</p>
+
+          <div class="links">
+            <a class="section-link pressable" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="anniversaries" class="section reveal">
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="anniversaries" class="section featured-section">
       <div class="section-head">
+        <div class="section-kicker">Interactive</div>
         <h2>Anniversaries</h2>
       </div>
- 
-      <div class="section-image-wrap anniversary-image">
-        <div class="anniversary-interactive">
-          <div class="anniversary-image-layer lightbox-trigger">
-            <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
-          </div>
 
-          <div class="anniversary-hotspots" aria-hidden="false">
-            <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
-            <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
-            <button class="balloon-hotspot balloon-3" type="button" data-years="3" data-count="2293" aria-label="See 3 year milestone count"></button>
-            <button class="balloon-hotspot balloon-4" type="button" data-years="4" data-count="1793" aria-label="See 4 year milestone count"></button>
-            <button class="balloon-hotspot balloon-5" type="button" data-years="5" data-count="1345" aria-label="See 5 year milestone count"></button>
-            <button class="balloon-hotspot balloon-10" type="button" data-years="10" data-count="651" aria-label="See 10 year milestone count"></button>
-            <button class="balloon-hotspot balloon-15" type="button" data-years="15" data-count="290" aria-label="See 15 year milestone count"></button>
-            <button class="balloon-hotspot balloon-20" type="button" data-years="20" data-count="141" aria-label="See 20 year milestone count"></button>
-            <button class="balloon-hotspot balloon-25" type="button" data-years="25" data-count="58" aria-label="See 25 year milestone count"></button>
-            <button class="balloon-hotspot balloon-30" type="button" data-years="30" data-count="20" aria-label="See 30 year milestone count"></button>
-            <button class="balloon-hotspot balloon-35" type="button" data-years="35" data-count="5" aria-label="See 35 year milestone count"></button>
-            <button class="balloon-hotspot balloon-40" type="button" data-years="40" data-count="4" aria-label="See 40 year milestone count"></button>
-            <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
-            <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
+      <div class="section-image-wrap">
+        <div class="anniversary-interactive tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="anniversary-image-layer lightbox-trigger">
+              <div class="media-frame">
+                <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
+              </div>
+            </div>
+
+            <div class="anniversary-hotspots" aria-hidden="false">
+              <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
+              <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
+              <button class="balloon-hotspot balloon-3" type="button" data-years="3" data-count="2293" aria-label="See 3 year milestone count"></button>
+              <button class="balloon-hotspot balloon-4" type="button" data-years="4" data-count="1793" aria-label="See 4 year milestone count"></button>
+              <button class="balloon-hotspot balloon-5" type="button" data-years="5" data-count="1345" aria-label="See 5 year milestone count"></button>
+              <button class="balloon-hotspot balloon-10" type="button" data-years="10" data-count="651" aria-label="See 10 year milestone count"></button>
+              <button class="balloon-hotspot balloon-15" type="button" data-years="15" data-count="290" aria-label="See 15 year milestone count"></button>
+              <button class="balloon-hotspot balloon-20" type="button" data-years="20" data-count="141" aria-label="See 20 year milestone count"></button>
+              <button class="balloon-hotspot balloon-25" type="button" data-years="25" data-count="58" aria-label="See 25 year milestone count"></button>
+              <button class="balloon-hotspot balloon-30" type="button" data-years="30" data-count="20" aria-label="See 30 year milestone count"></button>
+              <button class="balloon-hotspot balloon-35" type="button" data-years="35" data-count="5" aria-label="See 35 year milestone count"></button>
+              <button class="balloon-hotspot balloon-40" type="button" data-years="40" data-count="4" aria-label="See 40 year milestone count"></button>
+              <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
+              <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
+            </div>
+
+            <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
- 
-        <p class="anniversary-summary">
-          Celebrating over 16,000 Associates for their dedication and service! Click on the balloons to see how many are celebrating each milestone.
-        </p>
- 
-        <div class="links">
-          <a class="section-link" href="#">Recognition details</a>
+
+        <div class="section-copy">
+          <p class="anniversary-summary">
+            Celebrating over 16,500 Associates for their dedication and service.
+            Tap the balloons above to see how many are celebrating each milestone.
+          </p>
+
+          <div class="links">
+            <button class="section-link pressable" id="open-roadtrip-game" type="button">Play Anniversary Game</button>
+          </div>
         </div>
       </div>
     </section>
- 
-    <section id="trivia" class="section reveal">
+
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="trivia" class="section featured-section">
       <div class="section-head">
+        <div class="section-kicker">Featured</div>
         <h2>Museum Tour &amp; Trivia</h2>
       </div>
- 
+
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card data-tilt-depth="soft">
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/Museum Tour.png" alt="Museum Tour and Trivia" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
+          </div>
         </div>
- 
-        <div class="museum-video-wrap">
-          <iframe
-            src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
-            title="Museum Tour Video"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen>
-          </iframe>
+
+        <div class="video-shell" style="margin-top: 20px;">
+          <div class="video-label-row">
+            <div class="video-label">Watch Then Play</div>
+          </div>
+
+          <div class="video-frame">
+            <iframe
+              src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
+              title="Museum Tour Video"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
         </div>
- 
-        <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
- 
-        <div class="links">
-          <a
-            class="section-link"
-            href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D"
-            rel="noopener noreferrer"
-          >
-            Ready for Trivia?
-          </a>
+
+        <div class="section-copy">
+          <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
+
+          <div class="links">
+            <a
+              class="section-link pressable"
+              href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D"
+              rel="noopener noreferrer"
+            >
+              Play Trivia
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="shoes-for-crews" class="section reveal">
-      <div class="section-head">
-        <h2>Shoes For Crews</h2>
-      </div>
- 
-      <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
-        </div>
- 
-        <p>Don’t need a new pair? Pay it forward! Use your credit to grab shoes for a coworker (see FAQs for steps).</p>
- 
-        <div class="links">
-          <a
-            class="section-link"
-            href="https://www.shoesforcrews.com/wafflehouse"
-            rel="noopener noreferrer"
-          >
-            Shop Now!
-          </a>
-          <a class="section-link secondary" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
-        </div>
-      </div>
-    </section>
- 
-    <section id="photo" class="section reveal">
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="photo" class="section">
       <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
- 
+
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+        <div class="section-image-link lightbox-trigger photo-flash-link attention tilt-card" id="photo-flash-link" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/2026 ASSOCIATE APPRECIATION PHOTO CONTEST.jpg" alt="Photo Contest" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
+          </div>
         </div>
- 
-        <p>Upload your best photos to enter.</p>
- 
-        <div class="links">
-          <a
-            class="section-link"
-            href="https://form.jotform.com/260616390409053"
-            rel="noopener noreferrer"
-          >
-            Submission &amp; Contest Rules
-          </a>
+
+        <div class="section-copy">
+          <p>Upload your best photos to enter.</p>
+
+          <div class="links">
+            <a
+              class="section-link pressable"
+              href="https://form.jotform.com/260616390409053"
+              rel="noopener noreferrer"
+            >
+              Contest Rules &amp; Submission
+            </a>
+          </div>
         </div>
       </div>
     </section>
- 
-    <section id="touchtunes" class="section reveal">
+
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="shoes-for-crews" class="section">
+      <div class="section-head">
+        <h2>Shoes For Crews</h2>
+      </div>
+
+      <div class="section-image-wrap">
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/Shoes for Crews.png" alt="Shoes For Crews Collection" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <div class="section-copy">
+          <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
+
+          <div class="links">
+            <a
+              class="section-link pressable"
+              href="https://www.shoesforcrews.com/wafflehouse"
+              rel="noopener noreferrer"
+            >
+              Shop Now
+            </a>
+            <a class="section-link secondary pressable" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
+          </div>
+
+          <div class="actions">
+            <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫Email Customer Service</a>
+            <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-sparkle" aria-hidden="true"></div>
+
+    <section id="touchtunes" class="section">
       <div class="section-head">
         <h2>TouchTunes</h2>
       </div>
- 
+
       <div class="section-image-wrap">
-        <div class="section-image-link lightbox-trigger">
-          <img src="Images/touchtunes.png" alt="TouchTunes" />
+        <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
+          <div class="tilt-stage">
+            <div class="media-frame">
+              <img src="Images/touchtunes.png" alt="TouchTunes" />
+            </div>
+            <span class="tilt-glare" aria-hidden="true"></span>
+          </div>
         </div>
- 
-        <p>Enjoy 5 free jukebox credits a week on the House.</p>
- 
-        <div class="links">
-          <a
-            class="section-link"
-            href="https://www.touchtunes.com/play/app"
-            rel="noopener noreferrer"
-          >
-            Download the App
-          </a>
-          <a
-            class="section-link secondary"
-            href="https://touchtunes.helpshift.com/hc/en/8-touchtunes/?p=all"
-            rel="noopener noreferrer"
-          >
-            App Help
-          </a>
+
+        <div class="section-copy">
+          <p>Enjoy 15 free jukebox credits a week on the House.</p>
+
+          <div class="links">
+            <a
+              class="section-link pressable"
+              href="https://www.touchtunes.com/play/app"
+              rel="noopener noreferrer"
+            >
+              Download the App
+            </a>
+            <a
+              class="section-link secondary pressable"
+              href="https://touchtunes.helpshift.com/hc/en/8-touchtunes/?p=all"
+              rel="noopener noreferrer"
+            >
+              App Help
+            </a>
+          </div>
         </div>
       </div>
     </section>
- 
   </main>
- 
+
+  <section class="footer-decor" aria-label="Closing Note">
+    <div class="footer-decor-inner">
+      <p class="footer-thanks">Thank you for everything you do.</p>
+      <p class="footer-note">
+        Your dedication, teamwork, and heart are what make this "America's Place".
+      </p>
+    </div>
+  </section>
+
   <div class="footer">
-    &copy; 2026 Waffle House Inc. Intellectual Property. All rights reserved.
+    &copy;2026 WH Intellectual, LLC. ®™ All Waffle House trademarks are owned by WH Intellectual, LLC and licensed to Waffle House, Inc.
   </div>
- 
+
+  <button class="back-to-top pressable" id="back-to-top" type="button" aria-label="Back to top">
+    <span class="arrow">↑</span>
+    <span class="label">Top</span>
+  </button>
+
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-inner">
       <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
       <img id="lightbox-image" src="" alt="" />
     </div>
   </div>
- 
+
   <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
     <div class="milestone-modal-inner">
       <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
@@ -1051,82 +2598,393 @@
       <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
     </div>
   </div>
- 
+
+  <div class="game-modal" id="roadtrip-game-modal" aria-hidden="true">
+    <div class="game-modal-inner game-modal-inner--wide">
+      <button class="game-modal-close" id="close-roadtrip-game" type="button" aria-label="Close game">&times;</button>
+
+      <div class="game-shell roadtrip-shell">
+        <div class="game-top roadtrip-top">
+          <div class="game-kicker">Anniversary Game</div>
+          <h2 class="game-title">Anniversary Road Trip</h2>
+          <p class="game-subtitle">
+            The celebration points are based on the actual number of Associates we're celebrating in each state across Waffle Nation! Start in Georgia, follow the road to connected states, hit bonus refuel stops, and collect enough points to reach the goal before the tank runs dry. 
+          </p>
+        </div>
+
+        <div class="game-board roadtrip-board">
+          <div class="game-map-panel roadtrip-map-panel">
+            <div class="game-hud">
+              <div class="hud-card">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="roadtrip-score">0</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Fuel</div>
+                <div class="hud-value" id="roadtrip-fuel">18</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Visited</div>
+                <div class="hud-value" id="roadtrip-visited">1</div>
+              </div>
+            </div>
+
+            <div class="roadtrip-status-strip">
+              <div class="game-banner" id="roadtrip-status"></div>
+            </div>
+
+            <div class="roadtrip-scroll-hint">Swipe the map sideways if you need more room.</div>
+
+            <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
+              <div class="game-map roadtrip-map-stage" id="roadtrip-map">
+                <div class="roadtrip-sun" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-a" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-b" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-c" aria-hidden="true"></div>
+                <div class="roadtrip-zone-label zone-west">West</div>
+                <div class="roadtrip-zone-label zone-midwest">Midwest</div>
+                <div class="roadtrip-zone-label zone-south">South</div>
+                <div class="roadtrip-zone-label zone-atlantic">Atlantic</div>
+                <svg class="map-path roadtrip-route-svg" viewBox="0 0 860 560" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="route-main" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
+                  <path class="route-center" d="M86 310 C118 222, 164 174, 222 176 C270 178, 314 212, 356 210 C400 208, 436 150, 486 146 C544 142, 588 198, 622 190 C672 178, 720 110, 780 120 C814 126, 826 154, 814 188 C802 224, 762 230, 748 256 C732 288, 754 336, 740 372 C726 406, 680 412, 664 388 C642 356, 660 296, 624 286 C582 274, 540 334, 488 332 C440 330, 410 274, 366 272 C318 270, 286 332, 240 334 C188 336, 142 284, 110 292 C98 294, 92 302, 86 310" />
+                </svg>
+                <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
+              </div>
+            </div>
+
+            <div class="game-celebration" id="roadtrip-celebration"></div>
+          </div>
+
+          <div class="game-side-panel roadtrip-side-panel">
+            <div class="game-panel-card">
+              <h3>Difficulty</h3>
+              <div class="roadtrip-levels" id="roadtrip-levels">
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="beginner">Beginner Level</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="intermediate">Intermediate Level</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
+              </div>
+            </div>
+
+            <div class="game-panel-card roadtrip-next-card">
+              <h3>Next Stops</h3>
+              <p class="roadtrip-helper">Tap a glowing state on the map or use these quick-pick buttons.</p>
+              <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Trip Route</h3>
+              <div class="roadtrip-route-chips" id="roadtrip-route-chips"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Top Celebration States</h3>
+              <div class="top-state-list" id="roadtrip-top-states"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Bonus Refuel Stops</h3>
+              <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Trip Goal</h3>
+              <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
+            </div>
+
+            <div class="game-actions">
+              <button class="section-link pressable" id="roadtrip-restart" type="button">Restart Trip</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anniversary-tip" id="anniversary-tip" aria-hidden="true">
+    🎈 Tap the balloons to reveal milestone counts
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
- 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
- 
+      const pointerFineMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+      const mobileMedia = window.matchMedia("(max-width: 640px)");
+
       const progressBar = document.getElementById("scroll-progress");
- 
+      const sections = Array.from(document.querySelectorAll(".section"));
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxClose = document.querySelector(".lightbox-close");
+      const milestoneModal = document.getElementById("milestone-modal");
+      const milestoneTitle = document.getElementById("milestone-title");
+      const milestoneText = document.getElementById("milestone-text");
+      const milestoneClose = document.querySelector(".milestone-close");
+      const balloonHotspots = document.querySelectorAll(".balloon-hotspot");
+      const audioPlayer = document.getElementById("audio-player");
+      const audioCard = document.getElementById("audio-card");
+      const songToggle = document.getElementById("song-toggle");
+      const anniversaryTip = document.getElementById("anniversary-tip");
+      const triggers = document.querySelectorAll(".lightbox-trigger");
+      const backToTop = document.getElementById("back-to-top");
+      const heroImage = document.querySelector(".hero-image img");
+      const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
+      const pressables = document.querySelectorAll(".pressable");
+      const photoFlashLink = document.getElementById("photo-flash-link");
+      const lyricLineHost = document.getElementById("lyric-line-host");
+      const lyricScrubber = document.getElementById("lyric-scrubber");
+      const lyricStage = document.getElementById("lyric-stage");
+      const lyricBgVideo = document.getElementById("lyric-bg-video");
+      const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
+      const roadtripModal = document.getElementById("roadtrip-game-modal");
+      const openRoadtripGame = document.getElementById("open-roadtrip-game");
+      const closeRoadtripGame = document.getElementById("close-roadtrip-game");
+      const roadtripMap = document.getElementById("roadtrip-map");
+      const roadtripCar = document.getElementById("roadtrip-car");
+      const roadtripScore = document.getElementById("roadtrip-score");
+      const roadtripFuel = document.getElementById("roadtrip-fuel");
+      const roadtripVisited = document.getElementById("roadtrip-visited");
+      const roadtripStatus = document.getElementById("roadtrip-status");
+      const roadtripRestart = document.getElementById("roadtrip-restart");
+      const roadtripCelebration = document.getElementById("roadtrip-celebration");
+      const roadtripTopStates = document.getElementById("roadtrip-top-states");
+      const roadtripNextStops = document.getElementById("roadtrip-next-stops");
+      const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
+      const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
+      const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
+      const roadtripGoalCopy = document.getElementById("roadtrip-goal-copy");
+      const roadtripLevelButtons = Array.from(document.querySelectorAll("[data-roadtrip-level]"));
+
+      const roadTripStates = {
+        CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
+        AZ: { code: "AZ", name: "Arizona", points: 140, region: "west", x: 9, y: 56, neighbors: ["CO"] },
+        TX: { code: "TX", name: "Texas", points: 1098, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
+        OK: { code: "OK", name: "Oklahoma", points: 149, region: "south", x: 21, y: 60, neighbors: ["TX", "AR", "MO", "KS"] },
+        KS: { code: "KS", name: "Kansas", points: 43, region: "midwest", x: 23, y: 42, neighbors: ["OK", "MO", "CO"] },
+        LA: { code: "LA", name: "Louisiana", points: 870, fuelBonus: 2, region: "south", x: 31, y: 79, neighbors: ["MS", "TX", "AR"] },
+        AR: { code: "AR", name: "Arkansas", points: 442, fuelBonus: 2, region: "south", x: 33, y: 58, neighbors: ["TX", "LA", "MS", "TN", "MO", "OK"] },
+        MO: { code: "MO", name: "Missouri", points: 315, region: "midwest", x: 35, y: 42, neighbors: ["AR", "OK", "KS", "IL", "KY", "TN"] },
+        MS: { code: "MS", name: "Mississippi", points: 750, region: "south", x: 45, y: 72, neighbors: ["AL", "LA", "TN", "AR"] },
+        IL: { code: "IL", name: "Illinois", points: 14, region: "midwest", x: 43, y: 24, neighbors: ["MO", "IN"] },
+        IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 52, y: 22, neighbors: ["IL", "OH", "KY"] },
+        TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
+        KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
+        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 62, y: 20, neighbors: ["IN", "KY", "PA", "WV"] },
+        AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
+        GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
+        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 70, y: 27, neighbors: ["OH", "VA", "PA", "MD"] },
+        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 80, y: 47, neighbors: ["SC", "GA", "VA", "TN"] },
+        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 77, y: 35, neighbors: ["NC", "KY", "WV", "MD"] },
+        PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 78, y: 14, neighbors: ["OH", "WV", "MD", "DE"] },
+        SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 83, y: 64, neighbors: ["GA", "NC", "FL"] },
+        MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 86, y: 30, neighbors: ["VA", "WV", "DE", "PA"] },
+        DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 93, y: 22, neighbors: ["MD", "PA"] },
+        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 85, y: 85, neighbors: ["GA", "AL", "SC"] }
+      };
+
+      const ROADTRIP_LEVELS = {
+        beginner: {
+          key: "beginner",
+          label: "Beginner",
+          goal: 12000,
+          startFuel: 22,
+          description: "More fuel and a lower score target for an easier first trip."
+        },
+        intermediate: {
+          key: "intermediate",
+          label: "Intermediate",
+          goal: 14000,
+          startFuel: 19,
+          description: "Balanced fuel and score target for a standard challenge."
+        },
+        advanced: {
+          key: "advanced",
+          label: "Advanced",
+          goal: 15500,
+          startFuel: 16,
+          description: "Tighter fuel and a tougher score target for expert route planning."
+        }
+      };
+
+      let currentRoadTripLevel = "beginner";
+
+      const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
+
+      let roadTrip = {
+        current: "GA",
+        score: roadTripStates.GA.points,
+        fuel: getRoadTripSettings().startFuel,
+        visited: new Set(["GA"]),
+        route: ["GA"],
+        status: "",
+        gameOver: false
+      };
+
+      const sortedTopStates = Object.values(roadTripStates)
+        .sort((a, b) => b.points - a.points)
+        .slice(0, 5);
+
+      const lyricLines = [
+        { start: 10.7, end: 13.3, top: "16%", text: "Globe light glowing\non the corner booth" },
+        { start: 13.4, end: 16.0, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
+        { start: 16.1, end: 18.0, top: "22%", text: "You remember how\nI like my food" },
+        { start: 18.1, end: 21.1, top: "42%", text: "Starting early mornings off\nwith what I need" },
+        { start: 21.2, end: 24.0, top: "26%", text: "But I see more than\nwhat’s in sight" },
+        { start: 24.1, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
+        { start: 27.0, end: 30.0, top: "66%", text: "Keeping everything\nworking right" },
+        { start: 31.1, end: 32.0, top: "18%", text: "So here’s to you" },
+        { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 33.6, end: 36.1, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
+        { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
+        { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
+        { start: 60.1, end: 63.4, top: "52%", text: "Callbacks hit\nright on time" },
+        { start: 63.5, end: 65.7, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
+        { start: 65.8, end: 67.9, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
+        { start: 68.0, end: 68.8, top: "18%", text: "So here’s to you" },
+        { start: 68.9, end: 70.9, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 71.0, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 76.1, end: 78.9, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 79.0, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 83.1, end: 85.6, top: "24%", text: "Thank you for everything" },
+        { start: 94.7, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
+        { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
+        { start: 100.1, end: 105.0, top: "52%", text: "Prepping, cleaning,\ncoaching strong" },
+        { start: 105.1, end: 107.9, top: "24%", text: "The hospitality,\nthe attention you give" },
+        { start: 108.0, end: 112.0, top: "46%", text: "It all comes together\nin America’s Place" },
+        { start: 112.1, end: 117.0, top: "68%", text: "Because of you each day" },
+        { start: 117.8, end: 122.0, top: "22%", text: "So here’s to you" },
+        { start: 122.2, end: 124.0, top: "40%", text: "Serving up egg-cellence" },
+        { start: 124.1, end: 126.9, top: "56%", text: "Serving up egg-cellence" },
+        { start: 127.0, end: 129.9, top: "72%", text: "Serving up egg-cellence" },
+        { start: 137.0, end: 149.0, top: "42%", text: "Thank you" }
+      ];
+
+      const lyricNodes = lyricLineHost
+        ? lyricLines.map((line) => {
+            const el = document.createElement("div");
+            el.className = "lyric-line";
+            el.textContent = line.text;
+            el.style.top = line.top;
+            lyricLineHost.appendChild(el);
+            return { el, line };
+          })
+        : [];
+
+      const renderLyrics = () => {
+        if (!audioPlayer || !lyricNodes.length) return;
+        const t = audioPlayer.currentTime || 0;
+
+        lyricNodes.forEach(({ el, line }) => {
+          const active = t >= line.start && t < line.end;
+          const progress = active ? (t - line.start) / Math.max(0.01, line.end - line.start) : 0;
+
+          el.classList.toggle("active", active);
+          el.classList.toggle("exiting", active && progress > 0.84);
+
+          if (active) {
+            const driftX = -50 + progress * 2.2;
+            const driftY = progress < 0.5 ? 5 - progress * 10 : -5 + (progress - 0.5) * 6;
+            el.style.transform = `translateX(${driftX}%) translateY(${driftY}px)`;
+            el.style.opacity = progress < 0.10
+              ? (progress / 0.10).toFixed(3)
+              : progress > 0.90
+                ? ((1 - progress) / 0.10).toFixed(3)
+                : "1";
+          } else {
+            el.style.transform = "translateX(-50%) translateY(18px)";
+            el.style.opacity = "0";
+          }
+        });
+
+        if (lyricScrubber) lyricScrubber.value = t;
+      };
+
+      let confettiFired = false;
+      let nudgeTimer;
+      let tipShown = false;
+      let lastInteractionTime = Date.now();
+
+      const markInteraction = () => {
+        lastInteractionTime = Date.now();
+      };
+
+      ["scroll", "touchstart", "pointerdown", "mousemove", "keydown", "click"].forEach((eventName) => {
+        window.addEventListener(eventName, markInteraction, { passive: true });
+      });
+
       const updateProgressBar = () => {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
         progressBar.style.width = progress + "%";
+
+        const warmth = Math.min(1, Math.max(0, progress / 100));
+        document.documentElement.style.setProperty("--page-warmth", warmth.toFixed(3));
+
+        if (backToTop) {
+          backToTop.classList.toggle("show", scrollTop > 420);
+        }
+
+        if (heroImage && !prefersReducedMotion) {
+          const amount = Math.min(16, scrollTop * 0.06);
+          heroImage.style.transform = `translateY(${amount}px)`;
+        }
       };
- 
-      updateProgressBar();
-      window.addEventListener("scroll", updateProgressBar);
- 
-      const revealItems = document.querySelectorAll(".reveal");
- 
-      if (!prefersReducedMotion && "IntersectionObserver" in window) {
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("show");
-              observer.unobserve(entry.target);
-            }
-          });
-        }, {
-          threshold: 0.12,
-          rootMargin: "0px 0px -40px 0px"
+
+      const setActiveMiniNav = () => {
+        let activeId = "";
+        const offset = 180;
+
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= offset && rect.bottom > offset) {
+            activeId = section.id;
+          }
         });
- 
-        revealItems.forEach((item) => revealObserver.observe(item));
-      } else {
-        revealItems.forEach((item) => item.classList.add("show"));
-      }
- 
-      const heroCopy = document.querySelector(".hero-copy");
-      const heroImage = document.querySelector(".hero-image");
-      const audioCard = document.querySelector(".audio-card");
- 
-      if (!prefersReducedMotion) {
-        setTimeout(() => heroCopy?.classList.add("animate"), 100);
-        setTimeout(() => heroImage?.classList.add("animate"), 350);
-        setTimeout(() => audioCard?.classList.add("animate"), 600);
-      } else {
-        heroCopy?.classList.add("animate");
-        heroImage?.classList.add("animate");
-        audioCard?.classList.add("animate");
-      }
- 
-      let confettiFired = false;
- 
+
+        miniNavLinks.forEach((link) => {
+          const href = link.getAttribute("href");
+          if (href && href.startsWith("#")) {
+            link.classList.toggle("active", href === `#${activeId}`);
+          }
+        });
+      };
+
+      updateProgressBar();
+      setActiveMiniNav();
+      window.addEventListener("scroll", updateProgressBar, { passive: true });
+      window.addEventListener("scroll", setActiveMiniNav, { passive: true });
+
+      backToTop?.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      });
+
       const fireConfetti = () => {
         if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
-        confettiFired = true;
- 
+
         confetti({
           particleCount: 110,
           spread: 78,
           startVelocity: 34,
           origin: { y: 0.28 }
         });
+
+        confettiFired = true;
       };
- 
-      setTimeout(fireConfetti, 500);
+
+      window.addEventListener("load", () => {
+        setTimeout(fireConfetti, mobileMedia.matches ? 900 : 650);
+      });
+
       window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
       window.addEventListener("click", fireConfetti, { once: true, passive: true });
- 
-      const lightbox = document.getElementById("lightbox");
-      const lightboxImage = document.getElementById("lightbox-image");
-      const lightboxClose = document.querySelector(".lightbox-close");
-      const triggers = document.querySelectorAll(".lightbox-trigger");
- 
+
       const openLightbox = (img) => {
         lightboxImage.src = img.src;
         lightboxImage.alt = img.alt || "";
@@ -1134,7 +2992,7 @@
         lightbox.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
       };
- 
+
       const closeLightbox = () => {
         lightbox.classList.remove("open");
         lightbox.setAttribute("aria-hidden", "true");
@@ -1144,13 +3002,13 @@
           lightboxImage.alt = "";
         }, 180);
       };
- 
+
       triggers.forEach((trigger) => {
         trigger.addEventListener("click", () => {
           const img = trigger.querySelector("img");
           if (img) openLightbox(img);
         });
- 
+
         trigger.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -1158,49 +3016,44 @@
             if (img) openLightbox(img);
           }
         });
- 
+
         trigger.setAttribute("tabindex", "0");
         trigger.setAttribute("role", "button");
         trigger.setAttribute("aria-label", "Open image");
       });
- 
+
       lightboxClose?.addEventListener("click", closeLightbox);
- 
       lightbox?.addEventListener("click", (e) => {
         if (e.target === lightbox) closeLightbox();
       });
- 
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && lightbox?.classList.contains("open")) {
           closeLightbox();
         }
       });
- 
-      const milestoneModal = document.getElementById("milestone-modal");
-      const milestoneTitle = document.getElementById("milestone-title");
-      const milestoneText = document.getElementById("milestone-text");
-      const milestoneClose = document.querySelector(".milestone-close");
-      const balloonHotspots = document.querySelectorAll(".balloon-hotspot");
- 
+
       const formatCount = (count) => Number(count).toLocaleString();
- 
+
       const openMilestoneModal = (years, count) => {
         const numericCount = Number(count);
         const associateWord = numericCount === 1 ? "Associate" : "Associates";
         const verbWord = numericCount === 1 ? "is" : "are";
         const yearWord = years === "1" ? "year" : "years";
- 
+
         milestoneTitle.textContent = `${years} ${yearWord}`;
         milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
- 
+
+        document.documentElement.classList.add("milestone-open");
+        document.body.classList.add("milestone-open");
+
         milestoneModal.classList.add("open");
         milestoneModal.setAttribute("aria-hidden", "false");
-        document.body.classList.add("milestone-open");
       };
- 
+
       const closeMilestoneModal = () => {
         milestoneModal.classList.remove("open");
         milestoneModal.setAttribute("aria-hidden", "true");
+        document.documentElement.classList.remove("milestone-open");
         document.body.classList.remove("milestone-open");
       };
 
@@ -1228,43 +3081,569 @@
           origin: { x, y }
         });
       };
- 
+
       balloonHotspots.forEach((spot) => {
         const years = spot.dataset.years;
         const count = spot.dataset.count;
- 
+
         spot.addEventListener("click", (e) => {
           e.stopPropagation();
+          markInteraction();
+          hideAnniversaryTip();
+          spot.classList.remove("hinting");
           popBalloonEffect(spot);
           setTimeout(() => openMilestoneModal(years, count), 90);
         });
- 
-        spot.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            e.stopPropagation();
-            popBalloonEffect(spot);
-            setTimeout(() => openMilestoneModal(years, count), 90);
+      });
+
+      milestoneClose?.addEventListener("click", closeMilestoneModal);
+      milestoneModal?.addEventListener("click", (e) => {
+        if (e.target === milestoneModal) closeMilestoneModal();
+      });
+
+      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      const updateSongButton = () => {
+        if (!songToggle || !audioPlayer) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        songToggle.textContent = playing ? "❚❚" : "🧇";
+        songToggle.setAttribute(
+          "aria-label",
+          playing ? "Pause appreciation song" : "Play appreciation song"
+        );
+      };
+
+      const syncLyricVideo = () => {
+        if (!audioPlayer || !lyricBgVideo) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        if (playing) {
+          const playPromise = lyricBgVideo.play();
+          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+        } else {
+          lyricBgVideo.pause();
+        }
+      };
+
+      const syncAudioState = () => {
+        if (!audioPlayer || !audioCard) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        audioCard.classList.toggle("audio-playing", playing);
+        updateSongButton();
+        syncLyricVideo();
+      };
+
+      audioPlayer?.addEventListener("play", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("pause", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("ended", () => {
+        if (lyricBgVideo) {
+          lyricBgVideo.pause();
+          lyricBgVideo.currentTime = 0;
+        }
+        syncAudioState();
+        renderLyrics();
+      });
+      audioPlayer?.addEventListener("timeupdate", renderLyrics);
+      audioPlayer?.addEventListener("seeked", renderLyrics);
+      audioPlayer?.addEventListener("loadedmetadata", () => {
+        if (lyricScrubber && lyricLines.length) lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
+        renderLyrics();
+      });
+      lyricBgVideo?.addEventListener("loadedmetadata", () => {
+        if (lyricBgVideo.videoWidth && lyricBgVideo.videoHeight && lyricStage) {
+          lyricStage.style.aspectRatio = `${lyricBgVideo.videoWidth} / ${lyricBgVideo.videoHeight}`;
+        }
+      });
+      lyricScrubber?.addEventListener("input", (e) => {
+        if (!audioPlayer) return;
+        audioPlayer.currentTime = Number(e.target.value);
+        renderLyrics();
+      });
+      songToggle?.addEventListener("click", async () => {
+        if (!audioPlayer) return;
+        if (audioPlayer.paused) {
+          try { await audioPlayer.play(); } catch (err) {}
+        } else {
+          audioPlayer.pause();
+        }
+        syncAudioState();
+      });
+
+      const showAnniversaryTip = () => {
+        if (!anniversaryTip || tipShown || prefersReducedMotion) return;
+        anniversaryTip.classList.add("show");
+        anniversaryTip.setAttribute("aria-hidden", "false");
+        tipShown = true;
+        setTimeout(hideAnniversaryTip, 3000);
+      };
+
+      const hideAnniversaryTip = () => {
+        if (!anniversaryTip) return;
+        anniversaryTip.classList.remove("show");
+        anniversaryTip.setAttribute("aria-hidden", "true");
+      };
+
+      const anniversarySection = document.getElementById("anniversaries");
+      const runIdleNudge = () => {
+        clearTimeout(nudgeTimer);
+        nudgeTimer = setTimeout(() => {
+          if (Date.now() - lastInteractionTime < 5500) {
+            runIdleNudge();
+            return;
+          }
+
+          const anniversaryInView = anniversarySection && (() => {
+            const rect = anniversarySection.getBoundingClientRect();
+            return rect.top < window.innerHeight * 0.82 && rect.bottom > window.innerHeight * 0.18;
+          })();
+
+          if (anniversaryInView) {
+            const nudgeSpot = balloonHotspots[0];
+            nudgeSpot?.classList.add("hinting");
+            if (mobileMedia.matches) showAnniversaryTip();
+            setTimeout(() => nudgeSpot?.classList.remove("hinting"), 2200);
+          }
+
+          runIdleNudge();
+        }, 6200);
+      };
+     if (!prefersReducedMotion && photoFlashLink) {
+  let photoFlashTimeout;
+  let photoFlashLoopTimeout;
+
+  const triggerPhotoFlash = () => {
+    photoFlashLink.classList.remove("flash-now");
+    void photoFlashLink.offsetWidth;
+    photoFlashLink.classList.add("flash-now");
+
+    clearTimeout(photoFlashTimeout);
+    photoFlashTimeout = setTimeout(() => {
+      photoFlashLink.classList.remove("flash-now");
+    }, 1100);
+  };
+
+  const startPhotoFlashLoop = () => {
+    clearTimeout(photoFlashLoopTimeout);
+
+    const loop = () => {
+      if (document.visibilityState === "visible") {
+        triggerPhotoFlash();
+      }
+
+      photoFlashLoopTimeout = setTimeout(
+        loop,
+        mobileMedia.matches ? 3200 : 2600
+      );
+    };
+
+    photoFlashLoopTimeout = setTimeout(loop, 1200);
+  };
+
+  triggerPhotoFlash();
+  startPhotoFlashLoop();
+
+  photoFlashLink.addEventListener("click", triggerPhotoFlash);
+  photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      triggerPhotoFlash();
+      startPhotoFlashLoop();
+    } else {
+      clearTimeout(photoFlashLoopTimeout);
+    }
+  });
+}
+
+
+      const resetTiltCard = (card, instant = false) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+        if (instant) stage.style.transition = "none";
+        stage.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+        card.style.setProperty("--glare-x", "50%");
+        card.style.setProperty("--glare-y", "50%");
+        card.classList.remove("is-tilting");
+        if (instant) {
+          requestAnimationFrame(() => {
+            stage.style.transition = "";
+          });
+        }
+      };
+
+      const updateTiltCard = (card, clientX, clientY) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+
+        const rect = card.getBoundingClientRect();
+        const px = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+        const py = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
+        const maxRotate = window.innerWidth < 768 ? 7 : 12;
+        const rotateY = (px - 0.5) * (maxRotate * 2);
+        const rotateX = (0.5 - py) * (maxRotate * 1.65);
+
+        stage.style.transform =
+          `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
+
+        card.style.setProperty("--glare-x", `${(px * 100).toFixed(2)}%`);
+        card.style.setProperty("--glare-y", `${(py * 100).toFixed(2)}%`);
+        card.classList.add("is-tilting");
+      };
+
+      const enableTiltCards = () => {
+        tiltCards.forEach((card) => {
+          if (card.dataset.tiltBound === "true") return;
+          card.dataset.tiltBound = "true";
+          resetTiltCard(card, true);
+
+          card.addEventListener("pointerenter", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointermove", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointerleave", () => resetTiltCard(card));
+          card.addEventListener("blur", () => resetTiltCard(card), true);
+          card.addEventListener("focusin", () => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            card.classList.add("is-tilting");
+          });
+          card.addEventListener("touchstart", () => resetTiltCard(card, true), { passive: true });
+        });
+      };
+
+      const regionClassName = (region) => {
+        switch (region) {
+          case "west": return "region-west";
+          case "midwest": return "region-midwest";
+          case "mid-atlantic": return "region-mid-atlantic";
+          case "northeast": return "region-northeast";
+          default: return "region-south";
+        }
+      };
+
+      const renderTopStates = () => {
+        if (!roadtripTopStates) return;
+        roadtripTopStates.innerHTML = sortedTopStates.map((state, index) => `
+          <div class="top-state-item">
+            <span>${index + 1}. ${state.code}</span>
+            <span>${state.points.toLocaleString()}</span>
+          </div>
+        `).join("");
+      };
+
+      const renderBonusStops = () => {
+        if (!roadtripBonusList) return;
+        const bonusStates = Object.values(roadTripStates).filter((state) => state.fuelBonus);
+        roadtripBonusList.innerHTML = bonusStates.map((state) => `
+          <span class="roadtrip-bonus-pill">${state.code} +${state.fuelBonus} fuel</span>
+        `).join("");
+      };
+
+      const updateRoadTripLevelUI = () => {
+        roadtripLevelButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.roadtripLevel === currentRoadTripLevel);
+        });
+      };
+
+      const updateRoadTripLevelText = () => {
+        const settings = getRoadTripSettings();
+        if (roadtripGoalCopy) {
+          roadtripGoalCopy.innerHTML = `Each stop adds that state’s anniversary points. <strong>Bonus refuel stops</strong> give you extra fuel, so you can keep the celebration rolling. Reach <strong>${settings.goal.toLocaleString()}</strong> before fuel hits zero. ${settings.description}`;
+        }
+      };
+
+      const getRoadTripBannerLevel = () => {
+        return `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
+      };
+
+      const setRoadTripStatus = (message) => {
+        roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
+      };
+
+      const createStateButtons = () => {
+        if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
+
+        Object.values(roadTripStates).forEach((state) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `state-node ${regionClassName(state.region)}`;
+          button.dataset.state = state.code;
+          button.style.left = `${state.x}%`;
+          button.style.top = `${state.y}%`;
+          button.innerHTML = `
+            <span class="state-node-label">${state.code}</span>
+            <span class="state-node-points">${state.points.toLocaleString()}</span>
+            ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
+          `;
+          button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
+          button.addEventListener("click", () => attemptRoadTripMove(state.code));
+          roadtripMap.appendChild(button);
+        });
+      };
+
+      const getAvailableMoves = () => {
+        const currentState = roadTripStates[roadTrip.current];
+        return currentState.neighbors
+          .map((code) => roadTripStates[code])
+          .filter((state) => state && !roadTrip.visited.has(state.code));
+      };
+
+      const scrollRoadTripMapToCurrent = () => {
+        if (!roadtripMapScroll || !roadtripMap || !roadtripCar) return;
+        if (window.innerWidth > 700) return;
+
+        const mapRect = roadtripMap.getBoundingClientRect();
+        const current = roadTripStates[roadTrip.current];
+        const targetX = (current.x / 100) * mapRect.width - roadtripMapScroll.clientWidth / 2;
+        const left = Math.max(0, targetX);
+        roadtripMapScroll.scrollTo({ left, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      };
+
+      const renderRoadTripRoute = () => {
+        if (!roadtripRouteChips) return;
+        roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `
+          <span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>
+        `).join("");
+      };
+
+      const renderRoadTripChoices = () => {
+        if (!roadtripNextStops) return;
+        const moves = getAvailableMoves();
+
+        if (!moves.length) {
+          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">No connected stops left from ${roadTrip.current}. Restart to try a new route.</div>`;
+          return;
+        }
+
+        roadtripNextStops.innerHTML = moves.map((state) => `
+          <button type="button" class="roadtrip-next-btn ${regionClassName(state.region)}" data-next-state="${state.code}">
+            <div class="next-top">
+              <span class="next-name">${state.code}</span>
+              <span>${state.points.toLocaleString()}</span>
+            </div>
+            <div class="next-points">${state.name}</div>
+            <div class="next-region">${state.region.replace("-", " ")}</div>
+            <div class="roadtrip-next-meta">
+              ${state.fuelBonus ? `<span class="next-fuel-pill">+${state.fuelBonus} fuel</span>` : ""}
+            </div>
+          </button>
+        `).join("");
+
+        roadtripNextStops.querySelectorAll("[data-next-state]").forEach((button) => {
+          button.addEventListener("click", () => attemptRoadTripMove(button.dataset.nextState));
+        });
+      };
+
+      const updateRoadTripNodes = () => {
+        const buttons = roadtripMap.querySelectorAll(".state-node");
+        const currentState = roadTripStates[roadTrip.current];
+        const available = new Set(getAvailableMoves().map((state) => state.code));
+
+        buttons.forEach((button) => {
+          const code = button.dataset.state;
+          button.classList.remove("visited", "available", "unavailable", "current-stop");
+          button.disabled = false;
+
+          if (code === roadTrip.current) {
+            button.classList.add("current-stop", regionClassName(currentState.region));
+            button.disabled = true;
+          } else if (roadTrip.visited.has(code)) {
+            button.classList.add("visited");
+            button.disabled = true;
+          } else if (!roadTrip.gameOver && available.has(code)) {
+            button.classList.add("available");
+          } else {
+            button.classList.add("unavailable");
+            button.disabled = true;
+          }
+
+          if (roadTrip.gameOver && !roadTrip.visited.has(code) && code !== roadTrip.current) {
+            button.classList.add("unavailable");
+            button.classList.remove("available");
+            button.disabled = true;
           }
         });
-      });
- 
-      milestoneClose?.addEventListener("click", closeMilestoneModal);
- 
-      milestoneModal?.addEventListener("click", (e) => {
-        if (e.target === milestoneModal) {
-          closeMilestoneModal();
+      };
+
+      const updateRoadTripHUD = () => {
+        const settings = getRoadTripSettings();
+        roadtripScore.textContent = roadTrip.score.toLocaleString();
+        roadtripFuel.textContent = roadTrip.fuel;
+        roadtripVisited.textContent = roadTrip.visited.size;
+
+        const current = roadTripStates[roadTrip.current];
+        const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
+        const previous = roadTripStates[previousCode];
+        const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
+        const facingScale = movingLeft ? -1 : 1;
+
+        let carX = current.x + (movingLeft ? -8 : 8);
+        let carY = current.y + 2.5;
+
+        if (carX < 8) carX = current.x + 8;
+        if (carX > 92) carX = current.x - 8;
+        if (carY > 90) carY = current.y - 4;
+
+        roadtripCar.style.left = `${carX}%`;
+        roadtripCar.style.top = `${carY}%`;
+        roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
+
+        renderRoadTripRoute();
+        renderRoadTripChoices();
+        updateRoadTripNodes();
+        updateRoadTripLevelText();
+        scrollRoadTripMapToCurrent();
+      };
+
+      const showRoadTripCelebration = (message) => {
+        if (!roadtripCelebration) return;
+        roadtripCelebration.textContent = message;
+        roadtripCelebration.classList.add("show");
+      };
+
+      const clearRoadTripCelebration = () => {
+        roadtripCelebration?.classList.remove("show");
+      };
+
+      const finishRoadTrip = (won) => {
+        const settings = getRoadTripSettings();
+        roadTrip.gameOver = true;
+        updateRoadTripNodes();
+        renderRoadTripChoices();
+
+        if (won) {
+          showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
+          setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+          if (!prefersReducedMotion && typeof confetti === "function") {
+            confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
+          }
+        } else {
+          showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
+          setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
         }
+      };
+
+      const attemptRoadTripMove = (code) => {
+        if (roadTrip.gameOver) return;
+        if (roadTrip.visited.has(code)) return;
+
+        const currentState = roadTripStates[roadTrip.current];
+        if (!currentState.neighbors.includes(code)) return;
+        if (roadTrip.fuel <= 0) return;
+
+        const nextState = roadTripStates[code];
+        const settings = getRoadTripSettings();
+        roadTrip.current = code;
+        roadTrip.fuel -= 1;
+        roadTrip.score += nextState.points;
+        roadTrip.visited.add(code);
+        roadTrip.route.push(code);
+
+        let fuelMessage = "";
+        if (nextState.fuelBonus) {
+          roadTrip.fuel += nextState.fuelBonus;
+          fuelMessage = ` and refueled +${nextState.fuelBonus}`;
+        }
+
+        clearRoadTripCelebration();
+        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
+        updateRoadTripHUD();
+
+        if (!prefersReducedMotion && typeof confetti === "function") {
+          confetti({
+            particleCount: nextState.points >= 1000 ? 56 : 30,
+            spread: nextState.points >= 1000 ? 72 : 56,
+            origin: { x: nextState.x / 100, y: nextState.y / 100 },
+            startVelocity: 24
+          });
+        }
+
+        if (roadTrip.score >= settings.goal) {
+          finishRoadTrip(true);
+          return;
+        }
+
+        if (roadTrip.fuel <= 0) {
+          finishRoadTrip(false);
+          return;
+        }
+
+        if (!getAvailableMoves().length) {
+          finishRoadTrip(false);
+        }
+      };
+
+      const resetRoadTrip = () => {
+        const settings = getRoadTripSettings();
+        roadTrip = {
+          current: "GA",
+          score: roadTripStates.GA.points,
+          fuel: settings.startFuel,
+          visited: new Set(["GA"]),
+          route: ["GA"],
+          status: "",
+          gameOver: false
+        };
+
+        clearRoadTripCelebration();
+        setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
+        updateRoadTripHUD();
+      };
+
+      const applyRoadTripLevel = (level) => {
+        if (!ROADTRIP_LEVELS[level]) return;
+        currentRoadTripLevel = level;
+        updateRoadTripLevelUI();
+        updateRoadTripLevelText();
+        resetRoadTrip();
+      };
+
+      const openRoadTripModal = () => {
+        roadtripModal.classList.add("open");
+        roadtripModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("lightbox-open");
+        setTimeout(scrollRoadTripMapToCurrent, 60);
+      };
+
+      const closeRoadTripModalFn = () => {
+        roadtripModal.classList.remove("open");
+        roadtripModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("lightbox-open");
+      };
+
+      openRoadtripGame?.addEventListener("click", openRoadTripModal);
+      closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
+      roadtripRestart?.addEventListener("click", resetRoadTrip);
+      roadtripLevelButtons.forEach((button) => {
+        button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
       });
- 
+      roadtripModal?.addEventListener("click", (e) => {
+        if (e.target === roadtripModal) closeRoadTripModalFn();
+      });
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) {
-          closeMilestoneModal();
+        if (e.key === "Escape" && roadtripModal?.classList.contains("open")) {
+          closeRoadTripModalFn();
         }
       });
- 
-      const audioPlayer = document.querySelector(".audio-player");
-      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      renderTopStates();
+      renderBonusStops();
+      createStateButtons();
+      applyRoadTripLevel("beginner");
+      enableTiltCards();
+      window.addEventListener("resize", () => {
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+      });
+      pointerFineMedia.addEventListener?.("change", () => {
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+      });
+      syncAudioState();
+      updateSongButton();
+      renderLyrics();
     });
   </script>
 </body>
