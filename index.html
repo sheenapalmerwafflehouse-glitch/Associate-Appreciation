@@ -1668,37 +1668,36 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(92, 74, 16, 0.22);
-  stroke-width: 1.08;
+  stroke: rgba(102, 92, 72, 0.14);
+  stroke-width: 0.82;
 }
 
 .roadtrip-route-svg .route-network-center {
-  stroke: rgba(255, 251, 232, 0.34);
-  stroke-width: 0.42;
+  display: none;
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(87, 66, 10, 0.84);
-  stroke-width: 3.4;
+  stroke: rgba(103, 84, 36, 0.72);
+  stroke-width: 3.25;
   filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
 }
 
 .roadtrip-route-svg .route-option-center {
-  stroke: rgba(255, 251, 230, 0.92);
-  stroke-width: 0.9;
-  stroke-dasharray: 1.05 1.45;
+  stroke: rgba(255, 252, 237, 0.96);
+  stroke-width: 0.92;
+  stroke-dasharray: 0.18 1.58;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(58, 43, 6, 0.94);
-  stroke-width: 4.9;
+  stroke: rgba(82, 67, 30, 0.9);
+  stroke-width: 3.8;
   filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
 }
 
 .roadtrip-route-svg .route-traveled-center {
-  stroke: rgba(255, 251, 232, 0.98);
-  stroke-width: 1.15;
-  stroke-dasharray: 1.25 1.75;
+  stroke: rgba(255, 252, 238, 0.98);
+  stroke-width: 1.04;
+  stroke-dasharray: 0.16 1.46;
 }
 
     .roadtrip-mobile-difficulty {
@@ -2308,14 +2307,12 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-network-main { stroke-width: 1; }
+      .roadtrip-route-svg .route-network-main { stroke-width: 0.72; }
       .roadtrip-route-svg .route-network-center { display: none; }
-      .roadtrip-route-svg .route-option-main { stroke-width: 3.1; }
-      .roadtrip-route-svg .route-option-center { stroke-width: 0.85; }
-      .roadtrip-route-svg .route-traveled-main { stroke-width: 4.6; }
-      .roadtrip-route-svg .route-traveled-center { stroke-width: 1.05; }
-      .roadtrip-route-svg .route-traveled-main { stroke-width: 4.6; }
-      .roadtrip-route-svg .route-traveled-center { stroke-width: 1.18; stroke-dasharray: 1.15 1.55; }
+      .roadtrip-route-svg .route-option-main { stroke-width: 2.7; }
+      .roadtrip-route-svg .route-option-center { stroke-width: 0.78; stroke-dasharray: 0.16 1.34; }
+      .roadtrip-route-svg .route-traveled-main { stroke-width: 3.12; }
+      .roadtrip-route-svg .route-traveled-center { stroke-width: 0.86; stroke-dasharray: 0.14 1.22; }
       .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
       .roadtrip-map-outcome-card { width: 100%; max-width: none; padding: 14px 12px 15px; border-radius: 18px; }
       .roadtrip-map-outcome-kicker { margin-bottom: 8px; padding: 5px 10px; font-size: 0.68rem; }
@@ -2376,19 +2373,21 @@
       pointer-events: auto;
       border: 1px solid rgba(176, 150, 44, 0.22);
       border-radius: 999px;
-      min-height: 50px;
-      padding: 8px 14px 8px 10px;
+      min-height: 46px;
+      padding: 7px 12px 7px 9px;
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,247,200,0.98));
       color: #111;
       font-weight: 900;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       box-shadow: 0 12px 22px rgba(17,17,17,0.14);
       cursor: pointer;
-      max-width: min(84vw, 264px);
+      width: auto;
+      max-width: none;
       text-align: left;
+      white-space: nowrap;
     }
 
     .history-fab-icon {
@@ -2405,9 +2404,11 @@
     }
 
     .history-fab-label {
-      line-height: 1.15;
-      letter-spacing: 0.01em;
-      font-size: 0.84rem;
+      line-height: 1;
+      letter-spacing: 0.005em;
+      font-size: 0.76rem;
+      white-space: nowrap;
+      flex: 0 1 auto;
     }
 
     .history-chat-overlay {
@@ -2671,10 +2672,7 @@
     }
 
     .history-chat-helper {
-      margin-top: 10px;
-      color: #666;
-      font-size: 0.84rem;
-      line-height: 1.5;
+      display: none;
     }
 
     @media (max-width: 700px) {
@@ -2685,13 +2683,13 @@
       }
 
       .history-fab {
-        min-height: 46px;
-        padding: 8px 12px 8px 10px;
-        max-width: 228px;
+        min-height: 44px;
+        padding: 7px 11px 7px 9px;
+        gap: 7px;
       }
 
       .history-fab-label {
-        font-size: 0.8rem;
+        font-size: 0.72rem;
       }
 
       .history-chat-panel {
@@ -3093,7 +3091,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-            Wilson Waffle is heading out from Georgia on a celebration run. Every stop adds real anniversary points from that state, a few bonus refuel stops can keep the trip alive, and your route choices decide how far the journey goes before the tank runs dry.
+            Real anniversary counts power this road trip. Wilson Waffle starts in Georgia with 3,596 points, then every connected stop adds that state’s real celebration total as you build the best route before the fuel runs out.
           </p>
         </div>
 
@@ -3532,16 +3530,51 @@ const buildRoadTripLayout = (levelKey = "base") => {
   );
 };
 
-const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
+const getRoadTripNodeElement = (code) => roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
+
+const getRoadTripBadgeHalfSize = (code) => {
+  const fallback = { x: 5.2, y: 4.8 };
+  const el = getRoadTripNodeElement(code);
+  if (!el || !roadtripMap) return fallback;
+  const mapRect = roadtripMap.getBoundingClientRect();
+  if (!mapRect.width || !mapRect.height) return fallback;
+  return {
+    x: Math.max(3.8, (el.offsetWidth / mapRect.width) * 50),
+    y: Math.max(3.6, (el.offsetHeight / mapRect.height) * 50)
+  };
+};
+
+const getRoadTripBadgeAnchor = (fromState, toState, code, inset = 0.38) => {
+  const half = getRoadTripBadgeHalfSize(code);
   const dx = toState.x - fromState.x;
   const dy = toState.y - fromState.y;
+  const divisor = Math.max(Math.abs(dx) / Math.max(1, half.x - inset), Math.abs(dy) / Math.max(1, half.y - inset)) || 1;
+  const t = 1 / divisor;
+  return {
+    x: fromState.x + dx * t,
+    y: fromState.y + dy * t
+  };
+};
+
+const getRoadTripCurveSign = (codeA, codeB) => {
+  const seed = `${[codeA, codeB].sort().join("")}`.split("").reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
+  return seed % 2 === 0 ? 1 : -1;
+};
+
+const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
+  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, 0.42 * emphasis);
+  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, 0.42 * emphasis);
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
   const dist = Math.hypot(dx, dy) || 0.001;
-  const pad = clampRoadTripValue(4.15 * emphasis, 3.35, 4.9);
-  const startX = fromState.x + (dx / dist) * pad;
-  const startY = fromState.y + (dy / dist) * pad;
-  const endX = toState.x - (dx / dist) * pad;
-  const endY = toState.y - (dy / dist) * pad;
-  return `M ${startX.toFixed(2)} ${startY.toFixed(2)} L ${endX.toFixed(2)} ${endY.toFixed(2)}`;
+  const nx = -dy / dist;
+  const ny = dx / dist;
+  const bend = clampRoadTripValue(dist * 0.12, 0.8, 2.8) * getRoadTripCurveSign(fromState.code, toState.code);
+  const c1x = start.x + dx * 0.34 + nx * bend;
+  const c1y = start.y + dy * 0.34 + ny * bend;
+  const c2x = end.x - dx * 0.34 + nx * bend;
+  const c2y = end.y - dy * 0.34 + ny * bend;
+  return `M ${start.x.toFixed(2)} ${start.y.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${end.x.toFixed(2)} ${end.y.toFixed(2)}`;
 };
 
 const renderRoadTripNetwork = () => {
@@ -4606,7 +4639,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         return {
           kicker: `${settings.label} Level`,
           title: `Georgia is your starting stop`,
-          text: `Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel. Follow the yellow-highlighted connected stops, grab bonus fuel in Louisiana, Arkansas, and Tennessee, and chase ${settings.goal.toLocaleString()} points before the tank runs dry.`
+          text: `These map points match the real associates we’re celebrating in each state. Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank runs dry.`
         };
       };
 
@@ -4913,8 +4946,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
     <div class="history-chat-top">
       <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history chat">&times;</button>
       <div class="history-chat-eyebrow">Waffle House History</div>
-      <h3>Explore Waffle House History</h3>
-      <p>Tap a quick question for an instant answer, or ask your own question and I’ll package it for Art &amp; Archivist.</p>
+      <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.</p>
     </div>
 
     <div class="history-quick-asks" id="history-quick-asks">
@@ -4929,23 +4961,22 @@ const applyRoadTripLayout = (levelKey = "base") => {
     <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
     <div class="history-chat-followup" id="history-chat-followup" hidden>
-      <div class="history-followup-copy" id="history-followup-copy">Thanks for your question. Enter your name and email below, then tap the button to email your question to Art &amp; Archivist.</div>
+      <div class="history-followup-copy" id="history-followup-copy">Add your name and email, then I’ll package your question for the archivist and open a ready-to-send draft.</div>
       <div class="history-followup-grid">
         <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
         <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
       </div>
       <div class="history-followup-actions">
-        <div class="history-followup-note">I’ll package your note for <strong>Art &amp; Archivist</strong>, then open a pre-addressed draft to <strong>example@example.com</strong>.</div>
-        <button class="history-send-btn" id="history-send-email" type="button">Send to Art & Archivist</button>
+        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>example@example.com</strong>.</div>
+        <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
       </div>
     </div>
 
     <div class="history-chat-composer">
       <div class="history-chat-composer-row">
-        <input id="history-question-input" type="text" placeholder="Ask Art & Archivist a history question" aria-label="Ask Art & Archivist a history question" />
+        <input id="history-question-input" type="text" placeholder="Ask the archivist a Waffle House history question" aria-label="Ask the archivist a Waffle House history question" />
         <button class="history-ask-btn" id="history-ask-btn" type="button">Ask</button>
       </div>
-      <div class="history-chat-helper">After you ask a custom question, the chat will prompt for your name and email so you can send it to Art &amp; Archivist.</div>
     </div>
   </aside>
 
@@ -5071,7 +5102,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       const addMessage = (role, text) => {
         const msg = document.createElement("div");
         msg.className = `history-msg ${role}`;
-        const label = role === "bot" ? "Art & Archivist Bot" : "You";
+        const label = role === "bot" ? "Waffle House History Bot" : "You";
         msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
         log.appendChild(msg);
         log.scrollTop = log.scrollHeight;
@@ -5085,7 +5116,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         pendingQuestion = question;
         if (!followup) return;
         followup.hidden = false;
-        followupCopy.textContent = "Add your name and email, then I’ll package your question for Art & Archivist and open a ready-to-send draft.";
+        followupCopy.textContent = "Add your name and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
         window.setTimeout(() => nameInput?.focus(), 40);
       };
 
@@ -5093,7 +5124,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         if (!log) return;
         log.innerHTML = "";
         hideFollowup();
-        addMessage("bot", "Welcome to Waffle House History. Tap a quick question for an instant answer, or ask your own question below.");
+        addMessage("bot", "Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.");
       };
 
       const askHistoryQuestion = (question, { promptForEmail = false } = {}) => {
@@ -5104,7 +5135,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         window.setTimeout(() => {
           addMessage("bot", answer);
           if (promptForEmail) {
-            addMessage("bot", "Want to send that question to Art &amp; Archivist? Enter your name and email below, then tap Send to Art & Archivist.");
+            addMessage("bot", "Want me to send that to the archivist? Add your name and email below, then tap Send to Archivist.");
             showFollowup(q);
           }
         }, 110);
@@ -5175,11 +5206,11 @@ const applyRoadTripLayout = (levelKey = "base") => {
           question
         ].join("\n");
 
-        addMessage("bot", `Thanks, ${name}. I’m packaging your question for Art & Archivist now.`);
+        addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
         const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
-          addMessage("bot", `Your draft for Art & Archivist is ready in your email app — just review and send.`);
+          addMessage("bot", `Your draft for the archivist is ready in your email app — just review and send.`);
         }, 520);
       });
 
