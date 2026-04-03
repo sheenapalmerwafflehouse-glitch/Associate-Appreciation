@@ -479,7 +479,7 @@
       z-index: 8;
       transform: translate3d(var(--ball-x, -120px), var(--ball-y, -120px), 0) scale(var(--ball-scale, 0.84));
       transition:
-        transform 2400ms cubic-bezier(0.2, 0.88, 0.18, 1),
+        transform 2000ms cubic-bezier(0.2, 0.88, 0.18, 1),
         opacity 240ms ease;
       mix-blend-mode: multiply;
       will-change: transform, opacity;
@@ -4709,7 +4709,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
         window.setTimeout(() => {
           heroBallDrop.classList.add('is-done');
-        }, 3150);
+        }, 2000);
       };
 
       const scrollRoadTripMapToCurrent = () => {
