@@ -3149,9 +3149,6 @@
                   <g id="roadtrip-route-network"></g>
                   <g id="roadtrip-route-traveled"></g>
                 </svg>
-                <div class="roadtrip-map-lock" id="roadtrip-map-lock" aria-hidden="true">
-                  <div class="roadtrip-map-lock-card">Choose a difficulty level above to unlock the route, fuel target, and next stops.</div>
-                </div>
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
                 <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
                 <div class="roadtrip-point-popups" id="roadtrip-point-popups" aria-hidden="true"></div>
@@ -3246,7 +3243,6 @@
       const openRoadtripGame = document.getElementById("open-roadtrip-game");
       const closeRoadtripGame = document.getElementById("close-roadtrip-game");
       const roadtripMap = document.getElementById("roadtrip-map");
-      const roadtripMapLock = document.getElementById("roadtrip-map-lock");
       const roadtripRouteNetwork = document.getElementById("roadtrip-route-network");
       const roadtripRouteTraveled = document.getElementById("roadtrip-route-traveled");
       const roadtripCar = document.getElementById("roadtrip-car");
@@ -3267,7 +3263,6 @@
       const roadtripCelebration = document.getElementById("roadtrip-celebration");
       const roadtripTopStates = document.getElementById("roadtrip-top-states");
       const roadtripNextStops = document.getElementById("roadtrip-next-stops");
-      const roadtripHelper = roadtripModal?.querySelector(".roadtrip-helper");
       const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
       const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
       const roadtripScrollHint = document.getElementById("roadtrip-scroll-hint");
@@ -3569,48 +3564,35 @@ const getRoadTripDirectionVector = (fromState, toState) => {
   return { dx, dy, nx: dx / length, ny: dy / length, length };
 };
 
-const getRoadTripBadgeAnchor = (state, towardState, code, outsideGap = 0.45) => {
+const getRoadTripBadgeAnchor = (state, towardState, code) => {
   const half = getRoadTripBadgeHalfSize(code);
   const { nx, ny } = getRoadTripDirectionVector(state, towardState);
   const edgeDistance = 1 / Math.max(
     Math.abs(nx) / Math.max(0.001, half.x),
     Math.abs(ny) / Math.max(0.001, half.y)
   );
+  const tuckInside = Math.min(1.35, Math.max(0.72, edgeDistance * 0.24));
   return {
-    x: state.x + nx * (edgeDistance + outsideGap),
-    y: state.y + ny * (edgeDistance + outsideGap)
+    x: state.x + nx * (edgeDistance - tuckInside),
+    y: state.y + ny * (edgeDistance - tuckInside)
   };
 };
 
-const getRoadTripLineEndpoints = (fromState, toState, outsideGap = 0.45) => {
-  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, outsideGap);
-  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, outsideGap);
+const getRoadTripLineEndpoints = (fromState, toState) => {
+  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code);
+  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code);
   return { start, end };
 };
 
-const getRoadTripPathMarkup = (fromState, toState, className, options = {}) => {
-  const { start, end } = getRoadTripLineEndpoints(fromState, toState, options.outsideGap ?? 0.45);
-  const dx = end.x - start.x;
-  const dy = end.y - start.y;
-  const dist = Math.hypot(dx, dy) || 1;
-  const nx = -dy / dist;
-  const ny = dx / dist;
-  const bend = options.bend ?? Math.min(2.2, Math.max(-2.2, dist * 0.08 * ((fromState.code < toState.code) ? 1 : -1)));
-  const midX = (start.x + end.x) / 2 + nx * bend;
-  const midY = (start.y + end.y) / 2 + ny * bend;
-  return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} Q ${midX.toFixed(2)} ${midY.toFixed(2)} ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
+const getRoadTripPathMarkup = (fromState, toState, className) => {
+  const { start, end } = getRoadTripLineEndpoints(fromState, toState);
+  return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} L ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
 };
 
 const renderRoadTripNetwork = () => {
   if (!roadtripRouteNetwork || !roadtripRouteTraveled) return;
 
-  if (!roadtripHasChosenLevel) {
-    roadtripRouteNetwork.innerHTML = "";
-    roadtripRouteTraveled.innerHTML = "";
-    return;
-  }
-
-  const availableCodes = !roadTrip.gameOver
+  const availableCodes = !roadTrip.gameOver && roadtripHasChosenLevel
     ? new Set(getAvailableMoves().map((state) => state.code))
     : new Set();
 
@@ -3620,13 +3602,13 @@ const renderRoadTripNetwork = () => {
   ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    networkSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main", { outsideGap: 0.32, bend: 0 }));
+    networkSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main"));
 
     const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
     const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
     if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main", { outsideGap: 0.18, bend: 0 }));
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center", { outsideGap: 0.18, bend: 0 }));
+      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main"));
+      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center"));
     }
   });
 
@@ -3641,8 +3623,8 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main", { outsideGap: 0.12, bend: 0 }));
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center", { outsideGap: 0.12, bend: 0 }));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main"));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center"));
   }
   roadtripRouteTraveled.innerHTML = traveledSegments.join("");
 };
@@ -4138,35 +4120,15 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadtripStatusStrip?.classList.toggle("is-hidden", !roadtripHasChosenLevel);
       };
 
-      const updateRoadTripPreselectUI = () => {
-        if (roadtripMapLock) {
-          roadtripMapLock.classList.toggle("show", !roadtripHasChosenLevel);
-          roadtripMapLock.setAttribute("aria-hidden", roadtripHasChosenLevel ? "true" : "false");
-        }
-        if (roadtripScrollHint) {
-          roadtripScrollHint.textContent = roadtripHasChosenLevel
-            ? "Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map."
-            : "Choose a difficulty level above to unlock the map, fuel target, and next stops.";
-          roadtripScrollHint.classList.add("show");
-        }
-        if (roadtripHelper) {
-          roadtripHelper.textContent = roadtripHasChosenLevel
-            ? "Tap a state with the yellow highlight ring on the map or use these quick-pick buttons."
-            : "Choose a difficulty level first to unlock the map and your next available stops.";
-        }
-      };
-
       const setRoadTripStatus = (message) => {
         if (!roadtripStatus) return;
         if (!roadtripHasChosenLevel) {
           roadtripStatus.innerHTML = "";
           updateRoadTripStatusVisibility();
-          updateRoadTripPreselectUI();
           return;
         }
         roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
         updateRoadTripStatusVisibility();
-        updateRoadTripPreselectUI();
       };
 
       const createStateButtons = () => {
@@ -4419,7 +4381,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       const renderRoadTripChoices = () => {
         if (!roadtripNextStops) return;
         if (!roadtripHasChosenLevel) {
-          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">Choose a difficulty level above to unlock the map and your next stops.</div>`;
+          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">Choose a difficulty level to unlock your next stops.</div>`;
           return;
         }
         const moves = getAvailableMoves();
@@ -4841,7 +4803,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
         applyRoadTripLayout(level);
         updateRoadTripLevelUI();
         updateRoadTripLevelText();
-        updateRoadTripPreselectUI();
         resetRoadTrip();
       };
 
@@ -4852,7 +4813,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
         updateRoadTripLevelText();
         hideRoadtripIntro();
         updateRoadTripStatusVisibility();
-        updateRoadTripPreselectUI();
         resetRoadTrip();
       };
 
