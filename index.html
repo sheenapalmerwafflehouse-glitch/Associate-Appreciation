@@ -1614,10 +1614,7 @@
       width: 100%;
       border-radius: 24px;
       border: 1px solid rgba(176, 150, 44, 0.16);
-      background:
-        radial-gradient(circle at 16% 18%, rgba(255,255,255,0.68), rgba(255,255,255,0) 16%),
-        radial-gradient(circle at 84% 14%, rgba(255,255,255,0.58), rgba(255,255,255,0) 18%),
-        linear-gradient(180deg, #bfe7ff 0%, #cdeaff 46%, #c3e5a6 46%, #9ed780 100%);
+      background: #eef1e8;
       overflow: hidden;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.72);
     }
@@ -1646,25 +1643,11 @@
     .roadtrip-map-hud .hud-value { font-size: clamp(0.98rem, 2vw, 1.3rem); }
 
     .roadtrip-sun {
-      position: absolute;
-      width: 96px;
-      height: 96px;
-      right: 6.5%;
-      top: 7%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,250,214,0.98) 0%, rgba(255,230,120,0.96) 42%, rgba(255,230,120,0) 70%);
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(0.2px);
+      display: none;
     }
 
     .roadtrip-hill {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-      background: linear-gradient(180deg, rgba(116, 181, 95, 0.95), rgba(83, 148, 63, 0.92));
-      box-shadow: inset 0 10px 18px rgba(255,255,255,0.12);
+      display: none;
     }
 
     .roadtrip-hill.hill-a { width: 40%; height: 18%; left: -4%; bottom: 12%; }
@@ -1681,29 +1664,30 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(108, 82, 11, 0.34);
-  stroke-width: 4.2;
-  filter: drop-shadow(0 7px 10px rgba(39, 31, 7, 0.10));
+  stroke: rgba(118, 104, 72, 0.34);
+  stroke-width: 2.15;
 }
 
 .roadtrip-route-svg .route-network-center {
-  stroke: rgba(255,255,255,0.40);
-  stroke-width: 1.12;
-  stroke-dasharray: 1.2 1.8;
-  opacity: 0.78;
+  display: none;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(115, 85, 6, 0.9);
-  stroke-width: 5.1;
-  filter: drop-shadow(0 8px 12px rgba(39, 31, 7, 0.16));
+  stroke: rgba(115, 85, 6, 0.92);
+  stroke-width: 5;
+  filter: drop-shadow(0 8px 12px rgba(39, 31, 7, 0.14));
 }
 
 .roadtrip-route-svg .route-traveled-center {
   stroke: rgba(255, 243, 180, 0.96);
-  stroke-width: 1.28;
-  stroke-dasharray: 1.35 1.8;
+  stroke-width: 1.18;
+  stroke-dasharray: 1.45 1.9;
 }
+
+    .roadtrip-mobile-difficulty {
+      display: none;
+      width: 100%;
+    }
 
     .roadtrip-zone-label {
       position: absolute;
@@ -2210,13 +2194,16 @@
       .roadtrip-next-stops,
       .roadtrip-levels { grid-template-columns: 1fr; }
       .roadtrip-helper { display: none; }
-      .roadtrip-mobile-priority,
-      .roadtrip-mobile-next { display: grid; }
-      .roadtrip-mobile-priority { order: 1; }
-      .roadtrip-map-panel { order: 2; }
-      .roadtrip-mobile-next { order: 3; }
+      .roadtrip-mobile-next,
+      .roadtrip-mobile-difficulty { display: grid; }
+      .roadtrip-mobile-difficulty {
+        gap: 12px;
+        margin: 0 0 12px;
+      }
+      .roadtrip-map-panel { order: 1; }
+      .roadtrip-mobile-next { order: 2; }
       .roadtrip-side-panel {
-        order: 4;
+        order: 3;
         padding-bottom: calc(18px + env(safe-area-inset-bottom));
       }
 
@@ -2256,8 +2243,8 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-network-main { stroke-width: 3.8; }
-      .roadtrip-route-svg .route-network-center { stroke-width: 1.02; stroke-dasharray: 1.0 1.5; }
+      .roadtrip-route-svg .route-network-main { stroke-width: 2; }
+      .roadtrip-route-svg .route-network-center { display: none; }
       .roadtrip-route-svg .route-traveled-main { stroke-width: 4.6; }
       .roadtrip-route-svg .route-traveled-center { stroke-width: 1.18; stroke-dasharray: 1.15 1.55; }
       .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
@@ -2663,6 +2650,8 @@
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
 
+            <div class="roadtrip-mobile-difficulty" id="roadtrip-mobile-difficulty"></div>
+
             <div class="roadtrip-toast" id="roadtrip-toast" aria-live="polite"></div>
 
             <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
@@ -2828,6 +2817,7 @@
       const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
       const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(5)");
       const roadtripTripGoalCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(6)");
+      const roadtripMobileDifficulty = document.getElementById("roadtrip-mobile-difficulty");
       const roadtripMobilePriority = document.createElement("div");
       const roadtripMobileNext = document.createElement("div");
       const roadtripIntroOverlay = document.getElementById("roadtrip-intro-overlay");
@@ -3095,18 +3085,15 @@ const getRoadTripCurvePath = (fromState, toState, emphasis = 1) => {
   const dx = toState.x - fromState.x;
   const dy = toState.y - fromState.y;
   const dist = Math.hypot(dx, dy) || 0.001;
-  const midX = (fromState.x + toState.x) / 2;
-  const midY = (fromState.y + toState.y) / 2;
-  const pairHash = getRoadTripPairKey(fromState.code, toState.code)
-    .split("")
-    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  const direction = pairHash % 2 === 0 ? 1 : -1;
-  const bend = clampRoadTripValue((dist * 0.18) * emphasis, 1.0, 3.8);
+  const direction = ((fromState.y + toState.y) / 2) < ROADTRIP_GA_ANCHOR.y ? 1 : -1;
+  const bend = clampRoadTripValue((dist * 0.055 + Math.abs(dy) * 0.025) * emphasis, 0.24, 1.35);
   const normalX = (-dy / dist) * bend * direction;
   const normalY = (dx / dist) * bend * direction;
-  const controlX = midX + normalX;
-  const controlY = midY + normalY;
-  return `M ${fromState.x.toFixed(2)} ${fromState.y.toFixed(2)} Q ${controlX.toFixed(2)} ${controlY.toFixed(2)} ${toState.x.toFixed(2)} ${toState.y.toFixed(2)}`;
+  const c1x = fromState.x + (dx * 0.32) + normalX;
+  const c1y = fromState.y + (dy * 0.32) + normalY;
+  const c2x = fromState.x + (dx * 0.68) + normalX;
+  const c2y = fromState.y + (dy * 0.68) + normalY;
+  return `M ${fromState.x.toFixed(2)} ${fromState.y.toFixed(2)} C ${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${toState.x.toFixed(2)} ${toState.y.toFixed(2)}`;
 };
 
 const renderRoadTripNetwork = () => {
@@ -3115,11 +3102,8 @@ const renderRoadTripNetwork = () => {
   roadtripRouteNetwork.innerHTML = ROADTRIP_EDGE_PAIRS.map(([codeA, codeB]) => {
     const fromState = roadTripStates[codeA];
     const toState = roadTripStates[codeB];
-    const path = getRoadTripCurvePath(fromState, toState, 0.88);
-    return [
-      `<path class="route-network-main" d="${path}" />`,
-      `<path class="route-network-center" d="${path}" />`
-    ].join("");
+    const path = getRoadTripCurvePath(fromState, toState, 0.62);
+    return `<path class="route-network-main" d="${path}" />`;
   }).join("");
 
   if (roadTrip.route.length < 2) {
@@ -3131,7 +3115,7 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    const path = getRoadTripCurvePath(fromState, toState, 1.05);
+    const path = getRoadTripCurvePath(fromState, toState, 0.9);
     traveledSegments.push(`<path class="route-traveled-main" d="${path}" />`);
     traveledSegments.push(`<path class="route-traveled-center" d="${path}" />`);
   }
@@ -4007,18 +3991,22 @@ const applyRoadTripLayout = (levelKey = "base") => {
         const isMobileRoadTrip = window.innerWidth <= 700;
 
         if (isMobileRoadTrip) {
-          if (!roadtripMobilePriority.isConnected) roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
           if (!roadtripMobileNext.isConnected) {
             if (roadtripMapPanel.nextSibling) roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
             else roadtripBoard.appendChild(roadtripMobileNext);
           }
 
-          if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
-          if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
+          if (roadtripDifficultyCard && roadtripMobileDifficulty) {
+            roadtripMobileDifficulty.appendChild(roadtripDifficultyCard);
+          }
+
           if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
           if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+          if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
+
+          if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
         } else {
           if (roadtripDifficultyCard) roadtripSidePanel.appendChild(roadtripDifficultyCard);
           if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
@@ -4026,6 +4014,8 @@ const applyRoadTripLayout = (levelKey = "base") => {
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
           if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
+
+          if (roadtripMobileDifficulty) roadtripMobileDifficulty.replaceChildren();
           if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
           if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
         }
