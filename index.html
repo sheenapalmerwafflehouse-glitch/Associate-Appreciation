@@ -463,6 +463,48 @@
       will-change: transform;
     }
 
+    .hero-card {
+      position: relative;
+      overflow: visible;
+    }
+
+    .hero-ball-drop {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: clamp(96px, 13vw, 160px);
+      aspect-ratio: 1 / 1;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 8;
+      transform: translate3d(var(--ball-x, -120px), var(--ball-y, -120px), 0) scale(var(--ball-scale, 0.84));
+      transition:
+        transform 2400ms cubic-bezier(0.2, 0.88, 0.18, 1),
+        opacity 240ms ease;
+      mix-blend-mode: multiply;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 12px 18px rgba(92, 77, 19, 0.18));
+    }
+
+    .hero-ball-drop.is-ready {
+      opacity: 1;
+    }
+
+    .hero-ball-drop.is-done {
+      opacity: 0;
+      transition-duration: 420ms;
+    }
+
+    .hero-ball-drop video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: transparent;
+      mix-blend-mode: multiply;
+      border-radius: 50%;
+    }
+
     .song-card {
       width: 100%;
       max-width: 760px;
@@ -1628,31 +1670,46 @@
 
     .roadtrip-map-lock {
       position: absolute;
-      inset: 0;
+      inset: 12px;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-      z-index: 12;
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.32));
-      backdrop-filter: blur(1.5px);
+      padding: 16px;
+      z-index: 18;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.38));
+      backdrop-filter: blur(2px);
+      border-radius: 22px;
     }
 
     .roadtrip-map-lock.show { display: flex; }
 
     .roadtrip-map-lock-card {
-      width: min(540px, 90%);
-      padding: 18px 20px;
-      border-radius: 20px;
-      background: linear-gradient(180deg, rgba(255,253,245,0.98), rgba(255,247,219,0.98));
+      width: min(360px, calc(100% - 18px));
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,253,245,0.98), rgba(255,247,219,0.99));
       border: 1px solid rgba(176, 150, 44, 0.18);
-      box-shadow: 0 16px 36px rgba(17, 17, 17, 0.12);
+      box-shadow: 0 18px 38px rgba(17, 17, 17, 0.14);
       text-align: center;
       color: #5c4d00;
-      font-size: clamp(1rem, 1.5vw, 1.14rem);
+      font-size: clamp(0.98rem, 1.4vw, 1.08rem);
       font-weight: 800;
-      line-height: 1.42;
+      line-height: 1.38;
       letter-spacing: 0.01em;
+      margin: 0 auto;
+    }
+
+    .roadtrip-map-lock-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.55rem;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.22);
+      box-shadow: 0 10px 18px rgba(92, 77, 19, 0.14);
     }
 
     .roadtrip-map-stage.is-locked .roadtrip-zone-label,
@@ -1672,13 +1729,14 @@
     }
 
     .roadtrip-map-hud .hud-card {
-      min-height: 88px;
-      padding: 12px 10px 10px;
+      min-height: 74px;
+      padding: 10px 10px 9px;
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
+      gap: 2px;
       background: rgba(255,255,255,0.94);
       backdrop-filter: blur(4px);
       box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);
@@ -1710,36 +1768,39 @@
 }
 
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(102, 92, 72, 0.22);
-  stroke-width: 1.12;
+  stroke: rgba(77, 70, 56, 0.48);
+  stroke-width: 1.7;
+  filter: drop-shadow(0 2px 5px rgba(95, 70, 0, 0.08));
 }
 
 .roadtrip-route-svg .route-network-center {
-  display: none;
+  stroke: rgba(255, 250, 230, 0.72);
+  stroke-width: 0.34;
+  stroke-dasharray: 0.42 1.18;
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(103, 84, 36, 0.78);
-  stroke-width: 3.35;
-  filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.12));
+  stroke: rgba(103, 84, 36, 0.84);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.14));
 }
 
 .roadtrip-route-svg .route-option-center {
-  stroke: rgba(255, 252, 237, 0.96);
-  stroke-width: 0.98;
-  stroke-dasharray: 0.16 1.2;
+  stroke: rgba(255, 252, 237, 0.98);
+  stroke-width: 0.42;
+  stroke-dasharray: 0.42 1.12;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(82, 67, 30, 0.92);
-  stroke-width: 3.95;
+  stroke: rgba(82, 67, 30, 0.95);
+  stroke-width: 2.55;
   filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
 }
 
 .roadtrip-route-svg .route-traveled-center {
   stroke: rgba(255, 252, 238, 0.98);
-  stroke-width: 1.08;
-  stroke-dasharray: 0.16 1.14;
+  stroke-width: 0.5;
+  stroke-dasharray: 0.42 1.06;
 }
 
     .roadtrip-mobile-difficulty {
@@ -2264,8 +2325,8 @@
       }
 
       .roadtrip-map-stage { width: clamp(560px, 155vw, 760px); min-height: 460px; }
-      .roadtrip-map-lock { padding: 18px; }
-      .roadtrip-map-lock-card { width: min(92%, 430px); padding: 16px 16px; font-size: 0.96rem; line-height: 1.38; }
+      .roadtrip-map-lock { padding: 10px; inset: 10px; }
+      .roadtrip-map-lock-card { width: min(92%, 340px); padding: 15px 14px; font-size: 0.94rem; line-height: 1.34; }
       .zone-atlantic { right: 2.8%; top: 5.4%; }
 
       .roadtrip-map-stage .state-node[data-state="IN"] { left: 50.5% !important; top: 23.5% !important; }
@@ -2448,6 +2509,7 @@
     }
 
     .history-fab-label {
+  white-space: nowrap;
       line-height: 1;
       letter-spacing: 0.005em;
       font-size: clamp(0.64rem, 1.9vw, 0.74rem);
@@ -2789,6 +2851,7 @@
       }
 
       .history-fab-label {
+  white-space: nowrap;
         font-size: 0.67rem;
       }
 
@@ -2883,6 +2946,11 @@
 
         <div class="section-image-link hero-image lightbox-trigger">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
+        </div>
+        <div class="hero-ball-drop" id="hero-ball-drop" aria-hidden="true">
+          <video id="hero-ball-video" playsinline muted preload="auto">
+            <source src="Images/BALL DROP.mp4" type="video/mp4" />
+          </video>
         </div>
       </div>
     </section>
@@ -3242,7 +3310,10 @@
                   <g id="roadtrip-route-traveled"></g>
                 </svg>
                 <div class="roadtrip-map-lock" id="roadtrip-map-lock" aria-hidden="true">
-                  <div class="roadtrip-map-lock-card">Choose a difficulty level above to unlock the game, map, fuel target, and next stops.</div>
+                  <div class="roadtrip-map-lock-card">
+                    <div class="roadtrip-map-lock-icon" aria-hidden="true">🔒</div>
+                    <div>Choose a difficulty level above to unlock the game, map, fuel target, and next stops.</div>
+                  </div>
                 </div>
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
                 <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
@@ -3327,6 +3398,8 @@
       const triggers = document.querySelectorAll(".lightbox-trigger");
       const backToTop = document.getElementById("back-to-top");
       const heroImage = document.querySelector(".hero-image img");
+      const heroBallDrop = document.getElementById("hero-ball-drop");
+      const heroBallVideo = document.getElementById("hero-ball-video");
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
@@ -3437,6 +3510,15 @@
         });
         return pairs;
       })();
+
+
+      const ROADTRIP_ROUTE_PAIRS = [
+        ["CO", "AZ"], ["CO", "KS"], ["KS", "OK"], ["KS", "MO"], ["MO", "IL"], ["IL", "IN"], ["IN", "OH"],
+        ["OH", "PA"], ["PA", "DE"], ["PA", "MD"], ["MD", "VA"], ["VA", "WV"], ["KY", "WV"], ["KY", "TN"],
+        ["TN", "NC"], ["NC", "SC"], ["SC", "FL"], ["FL", "GA"], ["GA", "AL"], ["AL", "MS"], ["MS", "LA"],
+        ["LA", "TX"], ["TX", "OK"], ["OK", "AR"], ["AR", "LA"], ["AR", "TN"], ["MO", "AR"], ["TN", "AL"],
+        ["NC", "VA"], ["SC", "GA"]
+      ];
 
       const ROADTRIP_LAYOUTS = {
         base: { key: "base", jitter: 0, anchor: 0.12, angleDrift: 0, radialDrift: 0, settle: 150 },
@@ -3687,7 +3769,8 @@ const getRoadTripPathMarkup = (fromState, toState, className, options = {}) => {
   const dist = Math.hypot(dx, dy) || 1;
   const nx = -dy / dist;
   const ny = dx / dist;
-  const bend = options.bend ?? Math.min(2.2, Math.max(-2.2, dist * 0.08 * ((fromState.code < toState.code) ? 1 : -1)));
+  const curveSign = ((fromState.code.charCodeAt(0) + toState.code.charCodeAt(0)) % 2 === 0) ? 1 : -1;
+  const bend = options.bend ?? Math.min(1.1, Math.max(-1.1, dist * 0.045 * curveSign));
   const midX = (start.x + end.x) / 2 + nx * bend;
   const midY = (start.y + end.y) / 2 + ny * bend;
   return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} Q ${midX.toFixed(2)} ${midY.toFixed(2)} ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
@@ -4234,6 +4317,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         if (roadtripMap) {
           roadtripMap.classList.toggle("is-locked", !roadtripHasChosenLevel);
         }
+        syncRoadTripMapLockHost();
         if (roadtripMapLock) {
           roadtripMapLock.classList.toggle("show", !roadtripHasChosenLevel);
           roadtripMapLock.setAttribute("aria-hidden", roadtripHasChosenLevel ? "true" : "false");
@@ -4491,6 +4575,47 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadtripCarFallback.style.left = roadtripCar.style.left;
         roadtripCarFallback.style.top = roadtripCar.style.top;
         roadtripCarFallback.style.transform = roadtripCar.style.transform || "translate(-50%, -50%) scaleX(1)";
+      };
+
+
+      const syncRoadTripMapLockHost = () => {
+        if (!roadtripMapLock || !roadtripMapScroll) return;
+        if (roadtripMapLock.parentElement !== roadtripMapScroll) {
+          roadtripMapScroll.appendChild(roadtripMapLock);
+        }
+      };
+
+      const primeHeroBallDrop = () => {
+        if (!heroBallDrop || !heroBallVideo || !heroImage) return;
+        const card = heroBallDrop.closest('.hero-card');
+        const heroRect = heroImage.getBoundingClientRect();
+        const cardRect = card?.getBoundingClientRect();
+        if (!heroRect.width || !cardRect?.width) return;
+
+        const mobile = window.innerWidth <= 640;
+        const startX = mobile ? -64 : -88;
+        const startY = mobile ? -24 : -34;
+        const targetX = heroRect.left - cardRect.left + heroRect.width * (mobile ? 0.33 : 0.36);
+        const targetY = heroRect.top - cardRect.top + heroRect.height * (mobile ? 0.10 : 0.085);
+
+        heroBallDrop.style.setProperty('--ball-x', `${startX}px`);
+        heroBallDrop.style.setProperty('--ball-y', `${startY}px`);
+        heroBallDrop.style.setProperty('--ball-scale', mobile ? '0.72' : '0.84');
+        heroBallDrop.classList.remove('is-done');
+        heroBallDrop.classList.add('is-ready');
+
+        window.setTimeout(() => {
+          heroBallDrop.style.setProperty('--ball-x', `${targetX}px`);
+          heroBallDrop.style.setProperty('--ball-y', `${targetY}px`);
+          heroBallDrop.style.setProperty('--ball-scale', mobile ? '0.88' : '1');
+          heroBallVideo.currentTime = 0;
+          const playPromise = heroBallVideo.play();
+          if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+        }, 220);
+
+        window.setTimeout(() => {
+          heroBallDrop.classList.add('is-done');
+        }, 3150);
       };
 
       const scrollRoadTripMapToCurrent = () => {
@@ -5074,6 +5199,9 @@ const applyRoadTripLayout = (levelKey = "base") => {
       renderLyrics();
       positionRoadtripCarFallback();
       updateRoadtripScrollHint();
+      window.addEventListener('load', () => {
+        primeHeroBallDrop();
+      });
     });
   </script>
 
