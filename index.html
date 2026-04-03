@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>2026 Associate Appreciation</title>
-  
   <style>
     :root {
       --text: #111111;
@@ -61,14 +60,7 @@
       z-index: -1;
     }
 
-    body.lightbox-open {
-      overflow: hidden;
-    }
-
-    html.milestone-open,
-    body.milestone-open {
-      overflow: hidden;
-    }
+    body.lightbox-open { overflow: hidden; }
 
     img {
       max-width: 100%;
@@ -129,8 +121,10 @@
       width: 100%;
       max-width: 900px;
       overflow-x: auto;
+      overflow-y: hidden;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      overscroll-behavior-x: contain;
     }
 
     .mini-nav-wrap::-webkit-scrollbar { display: none; }
@@ -155,6 +149,9 @@
       white-space: nowrap;
       box-shadow: 0 4px 10px rgba(92, 77, 19, 0.05);
       transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      touch-action: manipulation;
+      position: relative;
+      z-index: 1;
     }
 
     .mini-nav a:hover,
@@ -325,10 +322,7 @@
       transition: transform 0.4s ease;
     }
 
-    .section-image-link:hover .media-frame img {
-      transform: scale(1.03);
-    }
-
+    .section-image-link:hover .media-frame img { transform: scale(1.03); }
     .section-copy { margin-top: 20px; }
 
     .links,
@@ -350,9 +344,7 @@
       position: relative;
       overflow: hidden;
       -webkit-tap-highlight-color: transparent;
-      box-shadow:
-        0 2px 0 rgba(92, 77, 19, 0.1),
-        0 8px 18px rgba(92, 77, 19, 0.08);
+      box-shadow: 0 2px 0 rgba(92, 77, 19, 0.1), 0 8px 18px rgba(92, 77, 19, 0.08);
     }
 
     .section-link {
@@ -370,9 +362,7 @@
     .section-link:hover,
     .song-toggle:hover {
       transform: translateY(-2px);
-      box-shadow:
-        0 2px 0 rgba(92, 77, 19, 0.1),
-        0 12px 22px rgba(92, 77, 19, 0.12);
+      box-shadow: 0 2px 0 rgba(92, 77, 19, 0.1), 0 12px 22px rgba(92, 77, 19, 0.12);
       background: #ffe66a;
     }
 
@@ -383,16 +373,12 @@
     }
 
     .pressable { will-change: transform; }
-
     .pressable.is-pressing {
       transform: scale(0.965);
-      box-shadow:
-        0 1px 0 rgba(92, 77, 19, 0.08),
-        0 4px 10px rgba(92, 77, 19, 0.1);
+      box-shadow: 0 1px 0 rgba(92, 77, 19, 0.08), 0 4px 10px rgba(92, 77, 19, 0.1);
     }
 
     .pressable.rebound { animation: pressRebound 220ms ease-out; }
-
     @keyframes pressRebound {
       0% { transform: scale(0.97); }
       55% { transform: scale(1.025); }
@@ -493,10 +479,7 @@
 
     .song-card.audio-playing {
       border-color: rgba(245, 213, 71, 0.9);
-      box-shadow:
-        0 12px 30px rgba(92, 77, 19, 0.08),
-        0 0 0 1px rgba(245, 213, 71, 0.45),
-        0 0 28px rgba(245, 213, 71, 0.2);
+      box-shadow: 0 12px 30px rgba(92, 77, 19, 0.08), 0 0 0 1px rgba(245, 213, 71, 0.45), 0 0 28px rgba(245, 213, 71, 0.2);
     }
 
     .song-layout {
@@ -529,11 +512,7 @@
       font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
     }
 
-    .song-meta {
-      min-width: 0;
-      text-align: center;
-    }
-
+    .song-meta { min-width: 0; text-align: center; }
     .song-label {
       font-size: 0.76rem;
       text-transform: uppercase;
@@ -696,13 +675,8 @@
       line-height: 1.15;
       letter-spacing: 0.01em;
       white-space: pre-line;
-      text-shadow:
-        0 2px 10px rgba(0,0,0,0.30),
-        0 0 12px rgba(0,0,0,0.18);
-      transition:
-        opacity 0.40s ease,
-        transform 0.40s ease,
-        filter 0.40s ease;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.30), 0 0 12px rgba(0,0,0,0.18);
+      transition: opacity 0.40s ease, transform 0.40s ease, filter 0.40s ease;
       filter: blur(1px);
       will-change: transform, opacity;
     }
@@ -719,23 +693,15 @@
       filter: blur(2px);
     }
 
-    .lyric-scrubber-wrap {
-      width: 100%;
-      max-width: 760px;
-      margin: 12px auto 0;
-    }
-
-    .lyric-scrubber {
-      width: 100%;
-      accent-color: #111111;
-    }
+    .lyric-scrubber-wrap { width: 100%; max-width: 760px; margin: 12px auto 0; }
+    .lyric-scrubber { width: 100%; accent-color: #111111; }
 
     .anniversary-interactive {
       position: relative;
       display: block;
       width: 100%;
       border-radius: 20px;
-      overflow: visible;
+      overflow: hidden;
       border: 1px solid rgba(176, 150, 44, 0.14);
       background: #fff;
       cursor: default;
@@ -768,9 +734,7 @@
       transform-origin: center center;
     }
 
-    .anniversary-interactive:hover .anniversary-image-layer img {
-      transform: scale(1.03);
-    }
+    .anniversary-interactive:hover .anniversary-image-layer img { transform: scale(1.03); }
 
     .anniversary-hotspots {
       position: absolute;
@@ -850,9 +814,7 @@
       transform: scale(1.08);
     }
 
-    .balloon-hotspot.popping {
-      animation: balloonPop 0.22s ease;
-    }
+    .balloon-hotspot.popping { animation: balloonPop 0.22s ease; }
 
     .balloon-hotspot.hinting::after {
       background: rgba(245, 213, 71, 0.12);
@@ -878,9 +840,7 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      .balloon-hotspot {
-        animation: balloonFloat 3.2s ease-in-out infinite;
-      }
+      .balloon-hotspot { animation: balloonFloat 3.2s ease-in-out infinite; }
     }
 
     @keyframes balloonFloat {
@@ -910,10 +870,7 @@
       border-radius: 20px;
     }
 
-    .photo-flash-link .tilt-stage {
-      position: relative;
-      z-index: 1;
-    }
+    .photo-flash-link .tilt-stage { position: relative; z-index: 1; }
 
     .photo-flash-link::before {
       content: "";
@@ -924,14 +881,7 @@
       height: 18%;
       transform: translate(-50%, -50%) scale(0.78);
       border-radius: 50%;
-      background: radial-gradient(
-        circle,
-        rgba(255,255,255,1) 0%,
-        rgba(255,255,255,0.92) 18%,
-        rgba(255,255,255,0.38) 36%,
-        rgba(255,255,255,0.08) 52%,
-        rgba(255,255,255,0) 74%
-      );
+      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0.92) 18%, rgba(255,255,255,0.38) 36%, rgba(255,255,255,0.08) 52%, rgba(255,255,255,0) 74%);
       opacity: 0;
       pointer-events: none;
       z-index: 6;
@@ -946,14 +896,7 @@
       width: 40%;
       height: 10%;
       border-radius: 999px;
-      background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.28) 18%,
-        rgba(255,255,255,1) 50%,
-        rgba(255,255,255,0.28) 82%,
-        rgba(255,255,255,0) 100%
-      );
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.28) 18%, rgba(255,255,255,1) 50%, rgba(255,255,255,0.28) 82%, rgba(255,255,255,0) 100%);
       opacity: 0;
       transform: translateX(-110%);
       pointer-events: none;
@@ -962,64 +905,31 @@
     }
 
     .photo-flash-link:hover::before,
-    .photo-flash-link:focus-visible::before {
-      animation: photoFlashPulse 1.05s ease-out;
-    }
+    .photo-flash-link:focus-visible::before { animation: photoFlashPulse 1.05s ease-out; }
 
     .photo-flash-link:hover::after,
-    .photo-flash-link:focus-visible::after {
-      animation: photoFlashSweep 1.05s ease-out;
-    }
+    .photo-flash-link:focus-visible::after { animation: photoFlashSweep 1.05s ease-out; }
 
-    .photo-flash-link.attention::before {
-      animation: photoFlashPulse 1.35s ease-out infinite;
-    }
-
-    .photo-flash-link.attention::after {
-      animation: photoFlashSweep 1.35s ease-out infinite;
-    }
+    .photo-flash-link.attention::before { animation: photoFlashPulse 1.35s ease-out infinite; }
+    .photo-flash-link.attention::after { animation: photoFlashSweep 1.35s ease-out infinite; }
 
     @keyframes photoFlashPulse {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.78);
-      }
-      16% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.02);
-      }
-      42% {
-        opacity: 0.26;
-        transform: translate(-50%, -50%) scale(1.08);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(1.14);
-      }
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.78); }
+      16% { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+      42% { opacity: 0.26; transform: translate(-50%, -50%) scale(1.08); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.14); }
     }
 
     @keyframes photoFlashSweep {
-      0% {
-        transform: translateX(-110%);
-        opacity: 0;
-      }
-      18% {
-        opacity: 1;
-      }
-      72% {
-        transform: translateX(110%);
-        opacity: 1;
-      }
-      100% {
-        transform: translateX(110%);
-        opacity: 0;
-      }
+      0% { transform: translateX(-110%); opacity: 0; }
+      18% { opacity: 1; }
+      72% { transform: translateX(110%); opacity: 1; }
+      100% { transform: translateX(110%); opacity: 0; }
     }
 
     .footer-decor {
       margin-top: 18px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,245,200,0.24) 18%, rgba(248,239,201,0.62) 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,245,200,0.24) 18%, rgba(248,239,201,0.62) 100%);
       border-top: 1px solid rgba(212, 176, 0, 0.14);
       position: relative;
       overflow: hidden;
@@ -1066,8 +976,7 @@
       font-size: 0.94rem;
     }
 
-    .lightbox,
-    .milestone-modal {
+    .lightbox {
       position: fixed;
       inset: 0;
       background: rgba(17, 17, 17, 0.82);
@@ -1075,9 +984,6 @@
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.25s ease, visibility 0.25s ease;
-    }
-
-    .lightbox {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1086,16 +992,26 @@
     }
 
     .milestone-modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.22);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.22s ease, visibility 0.22s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-      z-index: 99999;
+      padding: 18px;
+      z-index: 30;
+      border-radius: 20px;
+      backdrop-filter: blur(2px);
     }
 
     .lightbox.open,
     .milestone-modal.open,
-    .game-modal.open {
+    .game-modal.open,
+    .roadtrip-intro-overlay.show {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
@@ -1143,7 +1059,7 @@
 
     .milestone-modal-inner {
       position: relative;
-      width: min(420px, 92vw);
+      width: min(360px, calc(100% - 10px));
       margin: 0;
       background: linear-gradient(180deg, #fffdf2 0%, #f7f8e8 50%, #f1f6dc 100%);
       border: 1px solid rgba(176, 150, 44, 0.14);
@@ -1204,9 +1120,7 @@
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
       color: #111;
       font-weight: 800;
-      box-shadow:
-        0 8px 18px rgba(92, 77, 19, 0.14),
-        0 2px 0 rgba(92, 77, 19, 0.08);
+      box-shadow: 0 8px 18px rgba(92, 77, 19, 0.14), 0 2px 0 rgba(92, 77, 19, 0.08);
       border: 1px solid rgba(176, 150, 44, 0.18);
       cursor: pointer;
       opacity: 0;
@@ -1233,10 +1147,7 @@
       position: relative;
       border-radius: inherit;
       transform-style: preserve-3d;
-      transition:
-        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 260ms ease,
-        filter 260ms ease;
+      transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 260ms ease, filter 260ms ease;
       will-change: transform;
     }
 
@@ -1284,9 +1195,7 @@
       transform-origin: center center;
     }
 
-    .tilt-card.is-tilting img {
-      transform: translateZ(34px) scale(1.04);
-    }
+    .tilt-card.is-tilting img { transform: translateZ(34px) scale(1.04); }
 
     .tilt-glare {
       position: absolute;
@@ -1295,21 +1204,12 @@
       pointer-events: none;
       z-index: 2;
       opacity: 0;
-      background:
-        radial-gradient(
-          circle at var(--glare-x, 50%) var(--glare-y, 50%),
-          rgba(255, 255, 255, 0.54) 0%,
-          rgba(255, 255, 255, 0.2) 16%,
-          rgba(255, 255, 255, 0) 44%
-        );
+      background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.54) 0%, rgba(255, 255, 255, 0.2) 16%, rgba(255, 255, 255, 0) 44%);
       transition: opacity 220ms ease;
       mix-blend-mode: screen;
     }
 
-    .tilt-card.is-tilting .tilt-glare {
-      opacity: 0.95;
-    }
-
+    .tilt-card.is-tilting .tilt-glare { opacity: 0.95; }
     .tilt-card:focus-within .tilt-stage {
       transform: rotateX(0deg) rotateY(0deg) scale3d(1.01, 1.01, 1);
       box-shadow: 0 18px 34px rgba(92, 77, 19, 0.14);
@@ -1320,17 +1220,9 @@
       filter: saturate(1.02);
     }
 
-    .tilt-card[data-tilt-depth="soft"] .tilt-stage {
-      transition-duration: 220ms;
-    }
-
-    .tilt-card[data-tilt-depth="soft"] img {
-      transform: translateZ(18px) scale(1.01);
-    }
-
-    .tilt-card[data-tilt-depth="soft"].is-tilting img {
-      transform: translateZ(24px) scale(1.03);
-    }
+    .tilt-card[data-tilt-depth="soft"] .tilt-stage { transition-duration: 220ms; }
+    .tilt-card[data-tilt-depth="soft"] img { transform: translateZ(18px) scale(1.01); }
+    .tilt-card[data-tilt-depth="soft"].is-tilting img { transform: translateZ(24px) scale(1.03); }
 
     .game-modal {
       position: fixed;
@@ -1363,7 +1255,7 @@
       position: sticky;
       top: 0;
       float: right;
-      z-index: 4;
+      z-index: 40;
     }
 
     .game-shell {
@@ -1408,23 +1300,9 @@
       letter-spacing: 0.03em;
     }
 
-    .game-subtitle {
-      max-width: 46ch;
-      margin: 12px auto 0;
-      color: #4f4f4f;
-      line-height: 1.65;
-    }
-
-    .game-board {
-      padding: 18px;
-      display: grid;
-      grid-template-columns: 1.2fr 0.82fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .game-map-panel,
-    .game-side-panel {
+    .game-subtitle { max-width: 46ch; margin: 12px auto 0; color: #4f4f4f; line-height: 1.65; }
+    .game-board { padding: 18px; display: grid; grid-template-columns: 1.2fr 0.82fr; gap: 18px; align-items: start; }
+    .game-map-panel, .game-side-panel {
       background: rgba(255,255,255,0.84);
       border: 1px solid rgba(176, 150, 44, 0.14);
       border-radius: 22px;
@@ -1432,11 +1310,7 @@
     }
 
     .game-map-panel { padding: 18px; }
-    .game-side-panel {
-      padding: 16px;
-      display: grid;
-      gap: 14px;
-    }
+    .game-side-panel { padding: 16px; display: grid; gap: 14px; }
 
     .game-hud {
       display: grid;
@@ -1473,18 +1347,11 @@
       min-height: 500px;
       padding: 18px;
       border-radius: 20px;
-      background:
-        radial-gradient(circle at 20% 15%, rgba(255,255,255,0.8), rgba(255,255,255,0) 28%),
-        linear-gradient(180deg, #cbe8ff 0%, #b5ddf7 58%, #c9ecb5 58%, #a8d48d 100%);
+      background: radial-gradient(circle at 20% 15%, rgba(255,255,255,0.8), rgba(255,255,255,0) 28%), linear-gradient(180deg, #cbe8ff 0%, #b5ddf7 58%, #c9ecb5 58%, #a8d48d 100%);
       overflow: hidden;
     }
 
-    .map-path {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
+    .map-path { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 
     .game-banner {
       padding: 12px 14px;
@@ -1494,11 +1361,13 @@
       font-weight: 700;
       color: #4f4f4f;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
 
-    .game-banner strong {
-      color: #1a1a1a;
-    }
+    .game-banner strong { color: #1a1a1a; }
 
     .game-celebration {
       margin-top: 14px;
@@ -1512,23 +1381,9 @@
       display: none;
     }
 
-    .game-celebration.show {
-      display: block;
-      animation: celebrationBounce 0.45s ease;
-    }
-
-    .roadtrip-map-outcome {
-      position: absolute;
-      inset: 18px 18px auto 18px;
-      z-index: 18;
-      display: none;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    .roadtrip-map-outcome.show {
-      display: flex;
-    }
+    .game-celebration.show { display: block; animation: celebrationBounce 0.45s ease; }
+    .roadtrip-map-outcome { position: absolute; inset: 18px 18px auto 18px; z-index: 18; display: none; justify-content: center; pointer-events: none; }
+    .roadtrip-map-outcome.show { display: flex; }
 
     .roadtrip-map-outcome-card {
       width: min(430px, calc(100% - 12px));
@@ -1578,17 +1433,8 @@
       overflow-wrap: anywhere;
     }
 
-    .roadtrip-map-restart {
-      margin-top: 14px;
-    }
-
-    .roadtrip-side-panel .game-actions {
-      display: none;
-    }
-
-    .game-actions {
-      display: none !important;
-    }
+    .roadtrip-map-restart { margin-top: 14px; }
+    .roadtrip-side-panel .game-actions { display: none; }
 
     .roadtrip-toast {
       display: none;
@@ -1605,11 +1451,7 @@
       text-align: center;
     }
 
-    .roadtrip-toast.show {
-      display: block;
-      animation: celebrationBounce 0.32s ease;
-    }
-
+    .roadtrip-toast.show { display: block; animation: celebrationBounce 0.32s ease; }
     @keyframes celebrationBounce {
       0% { transform: scale(0.95); opacity: 0; }
       60% { transform: scale(1.04); opacity: 1; }
@@ -1622,14 +1464,8 @@
     }
 
     @keyframes availableStateRing {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      50% {
-        transform: scale(1.08);
-        opacity: 0.35;
-      }
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.35; }
     }
 
     @keyframes roadtripStripeDrift {
@@ -1649,24 +1485,12 @@
     }
 
     @keyframes roadtripPopupFloat {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateY(8px) scale(0.84);
-      }
-      12% {
-        opacity: 1;
-      }
-      70% {
-        opacity: 1;
-        transform: translate(-50%, -50%) translateY(-22px) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) translateY(-40px) scale(0.96);
-      }
+      0% { opacity: 0; transform: translate(-50%, -50%) translateY(8px) scale(0.84); }
+      12% { opacity: 1; }
+      70% { opacity: 1; transform: translate(-50%, -50%) translateY(-22px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) translateY(-40px) scale(0.96); }
     }
 
-    /* -------- Revised Anniversary Road Trip game overrides -------- */
     .game-modal-inner.game-modal-inner--wide {
       width: min(1180px, 98vw);
       max-height: 94vh;
@@ -1674,10 +1498,7 @@
       background: linear-gradient(180deg, #fffef7 0%, #fff7d6 55%, #fff2b8 100%);
     }
 
-    .roadtrip-shell {
-      background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,250,231,0.98) 100%);
-    }
-
+    .roadtrip-shell { background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,250,231,0.98) 100%); }
     .roadtrip-top {
       padding: 22px 18px 16px;
       background:
@@ -1686,16 +1507,8 @@
         linear-gradient(135deg, #ffe66a 0%, #f5d547 55%, #ffd84c 100%);
     }
 
-    .roadtrip-top .game-subtitle {
-      max-width: 54ch;
-      font-size: 1rem;
-    }
-
-    .roadtrip-board {
-      grid-template-columns: minmax(0, 1.42fr) minmax(380px, 0.98fr);
-      align-items: stretch;
-    }
-
+    .roadtrip-top .game-subtitle { max-width: 54ch; font-size: 1rem; }
+    .roadtrip-board { grid-template-columns: minmax(0, 1.42fr) minmax(380px, 0.98fr); align-items: stretch; }
     .roadtrip-map-panel {
       position: relative;
       padding: 16px;
@@ -1710,9 +1523,7 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,248,227,0.98));
     }
 
-    .roadtrip-status-strip {
-      margin-bottom: 12px;
-    }
+    .roadtrip-status-strip { margin-bottom: 12px; }
 
     .roadtrip-status-level {
       display: inline-flex;
@@ -1731,11 +1542,7 @@
       box-shadow: 0 6px 12px rgba(92, 77, 19, 0.08);
     }
 
-    .roadtrip-levels {
-      display: grid;
-      grid-template-columns: 1fr 1.32fr 1fr;
-      gap: 12px;
-    }
+    .roadtrip-levels { display: grid; grid-template-columns: 1fr 1.32fr 1fr; gap: 12px; }
 
     .roadtrip-level-btn {
       border: 1px solid rgba(176, 150, 44, 0.18);
@@ -1788,9 +1595,7 @@
       box-shadow: 0 8px 18px rgba(92, 77, 19, 0.08);
     }
 
-    .roadtrip-scroll-hint.show {
-      display: block;
-    }
+    .roadtrip-scroll-hint.show { display: block; }
 
     .roadtrip-map-scroll {
       overflow: auto;
@@ -1816,10 +1621,31 @@
     }
 
     .roadtrip-map-stage::before,
-    .roadtrip-map-stage::after {
-      content: none;
-      display: none;
+    .roadtrip-map-stage::after { content: none; display: none; }
+
+    .roadtrip-map-hud {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 14;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      pointer-events: none;
     }
+
+    .roadtrip-map-hud .hud-card {
+      padding: 10px 8px;
+      margin: 0;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 18px rgba(17, 17, 17, 0.12);
+      pointer-events: auto;
+    }
+
+    .roadtrip-map-hud .hud-label { font-size: 0.68rem; margin-bottom: 4px; }
+    .roadtrip-map-hud .hud-value { font-size: clamp(0.98rem, 2vw, 1.3rem); }
 
     .roadtrip-sun {
       position: absolute;
@@ -1847,11 +1673,7 @@
     .roadtrip-hill.hill-b { width: 46%; height: 19%; left: 26%; bottom: 10%; }
     .roadtrip-hill.hill-c { width: 42%; height: 18%; right: -3%; bottom: 11%; }
 
-    .map-path.roadtrip-route-svg {
-      inset: 0;
-      z-index: 1;
-    }
-
+    .map-path.roadtrip-route-svg { inset: 0; z-index: 1; }
     .roadtrip-route-svg .route-main {
       fill: none;
       stroke: rgba(96, 73, 9, 0.78);
@@ -1889,7 +1711,6 @@
     .zone-west { left: 6%; top: 6%; }
     .zone-midwest { left: 34%; top: 8%; }
     .zone-south { left: 44%; bottom: 8%; }
-    
     .zone-atlantic { right: 2.2%; top: 6%; }
 
     .roadtrip-map-stage .state-node[data-state="FL"] { left: 84% !important; top: 75.5% !important; }
@@ -1930,10 +1751,7 @@
 
     .roadtrip-map-stage .state-node-label,
     .roadtrip-map-stage .state-node-points,
-    .roadtrip-map-stage .state-node-fuel {
-      position: relative;
-      z-index: 2;
-    }
+    .roadtrip-map-stage .state-node-fuel { position: relative; z-index: 2; }
 
     .roadtrip-map-stage .state-node:hover,
     .roadtrip-map-stage .state-node:focus-visible {
@@ -1976,24 +1794,8 @@
       box-shadow: 0 6px 12px rgba(17, 17, 17, 0.05);
     }
 
-    .roadtrip-map-stage .state-node.unavailable .state-node-label,
-    .roadtrip-map-stage .state-node.unavailable .state-node-points,
-    .roadtrip-map-stage .state-node.unavailable .state-node-fuel {
-      opacity: 1;
-    }
-
-    .roadtrip-map-stage .state-node-label {
-      font-size: 1.02rem;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      margin-bottom: 5px;
-    }
-
-    .roadtrip-map-stage .state-node-points {
-      font-size: 0.82rem;
-      font-weight: 800;
-      opacity: 0.95;
-    }
+    .roadtrip-map-stage .state-node-label { font-size: 1.02rem; font-weight: 900; letter-spacing: 0.04em; margin-bottom: 5px; }
+    .roadtrip-map-stage .state-node-points { font-size: 0.82rem; font-weight: 800; opacity: 0.95; }
 
     .state-node.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); color: #111; }
     .state-node.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
@@ -2020,12 +1822,7 @@
       box-shadow: 0 5px 10px rgba(92, 77, 19, 0.08);
     }
 
-    .state-node-fuel {
-      margin-top: 2px;
-      font-size: 0.62rem;
-      padding: 3px 7px;
-      color: #624f00;
-    }
+    .state-node-fuel { margin-top: 2px; font-size: 0.62rem; padding: 3px 7px; color: #624f00; }
 
     .roadtrip-map-stage .state-car {
       position: absolute;
@@ -2039,11 +1836,7 @@
       -webkit-user-drag: none;
       touch-action: none;
       opacity: 1;
-      transition:
-        left 0.42s ease,
-        top 0.42s ease,
-        transform 0.3s ease,
-        opacity 0.2s ease;
+      transition: left 0.42s ease, top 0.42s ease, transform 0.3s ease, opacity 0.2s ease;
       filter: drop-shadow(0 8px 12px rgba(17, 17, 17, 0.20));
       background: transparent;
       border: none;
@@ -2053,9 +1846,7 @@
       display: block;
     }
 
-    .roadtrip-map-stage .state-car.car-fallback-hidden {
-      opacity: 0;
-    }
+    .roadtrip-map-stage .state-car.car-fallback-hidden { opacity: 0; }
 
     .roadtrip-car-fallback {
       position: absolute;
@@ -2074,23 +1865,15 @@
       pointer-events: none;
     }
 
-    .roadtrip-car-fallback.show {
-      display: flex;
-    }
+    .roadtrip-car-fallback.show { display: flex; }
 
-    .roadtrip-map-stage.car-traveling .route-center {
-      animation: roadtripStripeDrift 320ms linear infinite;
-    }
+    .roadtrip-map-stage.car-traveling .route-center { animation: roadtripStripeDrift 320ms linear infinite; }
 
     .roadtrip-map-stage .state-car.is-driving,
-    .roadtrip-car-fallback.is-driving {
-      animation: roadtripCarBob 180ms ease-in-out infinite alternate;
-    }
+    .roadtrip-car-fallback.is-driving { animation: roadtripCarBob 180ms ease-in-out infinite alternate; }
 
     .roadtrip-map-stage .state-car.is-arriving,
-    .roadtrip-car-fallback.is-arriving {
-      animation: roadtripCarArrival 320ms ease-out;
-    }
+    .roadtrip-car-fallback.is-arriving { animation: roadtripCarArrival 320ms ease-out; }
 
     .roadtrip-point-popups {
       position: absolute;
@@ -2118,32 +1901,12 @@
       white-space: nowrap;
     }
 
-    .roadtrip-point-popup.points {
-      background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%);
-      color: #4d4100;
-    }
+    .roadtrip-point-popup.points { background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%); color: #4d4100; }
+    .roadtrip-point-popup.fuel { background: rgba(255,255,255,0.96); color: #6a5500; }
+    .roadtrip-point-popup.show { animation: roadtripPopupFloat 1050ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 
-    .roadtrip-point-popup.fuel {
-      background: rgba(255,255,255,0.96);
-      color: #6a5500;
-    }
-
-    .roadtrip-point-popup.show {
-      animation: roadtripPopupFloat 1050ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    }
-
-    .roadtrip-helper {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #5a5a5a;
-      margin-bottom: 22px;
-    }
-
-    .roadtrip-next-stops {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
+    .roadtrip-helper { font-size: 0.9rem; line-height: 1.6; color: #5a5a5a; margin-bottom: 22px; }
+    .roadtrip-next-stops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 
     .roadtrip-next-btn {
       border: none;
@@ -2173,42 +1936,13 @@
       font-size: 0.98rem;
     }
 
-    .roadtrip-next-btn .next-name {
-      font-weight: 900;
-      letter-spacing: 0.03em;
-    }
+    .roadtrip-next-btn .next-name { font-weight: 900; letter-spacing: 0.03em; }
+    .roadtrip-next-btn .next-points { font-size: 0.84rem; opacity: 0.88; font-weight: 800; }
+    .roadtrip-next-btn .next-region { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; font-weight: 900; }
 
-    .roadtrip-next-btn .next-points {
-      font-size: 0.84rem;
-      opacity: 0.88;
-      font-weight: 800;
-    }
-
-    .roadtrip-next-btn .next-region {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.75;
-      font-weight: 900;
-    }
-
-    .roadtrip-next-meta {
-      margin-top: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .roadtrip-bonus-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .roadtrip-bonus-pill {
-      background: linear-gradient(180deg, #fff8d5, #ffe66a);
-      color: #4b3f00;
-    }
+    .roadtrip-next-meta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .roadtrip-bonus-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .roadtrip-bonus-pill { background: linear-gradient(180deg, #fff8d5, #ffe66a); color: #4b3f00; }
 
     .roadtrip-next-btn.region-south { background: linear-gradient(180deg, #ffe66a, #f5d547); }
     .roadtrip-next-btn.region-west { background: linear-gradient(180deg, #7cb7ff, #2f80ed); color: #fff; }
@@ -2226,11 +1960,7 @@
       font-weight: 700;
     }
 
-    .roadtrip-route-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .roadtrip-route-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .roadtrip-route-chip {
       display: inline-flex;
@@ -2246,15 +1976,9 @@
       box-shadow: 0 6px 14px rgba(92, 77, 19, 0.06);
     }
 
-    .roadtrip-route-chip.current {
-      background: linear-gradient(180deg, #ffe66a, #f5d547);
-      color: #111;
-    }
+    .roadtrip-route-chip.current { background: linear-gradient(180deg, #ffe66a, #f5d547); color: #111; }
 
-    .top-state-list {
-      display: grid;
-      gap: 8px;
-    }
+    .top-state-list { display: grid; gap: 8px; }
 
     .top-state-item {
       display: flex;
@@ -2294,29 +2018,82 @@
       font-size: 0.95rem;
     }
 
-    .game-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
+    .game-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .roadtrip-mobile-priority,
-    .roadtrip-mobile-next {
-      display: none;
-      width: 100%;
-      gap: 12px;
+    .roadtrip-mobile-next { display: none; width: 100%; gap: 12px; }
+    .roadtrip-mobile-priority:empty,
+    .roadtrip-mobile-next:empty { display: none; }
+
+    .roadtrip-intro-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.52);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.22s ease, visibility 0.22s ease;
+      z-index: 35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
 
-    .roadtrip-mobile-priority:empty,
-    .roadtrip-mobile-next:empty {
-      display: none;
+    .roadtrip-intro-card {
+      width: min(560px, calc(100% - 16px));
+      background: linear-gradient(180deg, #fffef8 0%, #fff8de 100%);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+      padding: 24px 22px;
+      text-align: left;
     }
+
+    .roadtrip-intro-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #5d4f00;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .roadtrip-intro-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+      line-height: 1.08;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-align: left;
+    }
+
+    .roadtrip-intro-text {
+      margin: 0 0 14px;
+      color: #4f4f4f;
+      line-height: 1.6;
+      max-width: none;
+      text-align: left;
+    }
+
+    .roadtrip-intro-list {
+      margin: 0 0 18px 18px;
+      padding: 0;
+      color: #4f4f4f;
+      line-height: 1.55;
+    }
+
+    .roadtrip-intro-button { min-width: 160px; }
 
     @media (hover: none), (pointer: coarse) {
       .tilt-card::after,
-      .tilt-glare {
-        display: none;
-      }
+      .tilt-glare { display: none; }
 
       .tilt-card .tilt-stage,
       .tilt-card.is-tilting .tilt-stage {
@@ -2326,28 +2103,17 @@
       }
 
       .tilt-card img,
-      .tilt-card.is-tilting img {
-        transform: none !important;
-      }
+      .tilt-card.is-tilting img { transform: none !important; }
 
-      .tilt-card:active .tilt-stage {
-        transform: translateY(-3px) scale(1.01) !important;
-      }
+      .tilt-card:active .tilt-stage { transform: translateY(-3px) scale(1.01) !important; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .tilt-stage,
-      .tilt-card img,
-      .tilt-glare,
-      .tilt-card::after,
-      .state-node.available,
-      .roadtrip-map-stage .state-node.available::before,
-      .roadtrip-map-stage .state-car.is-driving,
-      .roadtrip-map-stage .state-car.is-arriving,
-      .roadtrip-car-fallback.is-driving,
-      .roadtrip-car-fallback.is-arriving,
-      .roadtrip-point-popup.show,
-      .roadtrip-map-stage.car-traveling .route-center,
+      .tilt-stage, .tilt-card img, .tilt-glare, .tilt-card::after,
+      .state-node.available, .roadtrip-map-stage .state-node.available::before,
+      .roadtrip-map-stage .state-car.is-driving, .roadtrip-map-stage .state-car.is-arriving,
+      .roadtrip-car-fallback.is-driving, .roadtrip-car-fallback.is-arriving,
+      .roadtrip-point-popup.show, .roadtrip-map-stage.car-traveling .route-center,
       .game-celebration.show {
         transition: none !important;
         animation: none !important;
@@ -2362,11 +2128,7 @@
     }
 
     @media (max-width: 700px) {
-      .game-modal {
-        padding: 0;
-        align-items: stretch;
-      }
-
+      .game-modal { padding: 0; align-items: stretch; }
       .game-modal-inner.game-modal-inner--wide {
         width: 100vw;
         max-width: 100vw;
@@ -2377,10 +2139,7 @@
         border: none;
       }
 
-      .game-shell.roadtrip-shell {
-        min-height: 100dvh;
-        border-radius: 0;
-      }
+      .game-shell.roadtrip-shell { min-height: 100dvh; border-radius: 0; }
 
       .game-modal-close {
         position: absolute;
@@ -2391,19 +2150,9 @@
         height: 52px;
       }
 
-      .roadtrip-top {
-        padding: 22px 16px 16px;
-      }
-
-      .roadtrip-top .game-title {
-        font-size: clamp(1.7rem, 8vw, 2.4rem);
-      }
-
-      .roadtrip-board {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 12px;
-      }
+      .roadtrip-top { padding: 22px 16px 16px; }
+      .roadtrip-top .game-title { font-size: clamp(1.7rem, 8vw, 2.4rem); }
+      .roadtrip-board { grid-template-columns: 1fr; gap: 12px; padding: 12px; }
 
       .roadtrip-map-panel,
       .roadtrip-side-panel {
@@ -2412,16 +2161,7 @@
         padding: 12px;
       }
 
-      .game-hud {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
-      }
-
-      .game-banner {
-        font-size: clamp(0.95rem, 4.3vw, 1.1rem);
-        line-height: 1.35;
-        overflow-wrap: anywhere;
-      }
+      .game-banner { font-size: clamp(0.95rem, 4.3vw, 1.1rem); line-height: 1.35; overflow-wrap: anywhere; }
 
       .roadtrip-map-scroll {
         overflow: auto;
@@ -2430,60 +2170,18 @@
         padding-bottom: 4px;
       }
 
-      .roadtrip-map-stage {
-        width: clamp(560px, 155vw, 760px);
-        min-height: 460px;
-      }
+      .roadtrip-map-stage { width: clamp(560px, 155vw, 760px); min-height: 460px; }
+      .zone-atlantic { right: 2.8%; top: 5.4%; }
 
-      .zone-atlantic {
-        right: 2.8%;
-        top: 5.4%;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="IN"] {
-        left: 50.5% !important;
-        top: 23.5% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="OH"] {
-        left: 60% !important;
-        top: 19% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="PA"] {
-        left: 77.2% !important;
-        top: 15% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="WV"] {
-        left: 69.5% !important;
-        top: 31% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="VA"] {
-        left: 79.5% !important;
-        top: 39.8% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="NC"] {
-        left: 81.2% !important;
-        top: 52.2% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="MD"] {
-        left: 89.6% !important;
-        top: 33.2% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="DE"] {
-        left: 94.8% !important;
-        top: 24% !important;
-      }
-
-      .roadtrip-map-stage .state-node[data-state="FL"] {
-        left: 84% !important;
-        top: 76.5% !important;
-      }
+      .roadtrip-map-stage .state-node[data-state="IN"] { left: 50.5% !important; top: 23.5% !important; }
+      .roadtrip-map-stage .state-node[data-state="OH"] { left: 60% !important; top: 19% !important; }
+      .roadtrip-map-stage .state-node[data-state="PA"] { left: 77.2% !important; top: 15% !important; }
+      .roadtrip-map-stage .state-node[data-state="WV"] { left: 69.5% !important; top: 31% !important; }
+      .roadtrip-map-stage .state-node[data-state="VA"] { left: 79.5% !important; top: 39.8% !important; }
+      .roadtrip-map-stage .state-node[data-state="NC"] { left: 81.2% !important; top: 52.2% !important; }
+      .roadtrip-map-stage .state-node[data-state="MD"] { left: 89.6% !important; top: 33.2% !important; }
+      .roadtrip-map-stage .state-node[data-state="DE"] { left: 94.8% !important; top: 24% !important; }
+      .roadtrip-map-stage .state-node[data-state="FL"] { left: 84% !important; top: 76.5% !important; }
 
       .roadtrip-map-stage .state-node.available {
         opacity: 1 !important;
@@ -2493,50 +2191,25 @@
 
       .roadtrip-map-stage .state-node.available .state-node-label,
       .roadtrip-map-stage .state-node.available .state-node-points,
-      .roadtrip-map-stage .state-node.available .state-node-fuel {
-        opacity: 1 !important;
-      }
+      .roadtrip-map-stage .state-node.available .state-node-fuel { opacity: 1 !important; }
 
-      .roadtrip-scroll-hint {
-        display: block;
-      }
-
+      .roadtrip-scroll-hint { display: block; }
       .roadtrip-next-stops,
-      .roadtrip-levels {
-        grid-template-columns: 1fr;
-      }
-
-      .roadtrip-helper {
-        display: none;
-      }
-
-      .roadtrip-scroll-hint {
-        font-size: 0.78rem;
-        line-height: 1.32;
-        padding: 12px 18px;
-      }
-
+      .roadtrip-levels { grid-template-columns: 1fr; }
+      .roadtrip-helper { display: none; }
       .roadtrip-mobile-priority,
-      .roadtrip-mobile-next {
-        display: grid;
-      }
-
-      .roadtrip-mobile-priority {
-        order: 1;
-      }
-
-      .roadtrip-map-panel {
-        order: 2;
-      }
-
-      .roadtrip-mobile-next {
-        order: 3;
-      }
-
+      .roadtrip-mobile-next { display: grid; }
+      .roadtrip-mobile-priority { order: 1; }
+      .roadtrip-map-panel { order: 2; }
+      .roadtrip-mobile-next { order: 3; }
       .roadtrip-side-panel {
         order: 4;
         padding-bottom: calc(18px + env(safe-area-inset-bottom));
       }
+
+      .roadtrip-intro-overlay { padding: 18px 14px; }
+      .roadtrip-intro-card { width: min(100%, 100%); padding: 20px 18px; }
+      .roadtrip-intro-title { font-size: clamp(1.2rem, 5.4vw, 1.6rem); }
     }
 
     @media (max-width: 640px) {
@@ -2564,76 +2237,37 @@
       .state-node-label { font-size: 0.92rem; }
       .state-node-points { font-size: 0.68rem; }
       .game-map { min-height: 430px; }
-      .roadtrip-map-stage .state-node {
-        width: 66px;
-        min-height: 66px;
-        border-radius: 18px;
-        padding: 7px 5px 8px;
-      }
+      .roadtrip-map-stage .state-node { width: 66px; min-height: 66px; border-radius: 18px; padding: 7px 5px 8px; }
       .roadtrip-map-stage .state-node-label { font-size: 0.86rem; }
       .roadtrip-map-stage .state-node-points { font-size: 0.66rem; }
-      .roadtrip-map-stage .state-car {
-        width: 58px;
-      }
-      .roadtrip-car-fallback {
-        width: 48px;
-        height: 48px;
-        font-size: 1.45rem;
-      }
-      .roadtrip-zone-label {
-        font-size: 0.66rem;
-        padding: 5px 8px;
-      }
+      .roadtrip-map-stage .state-car { width: 58px; }
+      .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
+      .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
       .roadtrip-route-svg .route-main { stroke-width: 22; }
       .roadtrip-route-svg .route-center { stroke-width: 6; stroke-dasharray: 10 12; }
-      .roadtrip-map-outcome {
-        inset: 10px 10px auto 10px;
-      }
-      .roadtrip-map-outcome-card {
-        width: 100%;
-        max-width: none;
-        padding: 14px 12px 15px;
-        border-radius: 18px;
-      }
-      .roadtrip-map-outcome-kicker {
-        margin-bottom: 8px;
-        padding: 5px 10px;
-        font-size: 0.68rem;
-      }
-      .roadtrip-map-outcome-title {
-        font-size: clamp(1.05rem, 5.2vw, 1.42rem);
-      }
-      .roadtrip-map-outcome-text {
-        font-size: 0.88rem;
-        line-height: 1.42;
-        max-width: 24ch;
-      }
-      .roadtrip-map-restart {
-        min-height: 44px;
-        padding-inline: 16px;
-        margin-top: 12px;
-      }
+      .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
+      .roadtrip-map-outcome-card { width: 100%; max-width: none; padding: 14px 12px 15px; border-radius: 18px; }
+      .roadtrip-map-outcome-kicker { margin-bottom: 8px; padding: 5px 10px; font-size: 0.68rem; }
+      .roadtrip-map-outcome-title { font-size: clamp(1.05rem, 5.2vw, 1.42rem); }
+      .roadtrip-map-outcome-text { font-size: 0.88rem; line-height: 1.42; max-width: 24ch; }
+      .roadtrip-map-restart { min-height: 44px; padding-inline: 16px; margin-top: 12px; }
+      .milestone-modal { padding: 12px; }
+      .milestone-modal-inner { padding: 22px 16px 18px; }
     }
 
     @media (max-width: 520px) {
       .roadtrip-map-panel,
       .roadtrip-side-panel { padding: 10px; }
-      .hud-card { padding: 10px 8px; }
+
       .roadtrip-map-stage { width: clamp(520px, 150vw, 680px); min-height: 430px; }
       .roadtrip-route-chips { max-height: 108px; overflow: auto; }
       .roadtrip-point-popup { font-size: 0.8rem; padding: 7px 10px; min-width: 66px; }
-      .roadtrip-map-stage .state-node {
-        width: 60px;
-        min-height: 60px;
-      }
-      .roadtrip-map-stage .state-car {
-        width: 52px;
-      }
-      .roadtrip-scroll-hint {
-        font-size: 0.74rem;
-        line-height: 1.4;
-        padding: 12px 14px;
-      }
+      .roadtrip-map-stage .state-node { width: 60px; min-height: 60px; }
+      .roadtrip-map-stage .state-car { width: 52px; }
+      .roadtrip-scroll-hint { font-size: 0.74rem; line-height: 1.4; padding: 12px 14px; }
+      .roadtrip-map-hud .hud-card { padding: 8px 6px; }
+      .roadtrip-map-hud .hud-label { font-size: 0.62rem; }
+      .roadtrip-map-hud .hud-value { font-size: 0.94rem; }
     }
 
     @media (max-width: 900px) and (orientation: landscape) {
@@ -2649,31 +2283,21 @@
       .roadtrip-map-stage { width: clamp(620px, 120vw, 820px); min-height: 460px; }
     }
 
-    .game-banner {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .challenge-badge {
-      display: inline-flex;
-      margin: 0;
-    }
+    .challenge-badge { display: inline-flex; margin: 0; }
   </style>
 </head>
 <body>
   <div id="scroll-progress"></div>
-  
+
   <header class="topbar">
     <div class="topbar-inner">
       <div class="logo-link">
         <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
       </div>
-  
+
       <div class="mini-nav-wrap" aria-label="Section Navigation">
         <nav class="mini-nav" id="mini-nav">
-          <a href="about.html">Employee Assistance Program</a>
+          <a href="./about.html" id="eap-link">Employee Assistance Program</a>
           <a href="#trivia">Museum Tour &amp; Trivia</a>
           <a href="#appreciation">Appreciation Song</a>
           <a href="#shoes-for-crews">Shoes for Crews</a>
@@ -2686,7 +2310,7 @@
       </div>
     </div>
   </header>
-  
+
   <main class="sections">
     <section id="hero" class="section">
       <div class="section-image-wrap hero-card">
@@ -2694,94 +2318,63 @@
           <div class="eyebrow">Welcome to Our</div>
           <h1>Celebration Page</h1>
         </div>
-  
+
         <div class="section-image-link hero-image lightbox-trigger">
           <img src="Images/Intro graphic (1).png" alt="Associate Appreciation" />
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="appreciation" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Featured</div>
         <h2>Appreciation Song</h2>
       </div>
-  
+
       <div class="song-card" id="audio-card">
         <p>POV: Your hard work does not go unnoticed.</p>
-  
+
         <div class="song-layout">
-          <button
-            class="song-toggle pressable"
-            id="song-toggle"
-            type="button"
-            aria-label="Play appreciation song"
-          >🧇</button>
-  
+          <button class="song-toggle pressable" id="song-toggle" type="button" aria-label="Play appreciation song">🧇</button>
+
           <div class="song-meta">
             <div class="song-label">Tap the waffle to play/pause</div>
             <div class="song-title">🎵 "Serving Up Egg-cellence"</div>
           </div>
         </div>
-  
+
         <div class="audio-player-wrap">
-          <audio
-            class="audio-player"
-            id="audio-player"
-            controls
-            controlsList="nodownload noplaybackrate"
-            preload="metadata"
-            oncontextmenu="return false;"
-          >
+          <audio class="audio-player" id="audio-player" controls controlsList="nodownload noplaybackrate" preload="metadata" oncontextmenu="return false;">
             <source src="Audio/appreciationsong.mp3" type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
         </div>
-  
+
         <div class="lyric-video-shell">
           <div class="lyric-stage" id="lyric-stage">
-            <video
-              class="lyric-bg-video"
-              id="lyric-bg-video"
-              muted
-              playsinline
-              loop
-              preload="metadata"
-              poster="Images/Wilson-preview.png"
-              aria-hidden="true"
-            >
+            <video class="lyric-bg-video" id="lyric-bg-video" muted playsinline loop preload="metadata" poster="Images/Wilson-preview.png" aria-hidden="true">
               <source src="Images/Wilson.mp4" type="video/mp4" />
               <source src="Images/Wilson.webm" type="video/webm" />
             </video>
-  
             <div class="lyric-line-host" id="lyric-line-host"></div>
           </div>
         </div>
-  
+
         <div class="lyric-scrubber-wrap">
-          <input
-            type="range"
-            id="lyric-scrubber"
-            class="lyric-scrubber"
-            min="0"
-            max="152"
-            step="0.1"
-            value="0"
-            aria-label="Lyric timing scrubber"
-          />
+          <input type="range" id="lyric-scrubber" class="lyric-scrubber" min="0" max="152" step="0.1" value="0" aria-label="Lyric timing scrubber" />
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="dressup" class="section">
       <div class="section-head">
         <h2>Dress-Up Days</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2791,25 +2384,24 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p>Dress up and show your Waffle House pride.</p>
-  
           <div class="links">
             <a class="section-link pressable" href="PDFs/Associate Appreciation Dress-Up Day Guidelines .pdf">View Guidelines</a>
           </div>
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="anniversaries" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Interactive</div>
         <h2>Anniversaries</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="anniversary-interactive tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2818,7 +2410,7 @@
                 <img src="Images/Anniversary Landing Page Graphic (8).png" alt="Anniversaries" />
               </div>
             </div>
-  
+
             <div class="anniversary-hotspots" aria-hidden="false">
               <button class="balloon-hotspot balloon-1" type="button" data-years="1" data-count="6248" aria-label="See 1 year milestone count"></button>
               <button class="balloon-hotspot balloon-2" type="button" data-years="2" data-count="3650" aria-label="See 2 year milestone count"></button>
@@ -2835,32 +2427,41 @@
               <button class="balloon-hotspot balloon-45" type="button" data-years="45" data-count="1" aria-label="See 45 year milestone count"></button>
               <button class="balloon-hotspot balloon-50" type="button" data-years="50" data-count="2" aria-label="See 50 year milestone count"></button>
             </div>
-  
+
+            <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
+              <div class="milestone-modal-inner">
+                <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
+                <div class="milestone-badge">Anniversary Milestone</div>
+                <h3 id="milestone-title">10 Years</h3>
+                <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
+              </div>
+            </div>
+
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p class="anniversary-summary">
             Celebrating over 16,500 Associates for their dedication and service.
             Tap the balloons above to see how many are celebrating each milestone.
           </p>
-  
+
           <div class="links">
             <button class="section-link pressable" id="open-roadtrip-game" type="button">Play Anniversary Game</button>
           </div>
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="trivia" class="section featured-section">
       <div class="section-head">
         <div class="section-kicker">Featured</div>
         <h2>Museum Tour &amp; Trivia</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card data-tilt-depth="soft">
           <div class="tilt-stage">
@@ -2870,45 +2471,36 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="video-shell" style="margin-top: 20px;">
           <div class="video-label-row">
             <div class="video-label">Watch Then Play</div>
           </div>
-  
+
           <div class="video-frame">
-            <iframe
-              src="https://player.vimeo.com/video/1170667363?h=50e07f30cd"
-              title="Museum Tour Video"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+            <iframe src="https://player.vimeo.com/video/1170667363?h=50e07f30cd" title="Museum Tour Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p>Watch the museum tour video, then test your knowledge for a chance to win exclusive raffle prizes.</p>
-  
+
           <div class="links">
-            <a
-              class="section-link pressable"
-              href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D"
-              rel="noopener noreferrer"
-            >
+            <a class="section-link pressable" href="https://www.surveymonkey.com/survey-closed/?sm=WRpY9sKAVbCOt7H_2BORYWi1mG0A13IZOgdEjfuVEg9sTvMJz6ZNt8Uk7mIiFJLmyv9nxqZPack_2B6G4x4Pi9_2BsZvemUitAedxeftnG73RhJcVqDhuLwOAhCb7wPj4KQcrOrY_2F57SsHyO6azNUydTn_2F0g_3D_3D" rel="noopener noreferrer">
               Play Trivia
             </a>
           </div>
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="photo" class="section">
       <div class="section-head">
         <h2>Photo Contest</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger photo-flash-link attention tilt-card" id="photo-flash-link" data-tilt-card>
           <div class="tilt-stage">
@@ -2918,30 +2510,26 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p>Upload your best photos to enter.</p>
-  
+
           <div class="links">
-            <a
-              class="section-link pressable"
-              href="https://form.jotform.com/260616390409053"
-              rel="noopener noreferrer"
-            >
+            <a class="section-link pressable" href="https://form.jotform.com/260616390409053" rel="noopener noreferrer">
               Contest Rules &amp; Submission
             </a>
           </div>
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="shoes-for-crews" class="section">
       <div class="section-head">
         <h2>Shoes For Crews</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2951,21 +2539,15 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
-  
+
           <div class="links">
-            <a
-              class="section-link pressable"
-              href="https://www.shoesforcrews.com/wafflehouse"
-              rel="noopener noreferrer"
-            >
-              Shop Now
-            </a>
+            <a class="section-link pressable" href="https://www.shoesforcrews.com/wafflehouse" rel="noopener noreferrer">Shop Now</a>
             <a class="section-link secondary pressable" href="PDFs/Shoes for Crews FAQs.pdf">View FAQs</a>
           </div>
-  
+
           <div class="actions">
             <a class="section-link secondary pressable" href="mailto:emailsupport@shoesforcrews.com">📫Email Customer Service</a>
             <a class="section-link secondary pressable" href="tel:8005234448">📞 Call Customer Service</a>
@@ -2973,14 +2555,14 @@
         </div>
       </div>
     </section>
-  
+
     <div class="divider-sparkle" aria-hidden="true"></div>
-  
+
     <section id="touchtunes" class="section">
       <div class="section-head">
         <h2>TouchTunes</h2>
       </div>
-  
+
       <div class="section-image-wrap">
         <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
           <div class="tilt-stage">
@@ -2990,31 +2572,19 @@
             <span class="tilt-glare" aria-hidden="true"></span>
           </div>
         </div>
-  
+
         <div class="section-copy">
           <p>Enjoy 15 free jukebox credits a week on the House.</p>
-  
+
           <div class="links">
-            <a
-              class="section-link pressable"
-              href="https://www.touchtunes.com/play/app"
-              rel="noopener noreferrer"
-            >
-              Download the App
-            </a>
-            <a
-              class="section-link secondary pressable"
-              href="https://touchtunes.helpshift.com/hc/en/8-touchtunes/?p=all"
-              rel="noopener noreferrer"
-            >
-              App Help
-            </a>
+            <a class="section-link pressable" href="https://www.touchtunes.com/play/app" rel="noopener noreferrer">Download the App</a>
+            <a class="section-link secondary pressable" href="https://touchtunes.helpshift.com/hc/en/8-touchtunes/?p=all" rel="noopener noreferrer">App Help</a>
           </div>
         </div>
       </div>
     </section>
   </main>
-  
+
   <section class="footer-decor" aria-label="Closing Note">
     <div class="footer-decor-inner">
       <p class="footer-thanks">Thank you for everything you do.</p>
@@ -3023,36 +2593,42 @@
       </p>
     </div>
   </section>
-  
+
   <div class="footer">
     &copy;2026 WH Intellectual, LLC. ®™ All Waffle House trademarks are owned by WH Intellectual, LLC and licensed to Waffle House, Inc.
   </div>
-  
+
   <button class="back-to-top pressable" id="back-to-top" type="button" aria-label="Back to top">
     <span class="arrow">↑</span>
     <span class="label">Top</span>
   </button>
-  
+
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox-inner">
       <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
       <img id="lightbox-image" src="" alt="" />
     </div>
   </div>
-  
-  <div class="milestone-modal" id="milestone-modal" aria-hidden="true">
-    <div class="milestone-modal-inner">
-      <button class="milestone-close" type="button" aria-label="Close milestone">&times;</button>
-      <div class="milestone-badge">Anniversary Milestone</div>
-      <h3 id="milestone-title">10 Years</h3>
-      <p id="milestone-text">651 associates are celebrating 10 years of service.</p>
-    </div>
-  </div>
-  
+
   <div class="game-modal" id="roadtrip-game-modal" aria-hidden="true">
     <div class="game-modal-inner game-modal-inner--wide">
       <button class="game-modal-close" id="close-roadtrip-game" type="button" aria-label="Close game">&times;</button>
-  
+
+      <div class="roadtrip-intro-overlay" id="roadtrip-intro-overlay" aria-hidden="true">
+        <div class="roadtrip-intro-card">
+          <div class="roadtrip-intro-kicker" id="roadtrip-intro-kicker">How to Play</div>
+          <h3 class="roadtrip-intro-title" id="roadtrip-intro-title">Plan your route before you drive</h3>
+          <p class="roadtrip-intro-text" id="roadtrip-intro-text">Start in Georgia with 3,596 points. Pick only the yellow-highlighted connected states, keep an eye on your fuel, and hit the goal before the tank runs dry.</p>
+          <ul class="roadtrip-intro-list">
+            <li>Each stop adds that state's points and uses 1 fuel.</li>
+            <li>Louisiana, Arkansas, and Tennessee give bonus fuel.</li>
+            <li>Use the map or the Next Stops cards to move.</li>
+            <li>Your difficulty level changes your fuel and target score.</li>
+          </ul>
+          <button class="section-link pressable roadtrip-intro-button" id="roadtrip-intro-button" type="button">Start Trip</button>
+        </div>
+      </div>
+
       <div class="game-shell roadtrip-shell">
         <div class="game-top roadtrip-top">
           <div class="game-kicker">Anniversary Game</div>
@@ -3061,34 +2637,34 @@
             Celebration points match the actual number of Associates we're celebrating in each state across Waffle Nation. Every trip starts in Georgia, so your score begins with Georgia's 3,596 points at every level. Each new state adds that state's points, and bonus refuel stops help you keep the trip going until you reach the goal before Wilson's tank runs dry.
           </p>
         </div>
-  
+
         <div class="game-board roadtrip-board">
           <div class="game-map-panel roadtrip-map-panel">
-            <div class="game-hud">
-              <div class="hud-card">
-                <div class="hud-label">Score</div>
-                <div class="hud-value" id="roadtrip-score">0</div>
-              </div>
-              <div class="hud-card">
-                <div class="hud-label">Fuel</div>
-                <div class="hud-value" id="roadtrip-fuel">18</div>
-              </div>
-              <div class="hud-card">
-                <div class="hud-label">Visited</div>
-                <div class="hud-value" id="roadtrip-visited">1</div>
-              </div>
-            </div>
-  
             <div class="roadtrip-status-strip">
               <div class="game-banner" id="roadtrip-status"></div>
             </div>
 
             <div class="roadtrip-toast" id="roadtrip-toast" aria-live="polite"></div>
-  
+
             <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
-  
+
             <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
               <div class="game-map roadtrip-map-stage" id="roadtrip-map">
+                <div class="roadtrip-map-hud game-hud">
+                  <div class="hud-card">
+                    <div class="hud-label">Score</div>
+                    <div class="hud-value" id="roadtrip-score">0</div>
+                  </div>
+                  <div class="hud-card">
+                    <div class="hud-label">Fuel</div>
+                    <div class="hud-value" id="roadtrip-fuel">18</div>
+                  </div>
+                  <div class="hud-card">
+                    <div class="hud-label">Stops</div>
+                    <div class="hud-value" id="roadtrip-visited">1</div>
+                  </div>
+                </div>
+
                 <div class="roadtrip-sun" aria-hidden="true"></div>
                 <div class="roadtrip-hill hill-a" aria-hidden="true"></div>
                 <div class="roadtrip-hill hill-b" aria-hidden="true"></div>
@@ -3114,10 +2690,10 @@
                 </div>
               </div>
             </div>
-  
+
             <div class="game-celebration" id="roadtrip-celebration"></div>
           </div>
-  
+
           <div class="game-side-panel roadtrip-side-panel">
             <div class="game-panel-card">
               <h3>Difficulty</h3>
@@ -3127,44 +2703,44 @@
                 <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
               </div>
             </div>
-  
+
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
               <p class="roadtrip-helper">Tap a state with the yellow highlight ring on the map or use these quick-pick buttons.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
-  
+
             <div class="game-panel-card">
               <h3>Trip Route</h3>
               <div class="roadtrip-route-chips" id="roadtrip-route-chips"></div>
             </div>
-  
+
             <div class="game-panel-card">
               <h3>Top Celebration States</h3>
               <div class="top-state-list" id="roadtrip-top-states"></div>
             </div>
-  
+
             <div class="game-panel-card">
               <h3>Bonus Refuel Stops</h3>
               <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
             </div>
-  
+
             <div class="game-panel-card">
               <h3>Trip Goal</h3>
               <p id="roadtrip-goal-copy">Each stop adds that state’s anniversary points. Bonus refuel stops give you extra fuel, so you can keep the celebration rolling. Reach the goal before fuel hits zero.</p>
             </div>
-  
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   <div class="anniversary-tip" id="anniversary-tip" aria-hidden="true">
     🎈 Tap the balloons to reveal milestone counts
   </div>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3213,7 +2789,6 @@
       const roadtripVisited = document.getElementById("roadtrip-visited");
       const roadtripStatus = document.getElementById("roadtrip-status");
       const roadtripToast = document.getElementById("roadtrip-toast");
-      const roadtripRestart = document.getElementById("roadtrip-restart");
       const roadtripCelebration = document.getElementById("roadtrip-celebration");
       const roadtripTopStates = document.getElementById("roadtrip-top-states");
       const roadtripNextStops = document.getElementById("roadtrip-next-stops");
@@ -3232,9 +2807,14 @@
       const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
       const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(5)");
       const roadtripTripGoalCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(6)");
-      const roadtripActions = roadtripSidePanel?.querySelector(".game-actions");
       const roadtripMobilePriority = document.createElement("div");
       const roadtripMobileNext = document.createElement("div");
+      const roadtripIntroOverlay = document.getElementById("roadtrip-intro-overlay");
+      const roadtripIntroKicker = document.getElementById("roadtrip-intro-kicker");
+      const roadtripIntroTitle = document.getElementById("roadtrip-intro-title");
+      const roadtripIntroText = document.getElementById("roadtrip-intro-text");
+      const roadtripIntroButton = document.getElementById("roadtrip-intro-button");
+      const eapLink = document.getElementById("eap-link");
       roadtripMobilePriority.className = "roadtrip-mobile-priority";
       roadtripMobileNext.className = "roadtrip-mobile-next";
 
@@ -3266,27 +2846,9 @@
       };
 
       const ROADTRIP_LEVELS = {
-        beginner: {
-          key: "beginner",
-          label: "Beginner",
-          goal: 12000,
-          startFuel: 22,
-          description: "More fuel and a lower score target for an easier first trip."
-        },
-        intermediate: {
-          key: "intermediate",
-          label: "Intermediate",
-          goal: 14000,
-          startFuel: 19,
-          description: "Balanced fuel and score target for a standard challenge."
-        },
-        advanced: {
-          key: "advanced",
-          label: "Advanced",
-          goal: 15500,
-          startFuel: 16,
-          description: "Tighter fuel and a tougher score target for expert route planning."
-        }
+        beginner: { key: "beginner", label: "Beginner", goal: 12000, startFuel: 22, description: "More fuel and a lower score target for an easier first trip." },
+        intermediate: { key: "intermediate", label: "Intermediate", goal: 14000, startFuel: 19, description: "Balanced fuel and score target for a standard challenge." },
+        advanced: { key: "advanced", label: "Advanced", goal: 15500, startFuel: 16, description: "Tighter fuel and a tougher score target for expert route planning." }
       };
 
       let currentRoadTripLevel = "beginner";
@@ -3295,12 +2857,7 @@
       let roadtripArrivalTimeout;
       let roadtripAudioContext = null;
       let roadtripAudioUnlocked = false;
-      let roadTripPromptFlags = {
-        fuel2: false,
-        fuel1: false,
-        nearGoal: false,
-        bonusNearby: false
-      };
+      let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
 
@@ -3314,9 +2871,7 @@
         gameOver: false
       };
 
-      const sortedTopStates = Object.values(roadTripStates)
-        .sort((a, b) => b.points - a.points)
-        .slice(0, 5);
+      const sortedTopStates = Object.values(roadTripStates).sort((a, b) => b.points - a.points).slice(0, 5);
 
       const lyricLines = [
         { start: 10.6, end: 13.1, top: "16%", text: "Globe light glowing\non the corner booth" },
@@ -3384,11 +2939,7 @@
             const driftX = -50 + progress * 2.2;
             const driftY = progress < 0.5 ? 5 - progress * 10 : -5 + (progress - 0.5) * 6;
             el.style.transform = `translateX(${driftX}%) translateY(${driftY}px)`;
-            el.style.opacity = progress < 0.10
-              ? (progress / 0.10).toFixed(3)
-              : progress > 0.90
-                ? ((1 - progress) / 0.10).toFixed(3)
-                : "1";
+            el.style.opacity = progress < 0.10 ? (progress / 0.10).toFixed(3) : progress > 0.90 ? ((1 - progress) / 0.10).toFixed(3) : "1";
           } else {
             el.style.transform = "translateX(-50%) translateY(18px)";
             el.style.opacity = "0";
@@ -3404,10 +2955,7 @@
       let lastInteractionTime = Date.now();
       let roadtripHintDismissed = false;
 
-      const markInteraction = () => {
-        lastInteractionTime = Date.now();
-      };
-
+      const markInteraction = () => { lastInteractionTime = Date.now(); };
       ["scroll", "touchstart", "pointerdown", "mousemove", "keydown", "click"].forEach((eventName) => {
         window.addEventListener(eventName, markInteraction, { passive: true });
       });
@@ -3421,10 +2969,7 @@
         const warmth = Math.min(1, Math.max(0, progress / 100));
         document.documentElement.style.setProperty("--page-warmth", warmth.toFixed(3));
 
-        if (backToTop) {
-          backToTop.classList.toggle("show", scrollTop > 420);
-        }
-
+        if (backToTop) backToTop.classList.toggle("show", scrollTop > 420);
         if (heroImage && !prefersReducedMotion) {
           const amount = Math.min(16, scrollTop * 0.06);
           heroImage.style.transform = `translateY(${amount}px)`;
@@ -3437,16 +2982,12 @@
 
         sections.forEach((section) => {
           const rect = section.getBoundingClientRect();
-          if (rect.top <= offset && rect.bottom > offset) {
-            activeId = section.id;
-          }
+          if (rect.top <= offset && rect.bottom > offset) activeId = section.id;
         });
 
         miniNavLinks.forEach((link) => {
           const href = link.getAttribute("href");
-          if (href && href.startsWith("#")) {
-            link.classList.toggle("active", href === `#${activeId}`);
-          }
+          if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
         });
       };
 
@@ -3461,21 +3002,13 @@
 
       const fireConfetti = () => {
         if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
-
-        confetti({
-          particleCount: 110,
-          spread: 78,
-          startVelocity: 34,
-          origin: { y: 0.28 }
-        });
-
+        confetti({ particleCount: 110, spread: 78, startVelocity: 34, origin: { y: 0.28 } });
         confettiFired = true;
       };
 
       window.addEventListener("load", () => {
         setTimeout(fireConfetti, mobileMedia.matches ? 900 : 650);
       });
-
       window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
       window.addEventListener("click", fireConfetti, { once: true, passive: true });
 
@@ -3517,14 +3050,8 @@
       });
 
       lightboxClose?.addEventListener("click", closeLightbox);
-      lightbox?.addEventListener("click", (e) => {
-        if (e.target === lightbox) closeLightbox();
-      });
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && lightbox?.classList.contains("open")) {
-          closeLightbox();
-        }
-      });
+      lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox(); });
 
       const formatCount = (count) => Number(count).toLocaleString();
 
@@ -3533,13 +3060,8 @@
         const associateWord = numericCount === 1 ? "Associate" : "Associates";
         const verbWord = numericCount === 1 ? "is" : "are";
         const yearWord = years === "1" ? "year" : "years";
-
         milestoneTitle.textContent = `${years} ${yearWord}`;
         milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
-
-        document.documentElement.classList.add("milestone-open");
-        document.body.classList.add("milestone-open");
-
         milestoneModal.classList.add("open");
         milestoneModal.setAttribute("aria-hidden", "false");
       };
@@ -3547,39 +3069,24 @@
       const closeMilestoneModal = () => {
         milestoneModal.classList.remove("open");
         milestoneModal.setAttribute("aria-hidden", "true");
-        document.documentElement.classList.remove("milestone-open");
-        document.body.classList.remove("milestone-open");
       };
 
       const popBalloonEffect = (spot) => {
         spot.classList.remove("popping");
         void spot.offsetWidth;
         spot.classList.add("popping");
-
-        setTimeout(() => {
-          spot.classList.remove("popping");
-        }, 220);
+        setTimeout(() => spot.classList.remove("popping"), 220);
 
         if (prefersReducedMotion || typeof confetti !== "function") return;
-
         const rect = spot.getBoundingClientRect();
         const x = (rect.left + rect.width / 2) / window.innerWidth;
         const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-        confetti({
-          particleCount: 14,
-          spread: 55,
-          startVelocity: 20,
-          ticks: 70,
-          scalar: 0.7,
-          origin: { x, y }
-        });
+        confetti({ particleCount: 14, spread: 55, startVelocity: 20, ticks: 70, scalar: 0.7, origin: { x, y } });
       };
 
       balloonHotspots.forEach((spot) => {
         const years = spot.dataset.years;
         const count = spot.dataset.count;
-
         spot.addEventListener("click", (e) => {
           e.stopPropagation();
           unlockRoadtripAudio();
@@ -3593,9 +3100,7 @@
       });
 
       milestoneClose?.addEventListener("click", closeMilestoneModal);
-      milestoneModal?.addEventListener("click", (e) => {
-        if (e.target === milestoneModal) closeMilestoneModal();
-      });
+      milestoneModal?.addEventListener("click", (e) => { if (e.target === milestoneModal) closeMilestoneModal(); });
 
       audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
 
@@ -3603,10 +3108,7 @@
         if (!songToggle || !audioPlayer) return;
         const playing = !audioPlayer.paused && !audioPlayer.ended;
         songToggle.textContent = playing ? "❚❚" : "🧇";
-        songToggle.setAttribute(
-          "aria-label",
-          playing ? "Pause appreciation song" : "Play appreciation song"
-        );
+        songToggle.setAttribute("aria-label", playing ? "Pause appreciation song" : "Play appreciation song");
       };
 
       const syncLyricVideo = () => {
@@ -3722,14 +3224,8 @@
           clearTimeout(photoFlashLoopTimeout);
 
           const loop = () => {
-            if (document.visibilityState === "visible") {
-              triggerPhotoFlash();
-            }
-
-            photoFlashLoopTimeout = setTimeout(
-              loop,
-              mobileMedia.matches ? 3200 : 2600
-            );
+            if (document.visibilityState === "visible") triggerPhotoFlash();
+            photoFlashLoopTimeout = setTimeout(loop, mobileMedia.matches ? 3200 : 2600);
           };
 
           photoFlashLoopTimeout = setTimeout(loop, 1200);
@@ -3737,7 +3233,6 @@
 
         triggerPhotoFlash();
         startPhotoFlashLoop();
-
         photoFlashLink.addEventListener("click", triggerPhotoFlash);
         photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
 
@@ -3759,11 +3254,7 @@
         card.style.setProperty("--glare-x", "50%");
         card.style.setProperty("--glare-y", "50%");
         card.classList.remove("is-tilting");
-        if (instant) {
-          requestAnimationFrame(() => {
-            stage.style.transition = "";
-          });
-        }
+        if (instant) requestAnimationFrame(() => { stage.style.transition = ""; });
       };
 
       const updateTiltCard = (card, clientX, clientY) => {
@@ -3777,9 +3268,7 @@
         const rotateY = (px - 0.5) * (maxRotate * 2);
         const rotateX = (0.5 - py) * (maxRotate * 1.65);
 
-        stage.style.transform =
-          `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
-
+        stage.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
         card.style.setProperty("--glare-x", `${(px * 100).toFixed(2)}%`);
         card.style.setProperty("--glare-y", `${(py * 100).toFixed(2)}%`);
         card.classList.add("is-tilting");
@@ -3852,9 +3341,7 @@
         }
       };
 
-      const getRoadTripBannerLevel = () => {
-        return `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
-      };
+      const getRoadTripBannerLevel = () => `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
 
       const setRoadTripStatus = (message) => {
         roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
@@ -3862,7 +3349,6 @@
 
       const createStateButtons = () => {
         if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
-
         Object.values(roadTripStates).forEach((state) => {
           const button = document.createElement("button");
           button.type = "button";
@@ -3883,9 +3369,7 @@
 
       const getAvailableMoves = () => {
         const currentState = roadTripStates[roadTrip.current];
-        return currentState.neighbors
-          .map((code) => roadTripStates[code])
-          .filter((state) => state && !roadTrip.visited.has(state.code));
+        return currentState.neighbors.map((code) => roadTripStates[code]).filter((state) => state && !roadTrip.visited.has(state.code));
       };
 
       const updateRoadtripScrollHint = () => {
@@ -3917,12 +3401,8 @@
         if (roadtripAudioUnlocked && roadtripAudioContext) return roadtripAudioContext;
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         if (!AudioCtx) return null;
-        if (!roadtripAudioContext) {
-          roadtripAudioContext = new AudioCtx();
-        }
-        if (roadtripAudioContext.state === "suspended") {
-          roadtripAudioContext.resume().catch(() => {});
-        }
+        if (!roadtripAudioContext) roadtripAudioContext = new AudioCtx();
+        if (roadtripAudioContext.state === "suspended") roadtripAudioContext.resume().catch(() => {});
         roadtripAudioUnlocked = true;
         return roadtripAudioContext;
       };
@@ -3949,16 +3429,13 @@
       const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
         const ctx = unlockRoadtripAudio();
         if (!ctx) return;
-
         const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
         const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
         const data = buffer.getChannelData(0);
-
         for (let i = 0; i < frameCount; i += 1) {
           const decay = 1 - (i / frameCount);
           data[i] = (Math.random() * 2 - 1) * decay;
         }
-
         const source = ctx.createBufferSource();
         source.buffer = buffer;
 
@@ -3986,72 +3463,56 @@
         source.stop(startAt + duration + 0.02);
       };
 
-      const playRoadtripMoveSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
-          { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
-          { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
-        ]);
-      };
+      const playRoadtripMoveSound = () => playRoadtripToneSequence([
+        { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
+        { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
+        { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
+      ]);
 
-      const playRoadtripPointsSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
-          { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
-        ]);
-      };
+      const playRoadtripPointsSound = () => playRoadtripToneSequence([
+        { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
+        { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
+      ]);
 
-      const playRoadtripFuelSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
-          { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
-        ]);
-      };
+      const playRoadtripFuelSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
+        { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
+      ]);
 
       const playBalloonPopSound = () => {
         const ctx = unlockRoadtripAudio();
         if (!ctx) return;
-
         playNoiseBurst({ duration: 0.05, volume: 0.07, frequency: 1250, q: 0.68 });
-
         const pop = ctx.createOscillator();
         const popGain = ctx.createGain();
         const popFilter = ctx.createBiquadFilter();
         const startAt = ctx.currentTime + 0.01;
-
         pop.type = "triangle";
         pop.frequency.setValueAtTime(175, startAt);
         pop.frequency.exponentialRampToValueAtTime(68, startAt + 0.055);
-
         popFilter.type = "lowpass";
         popFilter.frequency.setValueAtTime(1000, startAt);
         popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
-
         popGain.gain.setValueAtTime(0.0001, startAt);
         popGain.gain.exponentialRampToValueAtTime(0.03, startAt + 0.003);
         popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
-
         pop.connect(popFilter).connect(popGain).connect(ctx.destination);
         pop.start(startAt);
         pop.stop(startAt + 0.07);
       };
 
-      const playRoadtripWinSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 523.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
-          { frequency: 659.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
-          { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.09 },
-          { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
-        ]);
-      };
+      const playRoadtripWinSound = () => playRoadtripToneSequence([
+        { frequency: 523.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 659.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.09 },
+        { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
+      ]);
 
-      const playRoadtripLoseSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
-          { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
-          { frequency: 261.63, duration: 0.14, volume: 0.016, type: "sine", gap: 0.14 }
-        ]);
-      };
+      const playRoadtripLoseSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
+        { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
+        { frequency: 261.63, duration: 0.14, volume: 0.016, type: "sine", gap: 0.14 }
+      ]);
 
       const playRoadtripRestartSound = () => {
         playNoiseBurst({ duration: 0.045, volume: 0.038, frequency: 920, q: 0.85 });
@@ -4063,13 +3524,11 @@
         ]);
       };
 
-      const playRoadtripLevelSound = () => {
-        playRoadtripToneSequence([
-          { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
-          { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
-          { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
-        ]);
-      };
+      const playRoadtripLevelSound = () => playRoadtripToneSequence([
+        { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
+        { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
+        { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
+      ]);
 
       const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
         if (!roadtripPointPopups || !text) return;
@@ -4079,14 +3538,8 @@
         popup.style.left = `${x}%`;
         popup.style.top = `${y}%`;
         roadtripPointPopups.appendChild(popup);
-
-        window.setTimeout(() => {
-          popup.classList.add("show");
-        }, delay);
-
-        window.setTimeout(() => {
-          popup.remove();
-        }, delay + 1150);
+        window.setTimeout(() => popup.classList.add("show"), delay);
+        window.setTimeout(() => popup.remove(), delay + 1150);
       };
 
       const showRoadtripMoveRewards = (state, fuelBonus = 0) => {
@@ -4094,28 +3547,22 @@
         const pointX = Math.min(92, state.x + 1.8);
         const pointY = Math.max(10, state.y - 2);
         spawnRoadtripPopup(`+${state.points.toLocaleString()}`, pointX, pointY, "points");
-        if (fuelBonus) {
-          spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, pointX + 4.5), Math.max(8, pointY - 6), "fuel", 110);
-        }
+        if (fuelBonus) spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, pointX + 4.5), Math.max(8, pointY - 6), "fuel", 110);
       };
 
       const animateRoadtripTravel = (fromState, toState, fuelBonus = 0) => {
         clearTimeout(roadtripTravelTimeout);
         clearTimeout(roadtripArrivalTimeout);
-
         const direction = fromState && toState && toState.x < fromState.x ? -1 : 1;
         updateRoadtripCarDirection(direction);
         setRoadtripCarState({ driving: !prefersReducedMotion, arriving: false });
         playRoadtripMoveSound();
-
         const arrivalDelay = prefersReducedMotion ? 0 : 430;
         roadtripTravelTimeout = window.setTimeout(() => {
           setRoadtripCarState({ driving: false, arriving: true });
           showRoadtripMoveRewards(toState, fuelBonus);
           playRoadtripPointsSound();
-          if (fuelBonus) {
-            window.setTimeout(() => playRoadtripFuelSound(), 120);
-          }
+          if (fuelBonus) window.setTimeout(() => playRoadtripFuelSound(), 120);
           roadtripArrivalTimeout = window.setTimeout(() => {
             setRoadtripCarState({ driving: false, arriving: false });
           }, prefersReducedMotion ? 0 : 340);
@@ -4132,7 +3579,6 @@
       const scrollRoadTripMapToCurrent = () => {
         if (!roadtripMapScroll || !roadtripMap || !roadtripCar) return;
         if (window.innerWidth > 700) return;
-
         const mapRect = roadtripMap.getBoundingClientRect();
         const current = roadTripStates[roadTrip.current];
         const targetX = (current.x / 100) * mapRect.width - roadtripMapScroll.clientWidth / 2;
@@ -4143,15 +3589,12 @@
 
       const renderRoadTripRoute = () => {
         if (!roadtripRouteChips) return;
-        roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `
-          <span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>
-        `).join("");
+        roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
       };
 
       const renderRoadTripChoices = () => {
         if (!roadtripNextStops) return;
         const moves = getAvailableMoves();
-
         if (!moves.length) {
           roadtripNextStops.innerHTML = `<div class="roadtrip-empty">No connected stops left from ${roadTrip.current}. Restart to try a new route.</div>`;
           return;
@@ -4188,9 +3631,7 @@
         clearTimeout(roadtripToastTimeout);
         roadtripToast.textContent = message;
         roadtripToast.classList.add("show");
-        roadtripToastTimeout = setTimeout(() => {
-          roadtripToast.classList.remove("show");
-        }, 2800);
+        roadtripToastTimeout = setTimeout(() => roadtripToast.classList.remove("show"), 2800);
       };
 
       const evaluateRoadTripPrompt = () => {
@@ -4260,22 +3701,15 @@
         const isMobileRoadTrip = window.innerWidth <= 700;
 
         if (isMobileRoadTrip) {
-          if (!roadtripMobilePriority.isConnected) {
-            roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
-          }
-
+          if (!roadtripMobilePriority.isConnected) roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
           if (!roadtripMobileNext.isConnected) {
-            if (roadtripMapPanel.nextSibling) {
-              roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
-            } else {
-              roadtripBoard.appendChild(roadtripMobileNext);
-            }
+            if (roadtripMapPanel.nextSibling) roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
+            else roadtripBoard.appendChild(roadtripMobileNext);
           }
 
           if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
           if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
           if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
-
           if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
@@ -4286,7 +3720,6 @@
           if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
           if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
           if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
-
           if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
           if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
         }
@@ -4296,7 +3729,6 @@
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadTrip.fuel;
         roadtripVisited.textContent = roadTrip.visited.size;
-
         const current = roadTripStates[roadTrip.current];
         const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
         const previous = roadTripStates[previousCode];
@@ -4306,7 +3738,6 @@
 
         let carX = current.x + (movingLeft ? -8 : 8);
         let carY = current.y + 2.5;
-
         if (carX < 8) carX = current.x + 8;
         if (carX > 92) carX = current.x - 8;
         if (carY > 90) carY = current.y - 4;
@@ -4315,7 +3746,6 @@
         roadtripCar.style.top = `${carY}%`;
         roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
         positionRoadtripCarFallback();
-
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
@@ -4327,16 +3757,12 @@
       const syncRoadTripMapOutcomeHost = () => {
         if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll || !roadtripMapPanel) return;
         const targetHost = window.innerWidth <= 700 ? roadtripMapPanel : roadtripMap;
-        if (roadtripMapOutcome.parentElement !== targetHost) {
-          targetHost.appendChild(roadtripMapOutcome);
-        }
+        if (roadtripMapOutcome.parentElement !== targetHost) targetHost.appendChild(roadtripMapOutcome);
       };
 
       const updateRoadTripMapOutcomeLayout = () => {
         if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll || !roadtripMapPanel) return;
-
         syncRoadTripMapOutcomeHost();
-
         roadtripMapOutcome.style.left = "";
         roadtripMapOutcome.style.right = "";
         roadtripMapOutcome.style.width = "";
@@ -4359,7 +3785,6 @@
         const viewportWidth = roadtripMapScroll.clientWidth;
         const cardWidth = Math.max(236, viewportWidth - 20);
         const topOffset = (roadtripMapScroll.offsetTop || 0) + 10;
-
         roadtripMapOutcome.style.inset = "auto";
         roadtripMapOutcome.style.top = `${topOffset}px`;
         roadtripMapOutcome.style.left = "10px";
@@ -4377,9 +3802,7 @@
         roadtripCelebration.classList.add("show");
       };
 
-      const clearRoadTripCelebration = () => {
-        roadtripCelebration?.classList.remove("show");
-      };
+      const clearRoadTripCelebration = () => roadtripCelebration?.classList.remove("show");
 
       const showRoadTripMapOutcome = ({ kicker = "Trip Update", title = "Trip over", text = "Restart and try a different route.", buttonLabel = "Restart Trip" } = {}) => {
         if (!roadtripMapOutcome) return;
@@ -4408,6 +3831,31 @@
         }
       };
 
+      const getRoadtripIntroCopy = () => {
+        const settings = getRoadTripSettings();
+        return {
+          kicker: `${settings.label} Level`,
+          title: `Reach ${settings.goal.toLocaleString()} before you run out of fuel`,
+          text: `You start in Georgia with 3,596 points and ${settings.startFuel} fuel. Pick only yellow-highlighted connected states, collect bonus fuel in Louisiana, Arkansas, and Tennessee, and watch your score, fuel, and stops right on the map.`
+        };
+      };
+
+      const showRoadtripIntro = () => {
+        if (!roadtripIntroOverlay) return;
+        const copy = getRoadtripIntroCopy();
+        roadtripIntroKicker.textContent = copy.kicker;
+        roadtripIntroTitle.textContent = copy.title;
+        roadtripIntroText.textContent = copy.text;
+        roadtripIntroOverlay.classList.add("show");
+        roadtripIntroOverlay.setAttribute("aria-hidden", "false");
+      };
+
+      const hideRoadtripIntro = () => {
+        if (!roadtripIntroOverlay) return;
+        roadtripIntroOverlay.classList.remove("show");
+        roadtripIntroOverlay.setAttribute("aria-hidden", "true");
+      };
+
       const finishRoadTrip = (won) => {
         const settings = getRoadTripSettings();
         roadTrip.gameOver = true;
@@ -4424,9 +3872,7 @@
             text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
             buttonLabel: "Play Again"
           });
-          if (!prefersReducedMotion && typeof confetti === "function") {
-            confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
-          }
+          if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           playRoadtripWinSound();
         } else {
           showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
@@ -4442,7 +3888,7 @@
       };
 
       const attemptRoadTripMove = (code) => {
-        if (roadTrip.gameOver) return;
+        if (roadTrip.gameOver || roadtripIntroOverlay?.classList.contains("show")) return;
         if (roadTrip.visited.has(code)) return;
 
         const currentState = roadTripStates[roadTrip.current];
@@ -4480,19 +3926,9 @@
           });
         }
 
-        if (roadTrip.score >= settings.goal) {
-          finishRoadTrip(true);
-          return;
-        }
-
-        if (roadTrip.fuel <= 0) {
-          finishRoadTrip(false);
-          return;
-        }
-
-        if (!getAvailableMoves().length) {
-          finishRoadTrip(false);
-        }
+        if (roadTrip.score >= settings.goal) return finishRoadTrip(true);
+        if (roadTrip.fuel <= 0) return finishRoadTrip(false);
+        if (!getAvailableMoves().length) finishRoadTrip(false);
       };
 
       const resetRoadTrip = () => {
@@ -4514,12 +3950,7 @@
         clearTimeout(roadtripArrivalTimeout);
         setRoadtripCarState({ driving: false, arriving: false });
         roadtripPointPopups?.replaceChildren();
-        roadTripPromptFlags = {
-          fuel2: false,
-          fuel1: false,
-          nearGoal: false,
-          bonusNearby: false
-        };
+        roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
         setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
         updateRoadTripHUD();
       };
@@ -4540,16 +3971,16 @@
         document.body.classList.add("lightbox-open");
         hideRoadTripMapOutcome();
         roadtripHintDismissed = false;
+        showRoadtripIntro();
         setTimeout(() => {
           scrollRoadTripMapToCurrent();
           updateRoadtripScrollHint();
-          if (roadtripMapOutcome?.classList.contains("show")) {
-            updateRoadTripMapOutcomeLayout();
-          }
+          if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
         }, 60);
       };
 
       const closeRoadTripModalFn = () => {
+        hideRoadtripIntro();
         roadtripModal.classList.remove("open");
         roadtripModal.setAttribute("aria-hidden", "true");
         document.body.classList.remove("lightbox-open");
@@ -4559,48 +3990,41 @@
         unlockRoadtripAudio();
         playRoadtripRestartSound();
         resetRoadTrip();
+        showRoadtripIntro();
       };
 
       openRoadtripGame?.addEventListener("click", () => {
         unlockRoadtripAudio();
         openRoadTripModal();
       });
+
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
-      roadtripRestart?.addEventListener("click", restartRoadTripWithFeedback);
       roadtripMapRestart?.addEventListener("click", restartRoadTripWithFeedback);
       roadtripLevelButtons.forEach((button) => {
         button.addEventListener("click", () => {
           unlockRoadtripAudio();
-          if (button.dataset.roadtripLevel !== currentRoadTripLevel) {
-            playRoadtripLevelSound();
-          } else {
-            playRoadtripRestartSound();
-          }
+          if (button.dataset.roadtripLevel !== currentRoadTripLevel) playRoadtripLevelSound();
+          else playRoadtripRestartSound();
           applyRoadTripLevel(button.dataset.roadtripLevel);
+          showRoadtripIntro();
         });
       });
-      roadtripModal?.addEventListener("click", (e) => {
-        if (e.target === roadtripModal) closeRoadTripModalFn();
-      });
+
+      roadtripIntroButton?.addEventListener("click", hideRoadtripIntro);
+
+      roadtripModal?.addEventListener("click", (e) => { if (e.target === roadtripModal) closeRoadTripModalFn(); });
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && roadtripModal?.classList.contains("open")) {
-          closeRoadTripModalFn();
-        }
+        if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
+        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) closeMilestoneModal();
       });
 
       roadtripMapScroll?.addEventListener("scroll", () => {
-        if (roadtripMapScroll.scrollLeft > 16) {
-          roadtripHintDismissed = true;
-        }
+        if (roadtripMapScroll.scrollLeft > 16) roadtripHintDismissed = true;
         updateRoadtripScrollHint();
-        if (roadtripMapOutcome?.classList.contains("show")) {
-          updateRoadTripMapOutcomeLayout();
-        }
+        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
       }, { passive: true });
 
-      roadtripModal?.addEventListener("pointerdown", () => {
-        unlockRoadtripAudio();
-      }, { passive: true });
+      roadtripModal?.addEventListener("pointerdown", () => unlockRoadtripAudio(), { passive: true });
 
       roadtripCar?.addEventListener("error", () => {
         roadtripCar.classList.add("car-fallback-hidden");
@@ -4612,6 +4036,13 @@
         roadtripCar.classList.remove("car-fallback-hidden");
         roadtripCarFallback?.classList.remove("show");
         positionRoadtripCarFallback();
+      });
+
+      eapLink?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = eapLink.getAttribute("href") || "./about.html";
+        window.location.assign(href);
       });
 
       syncRoadTripLayout();
@@ -4628,14 +4059,13 @@
         tiltCards.forEach((card) => resetTiltCard(card, true));
         updateRoadtripScrollHint();
         positionRoadtripCarFallback();
-        if (roadtripMapOutcome?.classList.contains("show")) {
-          updateRoadTripMapOutcomeLayout();
-        }
+        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
       });
       pointerFineMedia.addEventListener?.("change", () => {
         syncRoadTripLayout();
         tiltCards.forEach((card) => resetTiltCard(card, true));
       });
+
       syncAudioState();
       updateSongButton();
       renderLyrics();
