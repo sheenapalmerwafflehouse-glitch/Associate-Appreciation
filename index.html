@@ -3343,7 +3343,7 @@
                 <div class="roadtrip-map-lock-card">
                   <div class="roadtrip-map-lock-icon" aria-hidden="true">🔒</div>
                   <h3>Map Locked</h3>
-                  <p>Choose Beginner, Intermediate, or Advanced to unlock the map and start your trip.</p>
+                  <p>Choose beginner, intermediate, or advanced above to unlock the map and start your trip.</p>
                 </div>
               </div>
             </div>
@@ -3830,7 +3830,7 @@
       const renderRoadTripChoices = () => {
         if (!roadtripNextStops) return;
         if (!roadtripHasChosenLevel) {
-          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">Choose a difficulty level to unlock your next stops.</div>`;
+          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">Choose beginner, intermediate, or advanced above to unlock your next stops.</div>`;
           return;
         }
         const moves = getAvailableMoves();
@@ -3861,6 +3861,45 @@
           else { button.classList.add("unavailable"); button.disabled = true; }
         });
       };
+      const syncRoadTripLayout = () => {
+        if (!roadtripBoard || !roadtripMapPanel || !roadtripSidePanel) return;
+        const isMobileRoadTrip = window.innerWidth <= 700;
+        if (isMobileRoadTrip) {
+          if (!roadtripMobilePriority.isConnected) roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
+          if (!roadtripMobileNext.isConnected) roadtripBoard.insertBefore(roadtripMobileNext, roadtripSidePanel);
+          roadtripMobilePriority.innerHTML = "";
+          roadtripMobileNext.innerHTML = "";
+          if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
+          roadtripBoard.insertBefore(roadtripMapPanel, roadtripMobileNext);
+          if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+        } else {
+          if (roadtripDifficultyCard) roadtripSidePanel.appendChild(roadtripDifficultyCard);
+          if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+          if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
+          if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
+        }
+      };
+      const scrollRoadTripMapToCurrent = (behavior = "auto") => {
+        if (!roadtripMapScroll || !roadtripMap || window.innerWidth > 700) return;
+        const currentNode = roadtripMap.querySelector(`.state-node[data-state="${roadTrip.current}"]`);
+        if (!currentNode) return;
+        const viewportWidth = roadtripMapScroll.clientWidth;
+        const mapWidth = roadtripMap.scrollWidth || roadtripMap.offsetWidth;
+        const currentCenter = currentNode.offsetLeft + (currentNode.offsetWidth / 2);
+        const targetLeft = Math.max(0, Math.min(mapWidth - viewportWidth, currentCenter - (viewportWidth * 0.62)));
+        roadtripMapScroll.scrollTo({ left: targetLeft, behavior });
+      };
+      const queueRoadTripMapFocus = (behavior = "auto") => {
+        [0, 80, 180].forEach((delay) => {
+          window.setTimeout(() => scrollRoadTripMapToCurrent(behavior), delay);
+        });
+      };
       const updateRoadTripHUD = () => {
         roadtripScore.textContent = roadTrip.score.toLocaleString();
         roadtripFuel.textContent = roadtripHasChosenLevel ? roadTrip.fuel : "—";
@@ -3868,6 +3907,7 @@
         renderRoadTripRoute();
         renderRoadTripChoices();
         updateRoadTripNodes();
+        if (roadtripHasChosenLevel) queueRoadTripMapFocus(window.innerWidth <= 700 ? "smooth" : "auto");
       };
       const resetRoadTrip = () => {
         const settings = getRoadTripSettings();
@@ -3883,10 +3923,16 @@
         roadtripHasChosenLevel = true;
         roadtripLayoutCounter += 1;
         updateRoadTripLevelUI();
+        syncRoadTripLayout();
         resetRoadTrip();
+        if (window.innerWidth <= 700) {
+          roadtripMapPanel?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start", inline: "nearest" });
+        }
+        queueRoadTripMapFocus(prefersReducedMotion ? "auto" : "smooth");
       };
       const prepareRoadTripLevelSelection = () => {
         roadtripHasChosenLevel = false;
+        syncRoadTripLayout();
         updateRoadTripLevelUI();
         updateRoadTripStatusVisibility();
         resetRoadTrip();
@@ -3907,6 +3953,7 @@
         updateRoadTripHUD();
       };
       const openRoadTripModal = () => {
+        syncRoadTripLayout();
         roadtripModal.classList.add("open");
         roadtripModal.setAttribute("aria-hidden", "false");
         document.body.classList.add("lightbox-open");
@@ -3920,7 +3967,10 @@
 
       openRoadtripGame?.addEventListener("click", openRoadTripModal);
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
-      roadtripMapRestart?.addEventListener("click", resetRoadTrip);
+      roadtripMapRestart?.addEventListener("click", () => {
+        resetRoadTrip();
+        queueRoadTripMapFocus("auto");
+      });
       roadtripLevelButtons.forEach((button) => {
         button.addEventListener("click", () => applyRoadTripLevel(button.dataset.roadtripLevel));
       });
@@ -3929,16 +3979,25 @@
         if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
         if (e.key === "Escape" && milestoneModal?.classList.contains("open")) milestoneModal.classList.remove("open");
       });
+      roadtripIntroButton?.addEventListener("click", () => {
+        roadtripMapPanel?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start", inline: "nearest" });
+        queueRoadTripMapFocus(prefersReducedMotion ? "auto" : "smooth");
+      });
       eapLink?.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         const href = eapLink.getAttribute("href") || "./about.html";
         window.location.assign(href);
       });
+      window.addEventListener("resize", () => {
+        syncRoadTripLayout();
+        if (roadtripHasChosenLevel) queueRoadTripMapFocus("auto");
+      });
 
       renderTopStates();
       renderBonusStops();
       createStateButtons();
+      syncRoadTripLayout();
       prepareRoadTripLevelSelection();
       updateRoadTripStatusVisibility();
       updateProgressBar();
