@@ -740,7 +740,8 @@
       position: absolute;
       inset: 0;
       z-index: 3;
-      pointer-events: none;
+      pointer-events: auto;
+      touch-action: manipulation;
       border-radius: 20px;
     }
 
@@ -783,6 +784,7 @@
       border: none;
       cursor: pointer;
       pointer-events: auto;
+      touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       transition: transform 0.22s ease, box-shadow 0.22s ease;
     }
@@ -2473,6 +2475,10 @@
       transform: translate(-50%, 0) scale(1);
     }
 
+    .history-chat-panel.history-panel--keyboard {
+      max-height: calc(100dvh - 8px);
+    }
+
     .history-chat-top {
       position: relative;
       padding: 22px 20px 18px;
@@ -2970,7 +2976,7 @@
         min-height: 0;
         max-height: none;
         margin: 0 12px 12px;
-        padding: 12px 12px 0;
+        padding: 12px 12px 88px;
       }
 
       .history-chat-composer {
@@ -4102,18 +4108,43 @@
       };
       milestoneClose?.addEventListener("click", closeMilestoneModal);
       milestoneModal?.addEventListener("click", (e) => { if (e.target === milestoneModal) closeMilestoneModal(); });
+
+      const activateBalloonHotspot = (spot, years, count) => {
+        hideAnniversaryTip();
+        spot.classList.remove("hinting");
+        popBalloonEffect(spot);
+        openMilestoneModal(years, count);
+        try {
+          unlockRoadtripAudio();
+          playBalloonPopSound();
+        } catch (err) {
+          console.warn("Balloon pop sound unavailable", err);
+        }
+      };
+
       balloonHotspots.forEach((spot) => {
         const years = spot.dataset.years;
         const count = spot.dataset.count;
+        let lastBalloonActivation = 0;
+
+        const handleBalloonTap = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const now = Date.now();
+          if (now - lastBalloonActivation < 250) return;
+          lastBalloonActivation = now;
+          activateBalloonHotspot(spot, years, count);
+        };
+
+        spot.addEventListener("pointerdown", handleBalloonTap, { passive: false });
         spot.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
-          unlockRoadtripAudio();
-          playBalloonPopSound();
-          hideAnniversaryTip();
-          spot.classList.remove("hinting");
-          popBalloonEffect(spot);
-          window.setTimeout(() => openMilestoneModal(years, count), 80);
+        });
+        spot.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleBalloonTap(e);
+          }
         });
       });
 
@@ -4577,8 +4608,10 @@
         const visibleHeight = vv ? vv.height : layoutHeight;
         const offsetTop = vv ? vv.offsetTop : 0;
         const keyboardOpen = (layoutHeight - visibleHeight) > 140;
-        const panelHeight = Math.max(320, Math.min(visibleHeight - (keyboardOpen ? 8 : 16), 760));
-        const panelTop = keyboardOpen ? offsetTop + 8 : offsetTop + (visibleHeight / 2);
+        const panelHeight = keyboardOpen
+          ? Math.max(360, Math.min(visibleHeight - 4, 760))
+          : Math.max(360, Math.min(visibleHeight - 16, 760));
+        const panelTop = keyboardOpen ? offsetTop + 4 : offsetTop + (visibleHeight / 2);
         panel.classList.toggle("history-panel--keyboard", keyboardOpen);
         panel.style.setProperty("--history-panel-top", `${panelTop}px`);
         panel.style.setProperty("--history-panel-height", `${panelHeight}px`);
@@ -4729,11 +4762,11 @@
             if (followupScroller) {
               const fieldRect = field.getBoundingClientRect();
               const scrollerRect = followupScroller.getBoundingClientRect();
-              const targetTop = followupScroller.scrollTop + (fieldRect.top - scrollerRect.top) - 20;
+              const targetTop = followupScroller.scrollTop + (fieldRect.top - scrollerRect.top) - (followupScroller.clientHeight * 0.28);
               followupScroller.scrollTo({ top: Math.max(0, targetTop), behavior: "auto" });
             }
             field.scrollIntoView({ block: "center", inline: "nearest" });
-          }, 120);
+          }, 160);
         });
       });
 
