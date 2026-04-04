@@ -1672,26 +1672,23 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 18px;
-      z-index: 18;
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.34));
+      padding: clamp(14px, 3vw, 22px);
+      z-index: 26;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.36));
       backdrop-filter: blur(3px);
       border-radius: 24px;
       pointer-events: none;
       overflow: hidden;
+      box-sizing: border-box;
     }
 
-    .roadtrip-map-stage.is-locked .roadtrip-map-lock,
     .roadtrip-map-lock.show {
       display: flex;
     }
 
-    .roadtrip-map-stage:not(.is-locked) .roadtrip-map-lock {
-      display: none !important;
-    }
-
     .roadtrip-map-lock-card {
-      width: min(420px, calc(100% - 18px));
+      width: min(360px, calc(100% - 24px));
+      max-width: calc(100vw - 40px);
       padding: 18px 20px 16px;
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,253,245,0.98), rgba(255,247,219,0.99));
@@ -1704,6 +1701,7 @@
       line-height: 1.38;
       letter-spacing: 0.01em;
       margin: 0 auto;
+      box-sizing: border-box;
     }
 
     .roadtrip-map-lock-icon {
@@ -1724,6 +1722,10 @@
     .roadtrip-map-stage.is-locked .state-car,
     .roadtrip-map-stage.is-locked .roadtrip-car-fallback {
       opacity: 0.42;
+    }
+
+    .map-path.roadtrip-route-svg {
+      display: none !important;
     }
 
     .roadtrip-map-hud {
@@ -2339,8 +2341,14 @@
       }
 
       .roadtrip-map-stage { width: clamp(560px, 155vw, 760px); min-height: 460px; }
-      .roadtrip-map-lock { padding: 10px; inset: 10px; }
-      .roadtrip-map-lock-card { width: min(92%, 340px); padding: 15px 14px; font-size: 0.94rem; line-height: 1.34; }
+      .roadtrip-map-lock { inset: 0; padding: 14px; }
+      .roadtrip-map-lock-card {
+        width: min(320px, calc(100vw - 40px), calc(100% - 20px));
+        max-width: min(320px, calc(100vw - 40px));
+        padding: 15px 14px;
+        font-size: 0.94rem;
+        line-height: 1.34;
+      }
       .zone-atlantic { right: 2.8%; top: 5.4%; }
 
       .roadtrip-map-stage .state-node[data-state="IN"] { left: 50.5% !important; top: 23.5% !important; }
@@ -2388,9 +2396,11 @@
       }
       .roadtrip-intro-card {
         width: min(560px, calc(100vw - 32px));
+        max-width: calc(100vw - 32px);
         max-height: calc(100dvh - 48px);
         overflow: auto;
         padding: 20px 18px;
+        box-sizing: border-box;
       }
       .roadtrip-intro-title { font-size: clamp(1.2rem, 5.4vw, 1.6rem); }
     }
@@ -3300,7 +3310,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Enjoy 10 free jukebox credits a week on the House.</p>
+          <p>Enjoy 15 free jukebox credits a week on the House.</p>
 
           <div class="links">
             <a class="section-link pressable" href="https://www.touchtunes.com/play/app" rel="noopener noreferrer">Download the App</a>
@@ -3892,45 +3902,8 @@ const getRoadTripUniqueEdges = () => {
 };
 
 const renderRoadTripNetwork = () => {
-  if (!roadtripRouteNetwork || !roadtripRouteTraveled) return;
-
-  if (!roadtripHasChosenLevel) {
-    roadtripRouteNetwork.innerHTML = "";
-    roadtripRouteTraveled.innerHTML = "";
-    return;
-  }
-
-  const allEdges = getRoadTripUniqueEdges();
-  const baseSegments = [];
-  allEdges.forEach(({ fromState, toState }) => {
-    baseSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main", { outsideGap: 0.1, bend: 0.58 }));
-    baseSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-center", { outsideGap: 0.1, bend: 0.58 }));
-  });
-
-  const optionSegments = [];
-  const availableMoves = !roadTrip.gameOver ? getAvailableMoves() : [];
-  availableMoves.forEach((state) => {
-    const fromState = roadTripStates[roadTrip.current];
-    const toState = roadTripStates[state.code];
-    optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main", { outsideGap: 0.03, bend: 0.64 }));
-    optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center", { outsideGap: 0.03, bend: 0.64 }));
-  });
-
-  roadtripRouteNetwork.innerHTML = `${baseSegments.join("")}${optionSegments.join("")}`;
-
-  if (roadTrip.route.length < 2) {
-    roadtripRouteTraveled.innerHTML = "";
-    return;
-  }
-
-  const traveledSegments = [];
-  for (let i = 1; i < roadTrip.route.length; i += 1) {
-    const fromState = roadTripStates[roadTrip.route[i - 1]];
-    const toState = roadTripStates[roadTrip.route[i]];
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main", { outsideGap: -0.02, bend: 0.42 }));
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center", { outsideGap: -0.02, bend: 0.42 }));
-  }
-  roadtripRouteTraveled.innerHTML = traveledSegments.join("");
+  if (roadtripRouteNetwork) roadtripRouteNetwork.innerHTML = "";
+  if (roadtripRouteTraveled) roadtripRouteTraveled.innerHTML = "";
 };
 
 const applyRoadTripLayout = (levelKey = "base") => {
@@ -4621,6 +4594,30 @@ const applyRoadTripLayout = (levelKey = "base") => {
         { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
       ]);
 
+      const playRoadtripHooray = () => {
+        try {
+          if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance("Hooray!");
+            utterance.volume = 0.95;
+            utterance.rate = 1.02;
+            utterance.pitch = 1.14;
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice =
+              voices.find((voice) => /^en/i.test(voice.lang) && /samantha|victoria|zira|ava|karen|allison/i.test(voice.name)) ||
+              voices.find((voice) => /^en/i.test(voice.lang));
+            if (preferredVoice) utterance.voice = preferredVoice;
+            window.speechSynthesis.speak(utterance);
+            return;
+          }
+        } catch (error) {}
+        playRoadtripToneSequence([
+          { frequency: 523.25, duration: 0.08, volume: 0.022, type: "triangle", gap: 0.07 },
+          { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.08 },
+          { frequency: 1046.5, duration: 0.13, volume: 0.022, type: "triangle", gap: 0.12 }
+        ]);
+      };
+
       const playRoadtripLoseSound = () => playRoadtripToneSequence([
         { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
         { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
@@ -4691,16 +4688,21 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
 
       const syncRoadTripMapLockHost = () => {
-        if (!roadtripMapLock || !roadtripMap) return;
-        if (roadtripMapLock.parentElement !== roadtripMap) {
-          roadtripMap.appendChild(roadtripMapLock);
+        const targetHost = roadtripMapScroll || roadtripMapPanel || roadtripMap;
+        if (!roadtripMapLock || !targetHost) return;
+        if (roadtripMapLock.parentElement !== targetHost) {
+          targetHost.appendChild(roadtripMapLock);
         }
       };
 
       const updateRoadTripMapLockLayout = () => {
-        if (!roadtripMapLock) return;
-        roadtripMapLock.style.top = "";
-        roadtripMapLock.style.height = "";
+        if (!roadtripMapLock || !roadtripMapScroll) return;
+        roadtripMapLock.style.top = "0";
+        roadtripMapLock.style.left = "0";
+        roadtripMapLock.style.right = "0";
+        roadtripMapLock.style.bottom = "0";
+        roadtripMapLock.style.width = "100%";
+        roadtripMapLock.style.height = `${roadtripMapScroll.clientHeight}px`;
       };
 
       const primeHeroBallDrop = () => {
@@ -5094,6 +5096,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
           });
           if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
           playRoadtripWinSound();
+          playRoadtripHooray();
         } else {
           showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
           setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
