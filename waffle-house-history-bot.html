@@ -51,7 +51,8 @@
     }
 
     .history-chat-top {
-      padding: 18px 18px 14px;
+      position: relative;
+      padding: 18px 76px 14px 18px;
       background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
       border-bottom: 1px solid rgba(176, 150, 44, 0.18);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
@@ -87,6 +88,30 @@
       line-height: 1.5;
       font-size: 0.95rem;
       max-width: 58ch;
+    }
+
+
+    .history-chat-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.96);
+      color: #111;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(17,17,17,0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .history-chat-close:hover {
+      transform: translateY(-1px);
     }
 
     .history-quick-toolbar {
@@ -238,13 +263,7 @@
       outline-offset: 1px;
     }
 
-    .history-followup-note {
-      color: #666;
-      font-size: 0.84rem;
-      line-height: 1.4;
-    }
-
-    .history-chat-composer {
+        .history-chat-composer {
       flex: 0 0 auto;
       padding: 10px 18px 16px;
       border-top: 1px solid rgba(176, 150, 44, 0.14);
@@ -253,22 +272,31 @@
       gap: 10px;
     }
 
-    .history-chat-composer-row {
+    .history-followup-actions {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 10px;
       align-items: stretch;
     }
 
-    .history-send-row[hidden] { display: none; }
-
-    .history-send-row {
-      display: flex;
-      justify-content: flex-end;
+    .history-cancel-btn {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 14px;
+      min-height: 46px;
+      padding: 0 18px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #4b3f00;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 8px 16px rgba(17,17,17,0.05);
+      white-space: nowrap;
     }
 
-    .history-send-row .history-send-btn {
-      width: 100%;
+    .history-chat-composer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: stretch;
     }
 
     .history-send-btn,
@@ -285,19 +313,13 @@
       white-space: nowrap;
     }
 
-    .history-help {
-      color: #666;
-      font-size: 0.84rem;
-      line-height: 1.4;
-    }
-
     @media (max-width: 720px) {
       .history-followup-grid {
         grid-template-columns: 1fr;
       }
 
       .history-chat-top {
-        padding: 16px 16px 12px;
+        padding: 16px 68px 12px 16px;
       }
 
       .history-quick-toolbar,
@@ -310,12 +332,14 @@
         padding-right: 14px;
       }
 
-      .history-chat-composer-row {
+      .history-chat-composer-row,
+      .history-followup-actions {
         grid-template-columns: 1fr;
       }
 
       .history-ask-btn,
-      .history-send-btn {
+      .history-send-btn,
+      .history-cancel-btn {
         width: 100%;
       }
     }
@@ -325,7 +349,8 @@
   <main class="history-page">
     <section class="history-chat-panel" aria-label="Waffle House History Bot">
       <div class="history-chat-top">
-        <div class="history-chat-eyebrow">Waffle House Yellow</div>
+        <div class="history-chat-eyebrow">Waffle House History</div>
+        <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history bot">&times;</button>
         <h1>Waffle House History Bot</h1>
         <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.</p>
       </div>
@@ -358,13 +383,16 @@
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
       <div class="history-chat-followup" id="history-chat-followup" hidden>
-        <div class="history-followup-copy" id="history-followup-copy">Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.</div>
+        <div class="history-followup-copy" id="history-followup-copy">Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I’ll package your note for the archivist.</div>
         <div class="history-followup-grid">
           <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
           <input id="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Your unit number" aria-label="Your unit number" />
           <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
         </div>
-        <div class="history-followup-note">I’ll package your note for <strong>the archivist</strong>, then open a pre-addressed draft to <strong>example@example.com</strong>.</div>
+        <div class="history-followup-actions">
+          <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
+          <button class="history-cancel-btn" id="history-cancel-email" type="button">Not now</button>
+        </div>
       </div>
 
       <div class="history-chat-composer">
@@ -372,10 +400,6 @@
           <input id="history-question-input" type="text" placeholder="Ask a Waffle House history question" aria-label="Ask a Waffle House history question" />
           <button class="history-ask-btn" id="history-ask-btn" type="button">Ask</button>
         </div>
-        <div class="history-send-row" id="history-send-row" hidden>
-          <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
-        </div>
-        <div class="history-help">If you need something beyond the built-in facts, ask your question and I’ll help you package it for the archivist.</div>
       </div>
     </section>
   </main>
@@ -414,12 +438,23 @@
       const unitInput = document.getElementById("history-contact-unit");
       const emailInput = document.getElementById("history-contact-email");
       const sendEmailBtn = document.getElementById("history-send-email");
+      const cancelEmailBtn = document.getElementById("history-cancel-email");
       const askRow = document.getElementById("history-ask-row");
-      const sendRow = document.getElementById("history-send-row");
-      const moreToggle = document.getElementById("history-more-toggle");
+            const moreToggle = document.getElementById("history-more-toggle");
       const extraQuickAsks = document.getElementById("history-quick-asks-extra");
+      const closeBtn = document.getElementById("history-chat-close");
 
       let pendingQuestion = "";
+
+      const closeHistoryBot = () => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage("close-waffle-history-bot", "*");
+        } else if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "index.html";
+        }
+      };
 
       const suggestedTopics = [
         "Unit #1",
@@ -484,7 +519,7 @@
         const second = ranked[1];
 
         if (!top || top.score < 2) {
-          return "I could not confidently match that question to the built-in history facts. Try asking about " + suggestedTopics.slice(0, 5).join(", ") + ".";
+          return null;
         }
 
         if (top.score >= 5 && (!second || top.score >= second.score + 2)) {
@@ -512,16 +547,20 @@
       const hideFollowup = () => {
         followup.hidden = true;
         askRow.hidden = false;
-        sendRow.hidden = true;
+        nameInput.value = "";
+        unitInput.value = "";
+        emailInput.value = "";
       };
 
       const showFollowup = (question) => {
         pendingQuestion = question;
         followup.hidden = false;
         askRow.hidden = true;
-        sendRow.hidden = false;
-        followupCopy.textContent = "Add your name, unit number, and email, then I’ll package your question for the archivist and open a ready-to-send draft.";
-        nameInput.focus();
+        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I’ll package your note for the archivist.";
+        window.setTimeout(() => {
+          followup.scrollIntoView({ behavior: "smooth", block: "end" });
+          nameInput.focus();
+        }, 70);
       };
 
       const seedWelcome = () => {
@@ -529,15 +568,16 @@
         hideFollowup();
       };
 
-      const askHistoryQuestion = (question, { promptForEmail = false } = {}) => {
+      const askHistoryQuestion = (question, { fromQuickAsk = false } = {}) => {
         const q = (question || "").trim();
         if (!q) return;
         addMessage("user", q);
         const answer = findAnswer(q);
         window.setTimeout(() => {
-          addMessage("bot", answer);
-          if (promptForEmail) {
-            addMessage("bot", "Want me to send that to the archivist? Add your name, unit number, and email below, then tap Send to Archivist.");
+          if (answer) {
+            addMessage("bot", answer);
+          } else {
+            addMessage("bot", "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it.");
             showFollowup(q);
           }
         }, 110);
@@ -546,7 +586,7 @@
       askBtn.addEventListener("click", () => {
         const q = (input.value || "").trim();
         if (!q) return;
-        askHistoryQuestion(q, { promptForEmail: true });
+        askHistoryQuestion(q);
         input.value = "";
       });
 
@@ -558,7 +598,7 @@
       });
 
       quickAskButtons.forEach((button) => {
-        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
+        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || "", { fromQuickAsk: true }));
       });
 
       moreToggle.addEventListener("click", () => {
@@ -571,6 +611,13 @@
       unitInput.addEventListener("input", () => {
         unitInput.value = unitInput.value.replace(/\D+/g, "");
       });
+
+      cancelEmailBtn.addEventListener("click", () => {
+        addMessage("bot", "No problem — your question is still here if you want to send it to the archivist later.");
+        hideFollowup();
+      });
+
+      closeBtn.addEventListener("click", closeHistoryBot);
 
       sendEmailBtn.addEventListener("click", () => {
         const name = (nameInput.value || "").trim();
@@ -602,10 +649,11 @@
         ].join("\n");
 
         addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
-        const mailto = `mailto:example@example.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailto = `mailto:archives@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
+          hideFollowup();
         }, 520);
       });
 
