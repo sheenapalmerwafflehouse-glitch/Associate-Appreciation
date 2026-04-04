@@ -2997,9 +2997,19 @@
 
     @media (max-width: 640px) {
       .history-shell {
-        width: calc(100vw - 16px);
-        height: min(92dvh, 760px);
+        top: max(8px, env(safe-area-inset-top));
+        left: 8px;
+        right: 8px;
+        bottom: max(8px, env(safe-area-inset-bottom));
+        width: auto;
+        height: auto;
+        max-height: none;
+        transform: none;
         border-radius: 24px;
+      }
+
+      .history-shell.open {
+        transform: none;
       }
 
       .history-shell-close {
