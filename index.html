@@ -5394,20 +5394,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const eapLink = document.getElementById("eap-link");
-      const goToAboutPage = (event) => {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        window.location.assign('about.html');
-      };
-      eapLink?.addEventListener('click', goToAboutPage);
-      eapLink?.addEventListener('touchend', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        window.location.assign('about.html');
-      }, { passive: false });
-
       const historyLauncher = document.getElementById("history-chat-launcher");
       const historyShell = document.getElementById("history-chat-shell");
       const historyShellOverlay = document.getElementById("history-shell-overlay");
