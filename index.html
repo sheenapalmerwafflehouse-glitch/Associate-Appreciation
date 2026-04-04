@@ -1687,8 +1687,8 @@
     }
 
     .roadtrip-map-lock-card {
-      width: min(360px, calc(100% - 24px));
-      max-width: calc(100vw - 40px);
+      width: min(360px, calc(100% - 32px));
+      max-width: min(360px, calc(100vw - 44px));
       padding: 18px 20px 16px;
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,253,245,0.98), rgba(255,247,219,0.99));
@@ -1766,7 +1766,7 @@
     .roadtrip-hill.hill-b { width: 46%; height: 19%; left: 26%; bottom: 10%; }
     .roadtrip-hill.hill-c { width: 42%; height: 18%; right: -3%; bottom: 11%; }
 
-    .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; }
+    .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; display: none !important; }
 
 .roadtrip-route-svg path,
 .roadtrip-route-svg line {
@@ -2343,8 +2343,8 @@
       .roadtrip-map-stage { width: clamp(560px, 155vw, 760px); min-height: 460px; }
       .roadtrip-map-lock { inset: 0; padding: 14px; }
       .roadtrip-map-lock-card {
-        width: min(320px, calc(100vw - 40px), calc(100% - 20px));
-        max-width: min(320px, calc(100vw - 40px));
+        width: min(320px, calc(100% - 28px), calc(100vw - 44px));
+        max-width: min(320px, calc(100vw - 44px));
         padding: 15px 14px;
         font-size: 0.94rem;
         line-height: 1.34;
@@ -4055,6 +4055,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       const fireConfetti = () => {
         if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
         confetti({ particleCount: 110, spread: 78, startVelocity: 34, origin: { y: 0.28 } });
+        playPageLoadCelebrationSound();
         confettiFired = true;
       };
 
@@ -4594,28 +4595,39 @@ const applyRoadTripLayout = (levelKey = "base") => {
         { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
       ]);
 
+      const playCrowdClapCheer = ({ mini = false } = {}) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        const clapCount = mini ? 2 : 4;
+        for (let i = 0; i < clapCount; i += 1) {
+          window.setTimeout(() => {
+            playNoiseBurst({
+              duration: mini ? 0.038 : 0.052,
+              volume: mini ? 0.05 : 0.082,
+              frequency: 1650 + (i * 70),
+              q: 0.82
+            });
+          }, i * (mini ? 72 : 96));
+        }
+        playRoadtripToneSequence(mini
+          ? [
+              { frequency: 659.25, duration: 0.06, volume: 0.018, type: "triangle", gap: 0.05 },
+              { frequency: 880, duration: 0.08, volume: 0.018, type: "triangle", gap: 0.08 }
+            ]
+          : [
+              { frequency: 523.25, duration: 0.07, volume: 0.02, type: "triangle", gap: 0.06 },
+              { frequency: 659.25, duration: 0.08, volume: 0.02, type: "triangle", gap: 0.07 },
+              { frequency: 783.99, duration: 0.09, volume: 0.019, type: "triangle", gap: 0.08 },
+              { frequency: 1046.5, duration: 0.14, volume: 0.018, type: "triangle", gap: 0.12 }
+            ]);
+      };
+
+      const playPageLoadCelebrationSound = () => {
+        playCrowdClapCheer({ mini: true });
+      };
+
       const playRoadtripHooray = () => {
-        try {
-          if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance("Hooray!");
-            utterance.volume = 0.95;
-            utterance.rate = 1.02;
-            utterance.pitch = 1.14;
-            const voices = window.speechSynthesis.getVoices();
-            const preferredVoice =
-              voices.find((voice) => /^en/i.test(voice.lang) && /samantha|victoria|zira|ava|karen|allison/i.test(voice.name)) ||
-              voices.find((voice) => /^en/i.test(voice.lang));
-            if (preferredVoice) utterance.voice = preferredVoice;
-            window.speechSynthesis.speak(utterance);
-            return;
-          }
-        } catch (error) {}
-        playRoadtripToneSequence([
-          { frequency: 523.25, duration: 0.08, volume: 0.022, type: "triangle", gap: 0.07 },
-          { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.08 },
-          { frequency: 1046.5, duration: 0.13, volume: 0.022, type: "triangle", gap: 0.12 }
-        ]);
+        playCrowdClapCheer({ mini: false });
       };
 
       const playRoadtripLoseSound = () => playRoadtripToneSequence([
@@ -4688,7 +4700,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
 
       const syncRoadTripMapLockHost = () => {
-        const targetHost = roadtripMapScroll || roadtripMapPanel || roadtripMap;
+        const targetHost = roadtripMapPanel || roadtripMapScroll || roadtripMap;
         if (!roadtripMapLock || !targetHost) return;
         if (roadtripMapLock.parentElement !== targetHost) {
           targetHost.appendChild(roadtripMapLock);
@@ -4696,12 +4708,15 @@ const applyRoadTripLayout = (levelKey = "base") => {
       };
 
       const updateRoadTripMapLockLayout = () => {
-        if (!roadtripMapLock || !roadtripMapScroll) return;
-        roadtripMapLock.style.top = "0";
-        roadtripMapLock.style.left = "0";
-        roadtripMapLock.style.right = "0";
-        roadtripMapLock.style.bottom = "0";
-        roadtripMapLock.style.width = "100%";
+        if (!roadtripMapLock || !roadtripMapScroll || !roadtripMapPanel) return;
+        syncRoadTripMapLockHost();
+        const topOffset = roadtripMapScroll.offsetTop || 0;
+        const leftOffset = roadtripMapScroll.offsetLeft || 0;
+        roadtripMapLock.style.top = `${topOffset}px`;
+        roadtripMapLock.style.left = `${leftOffset}px`;
+        roadtripMapLock.style.right = "auto";
+        roadtripMapLock.style.bottom = "auto";
+        roadtripMapLock.style.width = `${roadtripMapScroll.clientWidth}px`;
         roadtripMapLock.style.height = `${roadtripMapScroll.clientHeight}px`;
       };
 
@@ -5220,6 +5235,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         prepareRoadTripLevelSelection();
         setTimeout(() => {
           scrollRoadTripMapToCurrent();
+          updateRoadTripMapLockLayout();
           updateRoadtripScrollHint();
           if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
         }, 60);
@@ -5308,6 +5324,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
       applyRoadTripLayout("base");
       prepareRoadTripLevelSelection();
       updateRoadTripStatusVisibility();
+      updateRoadTripMapLockLayout();
       enableTiltCards();
       runIdleNudge();
       window.addEventListener("resize", () => {
@@ -5318,7 +5335,20 @@ const applyRoadTripLayout = (levelKey = "base") => {
         tiltCards.forEach((card) => resetTiltCard(card, true));
         updateRoadtripScrollHint();
         positionRoadtripCarFallback();
+        updateRoadTripMapLockLayout();
+        if (roadtripModal?.classList.contains("open")) {
+          window.setTimeout(() => {
+            scrollRoadTripMapToCurrent();
+            updateRoadTripMapLockLayout();
+          }, prefersReducedMotion ? 0 : 90);
+        }
         if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
+      });
+      window.addEventListener("orientationchange", () => {
+        window.setTimeout(() => {
+          if (roadtripModal?.classList.contains("open")) scrollRoadTripMapToCurrent();
+          updateRoadTripMapLockLayout();
+        }, 120);
       });
       pointerFineMedia.addEventListener?.("change", () => {
         syncRoadTripLayout();
