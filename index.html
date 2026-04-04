@@ -481,7 +481,6 @@
       transition:
         transform 2000ms cubic-bezier(0.2, 0.88, 0.18, 1),
         opacity 240ms ease;
-      mix-blend-mode: multiply;
       will-change: transform, opacity;
       filter: drop-shadow(0 12px 18px rgba(92, 77, 19, 0.18));
     }
@@ -495,15 +494,12 @@
       transition-duration: 420ms;
     }
 
-    .hero-ball-drop img,
-    .hero-ball-drop video {
+    .hero-ball-drop img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
       background: transparent;
-      mix-blend-mode: multiply;
-      border-radius: 50%;
     }
 
     .song-card {
@@ -1669,24 +1665,34 @@
     .roadtrip-map-stage::before,
     .roadtrip-map-stage::after { content: none; display: none; }
 
+    
     .roadtrip-map-lock {
       position: absolute;
-      inset: 12px;
+      inset: 0;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 18px;
       z-index: 18;
-      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.38));
-      backdrop-filter: blur(2px);
-      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.34));
+      backdrop-filter: blur(3px);
+      border-radius: 24px;
+      pointer-events: none;
+      overflow: hidden;
     }
 
-    .roadtrip-map-lock.show { display: flex; }
+    .roadtrip-map-stage.is-locked .roadtrip-map-lock,
+    .roadtrip-map-lock.show {
+      display: flex;
+    }
+
+    .roadtrip-map-stage:not(.is-locked) .roadtrip-map-lock {
+      display: none !important;
+    }
 
     .roadtrip-map-lock-card {
-      width: min(360px, calc(100% - 18px));
-      padding: 18px 18px 16px;
+      width: min(420px, calc(100% - 18px));
+      padding: 18px 20px 16px;
       border-radius: 22px;
       background: linear-gradient(180deg, rgba(255,253,245,0.98), rgba(255,247,219,0.99));
       border: 1px solid rgba(176, 150, 44, 0.18);
@@ -1768,40 +1774,47 @@
   vector-effect: non-scaling-stroke;
 }
 
+
 .roadtrip-route-svg .route-network-main {
-  stroke: rgba(77, 70, 56, 0.48);
-  stroke-width: 1.7;
-  filter: drop-shadow(0 2px 5px rgba(95, 70, 0, 0.08));
+  display: block;
+  stroke: rgba(96, 81, 52, 0.34);
+  stroke-width: 5.8;
+  filter: drop-shadow(0 2px 5px rgba(56, 44, 18, 0.08));
 }
 
 .roadtrip-route-svg .route-network-center {
-  stroke: rgba(255, 250, 230, 0.72);
-  stroke-width: 0.34;
-  stroke-dasharray: 0.42 1.18;
+  display: block;
+  stroke: rgba(255, 249, 232, 0.48);
+  stroke-width: 1.05;
+  stroke-dasharray: 0.95 1.5;
 }
 
 .roadtrip-route-svg .route-option-main {
-  stroke: rgba(103, 84, 36, 0.84);
-  stroke-width: 2.2;
-  filter: drop-shadow(0 3px 8px rgba(95, 70, 0, 0.14));
+  stroke: rgba(122, 98, 54, 0.92);
+  stroke-width: 6.4;
+  filter: drop-shadow(0 4px 8px rgba(56, 44, 18, 0.14));
 }
 
 .roadtrip-route-svg .route-option-center {
-  stroke: rgba(255, 252, 237, 0.98);
-  stroke-width: 0.42;
-  stroke-dasharray: 0.42 1.12;
+  stroke: rgba(255, 249, 226, 0.98);
+  stroke-width: 1.15;
+  stroke-dasharray: 1.05 1.6;
 }
 
 .roadtrip-route-svg .route-traveled-main {
-  stroke: rgba(82, 67, 30, 0.95);
-  stroke-width: 2.55;
-  filter: drop-shadow(0 5px 10px rgba(95, 70, 0, 0.18));
+  stroke: rgba(86, 70, 39, 0.98);
+  stroke-width: 6.9;
+  filter: drop-shadow(0 5px 10px rgba(56, 44, 18, 0.18));
 }
 
 .roadtrip-route-svg .route-traveled-center {
-  stroke: rgba(255, 252, 238, 0.98);
-  stroke-width: 0.5;
-  stroke-dasharray: 0.42 1.06;
+  stroke: rgba(255, 251, 236, 0.98);
+  stroke-width: 1.3;
+  stroke-dasharray: 1.1 1.55;
+}
+
+.roadtrip-map-stage.car-traveling .route-traveled-center {
+  animation: roadtripStripeDrift 420ms linear infinite;
 }
 
     .roadtrip-mobile-difficulty {
@@ -2413,12 +2426,12 @@
       .roadtrip-map-stage .state-car { width: 58px; }
       .roadtrip-car-fallback { width: 48px; height: 48px; font-size: 1.45rem; }
       .roadtrip-zone-label { font-size: 0.66rem; padding: 5px 8px; }
-      .roadtrip-route-svg .route-network-main { stroke-width: 1.02; }
+      .roadtrip-route-svg .route-network-main { display: none; }
       .roadtrip-route-svg .route-network-center { display: none; }
-      .roadtrip-route-svg .route-option-main { stroke-width: 2.95; }
-      .roadtrip-route-svg .route-option-center { stroke-width: 0.86; stroke-dasharray: 0.14 1.08; }
-      .roadtrip-route-svg .route-traveled-main { stroke-width: 3.28; }
-      .roadtrip-route-svg .route-traveled-center { stroke-width: 0.92; stroke-dasharray: 0.12 1.04; }
+      .roadtrip-route-svg .route-option-main { stroke-width: 4.15; }
+      .roadtrip-route-svg .route-option-center { stroke-width: 0.8; stroke-dasharray: 0.62 1.04; }
+      .roadtrip-route-svg .route-traveled-main { stroke-width: 4.55; }
+      .roadtrip-route-svg .route-traveled-center { stroke-width: 0.92; stroke-dasharray: 0.62 1.02; }
       .roadtrip-map-outcome { inset: 10px 10px auto 10px; }
       .roadtrip-map-outcome-card { width: 100%; max-width: none; padding: 14px 12px 15px; border-radius: 18px; }
       .roadtrip-map-outcome-kicker { margin-bottom: 8px; padding: 5px 10px; font-size: 0.68rem; }
@@ -3395,7 +3408,7 @@
                 <div class="roadtrip-map-lock" id="roadtrip-map-lock" aria-hidden="true">
                   <div class="roadtrip-map-lock-card">
                     <div class="roadtrip-map-lock-icon" aria-hidden="true">🔒</div>
-                    <div>Choose a difficulty level above to unlock the game, map, fuel target, and next stops.</div>
+                    <div>Choose a difficulty level above to unlock the game, the map, and your next stops.</div>
                   </div>
                 </div>
                 <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
@@ -3853,10 +3866,29 @@ const getRoadTripPathMarkup = (fromState, toState, className, options = {}) => {
   const nx = -dy / dist;
   const ny = dx / dist;
   const curveSign = ((fromState.code.charCodeAt(0) + toState.code.charCodeAt(0)) % 2 === 0) ? 1 : -1;
-  const bend = options.bend ?? Math.min(1.1, Math.max(-1.1, dist * 0.045 * curveSign));
-  const midX = (start.x + end.x) / 2 + nx * bend;
-  const midY = (start.y + end.y) / 2 + ny * bend;
+  const requestedBend = options.bend;
+  const bendAmount = typeof requestedBend === "number"
+    ? requestedBend * curveSign
+    : Math.min(1.2, Math.max(-1.2, dist * 0.05 * curveSign));
+  const midX = (start.x + end.x) / 2 + nx * bendAmount;
+  const midY = (start.y + end.y) / 2 + ny * bendAmount;
   return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} Q ${midX.toFixed(2)} ${midY.toFixed(2)} ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
+};
+
+const getRoadTripUniqueEdges = () => {
+  const seen = new Set();
+  const edges = [];
+  Object.values(roadTripStates).forEach((state) => {
+    state.neighbors.forEach((neighborCode) => {
+      const neighbor = roadTripStates[neighborCode];
+      if (!neighbor) return;
+      const key = [state.code, neighbor.code].sort().join("-");
+      if (seen.has(key)) return;
+      seen.add(key);
+      edges.push({ key, fromState: state, toState: neighbor });
+    });
+  });
+  return edges;
 };
 
 const renderRoadTripNetwork = () => {
@@ -3868,27 +3900,23 @@ const renderRoadTripNetwork = () => {
     return;
   }
 
-  const availableCodes = !roadTrip.gameOver
-    ? new Set(getAvailableMoves().map((state) => state.code))
-    : new Set();
-
-  const networkSegments = [];
-  const optionSegments = [];
-
-  ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
-    const fromState = roadTripStates[codeA];
-    const toState = roadTripStates[codeB];
-    networkSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main", { outsideGap: 0.32, bend: 0 }));
-
-    const edgeTouchesCurrent = codeA === roadTrip.current || codeB === roadTrip.current;
-    const edgeTouchesAvailable = availableCodes.has(codeA) || availableCodes.has(codeB);
-    if (edgeTouchesCurrent && edgeTouchesAvailable) {
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main", { outsideGap: 0.18, bend: 0 }));
-      optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center", { outsideGap: 0.18, bend: 0 }));
-    }
+  const allEdges = getRoadTripUniqueEdges();
+  const baseSegments = [];
+  allEdges.forEach(({ fromState, toState }) => {
+    baseSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-main", { outsideGap: 0.1, bend: 0.58 }));
+    baseSegments.push(getRoadTripPathMarkup(fromState, toState, "route-network-center", { outsideGap: 0.1, bend: 0.58 }));
   });
 
-  roadtripRouteNetwork.innerHTML = networkSegments.join("") + optionSegments.join("");
+  const optionSegments = [];
+  const availableMoves = !roadTrip.gameOver ? getAvailableMoves() : [];
+  availableMoves.forEach((state) => {
+    const fromState = roadTripStates[roadTrip.current];
+    const toState = roadTripStates[state.code];
+    optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-main", { outsideGap: 0.03, bend: 0.64 }));
+    optionSegments.push(getRoadTripPathMarkup(fromState, toState, "route-option-center", { outsideGap: 0.03, bend: 0.64 }));
+  });
+
+  roadtripRouteNetwork.innerHTML = `${baseSegments.join("")}${optionSegments.join("")}`;
 
   if (roadTrip.route.length < 2) {
     roadtripRouteTraveled.innerHTML = "";
@@ -3899,8 +3927,8 @@ const renderRoadTripNetwork = () => {
   for (let i = 1; i < roadTrip.route.length; i += 1) {
     const fromState = roadTripStates[roadTrip.route[i - 1]];
     const toState = roadTripStates[roadTrip.route[i]];
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main", { outsideGap: 0.12, bend: 0 }));
-    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center", { outsideGap: 0.12, bend: 0 }));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-main", { outsideGap: -0.02, bend: 0.42 }));
+    traveledSegments.push(getRoadTripPathMarkup(fromState, toState, "route-traveled-center", { outsideGap: -0.02, bend: 0.42 }));
   }
   roadtripRouteTraveled.innerHTML = traveledSegments.join("");
 };
@@ -4401,6 +4429,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
           roadtripMap.classList.toggle("is-locked", !roadtripHasChosenLevel);
         }
         syncRoadTripMapLockHost();
+        updateRoadTripMapLockLayout();
         if (roadtripMapLock) {
           roadtripMapLock.classList.toggle("show", !roadtripHasChosenLevel);
           roadtripMapLock.setAttribute("aria-hidden", roadtripHasChosenLevel ? "true" : "false");
@@ -4662,10 +4691,16 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
 
       const syncRoadTripMapLockHost = () => {
-        if (!roadtripMapLock || !roadtripMapScroll) return;
-        if (roadtripMapLock.parentElement !== roadtripMapScroll) {
-          roadtripMapScroll.appendChild(roadtripMapLock);
+        if (!roadtripMapLock || !roadtripMap) return;
+        if (roadtripMapLock.parentElement !== roadtripMap) {
+          roadtripMap.appendChild(roadtripMapLock);
         }
+      };
+
+      const updateRoadTripMapLockLayout = () => {
+        if (!roadtripMapLock) return;
+        roadtripMapLock.style.top = "";
+        roadtripMapLock.style.height = "";
       };
 
       const primeHeroBallDrop = () => {
@@ -4676,10 +4711,10 @@ const applyRoadTripLayout = (levelKey = "base") => {
         if (!heroRect.width || !cardRect?.width) return;
 
         const mobile = window.innerWidth <= 640;
-        const startX = mobile ? -64 : -88;
-        const startY = mobile ? -24 : -34;
-        const targetX = heroRect.left - cardRect.left + heroRect.width * (mobile ? 0.33 : 0.36);
-        const targetY = heroRect.top - cardRect.top + heroRect.height * (mobile ? 0.10 : 0.085);
+        const startX = mobile ? -72 : -108;
+        const startY = mobile ? -34 : -46;
+        const targetX = heroRect.left - cardRect.left + heroRect.width * (mobile ? 0.46 : 0.46);
+        const targetY = heroRect.top - cardRect.top + heroRect.height * (mobile ? 0.18 : 0.145);
 
         heroBallDrop.style.setProperty('--ball-x', `${startX}px`);
         heroBallDrop.style.setProperty('--ball-y', `${startY}px`);
