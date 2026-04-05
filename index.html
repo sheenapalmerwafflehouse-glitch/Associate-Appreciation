@@ -3023,14 +3023,7 @@
   </style>
 </head>
 <body>
-  <script>
-    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.addEventListener("pageshow", () => {
-      window.scrollTo(0, 0);
-      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-    });
-  </script>
-  <div id="scroll-progress"></div>
+<div id="scroll-progress"></div>
 
   <header class="topbar">
     <div class="topbar-inner">
@@ -3040,7 +3033,7 @@
 
       <div class="mini-nav-wrap" aria-label="Section Navigation">
         <nav class="mini-nav" id="mini-nav">
-          <a href="./about.html" id="eap-link">Employee Assistance Program</a>
+          <a href="./about.html" id="eap-link" onclick="window.location.href='./about.html'; return false;">Employee Assistance Program</a>
           <a href="#trivia">Museum Tour &amp; Trivia</a>
           <a href="#appreciation">Appreciation Song</a>
           <a href="#shoes-for-crews">Shoes for Crews</a>
@@ -5322,7 +5315,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         e.preventDefault();
         e.stopPropagation();
         const href = eapLink.getAttribute("href") || "./about.html";
-        window.location.assign(href);
+        window.location.href = href;
       });
 
       syncRoadTripLayout();
