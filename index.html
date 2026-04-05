@@ -5380,7 +5380,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
   <div class="history-shell-overlay" id="history-shell-overlay"></div>
 
   <aside class="history-shell" id="history-chat-shell" aria-hidden="true" role="dialog" aria-label="Waffle House History Bot">
-    <button class="history-shell-close" id="history-shell-close" type="button" aria-label="Close history bot">&times;</button>
     <iframe
       class="history-shell-frame"
       id="history-shell-frame"
@@ -5423,7 +5422,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
       });
 
       historyLauncher?.addEventListener("click", openHistoryShell);
-      historyShellClose?.addEventListener("click", closeHistoryShell);
       historyShellOverlay?.addEventListener("click", closeHistoryShell);
 
       document.addEventListener("keydown", (event) => {
