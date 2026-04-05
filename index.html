@@ -4978,13 +4978,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
         updateRoadTripLevelText();
         scrollRoadTripMapToCurrent();
         updateRoadtripScrollHint();
-
-      eapLink?.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const href = eapLink.getAttribute("href") || "./about.html";
-        window.location.assign(href);
-      });
       };
 
       const syncRoadTripMapOutcomeHost = () => {
@@ -5323,6 +5316,13 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadtripCar.classList.remove("car-fallback-hidden");
         roadtripCarFallback?.classList.remove("show");
         positionRoadtripCarFallback();
+      });
+
+      eapLink?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = eapLink.getAttribute("href") || "./about.html";
+        window.location.assign(href);
       });
 
       syncRoadTripLayout();
