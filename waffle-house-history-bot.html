@@ -13,7 +13,7 @@
       --panel: #fffdf2;
       --panel-strong: #fff8db;
       --border: rgba(176, 150, 44, 0.18);
-      --shadow: 0 18px 42px rgba(17,17,17,0.16);
+      --shadow: 0 18px 42px rgba(17, 17, 17, 0.16);
     }
 
     * { box-sizing: border-box; }
@@ -56,6 +56,7 @@
       background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
       border-bottom: 1px solid rgba(176, 150, 44, 0.18);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
+      flex: 0 0 auto;
     }
 
     .history-chat-eyebrow {
@@ -90,7 +91,6 @@
       max-width: 58ch;
     }
 
-
     .history-chat-close {
       position: absolute;
       top: 16px;
@@ -121,6 +121,7 @@
       align-items: center;
       padding: 14px 18px 0;
       flex-wrap: wrap;
+      flex: 0 0 auto;
     }
 
     .history-quick-title {
@@ -148,6 +149,7 @@
       flex-wrap: wrap;
       gap: 8px;
       padding: 12px 18px 0;
+      flex: 0 0 auto;
     }
 
     .history-quick-asks-extra[hidden] { display: none; }
@@ -168,19 +170,21 @@
     .history-quick-ask:hover,
     .history-more-toggle:hover,
     .history-send-btn:hover,
-    .history-ask-btn:hover {
+    .history-ask-btn:hover,
+    .history-cancel-btn:hover {
       transform: translateY(-1px);
     }
 
     .history-chat-log {
       flex: 1 1 auto;
-      min-height: 0;
+      min-height: 120px;
       overflow: auto;
       padding: 16px 18px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
     }
 
     .history-chat-log:empty::before {
@@ -228,6 +232,10 @@
       padding: 12px 18px 8px;
       border-top: 1px solid rgba(176, 150, 44, 0.14);
       background: rgba(255,255,255,0.84);
+      flex: 0 0 auto;
+      max-height: min(34dvh, 280px);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .history-chat-followup[hidden] { display: none; }
@@ -263,7 +271,7 @@
       outline-offset: 1px;
     }
 
-        .history-chat-composer {
+    .history-chat-composer {
       flex: 0 0 auto;
       padding: 10px 18px 16px;
       border-top: 1px solid rgba(176, 150, 44, 0.14);
@@ -342,6 +350,10 @@
       .history-cancel-btn {
         width: 100%;
       }
+
+      .history-chat-followup {
+        max-height: min(40dvh, 320px);
+      }
     }
   </style>
 </head>
@@ -352,7 +364,7 @@
         <div class="history-chat-eyebrow">Waffle House History</div>
         <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history bot">&times;</button>
         <h1>Waffle House History Bot</h1>
-        <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I’ll help you send it to the archivist.</p>
+        <p>Welcome. Tap a question below for an instant answer, or ask your own question below and I'll help you send it to the archivist.</p>
       </div>
 
       <div class="history-quick-toolbar">
@@ -383,7 +395,9 @@
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
       <div class="history-chat-followup" id="history-chat-followup" hidden>
-        <div class="history-followup-copy" id="history-followup-copy">Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I’ll package your note for the archivist.</div>
+        <div class="history-followup-copy" id="history-followup-copy">
+          Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I'll package your note for the archivist.
+        </div>
         <div class="history-followup-grid">
           <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
           <input id="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Your unit number" aria-label="Your unit number" />
@@ -408,16 +422,16 @@
     document.addEventListener("DOMContentLoaded", () => {
       const historyFacts = [
         { answer: "At Unit #1, pies and hashbrowns took 2 days to make.", keywords: ["unit 1", "pies", "hashbrowns", "two days", "2 days", "prep", "make", "took"] },
-        { answer: "Unit #1’s daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
+        { answer: "Unit #1's daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
         { answer: "When Waffle House opened, it started with no booths, just stools and coffee benches.", keywords: ["booths", "stools", "coffee benches", "opened", "seating", "original seating"] },
         { answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first off-highway location opened.", keywords: ["original sign", "dripping syrup", "block logo", "highway", "off highway", "sign changed"] },
         { answer: "Tom and Joe chose yellow for the sign so you could see it from far away, just like school buses are easy to see from far away.", keywords: ["yellow", "sign", "why yellow", "school bus", "far away", "visibility"] },
         { answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles.", keywords: ["quick foods", "first franchise", "1967", "northlake foods", "east coast waffles", "franchise"] },
         { answer: "In Indiana, there was already a restaurant using the Waffle House name. Waffle House first opened there as WH Coffeehouse and Waffle & Steak before getting the rights to use the Waffle House name in that state.", keywords: ["indiana", "wh coffeehouse", "waffle and steak", "waffle steak", "rights", "name", "already a restaurant"] },
-        { answer: "Ms. Lucy is one of Waffle House’s longest-standing hourly associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004. She was known as an amazing waitress who took great care of every customer.", keywords: ["ms lucy", "lucy", "47 years", "unit 2", "1957", "retired", "2004", "waitress"] },
+        { answer: "Ms. Lucy is one of Waffle House's longest-standing hourly associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004. She was known as an amazing waitress who took great care of every customer.", keywords: ["ms lucy", "lucy", "47 years", "unit 2", "1957", "retired", "2004", "waitress"] },
         { answer: "Waffle House introduced the People Agenda in the 1980s. It included associate benefits such as health insurance and vacation pay for full-time hourly associates.", keywords: ["people agenda", "1980s", "benefits", "health insurance", "vacation pay", "full time", "hourly associates"] },
         { answer: "Scattered, Smothered, and Covered lingo was created by associates and was added to the menu in 1984.", keywords: ["scattered", "smothered", "covered", "lingo", "menu", "1984", "hashbrown lingo"] },
-        { answer: "Operator Bert Thornton created the recipe for Bert’s Chili in Texas in 1984. Bert worked in operations for 38 years.", keywords: ["bert", "bert thornton", "bert's chili", "chili", "texas", "1984", "operations", "38 years"] },
+        { answer: "Operator Bert Thornton created the recipe for Bert's Chili in Texas in 1984. Bert worked in operations for 38 years.", keywords: ["bert", "bert thornton", "bert's chili", "chili", "texas", "1984", "operations", "38 years"] },
         { answer: "Waffle House has over 2,000 locations in 25 states.", keywords: ["locations", "how many locations", "2,000", "2000", "25 states", "states"] },
         { answer: "The farthest west location is Unit #481 in Goodyear, Arizona.", keywords: ["farthest west", "goodyear", "arizona", "unit 481"] },
         { answer: "The farthest north location is Unit #1830 in Austinburg, Ohio.", keywords: ["farthest north", "austinburg", "ohio", "unit 1830"] },
@@ -440,7 +454,7 @@
       const sendEmailBtn = document.getElementById("history-send-email");
       const cancelEmailBtn = document.getElementById("history-cancel-email");
       const askRow = document.getElementById("history-ask-row");
-            const moreToggle = document.getElementById("history-more-toggle");
+      const moreToggle = document.getElementById("history-more-toggle");
       const extraQuickAsks = document.getElementById("history-quick-asks-extra");
       const closeBtn = document.getElementById("history-chat-close");
 
@@ -456,25 +470,12 @@
         }
       };
 
-      const suggestedTopics = [
-        "Unit #1",
-        "the original sign",
-        "the yellow sign",
-        "Indiana naming story",
-        "Ms. Lucy",
-        "the People Agenda",
-        "Scattered, Smothered, and Covered",
-        "Bert’s Chili",
-        "location count",
-        "annual sales"
-      ];
-
       const escapeHtml = (text) =>
         text
           .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
-          .replace(/\"/g, "&quot;")
+          .replace(/"/g, "&quot;")
           .replace(/'/g, "&#39;");
 
       const normalize = (text) =>
@@ -556,9 +557,9 @@
         pendingQuestion = question;
         followup.hidden = false;
         askRow.hidden = true;
-        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I’ll package your note for the archivist.";
+        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I'll package your note for the archivist.";
         window.setTimeout(() => {
-          followup.scrollIntoView({ behavior: "smooth", block: "end" });
+          followup.scrollIntoView({ behavior: "smooth", block: "nearest" });
           nameInput.focus();
         }, 70);
       };
@@ -568,7 +569,7 @@
         hideFollowup();
       };
 
-      const askHistoryQuestion = (question, { fromQuickAsk = false } = {}) => {
+      const askHistoryQuestion = (question) => {
         const q = (question || "").trim();
         if (!q) return;
         addMessage("user", q);
@@ -598,7 +599,7 @@
       });
 
       quickAskButtons.forEach((button) => {
-        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || "", { fromQuickAsk: true }));
+        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
       });
 
       moreToggle.addEventListener("click", () => {
@@ -648,7 +649,7 @@
           question
         ].join("\n");
 
-        addMessage("bot", `Thanks, ${name}. I’m packaging your question for the archivist now.`);
+        addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
         const mailto = `mailto:archives@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
