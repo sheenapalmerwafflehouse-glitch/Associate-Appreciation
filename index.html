@@ -3023,7 +3023,14 @@
   </style>
 </head>
 <body>
-<div id="scroll-progress"></div>
+  <script>
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.addEventListener("pageshow", () => {
+      window.scrollTo(0, 0);
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    });
+  </script>
+  <div id="scroll-progress"></div>
 
   <header class="topbar">
     <div class="topbar-inner">
@@ -3033,7 +3040,7 @@
 
       <div class="mini-nav-wrap" aria-label="Section Navigation">
         <nav class="mini-nav" id="mini-nav">
-          <a href="./about.html" id="eap-link" onclick="window.location.href='./about.html'; return false;">Employee Assistance Program</a>
+          <a href="about.html" id="eap-link">Employee Assistance Program</a>
           <a href="#trivia">Museum Tour &amp; Trivia</a>
           <a href="#appreciation">Appreciation Song</a>
           <a href="#shoes-for-crews">Shoes for Crews</a>
@@ -3510,7 +3517,6 @@
       const heroBallDrop = document.getElementById("hero-ball-drop");
       const heroBallMedia = document.getElementById("hero-ball-media");
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
-      const eapLink = document.getElementById("eap-link");
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
       const lyricScrubber = document.getElementById("lyric-scrubber");
@@ -5311,13 +5317,6 @@ const applyRoadTripLayout = (levelKey = "base") => {
         positionRoadtripCarFallback();
       });
 
-      eapLink?.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const href = eapLink.getAttribute("href") || "./about.html";
-        window.location.href = href;
-      });
-
       syncRoadTripLayout();
       syncRoadtripIntroHost();
       syncRoadTripMapOutcomeHost();
@@ -5394,6 +5393,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const eapLink = document.getElementById("eap-link");
       const historyLauncher = document.getElementById("history-chat-launcher");
       const historyShell = document.getElementById("history-chat-shell");
       const historyShellOverlay = document.getElementById("history-shell-overlay");
