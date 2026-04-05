@@ -1665,6 +1665,7 @@
     .roadtrip-map-stage::before,
     .roadtrip-map-stage::after { content: none; display: none; }
 
+    
     .roadtrip-map-lock {
       position: absolute;
       inset: 0;
@@ -1767,55 +1768,56 @@
 
     .map-path.roadtrip-route-svg { inset: 0; z-index: 1; overflow: visible; display: none !important; }
 
-    .roadtrip-route-svg path,
-    .roadtrip-route-svg line {
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      vector-effect: non-scaling-stroke;
-    }
+.roadtrip-route-svg path,
+.roadtrip-route-svg line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
 
-    .roadtrip-route-svg .route-network-main {
-      display: block;
-      stroke: rgba(96, 81, 52, 0.34);
-      stroke-width: 5.8;
-      filter: drop-shadow(0 2px 5px rgba(56, 44, 18, 0.08));
-    }
 
-    .roadtrip-route-svg .route-network-center {
-      display: block;
-      stroke: rgba(255, 249, 232, 0.48);
-      stroke-width: 1.05;
-      stroke-dasharray: 0.95 1.5;
-    }
+.roadtrip-route-svg .route-network-main {
+  display: block;
+  stroke: rgba(96, 81, 52, 0.34);
+  stroke-width: 5.8;
+  filter: drop-shadow(0 2px 5px rgba(56, 44, 18, 0.08));
+}
 
-    .roadtrip-route-svg .route-option-main {
-      stroke: rgba(122, 98, 54, 0.92);
-      stroke-width: 6.4;
-      filter: drop-shadow(0 4px 8px rgba(56, 44, 18, 0.14));
-    }
+.roadtrip-route-svg .route-network-center {
+  display: block;
+  stroke: rgba(255, 249, 232, 0.48);
+  stroke-width: 1.05;
+  stroke-dasharray: 0.95 1.5;
+}
 
-    .roadtrip-route-svg .route-option-center {
-      stroke: rgba(255, 249, 226, 0.98);
-      stroke-width: 1.15;
-      stroke-dasharray: 1.05 1.6;
-    }
+.roadtrip-route-svg .route-option-main {
+  stroke: rgba(122, 98, 54, 0.92);
+  stroke-width: 6.4;
+  filter: drop-shadow(0 4px 8px rgba(56, 44, 18, 0.14));
+}
 
-    .roadtrip-route-svg .route-traveled-main {
-      stroke: rgba(86, 70, 39, 0.98);
-      stroke-width: 6.9;
-      filter: drop-shadow(0 5px 10px rgba(56, 44, 18, 0.18));
-    }
+.roadtrip-route-svg .route-option-center {
+  stroke: rgba(255, 249, 226, 0.98);
+  stroke-width: 1.15;
+  stroke-dasharray: 1.05 1.6;
+}
 
-    .roadtrip-route-svg .route-traveled-center {
-      stroke: rgba(255, 251, 236, 0.98);
-      stroke-width: 1.3;
-      stroke-dasharray: 1.1 1.55;
-    }
+.roadtrip-route-svg .route-traveled-main {
+  stroke: rgba(86, 70, 39, 0.98);
+  stroke-width: 6.9;
+  filter: drop-shadow(0 5px 10px rgba(56, 44, 18, 0.18));
+}
 
-    .roadtrip-map-stage.car-traveling .route-traveled-center {
-      animation: roadtripStripeDrift 420ms linear infinite;
-    }
+.roadtrip-route-svg .route-traveled-center {
+  stroke: rgba(255, 251, 236, 0.98);
+  stroke-width: 1.3;
+  stroke-dasharray: 1.1 1.55;
+}
+
+.roadtrip-map-stage.car-traveling .route-traveled-center {
+  animation: roadtripStripeDrift 420ms linear infinite;
+}
 
     .roadtrip-mobile-difficulty {
       display: none;
@@ -2483,6 +2485,7 @@
     }
 
     .challenge-badge { display: inline-flex; margin: 0; }
+  
 
     /* ----- Waffle House History floating chat ----- */
     .history-fab-wrap {
@@ -2530,6 +2533,7 @@
     }
 
     .history-fab-label {
+  white-space: nowrap;
       line-height: 1;
       letter-spacing: 0.005em;
       font-size: clamp(0.64rem, 1.9vw, 0.74rem);
@@ -2871,7 +2875,7 @@
       }
 
       .history-fab-label {
-        white-space: nowrap;
+  white-space: nowrap;
         font-size: 0.67rem;
       }
 
@@ -2922,6 +2926,7 @@
       }
     }
 
+  
     .history-shell-overlay {
       position: fixed;
       inset: 0;
@@ -3014,16 +3019,10 @@
         height: 44px;
       }
     }
+
   </style>
 </head>
 <body>
-  <!-- Full revised file intentionally limited to safe markup cleanup.
-       Main corrections made:
-       1) quoted malformed external href values
-       2) separated rel attributes that had become fused into href values
-       3) quoted iframe/script src attributes
-       4) left anniversary/lightbox/game/history logic intact -->
-
   <script>
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     window.addEventListener("pageshow", () => {
@@ -3359,7 +3358,129 @@
   <div class="game-modal" id="roadtrip-game-modal" aria-hidden="true">
     <div class="game-modal-inner game-modal-inner--wide">
       <button class="game-modal-close" id="close-roadtrip-game" type="button" aria-label="Close game">&times;</button>
-      <!-- Roadtrip modal content unchanged from your working version -->
+
+      <div class="roadtrip-intro-overlay" id="roadtrip-intro-overlay" aria-hidden="true">
+        <div class="roadtrip-intro-card">
+          <div class="roadtrip-intro-kicker" id="roadtrip-intro-kicker">How to Play</div>
+          <h3 class="roadtrip-intro-title" id="roadtrip-intro-title">Plan your route before you drive</h3>
+          <p class="roadtrip-intro-text" id="roadtrip-intro-text">Start in Georgia with 3,596 points. Pick only the yellow-highlighted connected states, keep an eye on your fuel, and hit the goal before the tank runs dry.</p>
+          <ul class="roadtrip-intro-list">
+            <li>Each stop adds that state's points and uses 1 fuel.</li>
+            <li>Louisiana, Arkansas, and Tennessee give bonus fuel.</li>
+            <li>Use the map or the Next Stops cards to move.</li>
+            <li>Your difficulty level changes your fuel and target score.</li>
+          </ul>
+          <button class="section-link pressable roadtrip-intro-button" id="roadtrip-intro-button" type="button">Start Trip</button>
+        </div>
+      </div>
+
+      <div class="game-shell roadtrip-shell">
+        <div class="game-top roadtrip-top">
+          <div class="game-kicker">Anniversary Game</div>
+          <h2 class="game-title">Anniversary Road Trip</h2>
+          <p class="game-subtitle">
+            Each state shows the real number of associates we’re celebrating. Wilson Waffle starts in Georgia with 3,596 points, and every connected stop adds that state’s real anniversary total before the fuel runs out.
+          </p>
+        </div>
+
+        <div class="game-board roadtrip-board">
+          <div class="game-map-panel roadtrip-map-panel">
+            <div class="roadtrip-status-strip">
+              <div class="game-banner" id="roadtrip-status"></div>
+            </div>
+
+            <div class="roadtrip-mobile-difficulty" id="roadtrip-mobile-difficulty"></div>
+
+            <div class="roadtrip-toast" id="roadtrip-toast" aria-live="polite"></div>
+
+            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint">Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
+
+            <div class="roadtrip-map-hud game-hud">
+              <div class="hud-card">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="roadtrip-score">0</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Fuel</div>
+                <div class="hud-value" id="roadtrip-fuel">18</div>
+              </div>
+              <div class="hud-card">
+                <div class="hud-label">Stops</div>
+                <div class="hud-value" id="roadtrip-visited">1</div>
+              </div>
+            </div>
+
+            <div class="roadtrip-map-scroll" id="roadtrip-map-scroll">
+              <div class="game-map roadtrip-map-stage" id="roadtrip-map">
+                <div class="roadtrip-sun" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-a" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-b" aria-hidden="true"></div>
+                <div class="roadtrip-hill hill-c" aria-hidden="true"></div>
+                <div class="roadtrip-zone-label zone-west">West</div>
+                <div class="roadtrip-zone-label zone-midwest">Midwest</div>
+                <div class="roadtrip-zone-label zone-south">South</div>
+                <div class="roadtrip-zone-label zone-atlantic">Atlantic</div>
+                <svg class="map-path roadtrip-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <g id="roadtrip-route-network"></g>
+                  <g id="roadtrip-route-traveled"></g>
+                </svg>
+                <div class="roadtrip-map-lock" id="roadtrip-map-lock" aria-hidden="true">
+                  <div class="roadtrip-map-lock-card">
+                    <div class="roadtrip-map-lock-icon" aria-hidden="true">🔒</div>
+                    <div>Choose a difficulty level above to unlock the game, the map, and your next stops.</div>
+                  </div>
+                </div>
+                <img src="Images/WilsonCar.png?v=3" alt="Wilson car" class="state-car" id="roadtrip-car" style="left:68%; top:70%;" draggable="false" />
+                <div class="roadtrip-car-fallback" id="roadtrip-car-fallback" aria-hidden="true">🚗</div>
+                <div class="roadtrip-point-popups" id="roadtrip-point-popups" aria-hidden="true"></div>
+                <div class="roadtrip-map-outcome" id="roadtrip-map-outcome" aria-live="polite">
+                  <div class="roadtrip-map-outcome-card" id="roadtrip-map-outcome-card">
+                    <div class="roadtrip-map-outcome-kicker" id="roadtrip-map-outcome-kicker">Trip Update</div>
+                    <h3 class="roadtrip-map-outcome-title" id="roadtrip-map-outcome-title">Trip over</h3>
+                    <p class="roadtrip-map-outcome-text" id="roadtrip-map-outcome-text">Restart and try a different route.</p>
+                    <button class="section-link pressable roadtrip-map-restart" id="roadtrip-map-restart" type="button">Restart Trip</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="game-celebration" id="roadtrip-celebration"></div>
+          </div>
+
+          <div class="game-side-panel roadtrip-side-panel">
+            <div class="game-panel-card roadtrip-next-card">
+              <h3>Next Stops</h3>
+              <p class="roadtrip-helper">Tap a state with the yellow highlight ring on the map or use these quick-pick buttons.</p>
+              <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Trip Route</h3>
+              <div class="roadtrip-route-chips" id="roadtrip-route-chips"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Top Celebration States</h3>
+              <div class="top-state-list" id="roadtrip-top-states"></div>
+            </div>
+
+            <div class="game-panel-card">
+              <h3>Bonus Refuel Stops</h3>
+              <div class="roadtrip-bonus-list" id="roadtrip-bonus-list"></div>
+            </div>
+
+            <div class="game-panel-card" id="roadtrip-difficulty-card">
+              <div class="roadtrip-difficulty-kicker">Choose Difficulty</div>
+              <p class="roadtrip-difficulty-copy">Tap <strong>Beginner</strong>, <strong>Intermediate</strong>, or <strong>Advanced</strong> to set your fuel and target score.</p>
+              <div class="roadtrip-levels" id="roadtrip-levels">
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="beginner">Beginner Level</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="intermediate">Intermediate Level</button>
+                <button type="button" class="roadtrip-level-btn" data-roadtrip-level="advanced">Advanced Level</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3369,12 +3490,1884 @@
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- NOTE:
-       I did not rewrite your large anniversary/game JS block here in this notepad version
-       because you asked me not to tamper with those behaviors.
-       This file is meant to show the safe markup cleanup points.
-       If you want, I can next give you a second file that merges these cleaned links
-       back into your exact full current file byte-for-byte around the JS sections. -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const pointerFineMedia = window.matchMedia("(hover: hover) and (pointer: fine)");
+      const mobileMedia = window.matchMedia("(max-width: 640px)");
+
+      const progressBar = document.getElementById("scroll-progress");
+      const sections = Array.from(document.querySelectorAll(".section"));
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxClose = document.querySelector(".lightbox-close");
+      const milestoneModal = document.getElementById("milestone-modal");
+      const milestoneTitle = document.getElementById("milestone-title");
+      const milestoneText = document.getElementById("milestone-text");
+      const milestoneClose = document.querySelector(".milestone-close");
+      const balloonHotspots = document.querySelectorAll(".balloon-hotspot");
+      const audioPlayer = document.getElementById("audio-player");
+      const audioCard = document.getElementById("audio-card");
+      const songToggle = document.getElementById("song-toggle");
+      const anniversaryTip = document.getElementById("anniversary-tip");
+      const triggers = document.querySelectorAll(".lightbox-trigger");
+      const backToTop = document.getElementById("back-to-top");
+      const heroImage = document.querySelector(".hero-image img");
+      const heroBallDrop = document.getElementById("hero-ball-drop");
+      const heroBallMedia = document.getElementById("hero-ball-media");
+      const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
+      const photoFlashLink = document.getElementById("photo-flash-link");
+      const lyricLineHost = document.getElementById("lyric-line-host");
+      const lyricScrubber = document.getElementById("lyric-scrubber");
+      const lyricStage = document.getElementById("lyric-stage");
+      const lyricBgVideo = document.getElementById("lyric-bg-video");
+      const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
+      const roadtripModal = document.getElementById("roadtrip-game-modal");
+      const openRoadtripGame = document.getElementById("open-roadtrip-game");
+      const closeRoadtripGame = document.getElementById("close-roadtrip-game");
+      const roadtripMap = document.getElementById("roadtrip-map");
+      const roadtripMapLock = document.getElementById("roadtrip-map-lock");
+      const roadtripRouteNetwork = document.getElementById("roadtrip-route-network");
+      const roadtripRouteTraveled = document.getElementById("roadtrip-route-traveled");
+      const roadtripCar = document.getElementById("roadtrip-car");
+      const roadtripCarFallback = document.getElementById("roadtrip-car-fallback");
+      const roadtripPointPopups = document.getElementById("roadtrip-point-popups");
+      const roadtripMapOutcome = document.getElementById("roadtrip-map-outcome");
+      const roadtripMapOutcomeCard = document.getElementById("roadtrip-map-outcome-card");
+      const roadtripMapOutcomeKicker = document.getElementById("roadtrip-map-outcome-kicker");
+      const roadtripMapOutcomeTitle = document.getElementById("roadtrip-map-outcome-title");
+      const roadtripMapOutcomeText = document.getElementById("roadtrip-map-outcome-text");
+      const roadtripMapRestart = document.getElementById("roadtrip-map-restart");
+      const roadtripScore = document.getElementById("roadtrip-score");
+      const roadtripFuel = document.getElementById("roadtrip-fuel");
+      const roadtripVisited = document.getElementById("roadtrip-visited");
+      const roadtripStatus = document.getElementById("roadtrip-status");
+      const roadtripStatusStrip = roadtripModal?.querySelector(".roadtrip-status-strip");
+      const roadtripToast = document.getElementById("roadtrip-toast");
+      const roadtripCelebration = document.getElementById("roadtrip-celebration");
+      const roadtripTopStates = document.getElementById("roadtrip-top-states");
+      const roadtripNextStops = document.getElementById("roadtrip-next-stops");
+      const roadtripHelper = roadtripModal?.querySelector(".roadtrip-helper");
+      const roadtripRouteChips = document.getElementById("roadtrip-route-chips");
+      const roadtripMapScroll = document.getElementById("roadtrip-map-scroll");
+      const roadtripScrollHint = document.getElementById("roadtrip-scroll-hint");
+      const roadtripBonusList = document.getElementById("roadtrip-bonus-list");
+      const roadtripGoalCopy = document.getElementById("roadtrip-goal-copy");
+      const roadtripLevelButtons = Array.from(document.querySelectorAll("[data-roadtrip-level]"));
+      const roadtripBoard = roadtripModal?.querySelector(".roadtrip-board");
+      const roadtripMapPanel = roadtripBoard?.querySelector(".roadtrip-map-panel");
+      const roadtripSidePanel = roadtripBoard?.querySelector(".roadtrip-side-panel");
+      const roadtripDifficultyCard = document.getElementById("roadtrip-difficulty-card");
+      const roadtripNextCard = roadtripSidePanel?.querySelector(".roadtrip-next-card");
+      const roadtripRouteCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(2)");
+      const roadtripTopStatesCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(3)");
+      const roadtripBonusCard = roadtripSidePanel?.querySelector(".game-panel-card:nth-of-type(4)");
+      const roadtripTripGoalCard = document.getElementById("roadtrip-tripgoal-card");
+      const roadtripMobileDifficulty = document.getElementById("roadtrip-mobile-difficulty");
+      const roadtripMobilePriority = document.createElement("div");
+      const roadtripMobileNext = document.createElement("div");
+      const roadtripIntroOverlay = document.getElementById("roadtrip-intro-overlay");
+      const roadtripIntroKicker = document.getElementById("roadtrip-intro-kicker");
+      const roadtripIntroTitle = document.getElementById("roadtrip-intro-title");
+      const roadtripIntroText = document.getElementById("roadtrip-intro-text");
+      const roadtripIntroButton = document.getElementById("roadtrip-intro-button");
+      const roadtripShell = roadtripModal?.querySelector(".roadtrip-shell");
+      roadtripMobilePriority.className = "roadtrip-mobile-priority";
+      roadtripMobileNext.className = "roadtrip-mobile-next";
+
+      const roadTripStates = {
+        CO: { code: "CO", name: "Colorado", points: 105, region: "west", x: 12, y: 28, neighbors: ["KS", "AZ"] },
+        AZ: { code: "AZ", name: "Arizona", points: 140, region: "west", x: 9, y: 56, neighbors: ["CO"] },
+        TX: { code: "TX", name: "Texas", points: 1098, region: "south", x: 18, y: 80, neighbors: ["LA", "OK", "AR"] },
+        OK: { code: "OK", name: "Oklahoma", points: 149, region: "south", x: 21, y: 60, neighbors: ["TX", "AR", "MO", "KS"] },
+        KS: { code: "KS", name: "Kansas", points: 43, region: "midwest", x: 23, y: 42, neighbors: ["OK", "MO", "CO"] },
+        LA: { code: "LA", name: "Louisiana", points: 870, fuelBonus: 2, region: "south", x: 31, y: 79, neighbors: ["MS", "TX", "AR"] },
+        AR: { code: "AR", name: "Arkansas", points: 442, fuelBonus: 2, region: "south", x: 33, y: 58, neighbors: ["TX", "LA", "MS", "TN", "MO", "OK"] },
+        MO: { code: "MO", name: "Missouri", points: 315, region: "midwest", x: 35, y: 42, neighbors: ["AR", "OK", "KS", "IL", "KY", "TN"] },
+        MS: { code: "MS", name: "Mississippi", points: 750, region: "south", x: 45, y: 72, neighbors: ["AL", "LA", "TN", "AR"] },
+        IL: { code: "IL", name: "Illinois", points: 14, region: "midwest", x: 43, y: 24, neighbors: ["MO", "IN"] },
+        IN: { code: "IN", name: "Indiana", points: 187, region: "midwest", x: 49, y: 24, neighbors: ["IL", "OH", "KY"] },
+        TN: { code: "TN", name: "Tennessee", points: 794, fuelBonus: 2, region: "south", x: 55, y: 50, neighbors: ["GA", "AL", "NC", "KY", "VA", "MS", "AR", "MO"] },
+        KY: { code: "KY", name: "Kentucky", points: 438, region: "south", x: 58, y: 36, neighbors: ["TN", "VA", "OH", "IN", "MO"] },
+        OH: { code: "OH", name: "Ohio", points: 556, region: "midwest", x: 59, y: 19, neighbors: ["IN", "KY", "PA", "WV"] },
+        AL: { code: "AL", name: "Alabama", points: 1364, region: "south", x: 56, y: 69, neighbors: ["GA", "FL", "MS", "TN"] },
+        GA: { code: "GA", name: "Georgia", points: 3596, region: "south", x: 68, y: 66, neighbors: ["FL", "AL", "SC", "NC", "TN"] },
+        WV: { code: "WV", name: "West Virginia", points: 44, region: "south", x: 71, y: 31, neighbors: ["OH", "VA", "PA", "MD"] },
+        NC: { code: "NC", name: "North Carolina", points: 1496, region: "south", x: 81, y: 52, neighbors: ["SC", "GA", "VA", "TN"] },
+        VA: { code: "VA", name: "Virginia", points: 546, region: "south", x: 79, y: 40, neighbors: ["NC", "KY", "WV", "MD"] },
+        PA: { code: "PA", name: "Pennsylvania", points: 47, region: "northeast", x: 78, y: 15, neighbors: ["OH", "WV", "MD", "DE"] },
+        SC: { code: "SC", name: "South Carolina", points: 1460, region: "south", x: 83, y: 64, neighbors: ["GA", "NC", "FL"] },
+        MD: { code: "MD", name: "Maryland", points: 84, region: "mid-atlantic", x: 89, y: 33, neighbors: ["VA", "WV", "DE", "PA"] },
+        DE: { code: "DE", name: "Delaware", points: 29, region: "mid-atlantic", x: 95, y: 24, neighbors: ["MD", "PA"] },
+        FL: { code: "FL", name: "Florida", points: 1934, region: "south", x: 84, y: 76, neighbors: ["GA", "AL", "SC"] }
+      };
+
+      const ROADTRIP_STATE_CODES = Object.keys(roadTripStates);
+      const roadTripStateValues = Object.values(roadTripStates);
+      const roadTripBasePositions = {};
+      roadTripStateValues.forEach((state) => {
+        state.baseX = state.x;
+        state.baseY = state.y;
+        roadTripBasePositions[state.code] = { x: state.x, y: state.y };
+      });
+
+      const ROADTRIP_EDGE_PAIRS = (() => {
+        const seen = new Set();
+        const pairs = [];
+        roadTripStateValues.forEach((state) => {
+          state.neighbors.forEach((neighborCode) => {
+            const key = [state.code, neighborCode].sort().join("-");
+            if (seen.has(key) || !roadTripStates[neighborCode]) return;
+            seen.add(key);
+            pairs.push([state.code, neighborCode]);
+          });
+        });
+        return pairs;
+      })();
+
+
+      const ROADTRIP_ROUTE_PAIRS = [
+        ["CO", "AZ"], ["CO", "KS"], ["KS", "OK"], ["KS", "MO"], ["MO", "IL"], ["IL", "IN"], ["IN", "OH"],
+        ["OH", "PA"], ["PA", "DE"], ["PA", "MD"], ["MD", "VA"], ["VA", "WV"], ["KY", "WV"], ["KY", "TN"],
+        ["TN", "NC"], ["NC", "SC"], ["SC", "FL"], ["FL", "GA"], ["GA", "AL"], ["AL", "MS"], ["MS", "LA"],
+        ["LA", "TX"], ["TX", "OK"], ["OK", "AR"], ["AR", "LA"], ["AR", "TN"], ["MO", "AR"], ["TN", "AL"],
+        ["NC", "VA"], ["SC", "GA"]
+      ];
+
+      const ROADTRIP_LAYOUTS = {
+        base: { key: "base", jitter: 0, anchor: 0.12, angleDrift: 0, radialDrift: 0, settle: 150 },
+        beginner: { key: "beginner", jitter: 5.5, anchor: 0.072, angleDrift: 0.34, radialDrift: 7, settle: 170 },
+        intermediate: { key: "intermediate", jitter: 10.5, anchor: 0.04, angleDrift: 0.72, radialDrift: 11, settle: 200 },
+        advanced: { key: "advanced", jitter: 15.5, anchor: 0.018, angleDrift: 1.08, radialDrift: 15, settle: 235 }
+      };
+
+      const ROADTRIP_LAYOUT_BOUNDS = { minX: 7, maxX: 95, minY: 15, maxY: 80 };
+      const ROADTRIP_GA_ANCHOR = { x: roadTripBasePositions.GA.x, y: roadTripBasePositions.GA.y };
+
+      const ROADTRIP_LEVELS = {
+        beginner: { key: "beginner", label: "Beginner", goal: 12000, startFuel: 22, description: "More fuel and a lower score target for an easier first trip." },
+        intermediate: { key: "intermediate", label: "Intermediate", goal: 14000, startFuel: 19, description: "Balanced fuel and score target for a standard challenge." },
+        advanced: { key: "advanced", label: "Advanced", goal: 15500, startFuel: 16, description: "Tighter fuel and a tougher score target for expert route planning." }
+      };
+
+      let currentRoadTripLevel = "beginner";
+      let roadtripHasChosenLevel = false;
+      let roadtripLayoutCounter = 0;
+      let currentRoadTripLayoutKey = "base";
+      let roadtripToastTimeout;
+      let roadtripTravelTimeout;
+      let roadtripArrivalTimeout;
+      let roadtripAudioContext = null;
+      let roadtripAudioUnlocked = false;
+      let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
+
+      const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
+
+
+const clampRoadTripValue = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const createRoadTripSeededRandom = (seed) => {
+  let t = seed >>> 0;
+  return () => {
+    t += 0x6D2B79F5;
+    let r = Math.imul(t ^ (t >>> 15), t | 1);
+    r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+const getRoadTripLayoutConfig = (levelKey = "base") => ROADTRIP_LAYOUTS[levelKey] || ROADTRIP_LAYOUTS.base;
+
+const getRoadTripPairKey = (codeA, codeB) => [codeA, codeB].sort().join("-");
+
+const setRoadTripStatePosition = (code, x, y) => {
+  const state = roadTripStates[code];
+  if (!state) return;
+  state.x = Number(x.toFixed(2));
+  state.y = Number(y.toFixed(2));
+  const node = roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
+  if (node) {
+    node.style.setProperty("left", `${state.x}%`, "important");
+    node.style.setProperty("top", `${state.y}%`, "important");
+  }
+};
+
+const getRoadTripLayoutScore = (layoutPositions) => {
+  let score = 0;
+  const codes = Object.keys(layoutPositions);
+
+  for (let i = 0; i < codes.length; i += 1) {
+    const a = layoutPositions[codes[i]];
+    for (let j = i + 1; j < codes.length; j += 1) {
+      const b = layoutPositions[codes[j]];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy) || 0.001;
+      if (dist < 7.8) score += (7.8 - dist) * 90;
+    }
+  }
+
+  ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+    const a = layoutPositions[codeA];
+    const b = layoutPositions[codeB];
+    const dist = Math.hypot(b.x - a.x, b.y - a.y) || 0.001;
+    const baseA = roadTripBasePositions[codeA];
+    const baseB = roadTripBasePositions[codeB];
+    const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+    score += Math.abs(dist - baseDist) * 1.5;
+  });
+
+  return score;
+};
+
+const applyRoadTripLayoutPositions = (layoutPositions) => {
+  roadTripStateValues.forEach((state) => {
+    const next = layoutPositions[state.code] || roadTripBasePositions[state.code];
+    setRoadTripStatePosition(state.code, next.x, next.y);
+  });
+};
+
+const buildRoadTripLayout = (levelKey = "base") => {
+  const config = getRoadTripLayoutConfig(levelKey);
+
+  if (levelKey === "base" || !config.jitter) {
+    return Object.fromEntries(
+      roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
+    );
+  }
+
+  const baseSeed = Date.now() + (roadtripLayoutCounter * 997) + (levelKey === "beginner" ? 11 : levelKey === "intermediate" ? 29 : 53);
+  let bestLayout = null;
+  let bestScore = Number.POSITIVE_INFINITY;
+
+  for (let attempt = 0; attempt < 7; attempt += 1) {
+    const random = createRoadTripSeededRandom(baseSeed + (attempt * 131));
+    const positions = {};
+
+    roadTripStateValues.forEach((state) => {
+      if (state.code === "GA") {
+        positions[state.code] = { x: ROADTRIP_GA_ANCHOR.x, y: ROADTRIP_GA_ANCHOR.y };
+        return;
+      }
+
+      const fromGAx = state.baseX - ROADTRIP_GA_ANCHOR.x;
+      const fromGAy = state.baseY - ROADTRIP_GA_ANCHOR.y;
+      const baseRadius = Math.hypot(fromGAx, fromGAy);
+      const baseAngle = Math.atan2(fromGAy, fromGAx);
+      const angle = baseAngle + ((random() - 0.5) * 2 * config.angleDrift);
+      const radius = Math.max(7, baseRadius + ((random() - 0.5) * 2 * config.radialDrift));
+      const jitterX = (random() - 0.5) * config.jitter;
+      const jitterY = (random() - 0.5) * config.jitter;
+
+      positions[state.code] = {
+        x: clampRoadTripValue(ROADTRIP_GA_ANCHOR.x + Math.cos(angle) * radius + jitterX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX),
+        y: clampRoadTripValue(ROADTRIP_GA_ANCHOR.y + Math.sin(angle) * radius + jitterY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY)
+      };
+    });
+
+    for (let step = 0; step < config.settle; step += 1) {
+      const nudges = Object.fromEntries(
+        ROADTRIP_STATE_CODES.map((code) => [code, { x: 0, y: 0 }])
+      );
+
+      ROADTRIP_EDGE_PAIRS.forEach(([codeA, codeB]) => {
+        const posA = positions[codeA];
+        const posB = positions[codeB];
+        const dx = posB.x - posA.x;
+        const dy = posB.y - posA.y;
+        const dist = Math.hypot(dx, dy) || 0.001;
+        const baseA = roadTripBasePositions[codeA];
+        const baseB = roadTripBasePositions[codeB];
+        const baseDist = Math.hypot(baseB.x - baseA.x, baseB.y - baseA.y);
+        const target = clampRoadTripValue(baseDist, 7.6, 18.5);
+        const delta = dist - target;
+        const force = delta * 0.022;
+        const nx = (dx / dist) * force;
+        const ny = (dy / dist) * force;
+        nudges[codeA].x += nx;
+        nudges[codeA].y += ny;
+        nudges[codeB].x -= nx;
+        nudges[codeB].y -= ny;
+      });
+
+      for (let i = 0; i < ROADTRIP_STATE_CODES.length; i += 1) {
+        const codeA = ROADTRIP_STATE_CODES[i];
+        const posA = positions[codeA];
+        for (let j = i + 1; j < ROADTRIP_STATE_CODES.length; j += 1) {
+          const codeB = ROADTRIP_STATE_CODES[j];
+          const posB = positions[codeB];
+          const dx = posB.x - posA.x;
+          const dy = posB.y - posA.y;
+          const dist = Math.hypot(dx, dy) || 0.001;
+          const minDist = codeA === "GA" || codeB === "GA" ? 8.8 : 7.7;
+          if (dist >= minDist) continue;
+          const force = ((minDist - dist) / minDist) * 0.32;
+          const nx = (dx / dist) * force;
+          const ny = (dy / dist) * force;
+          nudges[codeA].x -= nx;
+          nudges[codeA].y -= ny;
+          nudges[codeB].x += nx;
+          nudges[codeB].y += ny;
+        }
+      }
+
+      roadTripStateValues.forEach((state) => {
+        if (state.code === "GA") return;
+        const pos = positions[state.code];
+        const pullX = (state.baseX - pos.x) * config.anchor;
+        const pullY = (state.baseY - pos.y) * config.anchor;
+        pos.x = clampRoadTripValue(pos.x + nudges[state.code].x + pullX, ROADTRIP_LAYOUT_BOUNDS.minX, ROADTRIP_LAYOUT_BOUNDS.maxX);
+        pos.y = clampRoadTripValue(pos.y + nudges[state.code].y + pullY, ROADTRIP_LAYOUT_BOUNDS.minY, ROADTRIP_LAYOUT_BOUNDS.maxY);
+      });
+
+      positions.GA.x = ROADTRIP_GA_ANCHOR.x;
+      positions.GA.y = ROADTRIP_GA_ANCHOR.y;
+    }
+
+    const score = getRoadTripLayoutScore(positions);
+    if (score < bestScore) {
+      bestScore = score;
+      bestLayout = JSON.parse(JSON.stringify(positions));
+    }
+  }
+
+  return bestLayout || Object.fromEntries(
+    roadTripStateValues.map((state) => [state.code, { x: state.baseX, y: state.baseY }])
+  );
+};
+
+const getRoadTripNodeElement = (code) => roadtripMap?.querySelector(`.state-node[data-state="${code}"]`);
+
+const getRoadTripBadgeHalfSize = (code) => {
+  const fallback = { x: 5.2, y: 4.8 };
+  const el = getRoadTripNodeElement(code);
+  if (!el || !roadtripMap) return fallback;
+  const mapRect = roadtripMap.getBoundingClientRect();
+  if (!mapRect.width || !mapRect.height) return fallback;
+  return {
+    x: Math.max(3.8, (el.offsetWidth / mapRect.width) * 50),
+    y: Math.max(3.6, (el.offsetHeight / mapRect.height) * 50)
+  };
+};
+
+const getRoadTripDirectionVector = (fromState, toState) => {
+  const dx = toState.x - fromState.x;
+  const dy = toState.y - fromState.y;
+  const length = Math.hypot(dx, dy) || 1;
+  return { dx, dy, nx: dx / length, ny: dy / length, length };
+};
+
+const getRoadTripBadgeAnchor = (state, towardState, code, outsideGap = 0.45) => {
+  const half = getRoadTripBadgeHalfSize(code);
+  const { nx, ny } = getRoadTripDirectionVector(state, towardState);
+  const edgeDistance = 1 / Math.max(
+    Math.abs(nx) / Math.max(0.001, half.x),
+    Math.abs(ny) / Math.max(0.001, half.y)
+  );
+  return {
+    x: state.x + nx * (edgeDistance + outsideGap),
+    y: state.y + ny * (edgeDistance + outsideGap)
+  };
+};
+
+const getRoadTripLineEndpoints = (fromState, toState, outsideGap = 0.45) => {
+  const start = getRoadTripBadgeAnchor(fromState, toState, fromState.code, outsideGap);
+  const end = getRoadTripBadgeAnchor(toState, fromState, toState.code, outsideGap);
+  return { start, end };
+};
+
+const getRoadTripPathMarkup = (fromState, toState, className, options = {}) => {
+  const { start, end } = getRoadTripLineEndpoints(fromState, toState, options.outsideGap ?? 0.45);
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const dist = Math.hypot(dx, dy) || 1;
+  const nx = -dy / dist;
+  const ny = dx / dist;
+  const curveSign = ((fromState.code.charCodeAt(0) + toState.code.charCodeAt(0)) % 2 === 0) ? 1 : -1;
+  const requestedBend = options.bend;
+  const bendAmount = typeof requestedBend === "number"
+    ? requestedBend * curveSign
+    : Math.min(1.2, Math.max(-1.2, dist * 0.05 * curveSign));
+  const midX = (start.x + end.x) / 2 + nx * bendAmount;
+  const midY = (start.y + end.y) / 2 + ny * bendAmount;
+  return `<path class="${className}" d="M ${start.x.toFixed(2)} ${start.y.toFixed(2)} Q ${midX.toFixed(2)} ${midY.toFixed(2)} ${end.x.toFixed(2)} ${end.y.toFixed(2)}" />`;
+};
+
+const getRoadTripUniqueEdges = () => {
+  const seen = new Set();
+  const edges = [];
+  Object.values(roadTripStates).forEach((state) => {
+    state.neighbors.forEach((neighborCode) => {
+      const neighbor = roadTripStates[neighborCode];
+      if (!neighbor) return;
+      const key = [state.code, neighbor.code].sort().join("-");
+      if (seen.has(key)) return;
+      seen.add(key);
+      edges.push({ key, fromState: state, toState: neighbor });
+    });
+  });
+  return edges;
+};
+
+const renderRoadTripNetwork = () => {
+  if (roadtripRouteNetwork) roadtripRouteNetwork.innerHTML = "";
+  if (roadtripRouteTraveled) roadtripRouteTraveled.innerHTML = "";
+};
+
+const applyRoadTripLayout = (levelKey = "base") => {
+  currentRoadTripLayoutKey = levelKey;
+  const layout = buildRoadTripLayout(levelKey);
+  applyRoadTripLayoutPositions(layout);
+  renderRoadTripNetwork();
+};
+
+      let roadTrip = {
+        current: "GA",
+        score: roadTripStates.GA.points,
+        fuel: getRoadTripSettings().startFuel,
+        visited: new Set(["GA"]),
+        route: ["GA"],
+        status: "",
+        gameOver: false
+      };
+
+      const sortedTopStates = Object.values(roadTripStates).sort((a, b) => b.points - a.points).slice(0, 5);
+
+      const lyricLines = [
+        { start: 10.6, end: 13.1, top: "16%", text: "Globe light glowing\non the corner booth" },
+        { start: 13.2, end: 15.7, top: "34%", text: "Name tag greeted by\nthe coffee steam" },
+        { start: 16.0, end: 17.8, top: "22%", text: "You remember how\nI like my food" },
+        { start: 18.0, end: 20.9, top: "42%", text: "Starting early mornings off\nwith what I need" },
+        { start: 21.2, end: 23.8, top: "26%", text: "But I see more than\nwhat’s in sight" },
+        { start: 24.0, end: 26.9, top: "46%", text: "Tools moving behind\nthe scenes" },
+        { start: 27.0, end: 30.7, top: "66%", text: "Keeping everything\nworking right" },
+        { start: 31.0, end: 32.0, top: "18%", text: "So here’s to you" },
+        { start: 32.1, end: 33.5, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 33.6, end: 35.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 36.2, end: 38.9, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 39.0, end: 41.2, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 41.3, end: 45.1, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 45.2, end: 48.0, top: "24%", text: "Thank you for everything" },
+        { start: 57.3, end: 58.4, top: "18%", text: "Hash browns crisp" },
+        { start: 58.5, end: 60.0, top: "34%", text: "Toast on the side" },
+        { start: 60.1, end: 62.9, top: "52%", text: "Callbacks hit\nright on time" },
+        { start: 63.2, end: 65.4, top: "26%", text: "You’ve got my order in\nbefore the drinks" },
+        { start: 65.5, end: 67.8, top: "50%", text: "You hold the night while\nthe world sleeps tight" },
+        { start: 67.9, end: 68.8, top: "18%", text: "So here’s to you" },
+        { start: 68.9, end: 70.7, top: "34%", text: "Serving up\negg-cellence" },
+        { start: 70.9, end: 72.9, top: "56%", text: "Every pour, every plate,\nevery smile makes a difference" },
+        { start: 73.0, end: 76.0, top: "26%", text: "From the front to the back,\nevery role you play" },
+        { start: 76.1, end: 78.7, top: "48%", text: "Keeps Waffle House running\nday to day" },
+        { start: 78.8, end: 82.0, top: "68%", text: "I’m grateful for the care you bring" },
+        { start: 83.1, end: 85.2, top: "24%", text: "Thank you for everything" },
+        { start: 94.5, end: 98.0, top: "18%", text: "And I notice how\nyou move as one" },
+        { start: 98.1, end: 100.0, top: "34%", text: "Pulling, Marking,\ndropping too" },
+        { start: 100.1, end: 105.0, top: "52%", text: "Prepping, cleaning,\ncoaching strong" },
+        { start: 105.1, end: 107.7, top: "24%", text: "The hospitality,\nthe attention you give" },
+        { start: 107.8, end: 112.0, top: "46%", text: "It all comes together\nin America’s Place" },
+        { start: 112.1, end: 117.0, top: "68%", text: "Because of you each day" },
+        { start: 117.6, end: 122.0, top: "22%", text: "So here’s to you" },
+        { start: 122.2, end: 124.0, top: "40%", text: "Serving up egg-cellence" },
+        { start: 124.1, end: 126.9, top: "56%", text: "Serving up egg-cellence" },
+        { start: 127.0, end: 129.9, top: "72%", text: "Serving up egg-cellence" },
+        { start: 136.8, end: 149.0, top: "42%", text: "Thank you" }
+      ];
+
+      const lyricNodes = lyricLineHost
+        ? lyricLines.map((line) => {
+            const el = document.createElement("div");
+            el.className = "lyric-line";
+            el.textContent = line.text;
+            el.style.top = line.top;
+            lyricLineHost.appendChild(el);
+            return { el, line };
+          })
+        : [];
+
+      const renderLyrics = () => {
+        if (!audioPlayer || !lyricNodes.length) return;
+        const t = audioPlayer.currentTime || 0;
+
+        lyricNodes.forEach(({ el, line }) => {
+          const active = t >= line.start && t < line.end;
+          const progress = active ? (t - line.start) / Math.max(0.01, line.end - line.start) : 0;
+
+          el.classList.toggle("active", active);
+          el.classList.toggle("exiting", active && progress > 0.84);
+
+          if (active) {
+            const driftX = -50 + progress * 2.2;
+            const driftY = progress < 0.5 ? 5 - progress * 10 : -5 + (progress - 0.5) * 6;
+            el.style.transform = `translateX(${driftX}%) translateY(${driftY}px)`;
+            el.style.opacity = progress < 0.10 ? (progress / 0.10).toFixed(3) : progress > 0.90 ? ((1 - progress) / 0.10).toFixed(3) : "1";
+          } else {
+            el.style.transform = "translateX(-50%) translateY(18px)";
+            el.style.opacity = "0";
+          }
+        });
+
+        if (lyricScrubber) lyricScrubber.value = t;
+      };
+
+      let confettiFired = false;
+      let nudgeTimer;
+      let tipShown = false;
+      let lastInteractionTime = Date.now();
+      let roadtripHintDismissed = false;
+
+      const markInteraction = () => { lastInteractionTime = Date.now(); };
+      ["scroll", "touchstart", "pointerdown", "mousemove", "keydown", "click"].forEach((eventName) => {
+        window.addEventListener(eventName, markInteraction, { passive: true });
+      });
+
+      const updateProgressBar = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = progress + "%";
+
+        const warmth = Math.min(1, Math.max(0, progress / 100));
+        document.documentElement.style.setProperty("--page-warmth", warmth.toFixed(3));
+
+        if (backToTop) backToTop.classList.toggle("show", scrollTop > 420);
+        if (heroImage && !prefersReducedMotion) {
+          const amount = Math.min(16, scrollTop * 0.06);
+          heroImage.style.transform = `translateY(${amount}px)`;
+        }
+      };
+
+      const setActiveMiniNav = () => {
+        let activeId = "";
+        const offset = 180;
+
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= offset && rect.bottom > offset) activeId = section.id;
+        });
+
+        miniNavLinks.forEach((link) => {
+          const href = link.getAttribute("href");
+          if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
+        });
+      };
+
+      updateProgressBar();
+      setActiveMiniNav();
+      window.addEventListener("scroll", updateProgressBar, { passive: true });
+      window.addEventListener("scroll", setActiveMiniNav, { passive: true });
+
+      backToTop?.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+      });
+
+      const fireConfetti = () => {
+        if (confettiFired || prefersReducedMotion || typeof confetti !== "function") return;
+        confetti({ particleCount: 110, spread: 78, startVelocity: 34, origin: { y: 0.28 } });
+        playPageLoadCelebrationSound();
+        confettiFired = true;
+      };
+
+      window.addEventListener("load", () => {
+        setTimeout(fireConfetti, mobileMedia.matches ? 900 : 650);
+      });
+      window.addEventListener("touchstart", fireConfetti, { once: true, passive: true });
+      window.addEventListener("click", fireConfetti, { once: true, passive: true });
+
+      const openLightbox = (img) => {
+        lightboxImage.src = img.src;
+        lightboxImage.alt = img.alt || "";
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.classList.add("lightbox-open");
+      };
+
+      const closeLightbox = () => {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("lightbox-open");
+        setTimeout(() => {
+          lightboxImage.src = "";
+          lightboxImage.alt = "";
+        }, 180);
+      };
+
+      triggers.forEach((trigger) => {
+        trigger.addEventListener("click", () => {
+          const img = trigger.querySelector("img");
+          if (img) openLightbox(img);
+        });
+
+        trigger.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            const img = trigger.querySelector("img");
+            if (img) openLightbox(img);
+          }
+        });
+
+        trigger.setAttribute("tabindex", "0");
+        trigger.setAttribute("role", "button");
+        trigger.setAttribute("aria-label", "Open image");
+      });
+
+      lightboxClose?.addEventListener("click", closeLightbox);
+      lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox(); });
+
+      const formatCount = (count) => Number(count).toLocaleString();
+
+      const openMilestoneModal = (years, count) => {
+        const numericCount = Number(count);
+        const associateWord = numericCount === 1 ? "Associate" : "Associates";
+        const verbWord = numericCount === 1 ? "is" : "are";
+        const yearWord = years === "1" ? "year" : "years";
+        milestoneTitle.textContent = `${years} ${yearWord}`;
+        milestoneText.textContent = `${formatCount(numericCount)} ${associateWord} ${verbWord} celebrating ${years} ${yearWord} of service.`;
+        milestoneModal.classList.add("open");
+        milestoneModal.setAttribute("aria-hidden", "false");
+      };
+
+      const closeMilestoneModal = () => {
+        milestoneModal.classList.remove("open");
+        milestoneModal.setAttribute("aria-hidden", "true");
+      };
+
+      const popBalloonEffect = (spot) => {
+        spot.classList.remove("popping");
+        void spot.offsetWidth;
+        spot.classList.add("popping");
+        setTimeout(() => spot.classList.remove("popping"), 220);
+
+        if (prefersReducedMotion || typeof confetti !== "function") return;
+        const rect = spot.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+        confetti({ particleCount: 14, spread: 55, startVelocity: 20, ticks: 70, scalar: 0.7, origin: { x, y } });
+      };
+
+      balloonHotspots.forEach((spot) => {
+        const years = spot.dataset.years;
+        const count = spot.dataset.count;
+        spot.addEventListener("click", (e) => {
+          e.stopPropagation();
+          unlockRoadtripAudio();
+          playBalloonPopSound();
+          markInteraction();
+          hideAnniversaryTip();
+          spot.classList.remove("hinting");
+          popBalloonEffect(spot);
+          setTimeout(() => openMilestoneModal(years, count), 90);
+        });
+      });
+
+      milestoneClose?.addEventListener("click", closeMilestoneModal);
+      milestoneModal?.addEventListener("click", (e) => { if (e.target === milestoneModal) closeMilestoneModal(); });
+
+      audioPlayer?.addEventListener("contextmenu", (e) => e.preventDefault());
+
+      const updateSongButton = () => {
+        if (!songToggle || !audioPlayer) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        songToggle.textContent = playing ? "❚❚" : "🧇";
+        songToggle.setAttribute("aria-label", playing ? "Pause appreciation song" : "Play appreciation song");
+      };
+
+      const syncLyricVideo = () => {
+        if (!audioPlayer || !lyricBgVideo) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        if (playing) {
+          const playPromise = lyricBgVideo.play();
+          if (playPromise && typeof playPromise.catch === "function") playPromise.catch(() => {});
+        } else {
+          lyricBgVideo.pause();
+        }
+      };
+
+      const syncAudioState = () => {
+        if (!audioPlayer || !audioCard) return;
+        const playing = !audioPlayer.paused && !audioPlayer.ended;
+        audioCard.classList.toggle("audio-playing", playing);
+        updateSongButton();
+        syncLyricVideo();
+      };
+
+      audioPlayer?.addEventListener("play", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("pause", () => { syncAudioState(); renderLyrics(); });
+      audioPlayer?.addEventListener("ended", () => {
+        if (lyricBgVideo) {
+          lyricBgVideo.pause();
+          lyricBgVideo.currentTime = 0;
+        }
+        syncAudioState();
+        renderLyrics();
+      });
+      audioPlayer?.addEventListener("timeupdate", renderLyrics);
+      audioPlayer?.addEventListener("seeked", renderLyrics);
+      audioPlayer?.addEventListener("loadedmetadata", () => {
+        if (lyricScrubber && lyricLines.length) lyricScrubber.max = lyricLines[lyricLines.length - 1].end;
+        renderLyrics();
+      });
+      lyricBgVideo?.addEventListener("loadedmetadata", () => {
+        if (lyricBgVideo.videoWidth && lyricBgVideo.videoHeight && lyricStage) {
+          lyricStage.style.aspectRatio = `${lyricBgVideo.videoWidth} / ${lyricBgVideo.videoHeight}`;
+        }
+      });
+      lyricScrubber?.addEventListener("input", (e) => {
+        if (!audioPlayer) return;
+        audioPlayer.currentTime = Number(e.target.value);
+        renderLyrics();
+      });
+      songToggle?.addEventListener("click", async () => {
+        if (!audioPlayer) return;
+        if (audioPlayer.paused) {
+          try { await audioPlayer.play(); } catch (err) {}
+        } else {
+          audioPlayer.pause();
+        }
+        syncAudioState();
+      });
+
+      const showAnniversaryTip = () => {
+        if (!anniversaryTip || tipShown || prefersReducedMotion) return;
+        anniversaryTip.classList.add("show");
+        anniversaryTip.setAttribute("aria-hidden", "false");
+        tipShown = true;
+        setTimeout(hideAnniversaryTip, 3000);
+      };
+
+      const hideAnniversaryTip = () => {
+        if (!anniversaryTip) return;
+        anniversaryTip.classList.remove("show");
+        anniversaryTip.setAttribute("aria-hidden", "true");
+      };
+
+      const anniversarySection = document.getElementById("anniversaries");
+      const runIdleNudge = () => {
+        clearTimeout(nudgeTimer);
+        nudgeTimer = setTimeout(() => {
+          if (Date.now() - lastInteractionTime < 5500) {
+            runIdleNudge();
+            return;
+          }
+
+          const anniversaryInView = anniversarySection && (() => {
+            const rect = anniversarySection.getBoundingClientRect();
+            return rect.top < window.innerHeight * 0.82 && rect.bottom > window.innerHeight * 0.18;
+          })();
+
+          if (anniversaryInView) {
+            const nudgeSpot = balloonHotspots[0];
+            nudgeSpot?.classList.add("hinting");
+            if (mobileMedia.matches) showAnniversaryTip();
+            setTimeout(() => nudgeSpot?.classList.remove("hinting"), 2200);
+          }
+
+          runIdleNudge();
+        }, 6200);
+      };
+
+      if (!prefersReducedMotion && photoFlashLink) {
+        let photoFlashTimeout;
+        let photoFlashLoopTimeout;
+
+        const triggerPhotoFlash = () => {
+          photoFlashLink.classList.remove("flash-now");
+          void photoFlashLink.offsetWidth;
+          photoFlashLink.classList.add("flash-now");
+
+          clearTimeout(photoFlashTimeout);
+          photoFlashTimeout = setTimeout(() => {
+            photoFlashLink.classList.remove("flash-now");
+          }, 1100);
+        };
+
+        const startPhotoFlashLoop = () => {
+          clearTimeout(photoFlashLoopTimeout);
+
+          const loop = () => {
+            if (document.visibilityState === "visible") triggerPhotoFlash();
+            photoFlashLoopTimeout = setTimeout(loop, mobileMedia.matches ? 3200 : 2600);
+          };
+
+          photoFlashLoopTimeout = setTimeout(loop, 1200);
+        };
+
+        triggerPhotoFlash();
+        startPhotoFlashLoop();
+        photoFlashLink.addEventListener("click", triggerPhotoFlash);
+        photoFlashLink.addEventListener("touchstart", triggerPhotoFlash, { passive: true });
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            triggerPhotoFlash();
+            startPhotoFlashLoop();
+          } else {
+            clearTimeout(photoFlashLoopTimeout);
+          }
+        });
+      }
+
+      const resetTiltCard = (card, instant = false) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+        if (instant) stage.style.transition = "none";
+        stage.style.transform = "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+        card.style.setProperty("--glare-x", "50%");
+        card.style.setProperty("--glare-y", "50%");
+        card.classList.remove("is-tilting");
+        if (instant) requestAnimationFrame(() => { stage.style.transition = ""; });
+      };
+
+      const updateTiltCard = (card, clientX, clientY) => {
+        const stage = card.querySelector(".tilt-stage");
+        if (!stage) return;
+
+        const rect = card.getBoundingClientRect();
+        const px = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+        const py = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
+        const maxRotate = window.innerWidth < 768 ? 7 : 12;
+        const rotateY = (px - 0.5) * (maxRotate * 2);
+        const rotateX = (0.5 - py) * (maxRotate * 1.65);
+
+        stage.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(${window.innerWidth < 768 ? 1.012 : 1.02}, ${window.innerWidth < 768 ? 1.012 : 1.02}, 1)`;
+        card.style.setProperty("--glare-x", `${(px * 100).toFixed(2)}%`);
+        card.style.setProperty("--glare-y", `${(py * 100).toFixed(2)}%`);
+        card.classList.add("is-tilting");
+      };
+
+      const enableTiltCards = () => {
+        tiltCards.forEach((card) => {
+          if (card.dataset.tiltBound === "true") return;
+          card.dataset.tiltBound = "true";
+          resetTiltCard(card, true);
+
+          card.addEventListener("pointerenter", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointermove", (e) => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            updateTiltCard(card, e.clientX, e.clientY);
+          });
+
+          card.addEventListener("pointerleave", () => resetTiltCard(card));
+          card.addEventListener("blur", () => resetTiltCard(card), true);
+          card.addEventListener("focusin", () => {
+            if (!pointerFineMedia.matches || prefersReducedMotion) return;
+            card.classList.add("is-tilting");
+          });
+          card.addEventListener("touchstart", () => resetTiltCard(card, true), { passive: true });
+        });
+      };
+
+      const regionClassName = (region) => {
+        switch (region) {
+          case "west": return "region-west";
+          case "midwest": return "region-midwest";
+          case "mid-atlantic": return "region-mid-atlantic";
+          case "northeast": return "region-northeast";
+          default: return "region-south";
+        }
+      };
+
+      const renderTopStates = () => {
+        if (!roadtripTopStates) return;
+        roadtripTopStates.innerHTML = sortedTopStates.map((state, index) => `
+          <div class="top-state-item">
+            <span>${index + 1}. ${state.code}</span>
+            <span>${state.points.toLocaleString()}</span>
+          </div>
+        `).join("");
+      };
+
+      const renderBonusStops = () => {
+        if (!roadtripBonusList) return;
+        const bonusStates = Object.values(roadTripStates).filter((state) => state.fuelBonus);
+        roadtripBonusList.innerHTML = bonusStates.map((state) => `
+          <span class="roadtrip-bonus-pill">${state.code} +${state.fuelBonus} fuel</span>
+        `).join("");
+      };
+
+      const updateRoadTripLevelUI = () => {
+        roadtripLevelButtons.forEach((button) => {
+          button.classList.toggle(
+            "active",
+            roadtripHasChosenLevel && button.dataset.roadtripLevel === currentRoadTripLevel
+          );
+        });
+      };
+
+      const updateRoadTripLevelText = () => {};
+
+      const getRoadTripBannerLevel = () => `<div class="roadtrip-status-level">${getRoadTripSettings().label}</div>`;
+
+      const updateRoadTripStatusVisibility = () => {
+        roadtripStatusStrip?.classList.toggle("is-hidden", !roadtripHasChosenLevel);
+      };
+
+      const updateRoadTripPreselectUI = () => {
+        if (roadtripMap) {
+          roadtripMap.classList.toggle("is-locked", !roadtripHasChosenLevel);
+        }
+        syncRoadTripMapLockHost();
+        updateRoadTripMapLockLayout();
+        if (roadtripMapLock) {
+          roadtripMapLock.classList.toggle("show", !roadtripHasChosenLevel);
+          roadtripMapLock.setAttribute("aria-hidden", roadtripHasChosenLevel ? "true" : "false");
+        }
+        if (roadtripScrollHint) {
+          roadtripScrollHint.textContent = roadtripHasChosenLevel
+            ? "Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map."
+            : "Choose a difficulty level above to unlock the map, fuel target, and next stops.";
+          roadtripScrollHint.classList.add("show");
+        }
+        if (roadtripHelper) {
+          roadtripHelper.textContent = roadtripHasChosenLevel
+            ? "Tap a state with the yellow highlight ring on the map or use these quick-pick buttons."
+            : "Choose a difficulty level first to unlock the map and your next available stops.";
+        }
+      };
+
+      const setRoadTripStatus = (message) => {
+        if (!roadtripStatus) return;
+        if (!roadtripHasChosenLevel) {
+          roadtripStatus.innerHTML = "";
+          updateRoadTripStatusVisibility();
+          updateRoadTripPreselectUI();
+          return;
+        }
+        roadtripStatus.innerHTML = `${getRoadTripBannerLevel()}${message}`;
+        updateRoadTripStatusVisibility();
+        updateRoadTripPreselectUI();
+      };
+
+      const createStateButtons = () => {
+        if (!roadtripMap || roadtripMap.querySelector(".state-node")) return;
+        roadTripStateValues.forEach((state) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `state-node ${regionClassName(state.region)}`;
+          button.dataset.state = state.code;
+          button.innerHTML = `
+            <span class="state-node-label">${state.code}</span>
+            <span class="state-node-points">${state.points.toLocaleString()}</span>
+            ${state.fuelBonus ? `<span class="state-node-fuel">+${state.fuelBonus} fuel</span>` : ""}
+          `;
+          button.setAttribute("aria-label", `${state.name}, ${state.points.toLocaleString()} points`);
+          button.addEventListener("click", () => attemptRoadTripMove(state.code));
+          roadtripMap.appendChild(button);
+          setRoadTripStatePosition(state.code, state.x, state.y);
+        });
+        renderRoadTripNetwork();
+      };
+
+      const getAvailableMoves = () => {
+        const currentState = roadTripStates[roadTrip.current];
+        return currentState.neighbors.map((code) => roadTripStates[code]).filter((state) => state && !roadTrip.visited.has(state.code));
+      };
+
+      const updateRoadtripScrollHint = () => {
+        if (!roadtripScrollHint || !roadtripMapScroll) return;
+        const isMobileWidth = window.innerWidth <= 700;
+        const canScroll = roadtripMapScroll.scrollWidth > roadtripMapScroll.clientWidth + 8;
+        const nearEnd = roadtripMapScroll.scrollLeft + roadtripMapScroll.clientWidth >= roadtripMapScroll.scrollWidth - 12;
+        const shouldShow = isMobileWidth && canScroll && !roadtripHintDismissed && !nearEnd;
+        roadtripScrollHint.classList.toggle("show", shouldShow);
+      };
+
+      const getRoadtripCarElements = () => [roadtripCar, roadtripCarFallback].filter(Boolean);
+
+      const updateRoadtripCarDirection = (direction = 1) => {
+        getRoadtripCarElements().forEach((el) => {
+          el.style.setProperty("--car-direction", direction);
+        });
+      };
+
+      const setRoadtripCarState = ({ driving = false, arriving = false } = {}) => {
+        roadtripMap?.classList.toggle("car-traveling", driving);
+        getRoadtripCarElements().forEach((el) => {
+          el.classList.toggle("is-driving", driving);
+          el.classList.toggle("is-arriving", arriving);
+        });
+      };
+
+      const unlockRoadtripAudio = () => {
+        if (roadtripAudioUnlocked && roadtripAudioContext) return roadtripAudioContext;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!roadtripAudioContext) roadtripAudioContext = new AudioCtx();
+        if (roadtripAudioContext.state === "suspended") roadtripAudioContext.resume().catch(() => {});
+        roadtripAudioUnlocked = true;
+        return roadtripAudioContext;
+      };
+
+      const playRoadtripToneSequence = (steps = []) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx || !steps.length) return;
+        let startAt = ctx.currentTime + 0.01;
+        steps.forEach((step) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = step.type || "sine";
+          osc.frequency.setValueAtTime(step.frequency, startAt);
+          gain.gain.setValueAtTime(0.0001, startAt);
+          gain.gain.exponentialRampToValueAtTime(step.volume || 0.015, startAt + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
+          osc.connect(gain).connect(ctx.destination);
+          osc.start(startAt);
+          osc.stop(startAt + (step.duration || 0.08) + 0.02);
+          startAt += (step.gap ?? step.duration ?? 0.08);
+        });
+      };
+
+      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < frameCount; i += 1) {
+          const decay = 1 - (i / frameCount);
+          data[i] = (Math.random() * 2 - 1) * decay;
+        }
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = "bandpass";
+        bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
+        bandpass.Q.setValueAtTime(q, ctx.currentTime);
+
+        const highpass = ctx.createBiquadFilter();
+        highpass.type = "highpass";
+        highpass.frequency.setValueAtTime(700, ctx.currentTime);
+
+        const gain = ctx.createGain();
+        const startAt = ctx.currentTime + 0.01;
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+
+        source.connect(bandpass);
+        bandpass.connect(highpass);
+        highpass.connect(gain);
+        gain.connect(ctx.destination);
+
+        source.start(startAt);
+        source.stop(startAt + duration + 0.02);
+      };
+
+      const playRoadtripMoveSound = () => playRoadtripToneSequence([
+        { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
+        { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
+        { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
+      ]);
+
+      const playRoadtripPointsSound = () => playRoadtripToneSequence([
+        { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
+        { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
+      ]);
+
+      const playRoadtripFuelSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
+        { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
+      ]);
+
+      const playBalloonPopSound = () => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        playNoiseBurst({ duration: 0.05, volume: 0.07, frequency: 1250, q: 0.68 });
+        const pop = ctx.createOscillator();
+        const popGain = ctx.createGain();
+        const popFilter = ctx.createBiquadFilter();
+        const startAt = ctx.currentTime + 0.01;
+        pop.type = "triangle";
+        pop.frequency.setValueAtTime(175, startAt);
+        pop.frequency.exponentialRampToValueAtTime(68, startAt + 0.055);
+        popFilter.type = "lowpass";
+        popFilter.frequency.setValueAtTime(1000, startAt);
+        popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
+        popGain.gain.setValueAtTime(0.0001, startAt);
+        popGain.gain.exponentialRampToValueAtTime(0.03, startAt + 0.003);
+        popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
+        pop.connect(popFilter).connect(popGain).connect(ctx.destination);
+        pop.start(startAt);
+        pop.stop(startAt + 0.07);
+      };
+
+      const playRoadtripWinSound = () => playRoadtripToneSequence([
+        { frequency: 523.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 659.25, duration: 0.08, volume: 0.024, type: "triangle", gap: 0.08 },
+        { frequency: 783.99, duration: 0.09, volume: 0.022, type: "triangle", gap: 0.09 },
+        { frequency: 1046.5, duration: 0.16, volume: 0.022, type: "triangle", gap: 0.16 }
+      ]);
+
+      const playCrowdClapCheer = ({ mini = false } = {}) => {
+        const ctx = unlockRoadtripAudio();
+        if (!ctx) return;
+        const clapCount = mini ? 2 : 4;
+        for (let i = 0; i < clapCount; i += 1) {
+          window.setTimeout(() => {
+            playNoiseBurst({
+              duration: mini ? 0.038 : 0.052,
+              volume: mini ? 0.05 : 0.082,
+              frequency: 1650 + (i * 70),
+              q: 0.82
+            });
+          }, i * (mini ? 72 : 96));
+        }
+        playRoadtripToneSequence(mini
+          ? [
+              { frequency: 659.25, duration: 0.06, volume: 0.018, type: "triangle", gap: 0.05 },
+              { frequency: 880, duration: 0.08, volume: 0.018, type: "triangle", gap: 0.08 }
+            ]
+          : [
+              { frequency: 523.25, duration: 0.07, volume: 0.02, type: "triangle", gap: 0.06 },
+              { frequency: 659.25, duration: 0.08, volume: 0.02, type: "triangle", gap: 0.07 },
+              { frequency: 783.99, duration: 0.09, volume: 0.019, type: "triangle", gap: 0.08 },
+              { frequency: 1046.5, duration: 0.14, volume: 0.018, type: "triangle", gap: 0.12 }
+            ]);
+      };
+
+      const playPageLoadCelebrationSound = () => {
+        playCrowdClapCheer({ mini: true });
+      };
+
+      const playRoadtripHooray = () => {
+        playCrowdClapCheer({ mini: false });
+      };
+
+      const playRoadtripLoseSound = () => playRoadtripToneSequence([
+        { frequency: 392, duration: 0.10, volume: 0.02, type: "sine", gap: 0.09 },
+        { frequency: 329.63, duration: 0.11, volume: 0.018, type: "sine", gap: 0.1 },
+        { frequency: 261.63, duration: 0.14, volume: 0.016, type: "sine", gap: 0.14 }
+      ]);
+
+      const playRoadtripRestartSound = () => {
+        playNoiseBurst({ duration: 0.045, volume: 0.038, frequency: 920, q: 0.85 });
+        playRoadtripToneSequence([
+          { frequency: 110, duration: 0.055, volume: 0.014, type: "sawtooth", gap: 0.04 },
+          { frequency: 138, duration: 0.06, volume: 0.014, type: "sawtooth", gap: 0.05 },
+          { frequency: 178, duration: 0.065, volume: 0.014, type: "sawtooth", gap: 0.06 },
+          { frequency: 224, duration: 0.08, volume: 0.012, type: "triangle", gap: 0.08 }
+        ]);
+      };
+
+      const playRoadtripLevelSound = () => playRoadtripToneSequence([
+        { frequency: 330, duration: 0.05, volume: 0.014, type: "triangle", gap: 0.045 },
+        { frequency: 392, duration: 0.055, volume: 0.014, type: "triangle", gap: 0.05 },
+        { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
+      ]);
+
+      const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
+        if (!roadtripPointPopups || !text) return;
+        const popup = document.createElement("div");
+        popup.className = `roadtrip-point-popup ${variant}`;
+        popup.textContent = text;
+        popup.style.left = `${x}%`;
+        popup.style.top = `${y}%`;
+        roadtripPointPopups.appendChild(popup);
+        window.setTimeout(() => popup.classList.add("show"), delay);
+        window.setTimeout(() => popup.remove(), delay + 1150);
+      };
+
+      const showRoadtripMoveRewards = (state, fuelBonus = 0) => {
+        if (!state) return;
+        const pointX = Math.min(92, state.x + 1.8);
+        const pointY = Math.max(10, state.y - 2);
+        spawnRoadtripPopup(`+${state.points.toLocaleString()}`, pointX, pointY, "points");
+        if (fuelBonus) spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, pointX + 4.5), Math.max(8, pointY - 6), "fuel", 110);
+      };
+
+      const animateRoadtripTravel = (fromState, toState, fuelBonus = 0) => {
+        clearTimeout(roadtripTravelTimeout);
+        clearTimeout(roadtripArrivalTimeout);
+        const direction = fromState && toState && toState.x < fromState.x ? -1 : 1;
+        updateRoadtripCarDirection(direction);
+        setRoadtripCarState({ driving: !prefersReducedMotion, arriving: false });
+        playRoadtripMoveSound();
+        const arrivalDelay = prefersReducedMotion ? 0 : 430;
+        roadtripTravelTimeout = window.setTimeout(() => {
+          setRoadtripCarState({ driving: false, arriving: true });
+          showRoadtripMoveRewards(toState, fuelBonus);
+          playRoadtripPointsSound();
+          if (fuelBonus) window.setTimeout(() => playRoadtripFuelSound(), 120);
+          roadtripArrivalTimeout = window.setTimeout(() => {
+            setRoadtripCarState({ driving: false, arriving: false });
+          }, prefersReducedMotion ? 0 : 340);
+        }, arrivalDelay);
+      };
+
+      const positionRoadtripCarFallback = () => {
+        if (!roadtripCarFallback) return;
+        roadtripCarFallback.style.left = roadtripCar.style.left;
+        roadtripCarFallback.style.top = roadtripCar.style.top;
+        roadtripCarFallback.style.transform = roadtripCar.style.transform || "translate(-50%, -50%) scaleX(1)";
+      };
+
+
+      const syncRoadTripMapLockHost = () => {
+        const targetHost = roadtripMapPanel || roadtripMapScroll || roadtripMap;
+        if (!roadtripMapLock || !targetHost) return;
+        if (roadtripMapLock.parentElement !== targetHost) {
+          targetHost.appendChild(roadtripMapLock);
+        }
+      };
+
+      const updateRoadTripMapLockLayout = () => {
+        if (!roadtripMapLock || !roadtripMapScroll || !roadtripMapPanel) return;
+        syncRoadTripMapLockHost();
+        const topOffset = roadtripMapScroll.offsetTop || 0;
+        const leftOffset = roadtripMapScroll.offsetLeft || 0;
+        roadtripMapLock.style.top = `${topOffset}px`;
+        roadtripMapLock.style.left = `${leftOffset}px`;
+        roadtripMapLock.style.right = "auto";
+        roadtripMapLock.style.bottom = "auto";
+        roadtripMapLock.style.width = `${roadtripMapScroll.clientWidth}px`;
+        roadtripMapLock.style.height = `${roadtripMapScroll.clientHeight}px`;
+      };
+
+      const primeHeroBallDrop = () => {
+        if (!heroBallDrop || !heroBallMedia || !heroImage) return;
+        const card = heroBallDrop.closest('.hero-card');
+        const heroRect = heroImage.getBoundingClientRect();
+        const cardRect = card?.getBoundingClientRect();
+        if (!heroRect.width || !cardRect?.width) return;
+
+        const mobile = window.innerWidth <= 640;
+        const startX = mobile ? -72 : -108;
+        const startY = mobile ? -34 : -46;
+        const targetX = heroRect.left - cardRect.left + heroRect.width * (mobile ? 0.46 : 0.46);
+        const targetY = heroRect.top - cardRect.top + heroRect.height * (mobile ? 0.18 : 0.145);
+
+        heroBallDrop.style.setProperty('--ball-x', `${startX}px`);
+        heroBallDrop.style.setProperty('--ball-y', `${startY}px`);
+        heroBallDrop.style.setProperty('--ball-scale', mobile ? '0.72' : '0.84');
+        heroBallDrop.classList.remove('is-done');
+        heroBallDrop.classList.add('is-ready');
+
+        const mediaTag = heroBallMedia.tagName.toLowerCase();
+        if (mediaTag === 'img') {
+          const rawSrc = heroBallMedia.dataset.baseSrc || heroBallMedia.getAttribute('src') || '';
+          const baseSrc = rawSrc.split('?')[0];
+          heroBallMedia.dataset.baseSrc = baseSrc;
+          heroBallMedia.setAttribute('src', `${baseSrc}?r=${Date.now()}`);
+        }
+
+        window.setTimeout(() => {
+          heroBallDrop.style.setProperty('--ball-x', `${targetX}px`);
+          heroBallDrop.style.setProperty('--ball-y', `${targetY}px`);
+          heroBallDrop.style.setProperty('--ball-scale', mobile ? '0.88' : '1');
+
+          if (mediaTag === 'video') {
+            heroBallMedia.currentTime = 0;
+            const playPromise = heroBallMedia.play();
+            if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+          }
+        }, 220);
+
+        window.setTimeout(() => {
+          heroBallDrop.classList.add('is-done');
+        }, 2000);
+      };
+
+      const scrollRoadTripMapToCurrent = () => {
+        if (!roadtripMapScroll || !roadtripMap || !roadtripCar) return;
+        if (window.innerWidth > 700) return;
+        const mapRect = roadtripMap.getBoundingClientRect();
+        const current = roadTripStates[roadTrip.current];
+        const targetX = (current.x / 100) * mapRect.width - roadtripMapScroll.clientWidth / 2;
+        const left = Math.max(0, targetX);
+        roadtripMapScroll.scrollTo({ left, behavior: prefersReducedMotion ? "auto" : "smooth" });
+        requestAnimationFrame(updateRoadtripScrollHint);
+      };
+
+      const renderRoadTripRoute = () => {
+        if (roadtripRouteChips) {
+          roadtripRouteChips.innerHTML = roadTrip.route.map((code, index) => `<span class="roadtrip-route-chip ${index === roadTrip.route.length - 1 ? "current" : ""}">${code}</span>`).join("");
+        }
+        renderRoadTripNetwork();
+      };
+
+      const renderRoadTripChoices = () => {
+        if (!roadtripNextStops) return;
+        if (!roadtripHasChosenLevel) {
+          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">Choose a difficulty level above to unlock the map and your next stops.</div>`;
+          return;
+        }
+        const moves = getAvailableMoves();
+        if (!moves.length) {
+          roadtripNextStops.innerHTML = `<div class="roadtrip-empty">No connected stops left from ${roadTrip.current}. Restart to try a new route.</div>`;
+          return;
+        }
+
+        roadtripNextStops.innerHTML = moves.map((state) => `
+          <button type="button" class="roadtrip-next-btn ${regionClassName(state.region)}" data-next-state="${state.code}">
+            <div class="next-top">
+              <span class="next-name">${state.code}</span>
+              <span>${state.points.toLocaleString()}</span>
+            </div>
+            <div class="next-points">${state.name}</div>
+            <div class="next-region">${state.region.replace("-", " ")}</div>
+            <div class="roadtrip-next-meta">
+              ${state.fuelBonus ? `<span class="next-fuel-pill">+${state.fuelBonus} fuel</span>` : ""}
+            </div>
+          </button>
+        `).join("");
+
+        roadtripNextStops.querySelectorAll("[data-next-state]").forEach((button) => {
+          button.addEventListener("click", () => attemptRoadTripMove(button.dataset.nextState));
+        });
+      };
+
+      const hideRoadTripToast = () => {
+        if (!roadtripToast) return;
+        clearTimeout(roadtripToastTimeout);
+        roadtripToast.classList.remove("show");
+        roadtripToast.textContent = "";
+      };
+
+      const showRoadTripToast = (message) => {
+        if (!roadtripToast || !message) return;
+        clearTimeout(roadtripToastTimeout);
+        roadtripToast.textContent = message;
+        roadtripToast.classList.add("show");
+        roadtripToastTimeout = setTimeout(() => roadtripToast.classList.remove("show"), 2800);
+      };
+
+      const evaluateRoadTripPrompt = () => {
+        if (roadTrip.gameOver) return;
+        const settings = getRoadTripSettings();
+        const availableMoves = getAvailableMoves();
+        const goalGap = settings.goal - roadTrip.score;
+        const bonusNearby = availableMoves.some((state) => state.fuelBonus);
+
+        if (roadTrip.fuel === 1 && !roadTripPromptFlags.fuel1) {
+          roadTripPromptFlags.fuel1 = true;
+          showRoadTripToast("Last move before the tank runs dry.");
+          return;
+        }
+
+        if (roadTrip.fuel === 2 && !roadTripPromptFlags.fuel2) {
+          roadTripPromptFlags.fuel2 = true;
+          showRoadTripToast("Only 2 moves left. Choose your next stop carefully.");
+          return;
+        }
+
+        if (roadTrip.fuel <= 2 && bonusNearby && !roadTripPromptFlags.bonusNearby) {
+          roadTripPromptFlags.bonusNearby = true;
+          showRoadTripToast("A bonus refuel stop is within reach.");
+          return;
+        }
+
+        if (goalGap > 0 && goalGap <= 2000 && !roadTripPromptFlags.nearGoal) {
+          roadTripPromptFlags.nearGoal = true;
+          showRoadTripToast("Almost there — one strong stop could win the trip.");
+        }
+      };
+
+      const updateRoadTripNodes = () => {
+        const buttons = roadtripMap.querySelectorAll(".state-node");
+        const currentState = roadTripStates[roadTrip.current];
+        const available = new Set(getAvailableMoves().map((state) => state.code));
+
+        buttons.forEach((button) => {
+          const code = button.dataset.state;
+          button.classList.remove("visited", "available", "unavailable", "current-stop");
+          button.disabled = false;
+
+          if (!roadtripHasChosenLevel) {
+            if (code === roadTrip.current) {
+              button.classList.add("current-stop", regionClassName(currentState.region));
+            } else {
+              button.classList.add("unavailable");
+            }
+            button.disabled = true;
+            return;
+          }
+
+          if (code === roadTrip.current) {
+            button.classList.add("current-stop", regionClassName(currentState.region));
+            button.disabled = true;
+          } else if (roadTrip.visited.has(code)) {
+            button.classList.add("visited");
+            button.disabled = true;
+          } else if (!roadTrip.gameOver && available.has(code)) {
+            button.classList.add("available");
+          } else {
+            button.classList.add("unavailable");
+            button.disabled = true;
+          }
+
+          if (roadTrip.gameOver && !roadTrip.visited.has(code) && code !== roadTrip.current) {
+            button.classList.add("unavailable");
+            button.classList.remove("available");
+            button.disabled = true;
+          }
+        });
+      };
+
+      const syncRoadTripLayout = () => {
+        if (!roadtripBoard || !roadtripMapPanel || !roadtripSidePanel) return;
+        const isMobileRoadTrip = window.innerWidth <= 900;
+
+        if (isMobileRoadTrip) {
+          if (!roadtripMobilePriority.isConnected) {
+            roadtripBoard.insertBefore(roadtripMobilePriority, roadtripMapPanel);
+          }
+
+          if (!roadtripMobileNext.isConnected) {
+            if (roadtripMapPanel.nextSibling) roadtripBoard.insertBefore(roadtripMobileNext, roadtripMapPanel.nextSibling);
+            else roadtripBoard.appendChild(roadtripMobileNext);
+          }
+
+          if (roadtripTripGoalCard) roadtripMobilePriority.appendChild(roadtripTripGoalCard);
+          if (roadtripDifficultyCard) roadtripMobilePriority.appendChild(roadtripDifficultyCard);
+
+          if (roadtripNextCard) roadtripMobileNext.appendChild(roadtripNextCard);
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+        } else {
+          if (roadtripDifficultyCard) {
+            if (roadtripNextCard && roadtripNextCard.parentElement === roadtripSidePanel) {
+              roadtripSidePanel.insertBefore(roadtripDifficultyCard, roadtripNextCard);
+            } else {
+              roadtripSidePanel.prepend(roadtripDifficultyCard);
+            }
+          }
+          if (roadtripNextCard) roadtripSidePanel.appendChild(roadtripNextCard);
+          if (roadtripRouteCard) roadtripSidePanel.appendChild(roadtripRouteCard);
+          if (roadtripTopStatesCard) roadtripSidePanel.appendChild(roadtripTopStatesCard);
+          if (roadtripBonusCard) roadtripSidePanel.appendChild(roadtripBonusCard);
+          if (roadtripTripGoalCard) roadtripSidePanel.appendChild(roadtripTripGoalCard);
+
+          if (roadtripMobilePriority.isConnected) roadtripMobilePriority.remove();
+          if (roadtripMobileNext.isConnected) roadtripMobileNext.remove();
+        }
+      };
+
+      const updateRoadTripHUD = () => {
+        roadtripScore.textContent = roadTrip.score.toLocaleString();
+        roadtripFuel.textContent = roadtripHasChosenLevel ? roadTrip.fuel : "—";
+        roadtripVisited.textContent = roadTrip.visited.size;
+        const current = roadTripStates[roadTrip.current];
+        const previousCode = roadTrip.route.length > 1 ? roadTrip.route[roadTrip.route.length - 2] : roadTrip.current;
+        const previous = roadTripStates[previousCode];
+        const movingLeft = roadTrip.route.length > 1 && current.x < previous.x;
+        const facingScale = movingLeft ? -1 : 1;
+        updateRoadtripCarDirection(facingScale);
+
+        let carX = current.x + (movingLeft ? -8 : 8);
+        let carY = current.y + 2.5;
+        if (carX < 8) carX = current.x + 8;
+        if (carX > 92) carX = current.x - 8;
+        if (carY > 90) carY = current.y - 4;
+
+        roadtripCar.style.left = `${carX}%`;
+        roadtripCar.style.top = `${carY}%`;
+        roadtripCar.style.transform = `translate(-50%, -50%) scaleX(${facingScale})`;
+        positionRoadtripCarFallback();
+        renderRoadTripRoute();
+        renderRoadTripChoices();
+        updateRoadTripNodes();
+        renderRoadTripNetwork();
+        updateRoadTripLevelText();
+        scrollRoadTripMapToCurrent();
+        updateRoadtripScrollHint();
+      };
+
+      const syncRoadTripMapOutcomeHost = () => {
+        if (!roadtripMapOutcome || !roadtripMap || !roadtripMapScroll || !roadtripMapPanel) return;
+        const targetHost = window.innerWidth <= 700 ? roadtripMapPanel : roadtripMap;
+        if (roadtripMapOutcome.parentElement !== targetHost) targetHost.appendChild(roadtripMapOutcome);
+      };
+
+      const updateRoadTripMapOutcomeLayout = () => {
+        if (!roadtripMapOutcome || !roadtripMapOutcomeCard || !roadtripMapScroll || !roadtripMapPanel) return;
+        syncRoadTripMapOutcomeHost();
+        roadtripMapOutcome.style.left = "";
+        roadtripMapOutcome.style.right = "";
+        roadtripMapOutcome.style.width = "";
+        roadtripMapOutcome.style.inset = "";
+        roadtripMapOutcome.style.top = "";
+        roadtripMapOutcome.style.justifyContent = "";
+        roadtripMapOutcomeCard.style.width = "";
+        roadtripMapOutcomeCard.style.maxWidth = "";
+        roadtripMapOutcomeCard.style.margin = "";
+
+        if (window.innerWidth > 700) {
+          roadtripMapOutcome.style.inset = "18px 18px auto 18px";
+          roadtripMapOutcome.style.justifyContent = "center";
+          roadtripMapOutcomeCard.style.width = "min(430px, calc(100% - 12px))";
+          roadtripMapOutcomeCard.style.maxWidth = "430px";
+          roadtripMapOutcomeCard.style.margin = "0 auto";
+          return;
+        }
+
+        const viewportWidth = roadtripMapScroll.clientWidth;
+        const cardWidth = Math.max(236, viewportWidth - 20);
+        const topOffset = (roadtripMapScroll.offsetTop || 0) + 10;
+        roadtripMapOutcome.style.inset = "auto";
+        roadtripMapOutcome.style.top = `${topOffset}px`;
+        roadtripMapOutcome.style.left = "10px";
+        roadtripMapOutcome.style.right = "auto";
+        roadtripMapOutcome.style.width = `${cardWidth}px`;
+        roadtripMapOutcome.style.justifyContent = "stretch";
+        roadtripMapOutcomeCard.style.width = "100%";
+        roadtripMapOutcomeCard.style.maxWidth = `${cardWidth}px`;
+        roadtripMapOutcomeCard.style.margin = "0";
+      };
+
+      const showRoadTripCelebration = (message) => {
+        if (!roadtripCelebration) return;
+        roadtripCelebration.textContent = message;
+        roadtripCelebration.classList.add("show");
+      };
+
+      const clearRoadTripCelebration = () => roadtripCelebration?.classList.remove("show");
+
+      const showRoadTripMapOutcome = ({ kicker = "Trip Update", title = "Trip over", text = "Restart and try a different route.", buttonLabel = "Restart Trip" } = {}) => {
+        if (!roadtripMapOutcome) return;
+        if (roadtripMapOutcomeKicker) roadtripMapOutcomeKicker.textContent = kicker;
+        if (roadtripMapOutcomeTitle) roadtripMapOutcomeTitle.textContent = title;
+        if (roadtripMapOutcomeText) roadtripMapOutcomeText.textContent = text;
+        if (roadtripMapRestart) roadtripMapRestart.textContent = buttonLabel;
+        roadtripMapOutcome.classList.add("show");
+        updateRoadTripMapOutcomeLayout();
+      };
+
+      const hideRoadTripMapOutcome = () => {
+        roadtripMapOutcome?.classList.remove("show");
+        if (roadtripMapOutcome) {
+          roadtripMapOutcome.style.left = "";
+          roadtripMapOutcome.style.right = "";
+          roadtripMapOutcome.style.width = "";
+          roadtripMapOutcome.style.inset = "";
+          roadtripMapOutcome.style.top = "";
+          roadtripMapOutcome.style.justifyContent = "";
+        }
+        if (roadtripMapOutcomeCard) {
+          roadtripMapOutcomeCard.style.width = "";
+          roadtripMapOutcomeCard.style.maxWidth = "";
+          roadtripMapOutcomeCard.style.margin = "";
+        }
+      };
+
+      const getRoadtripIntroCopy = () => {
+        const settings = getRoadTripSettings();
+        return {
+          kicker: `${settings.label} Level`,
+          title: `Georgia is your starting stop`,
+          text: `These map points match the real associates we’re celebrating in each state. Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank runs dry.`
+        };
+      };
+
+      const syncRoadtripIntroHost = () => {
+        const introHost = roadtripModal || roadtripShell || roadtripMapPanel;
+        if (!roadtripIntroOverlay || !introHost) return;
+        if (roadtripIntroOverlay.parentElement !== introHost) {
+          introHost.appendChild(roadtripIntroOverlay);
+        }
+      };
+
+      const scrollRoadtripMapPanelIntoView = () => {
+        const scrollTarget = roadtripMapPanel || roadtripStatusStrip || roadtripMapScroll;
+        if (!scrollTarget) return;
+        if (window.innerWidth <= 900) {
+          scrollTarget.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+            inline: "nearest"
+          });
+        }
+      };
+
+      const showRoadtripIntro = () => {
+        if (!roadtripIntroOverlay) return;
+        syncRoadtripIntroHost();
+        const copy = getRoadtripIntroCopy();
+        roadtripIntroKicker.textContent = copy.kicker;
+        roadtripIntroTitle.textContent = copy.title;
+        roadtripIntroText.textContent = copy.text;
+        roadtripIntroOverlay.classList.add("show");
+        roadtripIntroOverlay.setAttribute("aria-hidden", "false");
+      };
+
+      const hideRoadtripIntro = () => {
+        if (!roadtripIntroOverlay) return;
+        roadtripIntroOverlay.classList.remove("show");
+        roadtripIntroOverlay.setAttribute("aria-hidden", "true");
+      };
+
+      const finishRoadTrip = (won) => {
+        const settings = getRoadTripSettings();
+        roadTrip.gameOver = true;
+        hideRoadTripToast();
+        updateRoadTripNodes();
+        renderRoadTripChoices();
+
+        if (won) {
+          showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
+          setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+          showRoadTripMapOutcome({
+            kicker: "Trip Complete",
+            title: "You won!",
+            text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
+            buttonLabel: "Play Again"
+          });
+          if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
+          playRoadtripWinSound();
+          playRoadtripHooray();
+        } else {
+          showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
+          setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
+          showRoadTripMapOutcome({
+            kicker: "Trip Over",
+            title: "Out of fuel or moves",
+            text: "Restart and try a different route.",
+            buttonLabel: "Restart Trip"
+          });
+          playRoadtripLoseSound();
+        }
+      };
+
+      const attemptRoadTripMove = (code) => {
+        if (!roadtripHasChosenLevel || roadTrip.gameOver || roadtripIntroOverlay?.classList.contains("show")) return;
+        if (roadTrip.visited.has(code)) return;
+
+        const currentState = roadTripStates[roadTrip.current];
+        if (!currentState.neighbors.includes(code)) return;
+        if (roadTrip.fuel <= 0) return;
+
+        const fromState = roadTripStates[roadTrip.current];
+        const nextState = roadTripStates[code];
+        const settings = getRoadTripSettings();
+        roadTrip.current = code;
+        roadTrip.fuel -= 1;
+        roadTrip.score += nextState.points;
+        roadTrip.visited.add(code);
+        roadTrip.route.push(code);
+
+        let fuelMessage = "";
+        if (nextState.fuelBonus) {
+          roadTrip.fuel += nextState.fuelBonus;
+          fuelMessage = ` and refueled +${nextState.fuelBonus}`;
+        }
+
+        clearRoadTripCelebration();
+        hideRoadTripMapOutcome();
+        setRoadTripStatus(`<strong>${nextState.name}</strong> added ${nextState.points.toLocaleString()} points${fuelMessage}. Pick another connected stop.`);
+        updateRoadTripHUD();
+        animateRoadtripTravel(fromState, nextState, nextState.fuelBonus || 0);
+        evaluateRoadTripPrompt();
+
+        if (!prefersReducedMotion && typeof confetti === "function") {
+          confetti({
+            particleCount: nextState.points >= 1000 ? 56 : 30,
+            spread: nextState.points >= 1000 ? 72 : 56,
+            origin: { x: nextState.x / 100, y: nextState.y / 100 },
+            startVelocity: 24
+          });
+        }
+
+        if (roadTrip.score >= settings.goal) return finishRoadTrip(true);
+        if (roadTrip.fuel <= 0) return finishRoadTrip(false);
+        if (!getAvailableMoves().length) finishRoadTrip(false);
+      };
+
+      const resetRoadTrip = () => {
+        const settings = getRoadTripSettings();
+        roadTrip = {
+          current: "GA",
+          score: roadTripStates.GA.points,
+          fuel: settings.startFuel,
+          visited: new Set(["GA"]),
+          route: ["GA"],
+          status: "",
+          gameOver: false
+        };
+
+        clearRoadTripCelebration();
+        hideRoadTripToast();
+        hideRoadTripMapOutcome();
+        clearTimeout(roadtripTravelTimeout);
+        clearTimeout(roadtripArrivalTimeout);
+        setRoadtripCarState({ driving: false, arriving: false });
+        roadtripPointPopups?.replaceChildren();
+        roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
+
+        if (roadtripHasChosenLevel) {
+          setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
+        } else {
+          updateRoadTripStatusVisibility();
+          roadtripStatus.innerHTML = "";
+        }
+
+        updateRoadTripHUD();
+      };
+
+      const applyRoadTripLevel = (level) => {
+        if (!ROADTRIP_LEVELS[level]) return;
+        currentRoadTripLevel = level;
+        roadtripHasChosenLevel = true;
+        roadtripLayoutCounter += 1;
+        applyRoadTripLayout(level);
+        updateRoadTripLevelUI();
+        updateRoadTripLevelText();
+        updateRoadTripPreselectUI();
+        resetRoadTrip();
+      };
+
+      const prepareRoadTripLevelSelection = () => {
+        roadtripHasChosenLevel = false;
+        applyRoadTripLayout("base");
+        updateRoadTripLevelUI();
+        updateRoadTripLevelText();
+        hideRoadtripIntro();
+        updateRoadTripStatusVisibility();
+        updateRoadTripPreselectUI();
+        resetRoadTrip();
+      };
+
+      const openRoadTripModal = () => {
+        syncRoadTripLayout();
+        syncRoadtripIntroHost();
+        syncRoadTripMapOutcomeHost();
+        roadtripModal.classList.add("open");
+        roadtripModal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("lightbox-open");
+        hideRoadTripMapOutcome();
+        roadtripHintDismissed = false;
+        prepareRoadTripLevelSelection();
+        setTimeout(() => {
+          scrollRoadTripMapToCurrent();
+          updateRoadTripMapLockLayout();
+          updateRoadtripScrollHint();
+          if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
+        }, 60);
+      };
+
+      const closeRoadTripModalFn = () => {
+        hideRoadtripIntro();
+        roadtripModal.classList.remove("open");
+        roadtripModal.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("lightbox-open");
+      };
+
+      const restartRoadTripWithFeedback = () => {
+        unlockRoadtripAudio();
+        playRoadtripRestartSound();
+        hideRoadtripIntro();
+        resetRoadTrip();
+      };
+
+      openRoadtripGame?.addEventListener("click", () => {
+        unlockRoadtripAudio();
+        openRoadTripModal();
+      });
+
+      closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
+      roadtripMapRestart?.addEventListener("click", restartRoadTripWithFeedback);
+      roadtripLevelButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          unlockRoadtripAudio();
+          if (!roadtripHasChosenLevel || button.dataset.roadtripLevel !== currentRoadTripLevel) playRoadtripLevelSound();
+          else playRoadtripRestartSound();
+          applyRoadTripLevel(button.dataset.roadtripLevel);
+          showRoadtripIntro();
+        });
+      });
+
+      roadtripIntroButton?.addEventListener("click", () => {
+        hideRoadtripIntro();
+        window.setTimeout(() => {
+          scrollRoadtripMapPanelIntoView();
+          window.setTimeout(() => {
+            scrollRoadTripMapToCurrent();
+          }, prefersReducedMotion ? 0 : 90);
+        }, prefersReducedMotion ? 0 : 40);
+      });
+
+      roadtripModal?.addEventListener("click", (e) => { if (e.target === roadtripModal) closeRoadTripModalFn(); });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && roadtripModal?.classList.contains("open")) closeRoadTripModalFn();
+        if (e.key === "Escape" && milestoneModal?.classList.contains("open")) closeMilestoneModal();
+      });
+
+      roadtripMapScroll?.addEventListener("scroll", () => {
+        if (roadtripMapScroll.scrollLeft > 16) roadtripHintDismissed = true;
+        updateRoadtripScrollHint();
+        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
+      }, { passive: true });
+
+      roadtripModal?.addEventListener("pointerdown", () => unlockRoadtripAudio(), { passive: true });
+
+      roadtripCar?.addEventListener("error", () => {
+        roadtripCar.classList.add("car-fallback-hidden");
+        roadtripCarFallback?.classList.add("show");
+        positionRoadtripCarFallback();
+      });
+
+      roadtripCar?.addEventListener("load", () => {
+        roadtripCar.classList.remove("car-fallback-hidden");
+        roadtripCarFallback?.classList.remove("show");
+        positionRoadtripCarFallback();
+      });
+
+      syncRoadTripLayout();
+      syncRoadtripIntroHost();
+      syncRoadTripMapOutcomeHost();
+      renderTopStates();
+      renderBonusStops();
+      createStateButtons();
+      applyRoadTripLayout("base");
+      prepareRoadTripLevelSelection();
+      updateRoadTripStatusVisibility();
+      updateRoadTripMapLockLayout();
+      enableTiltCards();
+      runIdleNudge();
+      window.addEventListener("resize", () => {
+        syncRoadTripLayout();
+        syncRoadtripIntroHost();
+        syncRoadTripMapOutcomeHost();
+        updateRoadTripStatusVisibility();
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+        updateRoadtripScrollHint();
+        positionRoadtripCarFallback();
+        updateRoadTripMapLockLayout();
+        if (roadtripModal?.classList.contains("open")) {
+          window.setTimeout(() => {
+            scrollRoadTripMapToCurrent();
+            updateRoadTripMapLockLayout();
+          }, prefersReducedMotion ? 0 : 90);
+        }
+        if (roadtripMapOutcome?.classList.contains("show")) updateRoadTripMapOutcomeLayout();
+      });
+      window.addEventListener("orientationchange", () => {
+        window.setTimeout(() => {
+          if (roadtripModal?.classList.contains("open")) scrollRoadTripMapToCurrent();
+          updateRoadTripMapLockLayout();
+        }, 120);
+      });
+      pointerFineMedia.addEventListener?.("change", () => {
+        syncRoadTripLayout();
+        updateRoadTripStatusVisibility();
+        tiltCards.forEach((card) => resetTiltCard(card, true));
+      });
+
+      syncAudioState();
+      updateSongButton();
+      renderLyrics();
+      positionRoadtripCarFallback();
+      updateRoadtripScrollHint();
+      window.addEventListener('load', () => {
+        primeHeroBallDrop();
+      });
+    });
+  </script>
+
 
   <div class="history-fab-wrap" aria-live="polite">
     <button class="history-fab pressable" id="history-chat-launcher" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="history-chat-shell">
@@ -3398,6 +5391,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const eapLink = document.getElementById("eap-link");
       const historyLauncher = document.getElementById("history-chat-launcher");
       const historyShell = document.getElementById("history-chat-shell");
       const historyShellOverlay = document.getElementById("history-shell-overlay");
@@ -3419,7 +5413,6 @@
         document.body.classList.remove("lightbox-open");
       };
 
-      historyShellClose?.addEventListener("click", closeHistoryShell);
 
       window.addEventListener("message", (event) => {
         if (event?.data === "close-waffle-history-bot") {
