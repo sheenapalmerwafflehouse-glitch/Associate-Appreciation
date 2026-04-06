@@ -3464,7 +3464,7 @@
 
             <div class="roadtrip-toast" id="roadtrip-toast" aria-live="polite"></div>
 
-            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint"> How to Move: Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
+            <div class="roadtrip-scroll-hint" id="roadtrip-scroll-hint"> HOW TO MOVE: Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map.</div>
 
             <div class="roadtrip-map-hud game-hud">
               <div class="hud-card">
@@ -3521,7 +3521,7 @@
           <div class="game-side-panel roadtrip-side-panel">
             <div class="game-panel-card roadtrip-next-card">
               <h3>Next Stops</h3>
-              <p class="roadtrip-helper">How to Move: Tap a state with the yellow highlight ring on the map or use these quick-pick buttons.</p>
+              <p class="roadtrip-helper">HOW TO MOVE: Tap a state with the yellow highlight ring on the map or use these quick-pick buttons.</p>
               <div class="roadtrip-next-stops" id="roadtrip-next-stops"></div>
             </div>
 
@@ -4488,13 +4488,13 @@ const applyRoadTripLayout = (levelKey = "base") => {
         }
         if (roadtripScrollHint) {
           roadtripScrollHint.textContent = roadtripHasChosenLevel
-            ? "How to Move: Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map."
+            ? "HOW TO MOVE: Tap a state with the yellow highlight ring, or use the Next Stops cards below. Swipe left or right to see the full road trip map."
             : "Choose a difficulty level above to unlock the map, fuel target, and next stops.";
           roadtripScrollHint.classList.add("show");
         }
         if (roadtripHelper) {
           roadtripHelper.textContent = roadtripHasChosenLevel
-            ? "How to Move: Tap a state with the yellow highlight ring on the map or use these quick-pick buttons."
+            ? "HOW TO MOVE: Tap a state with the yellow highlight ring on the map or use these quick-pick buttons."
             : "Choose a difficulty level first to unlock the map and your next available stops.";
         }
       };
