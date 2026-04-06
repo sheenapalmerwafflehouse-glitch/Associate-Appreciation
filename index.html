@@ -160,6 +160,51 @@
       border-color: rgba(212, 176, 0, 0.24);
       transform: translateY(-1px);
     }
+.mini-nav-wrap {
+  position: relative;
+}
+
+.mini-nav-hint {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 10px 28px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 252, 238, 0) 0%,
+    rgba(255, 252, 238, 0.88) 22%,
+    rgba(255, 252, 238, 0.97) 42%,
+    rgba(255, 252, 238, 0.99) 100%
+  );
+  color: #b07a00;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+  z-index: 5;
+}
+
+.mini-nav-hint.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mini-nav-hint-arrow {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+
+    
 
     .sections {
       max-width: var(--max);
@@ -2466,14 +2511,24 @@
       .roadtrip-intro-title { font-size: clamp(1.2rem, 5.4vw, 1.6rem); }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 640px) {   
+  .mini-nav-hint {
+    right: 2px;
+    padding: 8px 10px 8px 22px;
+    font-size: 0.74rem;
+    gap: 6px;
+  }
+
+  .mini-nav-hint-arrow {
+    font-size: 1rem;
+  }
       :root { --media-frame-min-height: 260px; }
       html { scroll-padding-top: 126px; }
       .topbar-inner { padding-top: 8px; gap: 6px; }
       .sections { padding: 18px 14px 14px; }
       .divider-sparkle { width: min(180px, 54vw); margin-bottom: 18px; }
       .section { padding: 18px 14px 20px; border-radius: 24px; margin-bottom: 24px; }
-      .hero-card { padding: 14px; }
+      .hero-card { padding: 14px; }   
       .section-image-wrap { max-width: 100%; }
       .section p { line-height: 1.72; margin: 18px auto 0; max-width: 31ch; }
       .song-toggle { width: 74px; height: 74px; font-size: 2rem; }
@@ -3099,18 +3154,22 @@
         <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
       </div>
 
-      <div class="mini-nav-wrap" aria-label="Section Navigation">
-        <nav class="mini-nav" id="mini-nav">
-          <a href="about.html" id="eap-link">Employee Assistance Program</a>
-          <a href="#trivia">Museum Tour &amp; Trivia</a>
-          <a href="#appreciation">Appreciation Song</a>
-          <a href="#shoes-for-crews">Shoes for Crews</a>
-          <a href="#anniversaries">Anniversaries</a>
-          <a href="#touchtunes">TouchTunes</a>
-          <a href="#dressup">Dress-Up Days</a>
-          <a href="#photo">Photo Contest</a>
-        </nav>
-      </div>
+      <<div class="mini-nav-wrap" aria-label="Section Navigation">
+  <nav class="mini-nav" id="mini-nav">
+    <a href="about.html" id="eap-link">Employee Assistance Program</a>
+    <a href="#trivia">Museum Tour &amp; Trivia</a>
+    <a href="#appreciation">Appreciation Song</a>
+    <a href="#shoes-for-crews">Shoes for Crews</a>
+    <a href="#anniversaries">Anniversaries</a>
+    <a href="#touchtunes">TouchTunes</a>
+    <a href="#dressup">Dress-Up Days</a>
+    <a href="#photo">Photo Contest</a>
+  </nav>
+  <div class="mini-nav-hint" id="mini-nav-hint" aria-hidden="true">
+    <span>Scroll for more</span>
+    <span class="mini-nav-hint-arrow">→</span>
+  </div>
+</div>
     </div>
   </header>
 
@@ -3586,6 +3645,8 @@
       const heroBallDrop = document.getElementById("hero-ball-drop");
       const heroBallMedia = document.getElementById("hero-ball-media");
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
+      const miniNavWrap = document.querySelector(".mini-nav-wrap");
+      const miniNavHint = document.getElementById("mini-nav-hint");
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
       const lyricScrubber = document.getElementById("lyric-scrubber");
@@ -4120,11 +4181,26 @@ const applyRoadTripLayout = (levelKey = "base") => {
           if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
         });
       };
+     const updateMiniNavHint = () => {
+     if (!miniNavWrap || !miniNavHint) return;
+
+     const canScroll = miniNavWrap.scrollWidth > miniNavWrap.clientWidth + 8;
+     const atEnd = miniNavWrap.scrollLeft + miniNavWrap.clientWidth >= miniNavWrap.scrollWidth - 8;
+
+     miniNavHint.classList.toggle("show", canScroll && !atEnd);
+   };
+
 
       updateProgressBar();
-      setActiveMiniNav();
-      window.addEventListener("scroll", updateProgressBar, { passive: true });
-      window.addEventListener("scroll", setActiveMiniNav, { passive: true });
+setActiveMiniNav();
+updateMiniNavHint();
+
+window.addEventListener("scroll", updateProgressBar, { passive: true });
+window.addEventListener("scroll", setActiveMiniNav, { passive: true });
+window.addEventListener("resize", updateMiniNavHint);
+miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
+
+
 
       backToTop?.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
