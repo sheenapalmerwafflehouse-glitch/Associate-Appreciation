@@ -2011,34 +2011,47 @@
     .roadtrip-car-fallback.is-arriving { animation: roadtripCarArrival 320ms ease-out; }
 
     .roadtrip-point-popups {
-      position: absolute;
-      inset: 0;
-      z-index: 12;
-      pointer-events: none;
-      overflow: visible;
-    }
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  overflow: hidden;
+  isolation: isolate;
+}
 
-    .roadtrip-point-popup {
-      position: absolute;
-      transform: translate(-50%, -50%) scale(0.84);
-      min-width: 74px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.94);
-      border: 1px solid rgba(176, 150, 44, 0.18);
-      box-shadow: 0 10px 18px rgba(92, 77, 19, 0.14);
-      color: #5d4f00;
-      font-size: 0.86rem;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      text-align: center;
-      opacity: 0;
-      white-space: nowrap;
-    }
+.roadtrip-point-popup {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 88px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(176, 150, 44, 0.22);
+  box-shadow: 0 12px 22px rgba(92, 77, 19, 0.16);
+  color: #5d4f00;
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  text-align: center;
+  opacity: 0;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
 
-    .roadtrip-point-popup.points { background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%); color: #4d4100; }
-    .roadtrip-point-popup.fuel { background: rgba(255,255,255,0.96); color: #6a5500; }
-    .roadtrip-point-popup.show { animation: roadtripPopupFloat 1050ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.roadtrip-point-popup.points {
+  background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%);
+  color: #4d4100;
+}
+
+.roadtrip-point-popup.fuel {
+  background: linear-gradient(180deg, #ffffff 0%, #fff8dc 100%);
+  color: #6a5500;
+}
+
+.roadtrip-point-popup.show {
+  animation: roadtripPopupFloat 1250ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
 
     .roadtrip-helper { font-size: 0.9rem; line-height: 1.6; color: #5a5a5a; margin-bottom: 22px; }
     .roadtrip-next-stops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -3322,7 +3335,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Enjoy 15 free jukebox credits a week on the House.</p>
+          <p>Enjoy 10 free jukebox credits a week on the House.</p>
 
           <div class="links">
             <a class="section-link pressable" href="https://www.touchtunes.com/play/app" rel="noopener noreferrer">Download the App</a>
@@ -4664,25 +4677,50 @@ const applyRoadTripLayout = (levelKey = "base") => {
         { frequency: 494, duration: 0.065, volume: 0.013, type: "triangle", gap: 0.065 }
       ]);
 
-      const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
-        if (!roadtripPointPopups || !text) return;
-        const popup = document.createElement("div");
-        popup.className = `roadtrip-point-popup ${variant}`;
-        popup.textContent = text;
-        popup.style.left = `${x}%`;
-        popup.style.top = `${y}%`;
-        roadtripPointPopups.appendChild(popup);
-        window.setTimeout(() => popup.classList.add("show"), delay);
-        window.setTimeout(() => popup.remove(), delay + 1150);
-      };
+const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
+  if (!roadtripPointPopups || !text) return;
+
+  const popup = document.createElement("div");
+  popup.className = `roadtrip-point-popup ${variant}`;
+  popup.textContent = text;
+  popup.style.left = `${x}%`;
+  popup.style.top = `${y}%`;
+  roadtripPointPopups.appendChild(popup);
+
+  const showPopup = () => {
+    popup.classList.add("show");
+  };
+
+  if (delay > 0) {
+    window.setTimeout(() => {
+      requestAnimationFrame(showPopup);
+    }, delay);
+  } else {
+    requestAnimationFrame(showPopup);
+  }
+
+  window.setTimeout(() => popup.remove(), delay + 1350);
+};
+
 
       const showRoadtripMoveRewards = (state, fuelBonus = 0) => {
-        if (!state) return;
-        const pointX = Math.min(92, state.x + 1.8);
-        const pointY = Math.max(10, state.y - 2);
-        spawnRoadtripPopup(`+${state.points.toLocaleString()}`, pointX, pointY, "points");
-        if (fuelBonus) spawnRoadtripPopup(`+${fuelBonus} fuel`, Math.min(92, pointX + 4.5), Math.max(8, pointY - 6), "fuel", 110);
-      };
+  if (!state) return;
+
+  const pointX = clampRoadTripValue(state.x, 10, 90);
+  const pointY = clampRoadTripValue(state.y - 2, 12, 86);
+
+  spawnRoadtripPopup(`+${state.points.toLocaleString()} points`, pointX, pointY, "points");
+
+  if (fuelBonus) {
+    spawnRoadtripPopup(
+      `+${fuelBonus} fuel`,
+      clampRoadTripValue(pointX + 6, 12, 92),
+      clampRoadTripValue(pointY - 6, 10, 84),
+      "fuel",
+      120
+    );
+  }
+};
 
       const animateRoadtripTravel = (fromState, toState, fuelBonus = 0) => {
         clearTimeout(roadtripTravelTimeout);
@@ -5031,6 +5069,15 @@ const applyRoadTripLayout = (levelKey = "base") => {
       };
 
       const clearRoadTripCelebration = () => roadtripCelebration?.classList.remove("show");
+const getRoadTripEndReason = () => {
+  const settings = getRoadTripSettings();
+
+  if (roadTrip.score >= settings.goal) return "goal";
+  if (roadTrip.fuel <= 0) return "fuel";
+  if (!getAvailableMoves().length) return "dead-end";
+  return "continue";
+};
+
 
       const showRoadTripMapOutcome = ({ kicker = "Trip Update", title = "Trip over", text = "Restart and try a different route.", buttonLabel = "Restart Trip" } = {}) => {
         if (!roadtripMapOutcome) return;
@@ -5105,37 +5152,66 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadtripIntroOverlay.setAttribute("aria-hidden", "true");
       };
 
-      const finishRoadTrip = (won) => {
-        const settings = getRoadTripSettings();
-        roadTrip.gameOver = true;
-        hideRoadTripToast();
-        updateRoadTripNodes();
-        renderRoadTripChoices();
+      const finishRoadTrip = (won, reason = won ? "goal" : getRoadTripEndReason()) => {
+  const settings = getRoadTripSettings();
+  roadTrip.gameOver = true;
+  hideRoadTripToast();
+  updateRoadTripNodes();
+  renderRoadTripChoices();
 
-        if (won) {
-          showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
-          setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
-          showRoadTripMapOutcome({
-            kicker: "Trip Complete",
-            title: "You won!",
-            text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
-            buttonLabel: "Play Again"
-          });
-          if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
-          playRoadtripWinSound();
-          playRoadtripHooray();
-        } else {
-          showRoadTripCelebration(`🏁 Route ended. Final score: ${roadTrip.score.toLocaleString()} points.`);
-          setRoadTripStatus(`<strong>Trip over.</strong> Out of fuel or no connected stops left. Restart and try a different route.`);
-          showRoadTripMapOutcome({
-            kicker: "Route ended",
-            title: "Out of fuel or connected stops",
-            text: "Restart and try a different route.",
-            buttonLabel: "Restart Trip"
-          });
-          playRoadtripLoseSound();
-        }
-      };
+  if (won) {
+    showRoadTripCelebration(`🎉 You hit ${roadTrip.score.toLocaleString()} points and won the trip!`);
+    setRoadTripStatus(`<strong>You won!</strong> You reached the ${settings.goal.toLocaleString()}-point goal with ${roadTrip.fuel} fuel left.`);
+    showRoadTripMapOutcome({
+      kicker: "Trip Complete",
+      title: "You won!",
+      text: `You reached ${roadTrip.score.toLocaleString()} points with ${roadTrip.fuel} fuel left. Ready to take another trip?`,
+      buttonLabel: "Play Again"
+    });
+    if (!prefersReducedMotion && typeof confetti === "function") confetti({ particleCount: 180, spread: 90, origin: { y: 0.36 } });
+    playRoadtripWinSound();
+    playRoadtripHooray();
+    return;
+  }
+
+  if (reason === "fuel") {
+    showRoadTripCelebration(`⛽ Out of fuel. Final score: ${roadTrip.score.toLocaleString()} points.`);
+    setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel before reaching ${settings.goal.toLocaleString()} points.`);
+    showRoadTripMapOutcome({
+      kicker: "Route ended",
+      title: "Out of fuel",
+      text: `You finished with ${roadTrip.score.toLocaleString()} points, but the tank hit zero before you reached ${settings.goal.toLocaleString()}.`,
+      buttonLabel: "Restart Trip"
+    });
+    playRoadtripLoseSound();
+    return;
+  }
+
+  if (reason === "dead-end") {
+    showRoadTripCelebration(`🛑 Out of connected stops. Final score: ${roadTrip.score.toLocaleString()} points.`);
+    setRoadTripStatus(`<strong>Trip over.</strong> You still had fuel left, but there were no connected stops left to visit.`);
+    showRoadTripMapOutcome({
+      kicker: "Route ended",
+      title: "Out of connected stops",
+      text: `You still had ${roadTrip.fuel} fuel left, but there were no connected states left to visit from your route.`,
+      buttonLabel: "Restart Trip"
+    });
+    playRoadtripLoseSound();
+    return;
+  }
+
+  showRoadTripCelebration(`🏁 Route ended. Final score: ${roadTrip.score.toLocaleString()} points.`);
+  setRoadTripStatus(`<strong>Trip over.</strong> Restart and try a different route.`);
+  showRoadTripMapOutcome({
+    kicker: "Route ended",
+    title: "Trip over",
+    text: "Restart and try a different route.",
+    buttonLabel: "Restart Trip"
+  });
+  playRoadtripLoseSound();
+};
+
+
 
       const attemptRoadTripMove = (code) => {
         if (!roadtripHasChosenLevel || roadTrip.gameOver || roadtripIntroOverlay?.classList.contains("show")) return;
@@ -5176,9 +5252,11 @@ const applyRoadTripLayout = (levelKey = "base") => {
           });
         }
 
-        if (roadTrip.score >= settings.goal) return finishRoadTrip(true);
-        if (roadTrip.fuel <= 0) return finishRoadTrip(false);
-        if (!getAvailableMoves().length) finishRoadTrip(false);
+        if (roadTrip.score >= settings.goal) return finishRoadTrip(true, "goal");
+        if (roadTrip.fuel <= 0) return finishRoadTrip(false, "fuel");
+        if (!getAvailableMoves().length) return finishRoadTrip(false, "dead-end");
+
+
       };
 
       const resetRoadTrip = () => {
