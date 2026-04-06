@@ -5062,8 +5062,8 @@ const applyRoadTripLayout = (levelKey = "base") => {
         const settings = getRoadTripSettings();
         return {
           kicker: `${settings.label} Level`,
-          title: `Georgia is your starting stop`,
-          text: `Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank is empty.`
+          title: `INSTRUCTIONS`,
+          text: `Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and score ${settings.goal.toLocaleString()} points before the tank is empty or run out of connected stops to visit.`
         };
       };
 
@@ -5202,7 +5202,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
         if (roadtripHasChosenLevel) {
-          setRoadTripStatus(`<strong>Georgia is your starting stop.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
+          setRoadTripStatus(`<strong>INSTRUCTIONS.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
         } else {
           updateRoadTripStatusVisibility();
           roadtripStatus.innerHTML = "";
