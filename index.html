@@ -3287,7 +3287,7 @@
         </div>
 
         <div class="section-copy">
-          <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker.</p>
+          <p>Don’t need a new pair? Pay it forward. Use your credit to grab shoes for a coworker (See FAQs).</p>
 
           <div class="links">
             <a class="section-link pressable" href="https://www.shoesforcrews.com/wafflehouse" rel="noopener noreferrer">Shop Now</a>
@@ -3367,8 +3367,9 @@
           <p class="roadtrip-intro-text" id="roadtrip-intro-text">Start in Georgia with 3,596 points. Pick only the yellow-highlighted connected states, keep an eye on your fuel, and hit the goal before the tank runs dry.</p>
           <ul class="roadtrip-intro-list">
             <li>Each stop adds that state's points and uses 1 fuel.</li>
+            <li>You cannot go back to a stop you already visited.</li>
             <li>Louisiana, Arkansas, and Tennessee give bonus fuel.</li>
-            <li>Use the map or the Next Stops cards to move.</li>
+            <li>Tap the state cards on the map or the Next Stops cards to move.</li>
             <li>Your difficulty level changes your fuel and target score.</li>
           </ul>
           <button class="section-link pressable roadtrip-intro-button" id="roadtrip-intro-button" type="button">Start Trip</button>
@@ -5061,7 +5062,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         return {
           kicker: `${settings.label} Level`,
           title: `Georgia is your starting stop`,
-          text: `These map points match the real associates we’re celebrating in each state. Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank runs dry.`
+          text: `Wilson Waffle rolls out of Georgia with 3,596 points and ${settings.startFuel} fuel, so follow the connected yellow stops, grab bonus fuel where you can, and chase ${settings.goal.toLocaleString()} before the tank is empty.`
         };
       };
 
