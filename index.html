@@ -1526,12 +1526,25 @@
       100% { transform: translate(-50%, -50%) scaleX(var(--car-direction, 1)) scale(1); }
     }
 
-    @keyframes roadtripPopupFloat {
-      0% { opacity: 0; transform: translate(-50%, -50%) translateY(8px) scale(0.84); }
-      12% { opacity: 1; }
-      70% { opacity: 1; transform: translate(-50%, -50%) translateY(-22px) scale(1); }
-      100% { opacity: 0; transform: translate(-50%, -50%) translateY(-40px) scale(0.96); }
+  @keyframes roadtripCoinFloat {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(18px) scale(0.55) rotate(-8deg);
+      }
+      14% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(-2px) scale(1.08) rotate(4deg);
+      }
+      58% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(-28px) scale(1) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(-60px) scale(0.96) rotate(0deg);
+      }
     }
+
 
     .game-modal-inner.game-modal-inner--wide {
       width: min(1180px, 98vw);
@@ -2011,46 +2024,68 @@
     .roadtrip-car-fallback.is-arriving { animation: roadtripCarArrival 320ms ease-out; }
 
     .roadtrip-point-popups {
-  position: absolute;
-  inset: 0;
-  z-index: 22;
-  pointer-events: none;
-  overflow: hidden;
-  isolation: isolate;
-}
+      position: absolute;
+      inset: 0;
+      z-index: 24;
+      pointer-events: none;
+      overflow: visible;
+    }
 
-.roadtrip-point-popup {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  min-width: 88px;
-  padding: 9px 13px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(176, 150, 44, 0.22);
-  box-shadow: 0 12px 22px rgba(92, 77, 19, 0.16);
-  color: #5d4f00;
-  font-size: 0.84rem;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  text-align: center;
-  opacity: 0;
-  white-space: nowrap;
-  will-change: transform, opacity;
-}
+    .roadtrip-point-popup {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 82px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(176, 150, 44, 0.24);
+      box-shadow:
+        0 12px 22px rgba(92, 77, 19, 0.18),
+        0 2px 0 rgba(92, 77, 19, 0.10);
+      font-size: 0.92rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-align: center;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translate(-50%, -50%) translateY(14px) scale(0.58) rotate(-6deg);
+      will-change: transform, opacity;
+    }
 
-.roadtrip-point-popup.points {
-  background: linear-gradient(180deg, #fff8d5 0%, #ffe66a 100%);
-  color: #4d4100;
-}
+    .roadtrip-point-popup::before {
+      display: inline-block;
+      flex: 0 0 auto;
+      font-size: 1rem;
+      line-height: 1;
+    }
 
-.roadtrip-point-popup.fuel {
-  background: linear-gradient(180deg, #ffffff 0%, #fff8dc 100%);
-  color: #6a5500;
-}
+    .roadtrip-point-popup.points {
+      background: linear-gradient(180deg, #fff7c9 0%, #ffe66a 58%, #f5d547 100%);
+      color: #3f3400;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+    }
 
-.roadtrip-point-popup.show {
-  animation: roadtripPopupFloat 1250ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
+    .roadtrip-point-popup.points::before {
+      content: "🪙";
+    }
+
+    .roadtrip-point-popup.fuel {
+      background: linear-gradient(180deg, #fffef8 0%, #fff7d8 100%);
+      color: #5a4a00;
+    }
+
+    .roadtrip-point-popup.fuel::before {
+      content: "⛽";
+    }
+
+    .roadtrip-point-popup.show {
+      animation: roadtripCoinFloat 1180ms cubic-bezier(0.18, 0.82, 0.22, 1) forwards;
+    }
+
 
 
     .roadtrip-helper { font-size: 0.9rem; line-height: 1.6; color: #5a5a5a; margin-bottom: 22px; }
@@ -4678,49 +4713,52 @@ const applyRoadTripLayout = (levelKey = "base") => {
       ]);
 
 const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
-  if (!roadtripPointPopups || !text) return;
+        if (!roadtripPointPopups || !text) return;
 
-  const popup = document.createElement("div");
-  popup.className = `roadtrip-point-popup ${variant}`;
-  popup.textContent = text;
-  popup.style.left = `${x}%`;
-  popup.style.top = `${y}%`;
-  roadtripPointPopups.appendChild(popup);
+        const popup = document.createElement("div");
+        popup.className = `roadtrip-point-popup ${variant}`;
+        popup.textContent = text;
 
-  const showPopup = () => {
-    popup.classList.add("show");
-  };
+        const clampedX = Math.max(8, Math.min(92, x));
+        const clampedY = Math.max(10, Math.min(84, y));
 
-  if (delay > 0) {
-    window.setTimeout(() => {
-      requestAnimationFrame(showPopup);
-    }, delay);
-  } else {
-    requestAnimationFrame(showPopup);
-  }
+        popup.style.left = `${clampedX}%`;
+        popup.style.top = `${clampedY}%`;
 
-  window.setTimeout(() => popup.remove(), delay + 1350);
-};
+        roadtripPointPopups.appendChild(popup);
+
+        window.setTimeout(() => {
+          popup.classList.add("show");
+        }, delay);
+
+        window.setTimeout(() => {
+          popup.remove();
+        }, delay + 1250);
+      };
+
 
 
       const showRoadtripMoveRewards = (state, fuelBonus = 0) => {
-  if (!state) return;
+        if (!state) return;
 
-  const pointX = clampRoadTripValue(state.x, 10, 90);
-  const pointY = clampRoadTripValue(state.y - 2, 12, 86);
+        spawnRoadtripPopup(
+          `+${state.points.toLocaleString()}`,
+          state.x,
+          state.y - 2.5,
+          "points"
+        );
 
-  spawnRoadtripPopup(`+${state.points.toLocaleString()} points`, pointX, pointY, "points");
+        if (fuelBonus) {
+          spawnRoadtripPopup(
+            `+${fuelBonus} fuel`,
+            state.x + 4.8,
+            state.y - 10,
+            "fuel",
+            130
+          );
+        }
+      };
 
-  if (fuelBonus) {
-    spawnRoadtripPopup(
-      `+${fuelBonus} fuel`,
-      clampRoadTripValue(pointX + 6, 12, 92),
-      clampRoadTripValue(pointY - 6, 10, 84),
-      "fuel",
-      120
-    );
-  }
-};
 
       const animateRoadtripTravel = (fromState, toState, fuelBonus = 0) => {
         clearTimeout(roadtripTravelTimeout);
