@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Waffle House History Bot</title>
   <style>
     :root {
@@ -14,6 +14,7 @@
       --panel-strong: #fff8db;
       --border: rgba(176, 150, 44, 0.18);
       --shadow: 0 18px 42px rgba(17, 17, 17, 0.16);
+      --app-height: 100dvh;
     }
 
     * { box-sizing: border-box; }
@@ -22,6 +23,7 @@
       margin: 0;
       width: 100%;
       height: 100%;
+      min-height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--ink);
       background: transparent;
@@ -34,16 +36,19 @@
 
     .history-page {
       width: 100%;
-      height: 100%;
+      height: var(--app-height);
+      min-height: var(--app-height);
       display: flex;
       align-items: stretch;
       justify-content: stretch;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,231,0.98));
+      overflow: hidden;
     }
 
     .history-chat-panel {
       width: 100%;
       height: 100%;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -177,7 +182,7 @@
 
     .history-chat-log {
       flex: 1 1 auto;
-      min-height: 120px;
+      min-height: 0;
       overflow: auto;
       padding: 16px 18px 12px;
       display: flex;
@@ -273,11 +278,13 @@
 
     .history-chat-composer {
       flex: 0 0 auto;
-      padding: 10px 18px 16px;
+      padding: 10px 18px max(16px, env(safe-area-inset-bottom));
       border-top: 1px solid rgba(176, 150, 44, 0.14);
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,220,0.98));
       display: grid;
       gap: 10px;
+      position: relative;
+      z-index: 2;
     }
 
     .history-followup-actions {
@@ -354,6 +361,18 @@
       .history-chat-followup {
         max-height: min(40dvh, 320px);
       }
+
+      .history-quick-asks-extra:not([hidden]) {
+        max-height: min(26dvh, 220px);
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+      }
+
+      .history-chat-log {
+        padding-top: 12px;
+        padding-bottom: 10px;
+      }
     }
   </style>
 </head>
@@ -366,12 +385,10 @@
         <h1>Welcome to the Archive</h1>
         <p>Tap a question below for an instant answer, or ask your own question below and I'll help you send it to the archivist.</p>
       </div>
-
       <div class="history-quick-toolbar">
         <div class="history-quick-title">Quick questions</div>
         <button class="history-more-toggle" id="history-more-toggle" type="button" aria-expanded="false" aria-controls="history-quick-asks-extra">More facts</button>
       </div>
-
       <div class="history-quick-asks" id="history-quick-asks">
         <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
         <button class="history-quick-ask" type="button" data-question="Why is the sign yellow?">Why the sign is yellow</button>
@@ -380,7 +397,6 @@
         <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
         <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
       </div>
-
       <div class="history-quick-asks-extra" id="history-quick-asks-extra" hidden>
         <button class="history-quick-ask" type="button" data-question="What was Unit #1's daily average?">Unit #1 daily average</button>
         <button class="history-quick-ask" type="button" data-question="What did Unit #1 look like when it opened?">Original dining room</button>
@@ -391,9 +407,7 @@
         <button class="history-quick-ask" type="button" data-question="What is the farthest west Waffle House?">Farthest west</button>
         <button class="history-quick-ask" type="button" data-question="What is the farthest north Waffle House?">Farthest north</button>
       </div>
-
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
-
       <div class="history-chat-followup" id="history-chat-followup" hidden>
         <div class="history-followup-copy" id="history-followup-copy">
           Great question! Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email address and I'll package your message for the archivist.
@@ -408,7 +422,6 @@
           <button class="history-cancel-btn" id="history-cancel-email" type="button">Not now</button>
         </div>
       </div>
-
       <div class="history-chat-composer">
         <div class="history-chat-composer-row" id="history-ask-row">
           <input id="history-question-input" type="text" placeholder="Ask a Waffle House history question" aria-label="Ask a Waffle House history question" />
@@ -420,6 +433,20 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const root = document.documentElement;
+      const setAppHeight = () => {
+        const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        root.style.setProperty("--app-height", `${height}px`);
+      };
+
+      setAppHeight();
+      window.addEventListener("resize", setAppHeight);
+      window.addEventListener("orientationchange", () => setTimeout(setAppHeight, 180));
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", setAppHeight);
+        window.visualViewport.addEventListener("scroll", setAppHeight);
+      }
+
       const historyFacts = [
         { answer: "At Unit #1, pies and hashbrowns took 2 days to make.", keywords: ["unit 1", "pies", "hashbrowns", "two days", "2 days", "prep", "make", "took"] },
         { answer: "Unit #1's daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
@@ -457,8 +484,24 @@
       const moreToggle = document.getElementById("history-more-toggle");
       const extraQuickAsks = document.getElementById("history-quick-asks-extra");
       const closeBtn = document.getElementById("history-chat-close");
-
       let pendingQuestion = "";
+
+      const collapseExtraFactsForTyping = () => {
+        if (window.innerWidth > 720) return;
+        const expanded = moreToggle.getAttribute("aria-expanded") === "true";
+        if (!expanded) return;
+        moreToggle.setAttribute("aria-expanded", "false");
+        moreToggle.textContent = "More facts";
+        extraQuickAsks.hidden = true;
+      };
+
+      const keepTypingAreaVisible = (targetEl) => {
+        collapseExtraFactsForTyping();
+        setAppHeight();
+        window.setTimeout(() => {
+          (targetEl || askRow || input)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 180);
+      };
 
       const closeHistoryBot = () => {
         if (window.parent && window.parent !== window) {
@@ -471,68 +514,39 @@
       };
 
       const escapeHtml = (text) =>
-        text
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
+        text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;").replace(/'/g, "&#39;");
 
       const normalize = (text) =>
-        (text || "")
-          .toLowerCase()
-          .replace(/&/g, " and ")
-          .replace(/[^a-z0-9#\s$]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+        (text || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9#\s$]/g, " ").replace(/\s+/g, " ").trim();
 
       const scoreFact = (question, fact) => {
         const q = normalize(question);
         let score = 0;
-
         fact.keywords.forEach((keyword) => {
           const k = normalize(keyword);
           if (!k) return;
           if (q.includes(k)) score += k.split(" ").length > 1 ? 4 : 2;
         });
-
         const qWords = new Set(q.split(" "));
         fact.keywords.forEach((keyword) => {
           normalize(keyword).split(" ").forEach((word) => {
             if (word && qWords.has(word)) score += 1;
           });
         });
-
         if (/how many|how much|annual|each year|sell/i.test(question)) {
           if (/million|sell each year|annual sales|sales numbers/.test(fact.keywords.join(" "))) score += 2;
         }
-
         if (/who|tell me about/i.test(question) && /ms lucy|bert|tom|joe/.test(normalize(fact.answer))) score += 1;
         return score;
       };
 
       const findAnswer = (question) => {
-        const ranked = historyFacts
-          .map((fact) => ({ fact, score: scoreFact(question, fact) }))
-          .sort((a, b) => b.score - a.score);
-
+        const ranked = historyFacts.map((fact) => ({ fact, score: scoreFact(question, fact) })).sort((a, b) => b.score - a.score);
         const top = ranked[0];
         const second = ranked[1];
-
-        if (!top || top.score < 2) {
-          return null;
-        }
-
-        if (top.score >= 5 && (!second || top.score >= second.score + 2)) {
-          return top.fact.answer;
-        }
-
-        const related = ranked
-          .filter((item) => item.score >= Math.max(3, top.score - 1))
-          .slice(0, 3)
-          .map((item) => "• " + item.fact.answer)
-          .join("\n");
-
+        if (!top || top.score < 2) return null;
+        if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
+        const related = ranked.filter((item) => item.score >= Math.max(3, top.score - 1)).slice(0, 3).map((item) => "• " + item.fact.answer).join("\n");
         return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
       };
 
@@ -557,9 +571,10 @@
         pendingQuestion = question;
         followup.hidden = false;
         askRow.hidden = true;
+        collapseExtraFactsForTyping();
         followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it. Add your name, unit number, and email and I'll package your note for the archivist.";
         window.setTimeout(() => {
-          followup.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          keepTypingAreaVisible(followup);
           nameInput.focus();
         }, 70);
       };
@@ -577,6 +592,7 @@
         window.setTimeout(() => {
           if (answer) {
             addMessage("bot", answer);
+            keepTypingAreaVisible(askRow);
           } else {
             addMessage("bot", "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and internal records that may help answer it.");
             showFollowup(q);
@@ -587,9 +603,15 @@
       askBtn.addEventListener("click", () => {
         const q = (input.value || "").trim();
         if (!q) return;
+        collapseExtraFactsForTyping();
         askHistoryQuestion(q);
         input.value = "";
       });
+
+      input.addEventListener("focus", () => keepTypingAreaVisible(askRow));
+      nameInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+      unitInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+      emailInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
 
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -607,6 +629,7 @@
         moreToggle.setAttribute("aria-expanded", String(!expanded));
         moreToggle.textContent = expanded ? "More facts" : "Fewer facts";
         extraQuickAsks.hidden = expanded;
+        window.setTimeout(setAppHeight, 40);
       });
 
       unitInput.addEventListener("input", () => {
@@ -616,6 +639,7 @@
       cancelEmailBtn.addEventListener("click", () => {
         addMessage("bot", "No problem — your question is still here if you want to send it to the archivist later.");
         hideFollowup();
+        keepTypingAreaVisible(askRow);
       });
 
       closeBtn.addEventListener("click", closeHistoryBot);
@@ -625,12 +649,10 @@
         const unit = (unitInput.value || "").trim();
         const email = (emailInput.value || "").trim();
         const question = (pendingQuestion || "").trim();
-
         if (!question) {
           addMessage("bot", "Ask a question first, then I can help you send it.");
           return;
         }
-
         if (!name || !unit || !email) {
           addMessage("bot", "Please enter your name, unit number, and email before sending your question.");
           if (!name) nameInput.focus();
@@ -640,21 +662,14 @@
         }
 
         const subject = `Waffle House History Question from ${name}`;
-        const body = [
-          `Name: ${name}`,
-          `Unit Number: ${unit}`,
-          `Email: ${email}`,
-          "",
-          "Question:",
-          question
-        ].join("\n");
-
+        const body = [`Name: ${name}`, `Unit Number: ${unit}`, `Email: ${email}`, "", "Question:", question].join("\n");
         addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
         const mailto = `mailto:archives@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
           hideFollowup();
+          keepTypingAreaVisible(askRow);
         }, 520);
       });
 
