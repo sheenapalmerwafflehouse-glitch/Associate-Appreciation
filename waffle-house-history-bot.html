@@ -572,7 +572,7 @@
         followup.hidden = false;
         askRow.hidden = true;
         collapseExtraFactsForTyping();
-        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, unit number, and email and I'll package your note for the archivist.";
+        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email and I'll package your note for the archivist.";
         window.setTimeout(() => {
           keepTypingAreaVisible(followup);
           nameInput.focus();
@@ -654,7 +654,7 @@
           return;
         }
         if (!name || !unit || !email) {
-          addMessage("bot", "Please enter your name, unit number, and email before sending your question.");
+          addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
           if (!name) nameInput.focus();
           else if (!unit) unitInput.focus();
           else emailInput.focus();
