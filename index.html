@@ -3368,6 +3368,7 @@
           <ul class="roadtrip-intro-list">
             <li>Each stop adds that state's points and uses 1 fuel.</li>
             <li>You cannot go back to a stop you already visited.</li>
+            <li>Your route ends when you reach the level's target score, run out of fuel, or hit a dead end with no connected stops left to visit.</li>
             <li>Louisiana, Arkansas, and Tennessee give bonus fuel.</li>
             <li>Tap the state cards on the map or the Next Stops cards to move.</li>
             <li>Your difficulty level changes your fuel and target score.</li>
@@ -3381,7 +3382,7 @@
           <div class="game-kicker">Anniversary Game</div>
           <h2 class="game-title">Anniversary Road Trip</h2>
           <p class="game-subtitle">
-           Join Wilson on an anniversary road trip across Waffle Nation. Every state on the map shows the actual number of Associates being recognized, and each connected stop adds those points to your score. The game starts you off in Georgia with 3,596 points already on the board. Plan your route carefully, because your goal is to reach the target score for your level before you run out of fuel. 
+           Join Wilson on an anniversary road trip across Waffle Nation! Every state on the map shows the actual number of Associates being recognized, and each connected stop adds those points to your score. The game starts you off in Georgia with 3,596 points already on the board. Plan your route carefully, because your goal is to reach the target score for your level before you run out of fuel. 
           </p>
         </div>
 
@@ -5123,11 +5124,11 @@ const applyRoadTripLayout = (levelKey = "base") => {
           playRoadtripWinSound();
           playRoadtripHooray();
         } else {
-          showRoadTripCelebration(`🏁 Trip complete! Final score: ${roadTrip.score.toLocaleString()} points.`);
-          setRoadTripStatus(`<strong>Trip over.</strong> You ran out of fuel or moves. Restart and try a different route.`);
+          showRoadTripCelebration(`🏁 Route ended. Final score: ${roadTrip.score.toLocaleString()} points.`);
+          setRoadTripStatus(`<strong>Trip over.</strong> Out of fuel or no connected stops left. Restart and try a different route.`);
           showRoadTripMapOutcome({
-            kicker: "Trip Over",
-            title: "Out of fuel or moves",
+            kicker: "Route ended",
+            title: "Out of fuel or connected stops",
             text: "Restart and try a different route.",
             buttonLabel: "Restart Trip"
           });
