@@ -5201,7 +5201,7 @@ const applyRoadTripLayout = (levelKey = "base") => {
         roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
         if (roadtripHasChosenLevel) {
-          setRoadTripStatus(`<strong>INSTRUCTIONS.</strong> You begin with Georgia’s 3,596 points. Reach ${settings.goal.toLocaleString()} points before fuel hits zero. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
+          setRoadTripStatus(`<strong>INSTRUCTIONS.</strong> Reach ${settings.goal.toLocaleString()} points to win. You begin with 3,596 points in Georgia. Bonus refuel stops are Louisiana, Arkansas, and Tennessee.`);
         } else {
           updateRoadTripStatusVisibility();
           roadtripStatus.innerHTML = "";
