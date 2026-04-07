@@ -90,7 +90,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: fdfdfd;
+      background: #fdfdfd;
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(176, 150, 44, 0.18);
       box-shadow: 0 6px 18px rgba(92, 77, 19, 0.09);
@@ -5648,47 +5648,77 @@ const getRoadTripEndReason = () => {
       referrerpolicy="no-referrer"
     ></iframe>
   </aside>
+  <audio id="history-audio" preload="auto" loop playsinline>
+  <source src="Audio/GOOD FOOD FAST.mp3" type="audio/mpeg" />
+</audio>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const eapLink = document.getElementById("eap-link");
-      const historyLauncher = document.getElementById("history-chat-launcher");
-      const historyShell = document.getElementById("history-chat-shell");
-      const historyShellOverlay = document.getElementById("history-shell-overlay");
-      const historyShellClose = document.getElementById("history-shell-close");
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const eapLink = document.getElementById("eap-link");
+    const historyLauncher = document.getElementById("history-chat-launcher");
+    const historyShell = document.getElementById("history-chat-shell");
+    const historyShellOverlay = document.getElementById("history-shell-overlay");
+    const historyAudio = document.getElementById("history-audio");
 
-      const openHistoryShell = () => {
-        historyShell?.classList.add("open");
-        historyShellOverlay?.classList.add("open");
-        historyShell?.setAttribute("aria-hidden", "false");
-        historyLauncher?.setAttribute("aria-expanded", "true");
-        document.body.classList.add("lightbox-open");
-      };
+    const playHistoryAudio = async () => {
+      if (!historyAudio) return;
 
-      const closeHistoryShell = () => {
-        historyShell?.classList.remove("open");
-        historyShellOverlay?.classList.remove("open");
-        historyShell?.setAttribute("aria-hidden", "true");
-        historyLauncher?.setAttribute("aria-expanded", "false");
-        document.body.classList.remove("lightbox-open");
-      };
+      try {
+        historyAudio.currentTime = 0;
+        await historyAudio.play();
+      } catch (error) {
+        console.log("History audio could not start:", error);
+      }
+    };
 
+    const stopHistoryAudio = () => {
+      if (!historyAudio) return;
+      historyAudio.pause();
+      historyAudio.currentTime = 0;
+    };
 
-      window.addEventListener("message", (event) => {
-        if (event?.data === "close-waffle-history-bot") {
-          closeHistoryShell();
-        }
-      });
+    const openHistoryShell = () => {
+      historyShell?.classList.add("open");
+      historyShellOverlay?.classList.add("open");
+      historyShell?.setAttribute("aria-hidden", "false");
+      historyLauncher?.setAttribute("aria-expanded", "true");
+      document.body.classList.add("lightbox-open");
+      playHistoryAudio();
+    };
 
-      historyLauncher?.addEventListener("click", openHistoryShell);
-      historyShellOverlay?.addEventListener("click", closeHistoryShell);
+    const closeHistoryShell = () => {
+      historyShell?.classList.remove("open");
+      historyShellOverlay?.classList.remove("open");
+      historyShell?.setAttribute("aria-hidden", "true");
+      historyLauncher?.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("lightbox-open");
+      stopHistoryAudio();
+    };
 
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && historyShell?.classList.contains("open")) {
-          closeHistoryShell();
-        }
-      });
+    window.addEventListener("message", (event) => {
+      if (event?.data === "close-waffle-history-bot") {
+        closeHistoryShell();
+      }
     });
-  </script>
+
+    historyLauncher?.addEventListener("click", openHistoryShell);
+    historyShellOverlay?.addEventListener("click", closeHistoryShell);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && historyShell?.classList.contains("open")) {
+        closeHistoryShell();
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopHistoryAudio();
+    });
+
+    window.addEventListener("pagehide", stopHistoryAudio);
+    window.addEventListener("beforeunload", stopHistoryAudio);
+  });
+</script>
+
+
 </body>
 </html>
