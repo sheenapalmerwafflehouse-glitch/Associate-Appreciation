@@ -4689,7 +4689,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         });
       };
 
-      const playNoiseBurst = ({ duration = 0.07, volume = 0.06, frequency = 1800, q = 0.9 } = {}) => {
+      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
         const ctx = unlockRoadtripAudio();
         if (!ctx) return;
         const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
