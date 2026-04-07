@@ -126,13 +126,24 @@
 }
 
 .mini-nav-wrap {
-  flex: 1 1 auto;
-  min-width: 0;
+  width: 100%;
+  min-width: 900px;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+}
+.mini-nav-row {
+ width: 100%;
+ max-width: 900px;
+ display: flex;
+ align-items: center;
+ gap: 14px;
+}
+.mini-nav-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .mini-nav-wrap::-webkit-scrollbar {
@@ -166,21 +177,26 @@
 
 .mini-nav-hint {
   flex: 0 0 auto;
-  display: inline-flex;
+  display: static;
+  transform: none;
+  display: inline-flex
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255, 252, 238, 0.72);
-  border: 1px solid rgba(176, 150, 44, 0.10);
-  color: #9a7600;
-  font-size: 0.78rem;
-  font-weight: 700;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: #a37a00;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.22s ease, visibility 0.22s ease;
+  z-index: 0;
 }
 
 .mini-nav-hint.show {
@@ -3188,7 +3204,7 @@
   </div>
 
   <div class="mini-nav-hint" id="mini-nav-hint" aria-hidden="true">
-    <span>←Scroll→</span>
+    <span>← Scroll →</span>
   </div>
 </div>
 
