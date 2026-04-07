@@ -5660,6 +5660,9 @@ const getRoadTripEndReason = () => {
     const historyShellOverlay = document.getElementById("history-shell-overlay");
     const historyAudio = document.getElementById("history-audio");
 
+    if (historyAudio) {
+       historyAudio.volume = 0.2;
+    }
     const playHistoryAudio = async () => {
       if (!historyAudio) return;
 
