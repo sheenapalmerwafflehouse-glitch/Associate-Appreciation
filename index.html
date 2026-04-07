@@ -4727,19 +4727,19 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
       };
 
       const playRoadtripMoveSound = () => playRoadtripToneSequence([
-        { frequency: 180, duration: 0.06, volume: 0.012, type: "triangle", gap: 0.05 },
-        { frequency: 210, duration: 0.07, volume: 0.012, type: "triangle", gap: 0.06 },
-        { frequency: 240, duration: 0.07, volume: 0.011, type: "triangle", gap: 0.07 }
+        { frequency: 180, duration: 0.06, volume: 0.03, type: "triangle", gap: 0.05 },
+        { frequency: 210, duration: 0.07, volume: 0.03, type: "triangle", gap: 0.06 },
+        { frequency: 240, duration: 0.07, volume: 0.028, type: "triangle", gap: 0.07 }
       ]);
 
       const playRoadtripPointsSound = () => playRoadtripToneSequence([
-        { frequency: 660, duration: 0.06, volume: 0.02, type: "sine", gap: 0.05 },
-        { frequency: 880, duration: 0.08, volume: 0.018, type: "sine", gap: 0.08 }
+        { frequency: 660, duration: 0.06, volume: 0.05, type: "sine", gap: 0.05 },
+        { frequency: 880, duration: 0.08, volume: 0.045, type: "sine", gap: 0.08 }
       ]);
 
       const playRoadtripFuelSound = () => playRoadtripToneSequence([
-        { frequency: 392, duration: 0.06, volume: 0.018, type: "square", gap: 0.05 },
-        { frequency: 523.25, duration: 0.08, volume: 0.018, type: "square", gap: 0.08 }
+        { frequency: 392, duration: 0.06, volume: 0.05, type: "square", gap: 0.05 },
+        { frequency: 523.25, duration: 0.08, volume: 0.05, type: "square", gap: 0.08 }
       ]);
 
       const playBalloonPopSound = () => {
