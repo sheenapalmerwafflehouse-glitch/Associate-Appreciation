@@ -2121,9 +2121,13 @@
     }
 
     .roadtrip-point-popup.points {
-      background: linear-gradient(180deg, #fff7c9 0%, #ffe66a 58%, #f5d547 100%);
-      color: #3f3400;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+      background: linear-gradient(180deg, #ffffff 0%, #f8f6ee 100%); 
+      color: #222222;
+      border: 1px solid(60, 60, 60, 0.14);
+      text-shadow: none;
+      box-shadow: 
+      0 12px 22px rgba (17, 17, 17, 0.14),
+      0 2px 0 rgba (17, 17, 17, 0.06);
     }
 
     .roadtrip-point-popup.points::before {
@@ -3524,10 +3528,10 @@
 
       <div class="game-shell roadtrip-shell">
         <div class="game-top roadtrip-top">
-          <div class="game-kicker"> Wilson Waffle's Anniversary Journey</div>
+          <div class="game-kicker"> Wilson's Anniversary Journey</div>
           <h2 class="game-title">On the Road to Recognition</h2>
           <p class="game-subtitle">
-           Join Wilson on a trip across Waffle Nation! Every state on the map shows the actual number of Associates being recognized for milestone anniversaries, and each connected stop adds points to your score. The game starts you off in Georgia with 3,596 points already on the board. Plan your route carefully, because your goal is to reach the target score for your level before you run out of fuel or hit a dead end. 
+           Join Wilson Waffle on celebration road trip! Each state on the map shows the actual number of Associates being recognized for milestone anniversaries, and every connected stop adds points to your score. The game starts you off in Georgia with 3,596 points already on the board. Plan your route carefully, because your goal is to reach the target score for your level before you run out of fuel or hit a dead end. 
           </p>
         </div>
 
@@ -4676,7 +4680,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
           osc.type = step.type || "sine";
           osc.frequency.setValueAtTime(step.frequency, startAt);
           gain.gain.setValueAtTime(0.0001, startAt);
-          gain.gain.exponentialRampToValueAtTime(step.volume || 0.015, startAt + 0.015);
+          gain.gain.exponentialRampToValueAtTime(step.volume || 0.04, startAt + 0.015);
           gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
           osc.connect(gain).connect(ctx.destination);
           osc.start(startAt);
@@ -4685,7 +4689,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         });
       };
 
-      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+      const playNoiseBurst = ({ duration = 0.07, volume = 0.06, frequency = 1800, q = 0.9 } = {}) => {
         const ctx = unlockRoadtripAudio();
         if (!ctx) return;
         const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
