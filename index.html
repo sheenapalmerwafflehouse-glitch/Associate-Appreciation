@@ -4799,7 +4799,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
       };
 
       const playPageLoadCelebrationSound = () => {
-        playCrowdClapCheer({ mini: true });
+        playCrowdClapCheer({ mini: false });
       };
 
       const playRoadtripHooray = () => {
@@ -4823,9 +4823,9 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
       };
 
       const playRoadtripLevelSound = () => playRoadtripToneSequence([
-        { frequency: 330, duration: 0.05, volume: 0.028, type: "triangle", gap: 0.045 },
-        { frequency: 392, duration: 0.055, volume: 0.028, type: "triangle", gap: 0.05 },
-        { frequency: 494, duration: 0.065, volume: 0.024, type: "triangle", gap: 0.065 }
+        { frequency: 330, duration: 0.05, volume: 0.018, type: "triangle", gap: 0.045 },
+        { frequency: 392, duration: 0.055, volume: 0.128, type: "triangle", gap: 0.05 },
+        { frequency: 494, duration: 0.065, volume: 0.017, type: "triangle", gap: 0.065 }
       ]);
 
 const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
