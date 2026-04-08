@@ -180,34 +180,45 @@
       transform: translateY(-1px);
     }
 
-   .history-chat-log {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  padding: 16px 18px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+    .history-chat-log {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 16px 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+      isolation: isolate;
+    }
 
-  background:
-    linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
-    url("Images/history-watermark.png");
-  background-repeat: no-repeat;
-  background-position: center 58%;
-  background-size: 72%;
-}
+    .history-chat-log::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("images/history-watermark.png");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-
-    .history-chat-log:empty::before {
+    .history-chat-log:empty::after {
       content: "Tap a question above to get started.";
       color: #6b6b6b;
       font-size: 0.94rem;
       padding: 12px 2px 4px;
+      position: relative;
+      z-index: 2;
     }
 
     .history-msg {
+      position: relative;
+      z-index: 2;
       max-width: min(90%, 40ch);
       padding: 12px 14px;
       border-radius: 18px;
@@ -393,10 +404,12 @@
         <h1>Welcome to the Archive</h1>
         <p>Tap a question below for an instant answer, or ask your own question below and I'll help you send it to the archivist.</p>
       </div>
+
       <div class="history-quick-toolbar">
         <div class="history-quick-title">Quick questions</div>
         <button class="history-more-toggle" id="history-more-toggle" type="button" aria-expanded="false" aria-controls="history-quick-asks-extra">More facts</button>
       </div>
+
       <div class="history-quick-asks" id="history-quick-asks">
         <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
         <button class="history-quick-ask" type="button" data-question="Why is the sign yellow?">Why the sign is yellow</button>
@@ -405,6 +418,7 @@
         <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
         <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
       </div>
+
       <div class="history-quick-asks-extra" id="history-quick-asks-extra" hidden>
         <button class="history-quick-ask" type="button" data-question="What was Unit #1's daily average?">Unit #1 daily average</button>
         <button class="history-quick-ask" type="button" data-question="What did Unit #1 look like when it opened?">Original dining room</button>
@@ -415,7 +429,9 @@
         <button class="history-quick-ask" type="button" data-question="What is the farthest west Waffle House?">Farthest west</button>
         <button class="history-quick-ask" type="button" data-question="What is the farthest north Waffle House?">Farthest north</button>
       </div>
+
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
+
       <div class="history-chat-followup" id="history-chat-followup" hidden>
         <div class="history-followup-copy" id="history-followup-copy">
           Great question! Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email address and I'll package your message for the archivist.
@@ -430,6 +446,7 @@
           <button class="history-cancel-btn" id="history-cancel-email" type="button">Not now</button>
         </div>
       </div>
+
       <div class="history-chat-composer">
         <div class="history-chat-composer-row" id="history-ask-row">
           <input id="history-question-input" type="text" placeholder="Ask a Waffle House History Question" aria-label="Ask a Waffle House History Question" />
@@ -554,7 +571,11 @@
         const second = ranked[1];
         if (!top || top.score < 2) return null;
         if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
-        const related = ranked.filter((item) => item.score >= Math.max(3, top.score - 1)).slice(0, 3).map((item) => "• " + item.fact.answer).join("\n");
+        const related = ranked
+          .filter((item) => item.score >= Math.max(3, top.score - 1))
+          .slice(0, 3)
+          .map((item) => "• " + item.fact.answer)
+          .join("\n");
         return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
       };
 
@@ -657,10 +678,12 @@
         const unit = (unitInput.value || "").trim();
         const email = (emailInput.value || "").trim();
         const question = (pendingQuestion || "").trim();
+
         if (!question) {
           addMessage("bot", "Ask a question first, then I can help you send it.");
           return;
         }
+
         if (!name || !unit || !email) {
           addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
           if (!name) nameInput.focus();
@@ -670,9 +693,19 @@
         }
 
         const subject = `Waffle House History Question from ${name}`;
-        const body = [`Name: ${name}`, `Unit Number: ${unit}`, `Email: ${email}`, "", "Question:", question].join("\n");
+        const body = [
+          `Name: ${name}`,
+          `Unit Number: ${unit}`,
+          `Email: ${email}`,
+          "",
+          "Question:",
+          question
+        ].join("\n");
+
         addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
+
         const mailto = `mailto:archive@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
