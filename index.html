@@ -3860,7 +3860,6 @@
       let roadtripArrivalTimeout;
       let roadtripAudioContext = null;
       let roadtripAudioUnlocked = false;
-      const ROADTRIP_SFX_MULTIPLIER = 2;
       let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
@@ -4729,8 +4728,8 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
           osc.type = step.type || "sine";
           osc.frequency.setValueAtTime(step.frequency, startAt);
           gain.gain.setValueAtTime(0.0001, startAt);
-         const targetVolume = Math.min((step.volume || 0.015) * ROADTRIP_SFX_MULTIPLIER, 0.12);
-          gain.gain.exponentialRampToValueAtTime(targetVolume, startAt 0.015);
+          gain.gain.exponentialRampToValueAtTime(step.volume || 0.04, startAt + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
           osc.connect(gain).connect(ctx.destination);
           osc.start(startAt);
           osc.stop(startAt + (step.duration || 0.08) + 0.02);
@@ -4738,7 +4737,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         });
       };
 
-      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+      const playNoiseBurst = ({ duration = 0.05, volume = 0.095, frequency = 1250, q = 0.68 } = {}) => {
         const ctx = unlockRoadtripAudio();
         if (!ctx) return;
         const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
@@ -4763,8 +4762,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         const gain = ctx.createGain();
         const startAt = ctx.currentTime + 0.01;
         gain.gain.setValueAtTime(0.0001, startAt);
-        const targetVolume = Math.min(volume * ROADTRIP_SFX_MULTIPLIER, 0.18);
-        gain.gain.exponentialRampToValueAtTime(targetVolume, startAt + 0.005);
+        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
         gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
 
         source.connect(bandpass);
@@ -4807,7 +4805,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         popFilter.frequency.setValueAtTime(1000, startAt);
         popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
         popGain.gain.setValueAtTime(0.0001, startAt);
-        popGain.gain.exponentialRampToValueAtTime(Math.min(0.03 * ROADTRIP_SFX_MULTIPLIER, 0.12), startAt + 0.003);
+        popGain.gain.exponentialRampToValueAtTime(0.045, startAt + 0.003);
         popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
         pop.connect(popFilter).connect(popGain).connect(ctx.destination);
         pop.start(startAt);
@@ -4872,14 +4870,11 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         ]);
       };
 
-  const playRoadtripLevelSound = () => playRoadtripToneSequence([
-  { frequency: 330, duration: 0.05, volume: 0.018, type: "triangle", gap: 0.045 },
-  { frequency: 392, duration: 0.055, volume: 0.018, type: "triangle", gap: 0.05 },
-  { frequency: 494, duration: 0.065, volume: 0.017, type: "triangle", gap: 0.065 }
-]);
-
-
-
+      const playRoadtripLevelSound = () => playRoadtripToneSequence([
+        { frequency: 330, duration: 0.05, volume: 0.022, type: "triangle", gap: 0.045 },
+        { frequency: 392, duration: 0.055, volume: 0.022, type: "triangle", gap: 0.05 },
+        { frequency: 494, duration: 0.065, volume: 0.021, type: "triangle", gap: 0.065 }
+      ]);
 
 const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
         if (!roadtripPointPopups || !text) return;
