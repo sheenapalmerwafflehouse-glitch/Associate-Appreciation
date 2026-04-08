@@ -180,7 +180,7 @@
       transform: translateY(-1px);
     }
 
-.history-chat-log {
+   .history-chat-log {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
@@ -190,32 +190,22 @@
   gap: 10px;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  position: relative;
-  isolation: isolate;
-}
 
-.history-chat-log:empty::before {
-  content: "Tap a question above to get started.";
-  color: #6b6b6b;
-  font-size: 0.94rem;
-  padding: 12px 2px 4px;
-  position: relative;
-  z-index: 2;
-}
-
-.history-chat-log:empty::after {
-  content: "";
-  position: absolute;
-  inset: 0;
   background:
-    linear-gradient(rgba(255,255,255,0.84), rgba(255,255,255,0.84)),
+    linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
     url("Images/history-watermark.png");
   background-repeat: no-repeat;
-  background-position: center 72%;
-  background-size: 56%;
-  pointer-events: none;
-  z-index: 1;
+  background-position: center 58%;
+  background-size: 72%;
 }
+
+
+    .history-chat-log:empty::before {
+      content: "Tap a question above to get started.";
+      color: #6b6b6b;
+      font-size: 0.94rem;
+      padding: 12px 2px 4px;
+    }
 
     .history-msg {
       max-width: min(90%, 40ch);
