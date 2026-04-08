@@ -52,38 +52,13 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,250,231,0.96));
-      position: relative;
-      isolation: isolate;
-    }
-
-    .history-chat-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("images/history-watermark.png");
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-      opacity: 0.11;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .history-chat-top,
-    .history-quick-toolbar,
-    .history-quick-asks,
-    .history-quick-asks-extra,
-    .history-chat-log,
-    .history-chat-followup,
-    .history-chat-composer {
-      position: relative;
-      z-index: 1;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,231,0.98));
     }
 
     .history-chat-top {
+      position: relative;
       padding: 18px 76px 14px 18px;
-      background: linear-gradient(180deg, rgba(255,230,106,0.94) 0%, rgba(245,213,71,0.94) 100%);
+      background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
       border-bottom: 1px solid rgba(176, 150, 44, 0.18);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
       flex: 0 0 auto;
@@ -187,7 +162,7 @@
     .history-quick-ask {
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 999px;
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.94);
       color: #312a00;
       font-weight: 800;
       font-size: 0.84rem;
@@ -195,7 +170,6 @@
       padding: 10px 12px;
       cursor: pointer;
       box-shadow: 0 8px 16px rgba(17,17,17,0.05);
-      backdrop-filter: blur(1px);
     }
 
     .history-quick-ask:hover,
@@ -206,31 +180,34 @@
       transform: translateY(-1px);
     }
 
-    .history-chat-log {
-      flex: 1 1 auto;
-      min-height: 0;
-      overflow: auto;
-      padding: 16px 18px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      background: transparent;
-    }
+   .history-chat-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 16px 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 
-    .history-chat-log:empty::after {
+  background:
+    linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
+    url("Images/history-watermark.png");
+  background-repeat: no-repeat;
+  background-position: center 58%;
+  background-size: 72%;
+}
+
+
+    .history-chat-log:empty::before {
       content: "Tap a question above to get started.";
       color: #6b6b6b;
       font-size: 0.94rem;
       padding: 12px 2px 4px;
-      position: relative;
-      z-index: 2;
     }
 
     .history-msg {
-      position: relative;
-      z-index: 2;
       max-width: min(90%, 40ch);
       padding: 12px 14px;
       border-radius: 18px;
@@ -252,7 +229,7 @@
 
     .history-msg.bot {
       align-self: flex-start;
-      background: linear-gradient(180deg, rgba(255,254,247,0.95), rgba(255,247,220,0.95));
+      background: linear-gradient(180deg, #fffef7, #fff7dc);
       border: 1px solid rgba(176, 150, 44, 0.16);
     }
 
@@ -267,12 +244,11 @@
       gap: 10px;
       padding: 12px 18px 8px;
       border-top: 1px solid rgba(176, 150, 44, 0.14);
-      background: rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.84);
       flex: 0 0 auto;
       max-height: min(34dvh, 280px);
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      backdrop-filter: blur(1px);
     }
 
     .history-chat-followup[hidden] { display: none; }
@@ -297,7 +273,7 @@
       min-height: 46px;
       padding: 12px 14px;
       font: inherit;
-      background: rgba(255,255,255,0.96);
+      background: rgba(255,255,255,0.98);
       color: #111;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
@@ -312,9 +288,10 @@
       flex: 0 0 auto;
       padding: 10px 18px max(16px, env(safe-area-inset-bottom));
       border-top: 1px solid rgba(176, 150, 44, 0.14);
-      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,248,220,0.92));
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,220,0.98));
       display: grid;
       gap: 10px;
+      position: relative;
       z-index: 2;
     }
 
@@ -416,12 +393,10 @@
         <h1>Welcome to the Archive</h1>
         <p>Tap a question below for an instant answer, or ask your own question below and I'll help you send it to the archivist.</p>
       </div>
-
       <div class="history-quick-toolbar">
         <div class="history-quick-title">Quick questions</div>
         <button class="history-more-toggle" id="history-more-toggle" type="button" aria-expanded="false" aria-controls="history-quick-asks-extra">More facts</button>
       </div>
-
       <div class="history-quick-asks" id="history-quick-asks">
         <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
         <button class="history-quick-ask" type="button" data-question="Why is the sign yellow?">Why the sign is yellow</button>
@@ -430,7 +405,6 @@
         <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
         <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
       </div>
-
       <div class="history-quick-asks-extra" id="history-quick-asks-extra" hidden>
         <button class="history-quick-ask" type="button" data-question="What was Unit #1's daily average?">Unit #1 daily average</button>
         <button class="history-quick-ask" type="button" data-question="What did Unit #1 look like when it opened?">Original dining room</button>
@@ -441,9 +415,7 @@
         <button class="history-quick-ask" type="button" data-question="What is the farthest west Waffle House?">Farthest west</button>
         <button class="history-quick-ask" type="button" data-question="What is the farthest north Waffle House?">Farthest north</button>
       </div>
-
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
-
       <div class="history-chat-followup" id="history-chat-followup" hidden>
         <div class="history-followup-copy" id="history-followup-copy">
           Great question! Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email address and I'll package your message for the archivist.
@@ -458,7 +430,6 @@
           <button class="history-cancel-btn" id="history-cancel-email" type="button">Not now</button>
         </div>
       </div>
-
       <div class="history-chat-composer">
         <div class="history-chat-composer-row" id="history-ask-row">
           <input id="history-question-input" type="text" placeholder="Ask a Waffle House History Question" aria-label="Ask a Waffle House History Question" />
@@ -583,11 +554,7 @@
         const second = ranked[1];
         if (!top || top.score < 2) return null;
         if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
-        const related = ranked
-          .filter((item) => item.score >= Math.max(3, top.score - 1))
-          .slice(0, 3)
-          .map((item) => "• " + item.fact.answer)
-          .join("\n");
+        const related = ranked.filter((item) => item.score >= Math.max(3, top.score - 1)).slice(0, 3).map((item) => "• " + item.fact.answer).join("\n");
         return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
       };
 
@@ -690,12 +657,10 @@
         const unit = (unitInput.value || "").trim();
         const email = (emailInput.value || "").trim();
         const question = (pendingQuestion || "").trim();
-
         if (!question) {
           addMessage("bot", "Ask a question first, then I can help you send it.");
           return;
         }
-
         if (!name || !unit || !email) {
           addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
           if (!name) nameInput.focus();
@@ -705,19 +670,9 @@
         }
 
         const subject = `Waffle House History Question from ${name}`;
-        const body = [
-          `Name: ${name}`,
-          `Unit Number: ${unit}`,
-          `Email: ${email}`,
-          "",
-          "Question:",
-          question
-        ].join("\n");
-
+        const body = [`Name: ${name}`, `Unit Number: ${unit}`, `Email: ${email}`, "", "Question:", question].join("\n");
         addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
-
         const mailto = `mailto:archive@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
         window.setTimeout(() => {
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
