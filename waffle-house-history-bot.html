@@ -547,7 +547,6 @@
         if (!top || top.score < 2) return null;
         if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
         const related = ranked.filter((item) => item.score >= Math.max(3, top.score - 1)).slice(0, 3).map((item) => "• " + item.fact.answer).join("\n");
-        return related.includes("\n") ? "Here are the closest matching history facts:\n" + related : top.fact.answer;
       };
 
       const addMessage = (role, text) => {
