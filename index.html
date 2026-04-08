@@ -3858,9 +3858,13 @@
       let roadtripToastTimeout;
       let roadtripTravelTimeout;
       let roadtripArrivalTimeout;
-      let roadtripAudioContext = null;
-      let roadtripAudioUnlocked = false;
-      let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
+    
+    let roadtripAudioContext = null;
+    let roadtripAudioUnlocked = false;
+    const SFX_VOLUME_MULTIPLIER = 2;
+    const HISTORY_AUDIO_MULTIPLIER = 2;
+    let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
+
 
       const getRoadTripSettings = () => ROADTRIP_LEVELS[currentRoadTripLevel];
 
@@ -4719,60 +4723,62 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
       };
 
       const playRoadtripToneSequence = (steps = []) => {
-        const ctx = unlockRoadtripAudio();
-        if (!ctx || !steps.length) return;
-        let startAt = ctx.currentTime + 0.01;
-        steps.forEach((step) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = step.type || "sine";
-          osc.frequency.setValueAtTime(step.frequency, startAt);
-          gain.gain.setValueAtTime(0.0001, startAt);
-          gain.gain.exponentialRampToValueAtTime(step.volume || 0.04, startAt + 0.015);
-          gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
-          osc.connect(gain).connect(ctx.destination);
-          osc.start(startAt);
-          osc.stop(startAt + (step.duration || 0.08) + 0.02);
-          startAt += (step.gap ?? step.duration ?? 0.08);
-        });
-      };
-
-      const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
-        const ctx = unlockRoadtripAudio();
-        if (!ctx) return;
-        const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
-        const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < frameCount; i += 1) {
-          const decay = 1 - (i / frameCount);
-          data[i] = (Math.random() * 2 - 1) * decay;
-        }
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-
-        const bandpass = ctx.createBiquadFilter();
-        bandpass.type = "bandpass";
-        bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
-        bandpass.Q.setValueAtTime(q, ctx.currentTime);
-
-        const highpass = ctx.createBiquadFilter();
-        highpass.type = "highpass";
-        highpass.frequency.setValueAtTime(700, ctx.currentTime);
-
+      const ctx = unlockRoadtripAudio();
+      if (!ctx || !steps.length) return;
+      let startAt = ctx.currentTime + 0.01;
+      steps.forEach((step) => {
+        const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        const startAt = ctx.currentTime + 0.01;
+        osc.type = step.type || "sine";
+        osc.frequency.setValueAtTime(step.frequency, startAt);
         gain.gain.setValueAtTime(0.0001, startAt);
-        gain.gain.exponentialRampToValueAtTime(volume, startAt + 0.005);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+        gain.gain.exponentialRampToValueAtTime((step.volume || 0.04) * SFX_VOLUME_MULTIPLIER, startAt + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + (step.duration || 0.08));
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(startAt);
+        osc.stop(startAt + (step.duration || 0.08) + 0.02);
+        startAt += (step.gap ?? step.duration ?? 0.08);
+      });
+    };
 
-        source.connect(bandpass);
-        bandpass.connect(highpass);
-        highpass.connect(gain);
-        gain.connect(ctx.destination);
 
-        source.start(startAt);
-        source.stop(startAt + duration + 0.02);
-      };
+     const playNoiseBurst = ({ duration = 0.07, volume = 0.028, frequency = 1800, q = 0.9 } = {}) => {
+      const ctx = unlockRoadtripAudio();
+      if (!ctx) return;
+      const frameCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
+      const buffer = ctx.createBuffer(1, frameCount, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < frameCount; i += 1) {
+        const decay = 1 - (i / frameCount);
+        data[i] = (Math.random() * 2 - 1) * decay;
+      }
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.setValueAtTime(frequency, ctx.currentTime);
+      bandpass.Q.setValueAtTime(q, ctx.currentTime);
+
+      const highpass = ctx.createBiquadFilter();
+      highpass.type = "highpass";
+      highpass.frequency.setValueAtTime(700, ctx.currentTime);
+
+      const gain = ctx.createGain();
+      const startAt = ctx.currentTime + 0.01;
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(volume * SFX_VOLUME_MULTIPLIER, startAt + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
+
+      source.connect(bandpass);
+      bandpass.connect(highpass);
+      highpass.connect(gain);
+      gain.connect(ctx.destination);
+
+      source.start(startAt);
+      source.stop(startAt + duration + 0.02);
+    };
+
 
       const playRoadtripMoveSound = () => playRoadtripToneSequence([
         { frequency: 180, duration: 0.06, volume: 0.03, type: "triangle", gap: 0.05 },
@@ -4805,7 +4811,7 @@ miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
         popFilter.frequency.setValueAtTime(1000, startAt);
         popFilter.frequency.exponentialRampToValueAtTime(240, startAt + 0.055);
         popGain.gain.setValueAtTime(0.0001, startAt);
-        popGain.gain.exponentialRampToValueAtTime(0.06, startAt + 0.003);
+        popGain.gain.exponentialRampToValueAtTime(0.06 * SFX_VOLUME_MULTIPLIER, startAt + 0.003);
         popGain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.055);
         pop.connect(popFilter).connect(popGain).connect(ctx.destination);
         pop.start(startAt);
@@ -5685,7 +5691,7 @@ const getRoadTripEndReason = () => {
     const historyAudio = document.getElementById("history-audio");
 
     if (historyAudio) {
-       historyAudio.volume = 0.01;
+       historyAudio.volume = 0.005;
     }
     const playHistoryAudio = async () => {
       if (!historyAudio) return;
