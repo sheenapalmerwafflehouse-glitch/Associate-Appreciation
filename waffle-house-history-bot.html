@@ -223,6 +223,17 @@
       transform: none;
     }
 
+    .history-chat-panel.is-ask-mode .history-quick-title,
+    .history-chat-panel.is-ask-mode .history-more-toggle,
+    .history-chat-panel.is-ask-mode .history-quick-asks,
+    .history-chat-panel.is-ask-mode .history-quick-asks-extra {
+      display: none !important;
+    }
+
+    .history-chat-panel.is-ask-mode .history-quick-toolbar {
+      justify-content: flex-end;
+    }
+
     .history-chat-log {
       position: relative;
       flex: 1 1 auto;
@@ -609,6 +620,11 @@
         extraQuickAsks.hidden = true;
       };
 
+      const setAskMode = (active) => {
+        panel.classList.toggle("is-ask-mode", !!active);
+        setAppHeight();
+      };
+
       const prepareInteractionView = () => {
         setAppHeight();
       };
@@ -684,13 +700,6 @@
         }
       };
 
-      const collapseExtraFactsForTyping = () => {
-        if (window.innerWidth > 720) return;
-        const expanded = moreToggle.getAttribute("aria-expanded") === "true";
-        if (!expanded) return;
-        resetQuickFacts();
-      };
-
       const focusWithoutScroll = (el) => {
         if (!el) return;
         try {
@@ -701,7 +710,6 @@
       };
 
       const keepTypingAreaVisible = () => {
-        collapseExtraFactsForTyping();
         setAppHeight();
         window.setTimeout(() => {
           scrollChatToBottom("smooth");
@@ -838,6 +846,7 @@
 
       const showFollowup = (question) => {
         pendingQuestion = question;
+        setAskMode(true);
         prepareInteractionView();
         followup.hidden = false;
         askRow.hidden = true;
@@ -852,6 +861,7 @@
         log.innerHTML = "";
         hideFollowup();
         resetQuickFacts();
+        setAskMode(false);
         syncChatLogState();
         isResponding = false;
         setQuestionUiBusy(false);
@@ -891,6 +901,7 @@
       askBtn.addEventListener("click", () => {
         const q = (input.value || "").trim();
         if (!q) return;
+        setAskMode(true);
         askHistoryQuestion(q);
         input.value = "";
       });
@@ -903,17 +914,21 @@
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
-          askBtn.click();
+          const q = (input.value || "").trim();
+          if (!q) return;
+          setAskMode(true);
+          askHistoryQuestion(q);
+          input.value = "";
         }
       });
 
-    quickAskButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const question = button.dataset.question || "";
-    askHistoryQuestion(question);
-  });
-});
-
+      quickAskButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const question = button.dataset.question || "";
+          setAskMode(false);
+          askHistoryQuestion(question);
+        });
+      });
 
       moreToggle.addEventListener("click", () => {
         const expanded = moreToggle.getAttribute("aria-expanded") === "true";
