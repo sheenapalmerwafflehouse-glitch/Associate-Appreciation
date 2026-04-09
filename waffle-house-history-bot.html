@@ -275,6 +275,7 @@
       line-height: 1.5;
       font-size: 0.95rem;
       white-space: normal;
+      scroll-margin-top: 10px;
       scroll-margin-bottom: 18px;
     }
 
@@ -615,6 +616,30 @@
         });
       };
 
+      const scrollLatestExchangeIntoView = (behavior = "smooth") => {
+        requestAnimationFrame(() => {
+          const messages = Array.from(log.querySelectorAll(".history-msg"));
+          const botMsg = messages[messages.length - 1];
+          const userMsg = messages[messages.length - 2];
+
+          if (
+            userMsg &&
+            botMsg &&
+            userMsg.dataset.role === "user" &&
+            botMsg.dataset.role === "bot"
+          ) {
+            const topOffset = 8;
+            log.scrollTo({
+              top: Math.max(userMsg.offsetTop - topOffset, 0),
+              behavior
+            });
+            return;
+          }
+
+          log.scrollTo({ top: log.scrollHeight, behavior });
+        });
+      };
+
       const resetHistoryShellView = () => {
         if (document.activeElement && typeof document.activeElement.blur === "function") {
           document.activeElement.blur();
@@ -844,7 +869,7 @@
 
           if (answer) {
             addMessage("bot", answer, "smooth");
-            keepTypingAreaVisible();
+            scrollLatestExchangeIntoView("smooth");
           } else {
             addMessage(
               "bot",
