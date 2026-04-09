@@ -5747,14 +5747,31 @@ const playHistoryAudio = async () => {
   }
 };
 
-
-
-
     const stopHistoryAudio = () => {
       if (!historyAudio) return;
       historyAudio.pause();
       historyAudio.currentTime = 0;
     };
+
+ const updateHistoryMuteButton = () => {
+  if (!historyAudio || !historyAudioMute) return;
+  historyAudioMute.textContent = historyAudio.muted ? "🔇" : "🔊";
+  historyAudioMute.setAttribute(
+    "aria-label",
+    historyAudio.muted ? "Unmute history audio" : "Mute history audio"
+  );
+};
+
+historyAudioMute?.addEventListener("click", () => {
+  if (!historyAudio) return;
+  historyAudio.muted = !historyAudio.muted;
+  updateHistoryMuteButton();
+});
+
+updateHistoryMuteButton();
+
+
+   
 const closeHistoryShell = () => {
   historyShell?.classList.remove("open");
   historyShellOverlay?.classList.remove("open");
