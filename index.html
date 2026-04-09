@@ -5710,124 +5710,156 @@ const getRoadTripEndReason = () => {
   <source src="Audio/GOOD FOOD FAST.mp3" type="audio/mpeg" />
 </audio>
 
- <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const historyLauncher = document.getElementById("history-chat-launcher");
-const historyShell = document.getElementById("history-chat-shell");
-const historyShellOverlay = document.getElementById("history-shell-overlay");
-const historyAudio = document.getElementById("history-audio");
-const historyAudioControls = document.getElementById("history-audio-controls");
-const historyAudioMute = document.getElementById("history-audio-mute");
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const historyLauncher = document.getElementById("history-chat-launcher");
+  const historyShell = document.getElementById("history-chat-shell");
+  const historyShellOverlay = document.getElementById("history-shell-overlay");
+  const historyFrame = document.getElementById("history-shell-frame");
+  const historyAudio = document.getElementById("history-audio");
+  const historyAudioControls = document.getElementById("history-audio-controls");
+  const historyAudioMute = document.getElementById("history-audio-mute");
 
-    const HISTORY_AUDIO_VOLUME = 0.08; // start here for Android testing
+  const HISTORY_AUDIO_VOLUME = 0.08;
 
-if (historyAudio) {
-  historyAudio.volume = HISTORY_AUDIO_VOLUME;
-  historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
-  historyAudio.preload = "auto";
-  historyAudio.load();
-}
+  const updateHistoryMuteButton = () => {
+    if (!historyAudio || !historyAudioMute) return;
 
+    historyAudioMute.textContent = historyAudio.muted ? "🔇" : "🔊";
+    historyAudioMute.setAttribute(
+      "aria-label",
+      historyAudio.muted ? "Unmute history audio" : "Mute history audio"
+    );
+  };
 
-const playHistoryAudio = async () => {
-  if (!historyAudio) return;
-
-  try {
-    historyAudio.pause();
-    historyAudio.currentTime = 0;
-    historyAudio.volume = HISTORY_AUDIO_VOLUME;
-
-    const savedMuted = localStorage.getItem("waffle-history-audio-muted") === "true";
-    historyAudio.muted = savedMuted;
-
-    const playPromise = historyAudio.play();
-    if (playPromise && typeof playPromise.then === "function") {
-      await playPromise;
-    }
-
-    const frame = document.getElementById("history-shell-frame");
-    frame?.contentWindow?.postMessage(
-      { type: "history-audio-state", muted: historyAudio.muted },
+  const sendHistoryAudioStateToFrame = () => {
+    historyFrame?.contentWindow?.postMessage(
+      {
+        type: "history-audio-state",
+        muted: !!historyAudio?.muted
+      },
       "*"
     );
-  } catch (error) {
-    console.log("History audio could not start:", error);
+  };
+
+  if (historyAudio) {
+    historyAudio.volume = HISTORY_AUDIO_VOLUME;
+    historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
+    historyAudio.preload = "auto";
+    historyAudio.load();
   }
-};
 
+  const playHistoryAudio = async () => {
+    if (!historyAudio) return;
 
-    const stopHistoryAudio = () => {
-      if (!historyAudio) return;
+    try {
       historyAudio.pause();
       historyAudio.currentTime = 0;
-    };
+      historyAudio.volume = HISTORY_AUDIO_VOLUME;
+      historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
 
-    const openHistoryShell = () => {
-  historyShell?.classList.add("open");
-  historyShellOverlay?.classList.add("open");
-  historyShell?.setAttribute("aria-hidden", "false");
-  historyLauncher?.setAttribute("aria-expanded", "true");
-  document.body.classList.add("lightbox-open");
-  historyAudioControls?.removeAttribute("hidden");
-  playHistoryAudio();
-  updateHistoryMuteButton();
-};
-
-const closeHistoryShell = () => {
-  historyShell?.classList.remove("open");
-  historyShellOverlay?.classList.remove("open");
-  historyShell?.setAttribute("aria-hidden", "true");
-  historyLauncher?.setAttribute("aria-expanded", "false");
-  document.body.classList.remove("lightbox-open");
-  historyAudioControls?.setAttribute("hidden", "");
-  stopHistoryAudio();
-};
-
-
-    window.addEventListener("message", (event) => {
-      if (event?.data === "close-waffle-history-bot") {
-        closeHistoryShell();
+      const playPromise = historyAudio.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        await playPromise;
       }
-    });
+    } catch (error) {
+      console.log("History audio could not start:", error);
+    }
 
-    historyLauncher?.addEventListener("pointerup", (event) => {
-  event.preventDefault();
-  openHistoryShell();
-});
-    historyShellOverlay?.addEventListener("click", closeHistoryShell);
+    updateHistoryMuteButton();
+    sendHistoryAudioStateToFrame();
+  };
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && historyShell?.classList.contains("open")) {
-        closeHistoryShell();
-      }
-    });
+  const stopHistoryAudio = () => {
+    if (!historyAudio) return;
+    historyAudio.pause();
+    historyAudio.currentTime = 0;
+  };
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) stopHistoryAudio();
-    });
+  const openHistoryShell = () => {
+    historyShell?.classList.add("open");
+    historyShellOverlay?.classList.add("open");
+    historyShell?.setAttribute("aria-hidden", "false");
+    historyLauncher?.setAttribute("aria-expanded", "true");
+    document.body.classList.add("lightbox-open");
 
-    window.addEventListener("pagehide", stopHistoryAudio);
-    window.addEventListener("beforeunload", stopHistoryAudio);
+    historyAudioControls?.removeAttribute("hidden");
+    playHistoryAudio();
+  };
+
+  const closeHistoryShell = () => {
+    historyShell?.classList.remove("open");
+    historyShellOverlay?.classList.remove("open");
+    historyShell?.setAttribute("aria-hidden", "true");
+    historyLauncher?.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("lightbox-open");
+
+    historyAudioControls?.setAttribute("hidden", "");
+    stopHistoryAudio();
+  };
+
+  historyLauncher?.addEventListener("pointerup", (event) => {
+    event.preventDefault();
+    openHistoryShell();
   });
 
-   const updateHistoryMuteButton = () => {
-  if (!historyAudio || !historyAudioMute) return;
-  historyAudioMute.textContent = historyAudio.muted ? "🔇" : "🔊";
-  historyAudioMute.setAttribute(
-    "aria-label",
-    historyAudio.muted ? "Unmute history audio" : "Mute history audio"
-  );
-};
+  historyShellOverlay?.addEventListener("click", closeHistoryShell);
 
-historyAudioMute?.addEventListener("click", () => {
-  if (!historyAudio) return;
-  historyAudio.muted = !historyAudio.muted;
+  historyAudioMute?.addEventListener("click", () => {
+    if (!historyAudio) return;
+
+    historyAudio.muted = !historyAudio.muted;
+    localStorage.setItem("waffle-history-audio-muted", String(historyAudio.muted));
+
+    updateHistoryMuteButton();
+    sendHistoryAudioStateToFrame();
+  });
+
+  window.addEventListener("message", (event) => {
+    const data = event.data;
+
+    if (data === "close-waffle-history-bot") {
+      closeHistoryShell();
+      return;
+    }
+
+    if (!historyAudio) return;
+
+    if (data && data.type === "toggle-history-audio") {
+      historyAudio.muted = !historyAudio.muted;
+      localStorage.setItem("waffle-history-audio-muted", String(historyAudio.muted));
+
+      updateHistoryMuteButton();
+      sendHistoryAudioStateToFrame();
+      return;
+    }
+
+    if (data && data.type === "request-history-audio-state") {
+      updateHistoryMuteButton();
+      sendHistoryAudioStateToFrame();
+    }
+  });
+
+  historyFrame?.addEventListener("load", () => {
+    updateHistoryMuteButton();
+    sendHistoryAudioStateToFrame();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && historyShell?.classList.contains("open")) {
+      closeHistoryShell();
+    }
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopHistoryAudio();
+  });
+
+  window.addEventListener("pagehide", stopHistoryAudio);
+  window.addEventListener("beforeunload", stopHistoryAudio);
+
   updateHistoryMuteButton();
 });
-
-updateHistoryMuteButton();
-
-
 </script>
 
 
