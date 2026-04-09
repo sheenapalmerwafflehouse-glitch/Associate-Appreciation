@@ -5723,10 +5723,11 @@ const historyAudioMute = document.getElementById("history-audio-mute");
 
 if (historyAudio) {
   historyAudio.volume = HISTORY_AUDIO_VOLUME;
-  historyAudio.muted = false;
+  historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
   historyAudio.preload = "auto";
   historyAudio.load();
 }
+
 
 const playHistoryAudio = async () => {
   if (!historyAudio) return;
@@ -5734,20 +5735,25 @@ const playHistoryAudio = async () => {
   try {
     historyAudio.pause();
     historyAudio.currentTime = 0;
-    historyAudio.muted = false;
     historyAudio.volume = HISTORY_AUDIO_VOLUME;
+
+    const savedMuted = localStorage.getItem("waffle-history-audio-muted") === "true";
+    historyAudio.muted = savedMuted;
 
     const playPromise = historyAudio.play();
     if (playPromise && typeof playPromise.then === "function") {
       await playPromise;
-      console.log("History audio started successfully");
     }
+
+    const frame = document.getElementById("history-shell-frame");
+    frame?.contentWindow?.postMessage(
+      { type: "history-audio-state", muted: historyAudio.muted },
+      "*"
+    );
   } catch (error) {
     console.log("History audio could not start:", error);
   }
 };
-
-
 
 
     const stopHistoryAudio = () => {
