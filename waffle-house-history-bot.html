@@ -735,7 +735,25 @@
         }, 60);
       };
 
+      const clearHistorySession = () => {
+        log.innerHTML = "";
+        input.value = "";
+        pendingQuestion = "";
+        lastQuestionKey = "";
+        lastQuestionAt = 0;
+        isResponding = false;
+
+        hideFollowup();
+        resetQuickFacts();
+        setAskMode(false);
+        setQuestionUiBusy(false);
+        syncChatLogState();
+      };
+
       const closeHistoryBot = () => {
+        clearHistorySession();
+        resetHistoryShellView();
+
         if (window.parent && window.parent !== window) {
           window.parent.postMessage("close-waffle-history-bot", "*");
         } else if (window.history.length > 1) {
@@ -881,13 +899,7 @@
       };
 
       const seedWelcome = () => {
-        log.innerHTML = "";
-        hideFollowup();
-        resetQuickFacts();
-        setAskMode(false);
-        syncChatLogState();
-        isResponding = false;
-        setQuestionUiBusy(false);
+        clearHistorySession();
       };
 
       const askHistoryQuestion = (question) => {
@@ -1003,6 +1015,7 @@
         const data = event.data;
 
         if (data && data.type === "history-shell-reset-view") {
+          clearHistorySession();
           resetHistoryShellView();
           return;
         }
