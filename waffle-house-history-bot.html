@@ -659,6 +659,25 @@
         });
       };
 
+      const scrollFollowupContextIntoView = (behavior = "smooth") => {
+        requestAnimationFrame(() => {
+          const messages = Array.from(log.querySelectorAll(".history-msg"));
+          const lastBotMsg = [...messages].reverse().find((msg) => msg.dataset.role === "bot");
+
+          if (lastBotMsg) {
+            log.scrollTo({
+              top: Math.max(lastBotMsg.offsetTop - 8, 0),
+              behavior
+            });
+            return;
+          }
+
+          if (!followup.hidden) {
+            followup.scrollIntoView({ behavior, block: "start" });
+          }
+        });
+      };
+
       const resetHistoryShellView = () => {
         if (document.activeElement && typeof document.activeElement.blur === "function") {
           document.activeElement.blur();
@@ -852,8 +871,12 @@
         askRow.hidden = true;
 
         window.setTimeout(() => {
-          keepTypingAreaVisible();
+          scrollFollowupContextIntoView("smooth");
           focusWithoutScroll(nameInput);
+
+          window.setTimeout(() => {
+            scrollFollowupContextIntoView("smooth");
+          }, 220);
         }, 70);
       };
 
@@ -907,9 +930,18 @@
       });
 
       input.addEventListener("focus", keepTypingAreaVisible);
-      nameInput.addEventListener("focus", keepTypingAreaVisible);
-      unitInput.addEventListener("focus", keepTypingAreaVisible);
-      emailInput.addEventListener("focus", keepTypingAreaVisible);
+
+      nameInput.addEventListener("focus", () => {
+        window.setTimeout(() => scrollFollowupContextIntoView("smooth"), 120);
+      });
+
+      unitInput.addEventListener("focus", () => {
+        window.setTimeout(() => scrollFollowupContextIntoView("smooth"), 120);
+      });
+
+      emailInput.addEventListener("focus", () => {
+        window.setTimeout(() => scrollFollowupContextIntoView("smooth"), 120);
+      });
 
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -954,6 +986,8 @@
 
       cancelEmailBtn.addEventListener("click", () => {
         hideFollowup();
+        resetQuickFacts();
+        setAskMode(false);
         keepTypingAreaVisible();
       });
 
@@ -1016,6 +1050,8 @@
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
           hideFollowup();
+          resetQuickFacts();
+          setAskMode(false);
           keepTypingAreaVisible();
         }, 520);
       });
