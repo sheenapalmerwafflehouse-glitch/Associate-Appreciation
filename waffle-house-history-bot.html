@@ -907,13 +907,13 @@
         }
       });
 
-      quickAskButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const question = button.dataset.question || "";
-          resetQuickFacts();
-          askHistoryQuestion(question);
-        });
-      });
+    quickAskButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const question = button.dataset.question || "";
+    askHistoryQuestion(question);
+  });
+});
+
 
       moreToggle.addEventListener("click", () => {
         const expanded = moreToggle.getAttribute("aria-expanded") === "true";
