@@ -189,6 +189,7 @@
       flex: 0 0 auto;
     }
 
+    .history-quick-asks[hidden],
     .history-quick-asks-extra[hidden] {
       display: none;
     }
@@ -578,6 +579,7 @@
       const log = document.getElementById("history-chat-log");
       const askBtn = document.getElementById("history-ask-btn");
       const input = document.getElementById("history-question-input");
+      const primaryQuickAsks = document.getElementById("history-quick-asks");
       const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
       const followup = document.getElementById("history-chat-followup");
       const nameInput = document.getElementById("history-contact-name");
@@ -603,6 +605,7 @@
       const resetQuickFacts = () => {
         moreToggle.setAttribute("aria-expanded", "false");
         moreToggle.textContent = "More facts";
+        primaryQuickAsks.hidden = false;
         extraQuickAsks.hidden = true;
       };
 
@@ -848,6 +851,7 @@
       const seedWelcome = () => {
         log.innerHTML = "";
         hideFollowup();
+        resetQuickFacts();
         syncChatLogState();
         isResponding = false;
         setQuestionUiBusy(false);
@@ -904,14 +908,28 @@
       });
 
       quickAskButtons.forEach((button) => {
-        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
+        button.addEventListener("click", () => {
+          const question = button.dataset.question || "";
+          resetQuickFacts();
+          askHistoryQuestion(question);
+        });
       });
 
       moreToggle.addEventListener("click", () => {
         const expanded = moreToggle.getAttribute("aria-expanded") === "true";
-        moreToggle.setAttribute("aria-expanded", String(!expanded));
-        moreToggle.textContent = expanded ? "More facts" : "Fewer facts";
-        extraQuickAsks.hidden = expanded;
+
+        if (expanded) {
+          moreToggle.setAttribute("aria-expanded", "false");
+          moreToggle.textContent = "More facts";
+          primaryQuickAsks.hidden = false;
+          extraQuickAsks.hidden = true;
+        } else {
+          moreToggle.setAttribute("aria-expanded", "true");
+          moreToggle.textContent = "Fewer facts";
+          primaryQuickAsks.hidden = true;
+          extraQuickAsks.hidden = false;
+        }
+
         window.setTimeout(setAppHeight, 40);
       });
 
