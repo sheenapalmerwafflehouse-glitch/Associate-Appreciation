@@ -148,6 +148,7 @@
       box-shadow: 0 8px 16px rgba(17,17,17,0.06);
     }
 
+    
 .history-quick-actions {
   display: flex;
   align-items: center;
@@ -533,6 +534,30 @@
       const closeBtn = document.getElementById("history-chat-close");
       let pendingQuestion = "";
 
+const updateHistoryAudioButton = (muted) => {
+  if (!audioToggle) return;
+
+  audioToggle.classList.toggle("is-muted", muted);
+  audioToggle.setAttribute("aria-pressed", String(muted));
+  audioToggle.setAttribute(
+    "aria-label",
+    muted ? "Unmute history audio" : "Mute history audio"
+  );
+  audioToggle.setAttribute(
+    "title",
+    muted ? "Unmute history audio" : "Mute history audio"
+  );
+  audioToggle.textContent = muted ? "🔇 Sound Off" : "🔊 Sound On";
+};
+
+const requestHistoryAudioState = () => {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: "request-history-audio-state" }, "*");
+  }
+};
+
+
+      
       const collapseExtraFactsForTyping = () => {
         if (window.innerWidth > 720) return;
         const expanded = moreToggle.getAttribute("aria-expanded") === "true";
@@ -691,6 +716,46 @@
 
       closeBtn.addEventListener("click", closeHistoryBot);
 
+      window.addEventListener("message", (event) => {
+  const data = event.data;
+
+  if (data === "close-waffle-history-bot") {
+    closeHistoryShell();
+    return;
+  }
+
+  if (!historyAudio) return;
+
+  if (data && data.type === "toggle-history-audio") {
+    historyAudio.muted = !historyAudio.muted;
+
+    if (window.localStorage) {
+      localStorage.setItem("waffle-history-audio-muted", String(historyAudio.muted));
+    }
+
+    if (historyAudio.contentWindow) {
+      // not needed
+    }
+
+    const frame = document.getElementById("history-shell-frame");
+    frame?.contentWindow?.postMessage(
+      { type: "history-audio-state", muted: historyAudio.muted },
+      "*"
+    );
+    return;
+  }
+
+  if (data && data.type === "request-history-audio-state") {
+    const frame = document.getElementById("history-shell-frame");
+    frame?.contentWindow?.postMessage(
+      { type: "history-audio-state", muted: historyAudio.muted },
+      "*"
+    );
+  }
+});
+
+
+
       sendEmailBtn.addEventListener("click", () => {
         const name = (nameInput.value || "").trim();
         const unit = (unitInput.value || "").trim();
@@ -721,6 +786,9 @@
       });
 
       seedWelcome();
+updateHistoryAudioButton(false);
+requestHistoryAudioState();
+
     });
   </script>
 </body>
