@@ -5689,19 +5689,36 @@ const getRoadTripEndReason = () => {
     const historyShellOverlay = document.getElementById("history-shell-overlay");
     const historyAudio = document.getElementById("history-audio");
 
-    if (historyAudio) {
-       historyAudio.volume = 0.00001;
-    }
-    const playHistoryAudio = async () => {
-      if (!historyAudio) return;
+    const HISTORY_AUDIO_VOLUME = 0.002; // start here for Android testing
 
-      try {
-        historyAudio.currentTime = 0;
-        await historyAudio.play();
-      } catch (error) {
-        console.log("History audio could not start:", error);
-      }
-    };
+if (historyAudio) {
+  historyAudio.volume = HISTORY_AUDIO_VOLUME;
+  historyAudio.muted = false;
+  historyAudio.preload = "auto";
+  historyAudio.load();
+}
+
+const playHistoryAudio = async () => {
+  if (!historyAudio) return;
+
+  try {
+    historyAudio.pause();
+    historyAudio.currentTime = 0;
+    historyAudio.muted = false;
+    historyAudio.volume = HISTORY_AUDIO_VOLUME;
+
+    const playPromise = historyAudio.play();
+    if (playPromise && typeof playPromise.then === "function") {
+      await playPromise;
+      console.log("History audio started successfully");
+    }
+  } catch (error) {
+    console.log("History audio could not start:", error);
+  }
+};
+
+
+
 
     const stopHistoryAudio = () => {
       if (!historyAudio) return;
@@ -5733,7 +5750,10 @@ const getRoadTripEndReason = () => {
       }
     });
 
-    historyLauncher?.addEventListener("click", openHistoryShell);
+    historyLauncher?.addEventListener("pointerup", (event) => {
+  event.preventDefault();
+  openHistoryShell();
+});
     historyShellOverlay?.addEventListener("click", closeHistoryShell);
 
     document.addEventListener("keydown", (event) => {
