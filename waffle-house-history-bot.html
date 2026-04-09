@@ -148,31 +148,30 @@
       box-shadow: 0 8px 16px rgba(17,17,17,0.06);
     }
 
-    
-.history-quick-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+    .history-quick-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-.history-audio-toggle {
-  border: 1px solid rgba(176, 150, 44, 0.18);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #ffe66a, #f5d547);
-  color: #111;
-  font-weight: 900;
-  padding: 8px 14px;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(17,17,17,0.08);
-  white-space: nowrap;
-}
+    .history-audio-toggle {
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+      font-weight: 900;
+      padding: 8px 14px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(17,17,17,0.08);
+      white-space: nowrap;
+    }
 
-.history-audio-toggle.is-muted {
-  background: linear-gradient(180deg, #ffe66a, #f5d547);
-  color: #111;
-  box-shadow: 0 10px 20px rgba(17,17,17,0.08);
-}
+    .history-audio-toggle.is-muted {
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      color: #111;
+      box-shadow: 0 10px 20px rgba(17,17,17,0.08);
+    }
 
     .history-quick-asks,
     .history-quick-asks-extra {
@@ -206,24 +205,48 @@
       transform: translateY(-1px);
     }
 
-   .history-chat-log {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
-  padding: 16px 18px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+    .history-chat-log {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 16px 18px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.96),
+        rgba(255,250,231,0.96)
+      );
+      isolation: isolate;
+    }
 
-  background:
-    linear-gradient(rgba(255,255,255,0.76), rgba(255,255,255,0.76)),
-    url("Images/history-watermark.jpg");
-  background-repeat: no-repeat;
-  background-position: center 92%;
-  background-size: 52%;
-}
+    .history-chat-log::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(78%, 560px);
+      height: min(56%, 360px);
+      transform: translate(-50%, -50%);
+      background: url("Images/history-watermark.jpg") center center / contain no-repeat;
+      opacity: 0.16;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .history-chat-log.has-messages::before {
+      opacity: 0.06;
+    }
+
+    .history-chat-log > * {
+      position: relative;
+      z-index: 1;
+    }
 
     .history-msg {
       max-width: min(90%, 40ch);
@@ -399,6 +422,17 @@
         padding-top: 12px;
         padding-bottom: 10px;
       }
+
+      .history-chat-log::before {
+        width: 88%;
+        height: 42%;
+        top: 50%;
+        opacity: 0.13;
+      }
+
+      .history-chat-log.has-messages::before {
+        opacity: 0.05;
+      }
     }
   </style>
 </head>
@@ -411,32 +445,33 @@
         <h1>Welcome to the Archive</h1>
         <p>Tap a question below for an instant answer, or ask your own question in the chat and I'll help you send it to the archivist.</p>
       </div>
+
       <div class="history-quick-toolbar">
-  <div class="history-quick-title">Quick questions</div>
+        <div class="history-quick-title">Quick questions</div>
 
-  <div class="history-quick-actions">
-    <button
-      class="history-audio-toggle"
-      id="history-audio-toggle"
-      type="button"
-      aria-pressed="false"
-      aria-label="Mute history audio"
-      title="Mute history audio"
-    >
-      🔊 Sound On
-    </button>
+        <div class="history-quick-actions">
+          <button
+            class="history-audio-toggle"
+            id="history-audio-toggle"
+            type="button"
+            aria-pressed="false"
+            aria-label="Mute history audio"
+            title="Mute history audio"
+          >
+            🔊 Sound On
+          </button>
 
-    <button
-      class="history-more-toggle"
-      id="history-more-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="history-quick-asks-extra"
-    >
-      More facts
-    </button>
-  </div>
-</div>
+          <button
+            class="history-more-toggle"
+            id="history-more-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="history-quick-asks-extra"
+          >
+            More facts
+          </button>
+        </div>
+      </div>
 
       <div class="history-quick-asks" id="history-quick-asks">
         <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
@@ -446,6 +481,7 @@
         <button class="history-quick-ask" type="button" data-question="How many locations does Waffle House have?">Location count</button>
         <button class="history-quick-ask" type="button" data-question="What does Waffle House sell each year?">Sales numbers</button>
       </div>
+
       <div class="history-quick-asks-extra" id="history-quick-asks-extra" hidden>
         <button class="history-quick-ask" type="button" data-question="What was Unit #1's daily average?">Unit #1 daily average</button>
         <button class="history-quick-ask" type="button" data-question="What did Unit #1 look like when it opened?">Original dining room</button>
@@ -456,21 +492,26 @@
         <button class="history-quick-ask" type="button" data-question="What is the farthest west Waffle House?">Farthest west</button>
         <button class="history-quick-ask" type="button" data-question="What is the farthest north Waffle House?">Farthest north</button>
       </div>
+
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
+
       <div class="history-chat-followup" id="history-chat-followup" hidden>
         <div class="history-followup-copy" id="history-followup-copy">
           Great question! Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email address and I'll package your message for the archivist.
         </div>
+
         <div class="history-followup-grid">
           <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
           <input id="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Your unit number" aria-label="Your unit number" />
           <input id="history-contact-email" type="email" placeholder="Your email address" aria-label="Your email address" />
         </div>
+
         <div class="history-followup-actions">
           <button class="history-send-btn" id="history-send-email" type="button">Send to Archivist</button>
           <button class="history-cancel-btn" id="history-cancel-email" type="button">Not now</button>
         </div>
       </div>
+
       <div class="history-chat-composer">
         <div class="history-chat-composer-row" id="history-ask-row">
           <input id="history-question-input" type="text" placeholder="Ask a Waffle House History Question" aria-label="Ask a Waffle House History Question" />
@@ -481,354 +522,372 @@
   </main>
 
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const root = document.documentElement;
-    const setAppHeight = () => {
-      const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      root.style.setProperty("--app-height", `${height}px`);
-    };
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.documentElement;
 
-    setAppHeight();
-    window.addEventListener("resize", setAppHeight);
-    window.addEventListener("orientationchange", () => setTimeout(setAppHeight, 180));
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", setAppHeight);
-      window.visualViewport.addEventListener("scroll", setAppHeight);
-    }
+      const setAppHeight = () => {
+        const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        root.style.setProperty("--app-height", `${height}px`);
+      };
 
-    const historyFacts = [
-      { answer: "At Unit #1, pies and hashbrowns took 2 days to make.", keywords: ["unit 1", "pies", "hashbrowns", "two days", "2 days", "prep", "make", "took"] },
-      { answer: "Unit #1's daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
-      { answer: "When Waffle House opened, it started with no booths, just stools and coffee benches.", keywords: ["booths", "stools", "coffee benches", "opened", "seating", "original seating"] },
-      { answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first off-highway location opened.", keywords: ["original sign", "dripping syrup", "block logo", "highway", "off highway", "sign changed"] },
-      { answer: "Tom and Joe chose yellow for the sign so you could see it from far away, just like school buses are easy to see from far away.", keywords: ["yellow", "sign", "why yellow", "school bus", "far away", "visibility"] },
-      { answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles.", keywords: ["quick foods", "first franchise", "1967", "northlake foods", "east coast waffles", "franchise"] },
-      { answer: "In Indiana, there was already a restaurant using the Waffle House name. Waffle House first opened there as WH Coffeehouse and Waffle & Steak before getting the rights to use the Waffle House name in that state.", keywords: ["indiana", "wh coffeehouse", "waffle and steak", "waffle steak", "rights", "name", "already a restaurant"] },
-      { answer: "Ms. Lucy is one of Waffle House's longest-standing Hourly Associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004. She was known as an amazing waitress who took great care of every Customer.", keywords: ["ms lucy", "lucy", "47 years", "unit 2", "1957", "retired", "2004", "waitress"] },
-      { answer: "Waffle House introduced the People Agenda in the 1980s. It included associate benefits such as health insurance and vacation pay for full-time hourly associates.", keywords: ["people agenda", "1980s", "benefits", "health insurance", "vacation pay", "full time", "hourly associates"] },
-      { answer: "Scattered, Smothered, and Covered lingo was created by associates and was added to the menu in 1984.", keywords: ["scattered", "smothered", "covered", "lingo", "menu", "1984", "hashbrown lingo"] },
-      { answer: "Operator Bert Thornton created the recipe for Bert's Chili in Texas in 1984. Bert worked in operations for 38 years.", keywords: ["bert", "bert thornton", "bert's chili", "chili", "texas", "1984", "operations", "38 years"] },
-      { answer: "Waffle House has over 2,000 locations in 25 states.", keywords: ["locations", "how many locations", "2,000", "2000", "25 states", "states"] },
-      { answer: "The farthest west location is Unit #481 in Goodyear, Arizona.", keywords: ["farthest west", "goodyear", "arizona", "unit 481"] },
-      { answer: "The farthest north location is Unit #1830 in Austinburg, Ohio.", keywords: ["farthest north", "austinburg", "ohio", "unit 1830"] },
-      { answer: "Waffle House is about 94% company owned, with about 125 franchise locations.", keywords: ["94%", "company owned", "franchise locations", "125 franchise", "ownership"] },
-      { answer: "Waffle House sells about 300 million eggs each year.", keywords: ["eggs", "300 million", "sell each year", "sales numbers", "annual sales"] },
-      { answer: "Waffle House sells about 142 million waffles each year.", keywords: ["waffles", "142 million", "sell each year", "annual sales"] },
-      { answer: "Waffle House sells about 328 million slices of bacon each year.", keywords: ["bacon", "328 million", "slices of bacon", "sell each year", "annual sales"] },
-      { answer: "Waffle House sells about 200 million servings of hashbrowns each year.", keywords: ["hashbrowns", "200 million", "servings", "sell each year", "annual sales"] }
-    ];
-
-    const log = document.getElementById("history-chat-log");
-    const askBtn = document.getElementById("history-ask-btn");
-    const input = document.getElementById("history-question-input");
-    const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
-    const followup = document.getElementById("history-chat-followup");
-    const followupCopy = document.getElementById("history-followup-copy");
-    const nameInput = document.getElementById("history-contact-name");
-    const unitInput = document.getElementById("history-contact-unit");
-    const emailInput = document.getElementById("history-contact-email");
-    const sendEmailBtn = document.getElementById("history-send-email");
-    const cancelEmailBtn = document.getElementById("history-cancel-email");
-    const askRow = document.getElementById("history-ask-row");
-    const moreToggle = document.getElementById("history-more-toggle");
-    const extraQuickAsks = document.getElementById("history-quick-asks-extra");
-    const closeBtn = document.getElementById("history-chat-close");
-    const audioToggle = document.getElementById("history-audio-toggle");
-    let pendingQuestion = "";
-const resetHistoryShellView = () => {
-  if (document.activeElement && typeof document.activeElement.blur === "function") {
-    document.activeElement.blur();
-  }
-
-  input?.blur();
-  nameInput?.blur();
-  unitInput?.blur();
-  emailInput?.blur();
-
-  window.scrollTo(0, 0);
-  document.body.scrollTop = 0;
-  document.documentElement.scrollTop = 0;
-
-  const page = document.querySelector(".history-page");
-  const panel = document.querySelector(".history-chat-panel");
-
-  page?.scrollTo(0, 0);
-  panel?.scrollTo(0, 0);
-
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-    page?.scrollTo(0, 0);
-    panel?.scrollTo(0, 0);
-  }, 60);
-};
-
-
-    const updateHistoryAudioButton = (muted) => {
-      if (!audioToggle) return;
-
-      audioToggle.classList.toggle("is-muted", muted);
-      audioToggle.setAttribute("aria-pressed", String(muted));
-      audioToggle.setAttribute(
-        "aria-label",
-        muted ? "Unmute history audio" : "Mute history audio"
-      );
-      audioToggle.setAttribute(
-        "title",
-        muted ? "Unmute history audio" : "Mute history audio"
-      );
-      audioToggle.textContent = muted ? "🔇 Sound Off" : "🔊 Sound On";
-    };
-
-    const requestHistoryAudioState = () => {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: "request-history-audio-state" }, "*");
-      }
-    };
-
-    const collapseExtraFactsForTyping = () => {
-      if (window.innerWidth > 720) return;
-      const expanded = moreToggle.getAttribute("aria-expanded") === "true";
-      if (!expanded) return;
-      moreToggle.setAttribute("aria-expanded", "false");
-      moreToggle.textContent = "More facts";
-      extraQuickAsks.hidden = true;
-    };
-
-    const keepTypingAreaVisible = (targetEl) => {
-      collapseExtraFactsForTyping();
       setAppHeight();
-      window.setTimeout(() => {
-        (targetEl || askRow || input)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }, 180);
-    };
+      window.addEventListener("resize", setAppHeight);
+      window.addEventListener("orientationchange", () => setTimeout(setAppHeight, 180));
 
-    const closeHistoryBot = () => {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage("close-waffle-history-bot", "*");
-      } else if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = "index.html";
-      }
-    };
-
-    const escapeHtml = (text) =>
-      text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-
-    const normalize = (text) =>
-      (text || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9#\s$]/g, " ").replace(/\s+/g, " ").trim();
-
-    const scoreFact = (question, fact) => {
-      const q = normalize(question);
-      let score = 0;
-
-      fact.keywords.forEach((keyword) => {
-        const k = normalize(keyword);
-        if (!k) return;
-        if (q.includes(k)) score += k.split(" ").length > 1 ? 4 : 2;
-      });
-
-      const qWords = new Set(q.split(" "));
-      fact.keywords.forEach((keyword) => {
-        normalize(keyword).split(" ").forEach((word) => {
-          if (word && qWords.has(word)) score += 1;
-        });
-      });
-
-      if (/how many|how much|annual|each year|sell/i.test(question)) {
-        if (/million|sell each year|annual sales|sales numbers/.test(fact.keywords.join(" "))) score += 2;
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", setAppHeight);
+        window.visualViewport.addEventListener("scroll", setAppHeight);
       }
 
-      if (/who|tell me about/i.test(question) && /ms lucy|bert|tom|joe/.test(normalize(fact.answer))) {
-        score += 1;
-      }
+      const historyFacts = [
+        { answer: "At Unit #1, pies and hashbrowns took 2 days to make.", keywords: ["unit 1", "pies", "hashbrowns", "two days", "2 days", "prep", "make", "took"] },
+        { answer: "Unit #1's daily average was $183.", keywords: ["unit 1", "daily average", "$183", "183", "average", "sales"] },
+        { answer: "When Waffle House opened, it started with no booths, just stools and coffee benches.", keywords: ["booths", "stools", "coffee benches", "opened", "seating", "original seating"] },
+        { answer: "The original sign was meant to mimic dripping syrup, but it changed to the block logo when the first off-highway location opened.", keywords: ["original sign", "dripping syrup", "block logo", "highway", "off highway", "sign changed"] },
+        { answer: "Tom and Joe chose yellow for the sign so you could see it from far away, just like school buses are easy to see from far away.", keywords: ["yellow", "sign", "why yellow", "school bus", "far away", "visibility"] },
+        { answer: "Quick Foods was the first franchise in 1967. It later became Northlake Foods and is now East Coast Waffles.", keywords: ["quick foods", "first franchise", "1967", "northlake foods", "east coast waffles", "franchise"] },
+        { answer: "In Indiana, there was already a restaurant using the Waffle House name. Waffle House first opened there as WH Coffeehouse and Waffle & Steak before getting the rights to use the Waffle House name in that state.", keywords: ["indiana", "wh coffeehouse", "waffle and steak", "waffle steak", "rights", "name", "already a restaurant"] },
+        { answer: "Ms. Lucy is one of Waffle House's longest-standing Hourly Associates with 47 years of service. She worked at Unit #2 starting in 1957 and retired in 2004. She was known as an amazing waitress who took great care of every Customer.", keywords: ["ms lucy", "lucy", "47 years", "unit 2", "1957", "retired", "2004", "waitress"] },
+        { answer: "Waffle House introduced the People Agenda in the 1980s. It included associate benefits such as health insurance and vacation pay for full-time hourly associates.", keywords: ["people agenda", "1980s", "benefits", "health insurance", "vacation pay", "full time", "hourly associates"] },
+        { answer: "Scattered, Smothered, and Covered lingo was created by associates and was added to the menu in 1984.", keywords: ["scattered", "smothered", "covered", "lingo", "menu", "1984", "hashbrown lingo"] },
+        { answer: "Operator Bert Thornton created the recipe for Bert's Chili in Texas in 1984. Bert worked in operations for 38 years.", keywords: ["bert", "bert thornton", "bert's chili", "chili", "texas", "1984", "operations", "38 years"] },
+        { answer: "Waffle House has over 2,000 locations in 25 states.", keywords: ["locations", "how many locations", "2,000", "2000", "25 states", "states"] },
+        { answer: "The farthest west location is Unit #481 in Goodyear, Arizona.", keywords: ["farthest west", "goodyear", "arizona", "unit 481"] },
+        { answer: "The farthest north location is Unit #1830 in Austinburg, Ohio.", keywords: ["farthest north", "austinburg", "ohio", "unit 1830"] },
+        { answer: "Waffle House is about 94% company owned, with about 125 franchise locations.", keywords: ["94%", "company owned", "franchise locations", "125 franchise", "ownership"] },
+        { answer: "Waffle House sells about 300 million eggs each year.", keywords: ["eggs", "300 million", "sell each year", "sales numbers", "annual sales"] },
+        { answer: "Waffle House sells about 142 million waffles each year.", keywords: ["waffles", "142 million", "sell each year", "annual sales"] },
+        { answer: "Waffle House sells about 328 million slices of bacon each year.", keywords: ["bacon", "328 million", "slices of bacon", "sell each year", "annual sales"] },
+        { answer: "Waffle House sells about 200 million servings of hashbrowns each year.", keywords: ["hashbrowns", "200 million", "servings", "sell each year", "annual sales"] }
+      ];
 
-      return score;
-    };
+      const log = document.getElementById("history-chat-log");
+      const askBtn = document.getElementById("history-ask-btn");
+      const input = document.getElementById("history-question-input");
+      const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
+      const followup = document.getElementById("history-chat-followup");
+      const followupCopy = document.getElementById("history-followup-copy");
+      const nameInput = document.getElementById("history-contact-name");
+      const unitInput = document.getElementById("history-contact-unit");
+      const emailInput = document.getElementById("history-contact-email");
+      const sendEmailBtn = document.getElementById("history-send-email");
+      const cancelEmailBtn = document.getElementById("history-cancel-email");
+      const askRow = document.getElementById("history-ask-row");
+      const moreToggle = document.getElementById("history-more-toggle");
+      const extraQuickAsks = document.getElementById("history-quick-asks-extra");
+      const closeBtn = document.getElementById("history-chat-close");
+      const audioToggle = document.getElementById("history-audio-toggle");
 
-    const findAnswer = (question) => {
-      const ranked = historyFacts
-        .map((fact) => ({ fact, score: scoreFact(question, fact) }))
-        .sort((a, b) => b.score - a.score);
+      let pendingQuestion = "";
 
-      const top = ranked[0];
-      const second = ranked[1];
+      const syncChatLogState = () => {
+        log.classList.toggle("has-messages", log.children.length > 0);
+      };
 
-      if (!top || top.score < 2) return null;
-      if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
-
-      const related = ranked
-        .filter((item) => item.score >= Math.max(3, top.score - 1))
-        .slice(0, 3)
-        .map((item) => "• " + item.fact.answer)
-        .join("\n");
-
-      return related.includes("\n")
-        ? "Here are the closest matching history facts:\n" + related
-        : top.fact.answer;
-    };
-
-    const addMessage = (role, text) => {
-      const msg = document.createElement("div");
-      msg.className = `history-msg ${role}`;
-      const label = role === "bot" ? "Waffle House History Bot" : "You";
-      msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
-      log.appendChild(msg);
-      log.scrollTop = log.scrollHeight;
-    };
-
-    const hideFollowup = () => {
-      followup.hidden = true;
-      askRow.hidden = false;
-      nameInput.value = "";
-      unitInput.value = "";
-      emailInput.value = "";
-    };
-
-    const showFollowup = (question) => {
-      pendingQuestion = question;
-      followup.hidden = false;
-      askRow.hidden = true;
-      collapseExtraFactsForTyping();
-      followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email and I'll package your note for the archivist.";
-      window.setTimeout(() => {
-        keepTypingAreaVisible(followup);
-        nameInput.focus();
-      }, 70);
-    };
-
-    const seedWelcome = () => {
-      log.innerHTML = "";
-      hideFollowup();
-    };
-
-    const askHistoryQuestion = (question) => {
-      const q = (question || "").trim();
-      if (!q) return;
-
-      addMessage("user", q);
-      const answer = findAnswer(q);
-
-      window.setTimeout(() => {
-        if (answer) {
-          addMessage("bot", answer);
-          keepTypingAreaVisible(askRow);
-        } else {
-          addMessage("bot", "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it.");
-          showFollowup(q);
+      const resetHistoryShellView = () => {
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
         }
-      }, 110);
-    };
 
-    askBtn.addEventListener("click", () => {
-      const q = (input.value || "").trim();
-      if (!q) return;
-      collapseExtraFactsForTyping();
-      askHistoryQuestion(q);
-      input.value = "";
-    });
+        input?.blur();
+        nameInput?.blur();
+        unitInput?.blur();
+        emailInput?.blur();
 
-    input.addEventListener("focus", () => keepTypingAreaVisible(askRow));
-    nameInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
-    unitInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
-    emailInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
 
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        askBtn.click();
-      }
-    });
+        const page = document.querySelector(".history-page");
+        const panel = document.querySelector(".history-chat-panel");
 
-    quickAskButtons.forEach((button) => {
-      button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
-    });
+        page?.scrollTo(0, 0);
+        panel?.scrollTo(0, 0);
 
-    moreToggle.addEventListener("click", () => {
-      const expanded = moreToggle.getAttribute("aria-expanded") === "true";
-      moreToggle.setAttribute("aria-expanded", String(!expanded));
-      moreToggle.textContent = expanded ? "More facts" : "Fewer facts";
-      extraQuickAsks.hidden = expanded;
-      window.setTimeout(setAppHeight, 40);
-    });
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          page?.scrollTo(0, 0);
+          panel?.scrollTo(0, 0);
+        }, 60);
+      };
 
-    unitInput.addEventListener("input", () => {
-      unitInput.value = unitInput.value.replace(/\D+/g, "");
-    });
+      const updateHistoryAudioButton = (muted) => {
+        if (!audioToggle) return;
 
-    cancelEmailBtn.addEventListener("click", () => {
-      addMessage("bot", "No problem — your question is still here if you want to send it to the archivist later.");
-      hideFollowup();
-      keepTypingAreaVisible(askRow);
-    });
+        audioToggle.classList.toggle("is-muted", muted);
+        audioToggle.setAttribute("aria-pressed", String(muted));
+        audioToggle.setAttribute(
+          "aria-label",
+          muted ? "Unmute history audio" : "Mute history audio"
+        );
+        audioToggle.setAttribute(
+          "title",
+          muted ? "Unmute history audio" : "Mute history audio"
+        );
+        audioToggle.textContent = muted ? "🔇 Sound Off" : "🔊 Sound On";
+      };
 
-    closeBtn.addEventListener("click", closeHistoryBot);
+      const requestHistoryAudioState = () => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "request-history-audio-state" }, "*");
+        }
+      };
 
-    audioToggle?.addEventListener("click", () => {
-      if (window.parent && window.parent !== window) {
-        window.parent.postMessage({ type: "toggle-history-audio" }, "*");
-      }
-    });
+      const collapseExtraFactsForTyping = () => {
+        if (window.innerWidth > 720) return;
+        const expanded = moreToggle.getAttribute("aria-expanded") === "true";
+        if (!expanded) return;
+        moreToggle.setAttribute("aria-expanded", "false");
+        moreToggle.textContent = "More facts";
+        extraQuickAsks.hidden = true;
+      };
 
-    window.addEventListener("message", (event) => {
-      const data = event.data;
+      const keepTypingAreaVisible = (targetEl) => {
+        collapseExtraFactsForTyping();
+        setAppHeight();
+        window.setTimeout(() => {
+          (targetEl || askRow || input)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 180);
+      };
 
-      if (data && data.type === "history-shell-reset-view") {
-  resetHistoryShellView();
-  return;
-}
+      const closeHistoryBot = () => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage("close-waffle-history-bot", "*");
+        } else if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "index.html";
+        }
+      };
 
-      if (data && data.type === "history-audio-state") {
-        updateHistoryAudioButton(!!data.muted);
-        return;
-      }
-    });
+      const escapeHtml = (text) =>
+        text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
 
-    sendEmailBtn.addEventListener("click", () => {
-      const name = (nameInput.value || "").trim();
-      const unit = (unitInput.value || "").trim();
-      const email = (emailInput.value || "").trim();
-      const question = (pendingQuestion || "").trim();
+      const normalize = (text) =>
+        (text || "")
+          .toLowerCase()
+          .replace(/&/g, " and ")
+          .replace(/[^a-z0-9#\s$]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
 
-      if (!question) {
-        addMessage("bot", "Ask a question first, then I can help you send it.");
-        return;
-      }
+      const scoreFact = (question, fact) => {
+        const q = normalize(question);
+        let score = 0;
 
-      if (!name || !unit || !email) {
-        addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
-        if (!name) nameInput.focus();
-        else if (!unit) unitInput.focus();
-        else emailInput.focus();
-        return;
-      }
+        fact.keywords.forEach((keyword) => {
+          const k = normalize(keyword);
+          if (!k) return;
+          if (q.includes(k)) score += k.split(" ").length > 1 ? 4 : 2;
+        });
 
-      const subject = `Waffle House History Question from ${name}`;
-      const body = [
-        `Name: ${name}`,
-        `Unit Number: ${unit}`,
-        `Email: ${email}`,
-        "",
-        "Question:",
-        question
-      ].join("\n");
+        const qWords = new Set(q.split(" "));
+        fact.keywords.forEach((keyword) => {
+          normalize(keyword).split(" ").forEach((word) => {
+            if (word && qWords.has(word)) score += 1;
+          });
+        });
 
-      addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
+        if (/how many|how much|annual|each year|sell/i.test(question)) {
+          if (/million|sell each year|annual sales|sales numbers/.test(fact.keywords.join(" "))) score += 2;
+        }
 
-      const mailto = `mailto:archive@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        if (/who|tell me about/i.test(question) && /ms lucy|bert|tom|joe/.test(normalize(fact.answer))) {
+          score += 1;
+        }
 
-      window.setTimeout(() => {
-        window.location.href = mailto;
-        addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
+        return score;
+      };
+
+      const findAnswer = (question) => {
+        const ranked = historyFacts
+          .map((fact) => ({ fact, score: scoreFact(question, fact) }))
+          .sort((a, b) => b.score - a.score);
+
+        const top = ranked[0];
+        const second = ranked[1];
+
+        if (!top || top.score < 2) return null;
+        if (top.score >= 5 && (!second || top.score >= second.score + 2)) return top.fact.answer;
+
+        const related = ranked
+          .filter((item) => item.score >= Math.max(3, top.score - 1))
+          .slice(0, 3)
+          .map((item) => "• " + item.fact.answer)
+          .join("\n");
+
+        return related.includes("\n")
+          ? "Here are the closest matching history facts:\n" + related
+          : top.fact.answer;
+      };
+
+      const addMessage = (role, text) => {
+        const msg = document.createElement("div");
+        msg.className = `history-msg ${role}`;
+        const label = role === "bot" ? "Waffle House History Bot" : "You";
+        msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
+        log.appendChild(msg);
+        log.scrollTop = log.scrollHeight;
+        syncChatLogState();
+      };
+
+      const hideFollowup = () => {
+        followup.hidden = true;
+        askRow.hidden = false;
+        nameInput.value = "";
+        unitInput.value = "";
+        emailInput.value = "";
+      };
+
+      const showFollowup = (question) => {
+        pendingQuestion = question;
+        followup.hidden = false;
+        askRow.hidden = true;
+        collapseExtraFactsForTyping();
+        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email and I'll package your note for the archivist.";
+        window.setTimeout(() => {
+          keepTypingAreaVisible(followup);
+          nameInput.focus();
+        }, 70);
+      };
+
+      const seedWelcome = () => {
+        log.innerHTML = "";
+        hideFollowup();
+        syncChatLogState();
+      };
+
+      const askHistoryQuestion = (question) => {
+        const q = (question || "").trim();
+        if (!q) return;
+
+        addMessage("user", q);
+        const answer = findAnswer(q);
+
+        window.setTimeout(() => {
+          if (answer) {
+            addMessage("bot", answer);
+            keepTypingAreaVisible(askRow);
+          } else {
+            addMessage("bot", "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it.");
+            showFollowup(q);
+          }
+        }, 110);
+      };
+
+      askBtn.addEventListener("click", () => {
+        const q = (input.value || "").trim();
+        if (!q) return;
+        collapseExtraFactsForTyping();
+        askHistoryQuestion(q);
+        input.value = "";
+      });
+
+      input.addEventListener("focus", () => keepTypingAreaVisible(askRow));
+      nameInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+      unitInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+      emailInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          askBtn.click();
+        }
+      });
+
+      quickAskButtons.forEach((button) => {
+        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
+      });
+
+      moreToggle.addEventListener("click", () => {
+        const expanded = moreToggle.getAttribute("aria-expanded") === "true";
+        moreToggle.setAttribute("aria-expanded", String(!expanded));
+        moreToggle.textContent = expanded ? "More facts" : "Fewer facts";
+        extraQuickAsks.hidden = expanded;
+        window.setTimeout(setAppHeight, 40);
+      });
+
+      unitInput.addEventListener("input", () => {
+        unitInput.value = unitInput.value.replace(/\D+/g, "");
+      });
+
+      cancelEmailBtn.addEventListener("click", () => {
+        addMessage("bot", "No problem — your question is still here if you want to send it to the archivist later.");
         hideFollowup();
         keepTypingAreaVisible(askRow);
-      }, 520);
+      });
+
+      closeBtn.addEventListener("click", closeHistoryBot);
+
+      audioToggle?.addEventListener("click", () => {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: "toggle-history-audio" }, "*");
+        }
+      });
+
+      window.addEventListener("message", (event) => {
+        const data = event.data;
+
+        if (data && data.type === "history-shell-reset-view") {
+          resetHistoryShellView();
+          return;
+        }
+
+        if (data && data.type === "history-audio-state") {
+          updateHistoryAudioButton(!!data.muted);
+          return;
+        }
+      });
+
+      sendEmailBtn.addEventListener("click", () => {
+        const name = (nameInput.value || "").trim();
+        const unit = (unitInput.value || "").trim();
+        const email = (emailInput.value || "").trim();
+        const question = (pendingQuestion || "").trim();
+
+        if (!question) {
+          addMessage("bot", "Ask a question first, then I can help you send it.");
+          return;
+        }
+
+        if (!name || !unit || !email) {
+          addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
+          if (!name) nameInput.focus();
+          else if (!unit) unitInput.focus();
+          else emailInput.focus();
+          return;
+        }
+
+        const subject = `Waffle House History Question from ${name}`;
+        const body = [
+          `Name: ${name}`,
+          `Unit Number: ${unit}`,
+          `Email: ${email}`,
+          "",
+          "Question:",
+          question
+        ].join("\n");
+
+        addMessage("bot", `Thanks, ${name}. I'm packaging your question for the archivist now.`);
+
+        const mailto = `mailto:archive@wafflehouse.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        window.setTimeout(() => {
+          window.location.href = mailto;
+          addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
+          hideFollowup();
+          keepTypingAreaVisible(askRow);
+        }, 520);
+      });
+
+      seedWelcome();
+      requestHistoryAudioState();
     });
-
-    seedWelcome();
-    requestHistoryAudioState();
-  });
-</script>
-
+  </script>
 </body>
 </html>
