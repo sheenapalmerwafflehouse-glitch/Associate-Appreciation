@@ -5688,8 +5688,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyShellOverlay = document.getElementById("history-shell-overlay");
   const historyFrame = document.getElementById("history-shell-frame");
   const historyAudio = document.getElementById("history-audio");
-  const historyAudioControls = document.getElementById("history-audio-controls");
-  const historyAudioMute = document.getElementById("history-audio-mute");
+ 
 
   const HISTORY_AUDIO_VOLUME = 0.08;
 
@@ -5754,7 +5753,6 @@ document.addEventListener("DOMContentLoaded", () => {
     historyLauncher?.setAttribute("aria-expanded", "true");
     document.body.classList.add("lightbox-open");
 
-    historyAudioControls?.removeAttribute("hidden");
     playHistoryAudio();
   };
 
@@ -5765,7 +5763,7 @@ document.addEventListener("DOMContentLoaded", () => {
     historyLauncher?.setAttribute("aria-expanded", "false");
     document.body.classList.remove("lightbox-open");
 
-    historyAudioControls?.setAttribute("hidden", "");
+  
     stopHistoryAudio();
   };
 
@@ -5776,16 +5774,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   historyShellOverlay?.addEventListener("click", closeHistoryShell);
 
-  historyAudioMute?.addEventListener("click", () => {
-    if (!historyAudio) return;
-
-    historyAudio.muted = !historyAudio.muted;
-    localStorage.setItem("waffle-history-audio-muted", String(historyAudio.muted));
-
-    updateHistoryMuteButton();
-    sendHistoryAudioStateToFrame();
-  });
-
+  
   window.addEventListener("message", (event) => {
     const data = event.data;
 
