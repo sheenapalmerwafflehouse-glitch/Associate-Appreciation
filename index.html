@@ -560,7 +560,7 @@
       z-index: 8;
       transform: translate3d(var(--ball-x, -120px), var(--ball-y, -120px), 0) scale(var(--ball-scale, 0.84));
       transition:
-        transform 2000ms cubic-bezier(0.2, 0.88, 0.18, 1),
+        transform 1200ms cubic-bezier(0.2, 0.88, 0.18, 1),
         opacity 240ms ease;
       will-change: transform, opacity;
       filter: drop-shadow(0 12px 18px rgba(92, 77, 19, 0.18));
@@ -572,7 +572,7 @@
 
     .hero-ball-drop.is-done {
       opacity: 0;
-      transition-duration: 420ms;
+      transition-duration: 260ms;
     }
 
     .hero-ball-drop img {
@@ -5043,7 +5043,7 @@ const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
 
         window.setTimeout(() => {
           heroBallDrop.classList.add('is-done');
-        }, 2000);
+        }, 1200);
       };
 
       const scrollRoadTripMapToCurrent = () => {
@@ -5755,6 +5755,15 @@ const playHistoryAudio = async () => {
       historyAudio.pause();
       historyAudio.currentTime = 0;
     };
+const closeHistoryShell = () => {
+  historyShell?.classList.remove("open");
+  historyShellOverlay?.classList.remove("open");
+  historyShell?.setAttribute("aria-hidden", "true");
+  historyLauncher?.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("lightbox-open");
+  historyAudioControls?.setAttribute("hidden", "");
+  stopHistoryAudio();
+};
 
     const openHistoryShell = () => {
   historyShell?.classList.add("open");
@@ -5804,22 +5813,8 @@ const closeHistoryShell = () => {
     window.addEventListener("beforeunload", stopHistoryAudio);
   });
 
-   const updateHistoryMuteButton = () => {
-  if (!historyAudio || !historyAudioMute) return;
-  historyAudioMute.textContent = historyAudio.muted ? "🔇" : "🔊";
-  historyAudioMute.setAttribute(
-    "aria-label",
-    historyAudio.muted ? "Unmute history audio" : "Mute history audio"
-  );
-};
+   
 
-historyAudioMute?.addEventListener("click", () => {
-  if (!historyAudio) return;
-  historyAudio.muted = !historyAudio.muted;
-  updateHistoryMuteButton();
-});
-
-updateHistoryMuteButton();
 
 
 </script>
