@@ -3178,8 +3178,33 @@
         right: 10px;
         width: 44px;
         height: 44px;
-      }
+      }   
     }
+.history-audio-controls {
+  position: fixed;
+  left: 16px;
+  bottom: 70px;
+  z-index: 4560;
+}
+
+.history-audio-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffe66a, #f5d547);
+  color: #111;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(17,17,17,0.12);
+}
+
+@media (max-width: 700px) {
+  .history-audio-controls {
+    left: 12px;
+    bottom: 62px;
+  }
+}
 
   </style>
 </head>
@@ -5664,6 +5689,10 @@ const getRoadTripEndReason = () => {
       <span class="history-fab-label">Explore Waffle House History</span>
     </button>
   </div>
+  <div class="history-audio-controls" id="history-audio-controls" hidden>
+  <button class="history-audio-btn" id="history-audio-mute" type="button" aria-label="Mute history audio">🔊</button>
+</div>
+
 
   <div class="history-shell-overlay" id="history-shell-overlay"></div>
 
@@ -5683,11 +5712,12 @@ const getRoadTripEndReason = () => {
 
  <script>
   document.addEventListener("DOMContentLoaded", () => {
-    const eapLink = document.getElementById("eap-link");
     const historyLauncher = document.getElementById("history-chat-launcher");
-    const historyShell = document.getElementById("history-chat-shell");
-    const historyShellOverlay = document.getElementById("history-shell-overlay");
-    const historyAudio = document.getElementById("history-audio");
+const historyShell = document.getElementById("history-chat-shell");
+const historyShellOverlay = document.getElementById("history-shell-overlay");
+const historyAudio = document.getElementById("history-audio");
+const historyAudioControls = document.getElementById("history-audio-controls");
+const historyAudioMute = document.getElementById("history-audio-mute");
 
     const HISTORY_AUDIO_VOLUME = 0.002; // start here for Android testing
 
@@ -5727,22 +5757,26 @@ const playHistoryAudio = async () => {
     };
 
     const openHistoryShell = () => {
-      historyShell?.classList.add("open");
-      historyShellOverlay?.classList.add("open");
-      historyShell?.setAttribute("aria-hidden", "false");
-      historyLauncher?.setAttribute("aria-expanded", "true");
-      document.body.classList.add("lightbox-open");
-      playHistoryAudio();
-    };
+  historyShell?.classList.add("open");
+  historyShellOverlay?.classList.add("open");
+  historyShell?.setAttribute("aria-hidden", "false");
+  historyLauncher?.setAttribute("aria-expanded", "true");
+  document.body.classList.add("lightbox-open");
+  historyAudioControls?.removeAttribute("hidden");
+  playHistoryAudio();
+  updateHistoryMuteButton();
+};
 
-    const closeHistoryShell = () => {
-      historyShell?.classList.remove("open");
-      historyShellOverlay?.classList.remove("open");
-      historyShell?.setAttribute("aria-hidden", "true");
-      historyLauncher?.setAttribute("aria-expanded", "false");
-      document.body.classList.remove("lightbox-open");
-      stopHistoryAudio();
-    };
+const closeHistoryShell = () => {
+  historyShell?.classList.remove("open");
+  historyShellOverlay?.classList.remove("open");
+  historyShell?.setAttribute("aria-hidden", "true");
+  historyLauncher?.setAttribute("aria-expanded", "false");
+  document.body.classList.remove("lightbox-open");
+  historyAudioControls?.setAttribute("hidden", "");
+  stopHistoryAudio();
+};
+
 
     window.addEventListener("message", (event) => {
       if (event?.data === "close-waffle-history-bot") {
@@ -5769,6 +5803,25 @@ const playHistoryAudio = async () => {
     window.addEventListener("pagehide", stopHistoryAudio);
     window.addEventListener("beforeunload", stopHistoryAudio);
   });
+
+   const updateHistoryMuteButton = () => {
+  if (!historyAudio || !historyAudioMute) return;
+  historyAudioMute.textContent = historyAudio.muted ? "🔇" : "🔊";
+  historyAudioMute.setAttribute(
+    "aria-label",
+    historyAudio.muted ? "Unmute history audio" : "Mute history audio"
+  );
+};
+
+historyAudioMute?.addEventListener("click", () => {
+  if (!historyAudio) return;
+  historyAudio.muted = !historyAudio.muted;
+  updateHistoryMuteButton();
+});
+
+updateHistoryMuteButton();
+
+
 </script>
 
 
