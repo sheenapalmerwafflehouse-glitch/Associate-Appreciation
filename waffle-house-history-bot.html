@@ -205,21 +205,29 @@
       transform: translateY(-1px);
     }
 
+    /* Conversation mode: after first interaction, collapse the fact-picker area */
+    .history-chat-panel.is-conversation .history-quick-toolbar,
+    .history-chat-panel.is-conversation .history-quick-asks,
+    .history-chat-panel.is-conversation .history-quick-asks-extra {
+      display: none;
+    }
+
     .history-chat-log {
       position: relative;
       flex: 1 1 auto;
       min-height: 0;
       overflow: auto;
-      padding: 16px 18px 12px;
+      padding: 14px 18px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
+      scroll-padding-bottom: 18px;
       background: linear-gradient(
         180deg,
-        rgba(255,255,255,0.96),
-        rgba(255,250,231,0.96)
+        rgba(255,255,255,0.95),
+        rgba(255,250,231,0.95)
       );
       isolation: isolate;
     }
@@ -228,19 +236,19 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 50%;
-      width: min(78%, 560px);
-      height: min(56%, 360px);
+      top: 42%;
+      width: min(86%, 640px);
+      height: min(66%, 420px);
       transform: translate(-50%, -50%);
       background: url("Images/history-watermark.jpg") center center / contain no-repeat;
-      opacity: 0.16;
+      opacity: 0.18;
       pointer-events: none;
       z-index: 0;
       transition: opacity 0.25s ease;
     }
 
     .history-chat-log.has-messages::before {
-      opacity: 0.06;
+      opacity: 0.055;
     }
 
     .history-chat-log > * {
@@ -256,6 +264,7 @@
       line-height: 1.5;
       font-size: 0.95rem;
       white-space: normal;
+      scroll-margin-bottom: 18px;
     }
 
     .history-msg small {
@@ -424,10 +433,10 @@
       }
 
       .history-chat-log::before {
-        width: 88%;
-        height: 42%;
-        top: 50%;
-        opacity: 0.13;
+        top: 46%;
+        width: 92%;
+        height: 50%;
+        opacity: 0.16;
       }
 
       .history-chat-log.has-messages::before {
@@ -438,7 +447,7 @@
 </head>
 <body>
   <main class="history-page">
-    <section class="history-chat-panel" aria-label="Waffle House History Bot">
+    <section class="history-chat-panel" id="history-chat-panel" aria-label="Waffle House History Bot">
       <div class="history-chat-top">
         <div class="history-chat-eyebrow">Since 1955</div>
         <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history bot">&times;</button>
@@ -561,6 +570,7 @@
         { answer: "Waffle House sells about 200 million servings of hashbrowns each year.", keywords: ["hashbrowns", "200 million", "servings", "sell each year", "annual sales"] }
       ];
 
+      const panel = document.getElementById("history-chat-panel");
       const log = document.getElementById("history-chat-log");
       const askBtn = document.getElementById("history-ask-btn");
       const input = document.getElementById("history-question-input");
@@ -584,6 +594,29 @@
         log.classList.toggle("has-messages", log.children.length > 0);
       };
 
+      const resetQuickFacts = () => {
+        moreToggle.setAttribute("aria-expanded", "false");
+        moreToggle.textContent = "More facts";
+        extraQuickAsks.hidden = true;
+      };
+
+      const enterConversationMode = () => {
+        resetQuickFacts();
+        panel.classList.add("is-conversation");
+        setAppHeight();
+      };
+
+      const scrollLastMessageIntoView = (behavior = "smooth") => {
+        requestAnimationFrame(() => {
+          const last = log.lastElementChild;
+          if (last) {
+            last.scrollIntoView({ behavior, block: "end" });
+          } else {
+            log.scrollTo({ top: log.scrollHeight, behavior });
+          }
+        });
+      };
+
       const resetHistoryShellView = () => {
         if (document.activeElement && typeof document.activeElement.blur === "function") {
           document.activeElement.blur();
@@ -599,8 +632,6 @@
         document.documentElement.scrollTop = 0;
 
         const page = document.querySelector(".history-page");
-        const panel = document.querySelector(".history-chat-panel");
-
         page?.scrollTo(0, 0);
         panel?.scrollTo(0, 0);
 
@@ -637,9 +668,7 @@
         if (window.innerWidth > 720) return;
         const expanded = moreToggle.getAttribute("aria-expanded") === "true";
         if (!expanded) return;
-        moreToggle.setAttribute("aria-expanded", "false");
-        moreToggle.textContent = "More facts";
-        extraQuickAsks.hidden = true;
+        resetQuickFacts();
       };
 
       const keepTypingAreaVisible = (targetEl) => {
@@ -726,14 +755,18 @@
           : top.fact.answer;
       };
 
-      const addMessage = (role, text) => {
+      const addMessage = (role, text, behavior = "smooth") => {
         const msg = document.createElement("div");
         msg.className = `history-msg ${role}`;
         const label = role === "bot" ? "Waffle House History Bot" : "You";
         msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
         log.appendChild(msg);
-        log.scrollTop = log.scrollHeight;
         syncChatLogState();
+        requestAnimationFrame(() => {
+          msg.scrollIntoView({ behavior, block: "end" });
+          log.scrollTop = log.scrollHeight;
+        });
+        return msg;
       };
 
       const hideFollowup = () => {
@@ -746,9 +779,9 @@
 
       const showFollowup = (question) => {
         pendingQuestion = question;
+        enterConversationMode();
         followup.hidden = false;
         askRow.hidden = true;
-        collapseExtraFactsForTyping();
         followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email and I'll package your note for the archivist.";
         window.setTimeout(() => {
           keepTypingAreaVisible(followup);
@@ -766,24 +799,30 @@
         const q = (question || "").trim();
         if (!q) return;
 
-        addMessage("user", q);
-        const answer = findAnswer(q);
+        enterConversationMode();
+        addMessage("user", q, "auto");
 
         window.setTimeout(() => {
+          const answer = findAnswer(q);
+
           if (answer) {
-            addMessage("bot", answer);
+            addMessage("bot", answer, "smooth");
+            scrollLastMessageIntoView("smooth");
             keepTypingAreaVisible(askRow);
           } else {
-            addMessage("bot", "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it.");
+            addMessage(
+              "bot",
+              "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it.",
+              "smooth"
+            );
             showFollowup(q);
           }
-        }, 110);
+        }, 160);
       };
 
       askBtn.addEventListener("click", () => {
         const q = (input.value || "").trim();
         if (!q) return;
-        collapseExtraFactsForTyping();
         askHistoryQuestion(q);
         input.value = "";
       });
