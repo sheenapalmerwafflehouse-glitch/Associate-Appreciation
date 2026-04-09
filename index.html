@@ -3861,7 +3861,7 @@
     
     let roadtripAudioContext = null;
     let roadtripAudioUnlocked = false;
-    const SFX_VOLUME_MULTIPLIER = 6;
+    const SFX_VOLUME_MULTIPLIER = 10;
     let roadTripPromptFlags = { fuel2: false, fuel1: false, nearGoal: false, bonusNearby: false };
 
 
@@ -5690,7 +5690,7 @@ const getRoadTripEndReason = () => {
     const historyAudio = document.getElementById("history-audio");
 
     if (historyAudio) {
-       historyAudio.volume = 0.00002;
+       historyAudio.volume = 0.00001;
     }
     const playHistoryAudio = async () => {
       if (!historyAudio) return;
