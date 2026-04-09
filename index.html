@@ -181,40 +181,40 @@
   z-index: 1;
 }
 
-.mini-nav-hint {
+.mini-nav-arrow {
   flex: 0 0 auto;
-  display: static;
-  transform: none;
+  width: 42px;
+  height: 42px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  box-shadow: none;
+  border: 1px solid rgba(176, 150, 44, 0.18);
+  border-radius: 999px;
+  background: #ffffff;
   color: #7d8652;
-  font-size: 0.97rem;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 1;
-  visibility: visible;
-  position: relative;
-  top: -2px;
-}
-
-.mini-nav-hint.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.mini-nav-hint-arrow {
   font-size: 1.2rem;
+  font-weight: 900;
   line-height: 1;
-  color: #7d8652;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(92, 77, 19, 0.05);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
+
+.mini-nav-arrow:hover {
+  transform: translateY(-1px);
+  background: #fffdf2;
+  border-color: rgba(212, 176, 0, 0.24);
+}
+
+.mini-nav-arrow:active {
+  transform: translateY(0);
+}
+
+.mini-nav-arrow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 
 
     .mini-nav a {
@@ -2551,20 +2551,17 @@
       .roadtrip-intro-title { font-size: clamp(1.2rem, 5.4vw, 1.6rem); }
     }
 
-    @media (max-width: 640px) {   
+   @media (max-width: 640px) {
   .mini-nav-shell {
-  gap: 8px;
-}
+    gap: 8px;
+  }
 
-.mini-nav-hint {
-  padding: 5px 8px;
-  font-size: 0.72rem;
-  gap: 5px;
-}
+  .mini-nav-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
 
-.mini-nav-hint-arrow {
-  font-size: 1rem;
-}
       :root { --media-frame-min-height: 260px; }
       html { scroll-padding-top: 126px; }
       .topbar-inner { padding-top: 8px; gap: 6px; }
@@ -3199,7 +3196,12 @@
         <img src="Images/Mission Module Pics (17).png" alt="Waffle House Logo" class="nav-logo" />
       </div>
 
-    <div class="mini-nav-shell">
+    
+<div class="mini-nav-shell">
+  <button class="mini-nav-arrow" id="mini-nav-left" type="button" aria-label="Scroll navigation left">
+    ←
+  </button>
+
   <div class="mini-nav-wrap" aria-label="Section Navigation">
     <nav class="mini-nav" id="mini-nav">
       <a href="about.html" id="eap-link" target="_top">Employee Assistance Program</a>
@@ -3213,9 +3215,9 @@
     </nav>
   </div>
 
-  <div class="mini-nav-hint" id="mini-nav-hint" aria-hidden="true">
-    <span>← Scroll →</span>
-  </div>
+  <button class="mini-nav-arrow" id="mini-nav-right" type="button" aria-label="Scroll navigation right">
+    →
+  </button>
 </div>
 
     </div>
@@ -3716,7 +3718,8 @@
       const heroBallMedia = document.getElementById("hero-ball-media");
       const miniNavLinks = Array.from(document.querySelectorAll(".mini-nav a"));
       const miniNavWrap = document.querySelector(".mini-nav-wrap");
-      const miniNavHint = document.getElementById("mini-nav-hint");
+      const miniNavLeft = document.getElementById("mini-nav-left");
+      const miniNavRight = document.getElementById("mini-nav-right"); 
       const photoFlashLink = document.getElementById("photo-flash-link");
       const lyricLineHost = document.getElementById("lyric-line-host");
       const lyricScrubber = document.getElementById("lyric-scrubber");
@@ -4254,24 +4257,40 @@ const applyRoadTripLayout = (levelKey = "base") => {
           if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
         });
       };
-     const updateMiniNavHint = () => {
-     if (!miniNavWrap || !miniNavHint) return;
+     const updateMiniNavArrows = () => {
+  if (!miniNavWrap || !miniNavLeft || !miniNavRight) return;
 
-     const canScroll = miniNavWrap.scrollWidth > miniNavWrap.clientWidth + 8;
-     const atEnd = miniNavWrap.scrollLeft + miniNavWrap.clientWidth >= miniNavWrap.scrollWidth - 8;
+  const canScroll = miniNavWrap.scrollWidth > miniNavWrap.clientWidth + 8;
+  const atStart = miniNavWrap.scrollLeft <= 8;
+  const atEnd = miniNavWrap.scrollLeft + miniNavWrap.clientWidth >= miniNavWrap.scrollWidth - 8;
 
-     miniNavHint.classList.toggle("show", canScroll && !atEnd);
-   };
-
+  miniNavLeft.disabled = !canScroll || atStart;
+  miniNavRight.disabled = !canScroll || atEnd;
+};
 
       updateProgressBar();
 setActiveMiniNav();
-updateMiniNavHint();
+updateMiniNavArrows();
 
 window.addEventListener("scroll", updateProgressBar, { passive: true });
 window.addEventListener("scroll", setActiveMiniNav, { passive: true });
-window.addEventListener("resize", updateMiniNavHint);
-miniNavWrap?.addEventListener("scroll", updateMiniNavHint, { passive: true });
+window.addEventListener("resize", updateMiniNavArrows);
+miniNavWrap?.addEventListener("scroll", updateMiniNavArrows, { passive: true });
+
+miniNavLeft?.addEventListener("click", () => {
+  miniNavWrap?.scrollBy({
+    left: -220,
+    behavior: "smooth"
+  });
+});
+
+miniNavRight?.addEventListener("click", () => {
+  miniNavWrap?.scrollBy({
+    left: 220,
+    behavior: "smooth"
+  });
+});
+
 
 
 
