@@ -130,15 +130,13 @@ body {
   width: min(900px, calc(100vw - 32px));
   max-width: 900px;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 }
 
 .mini-nav-wrap {
-  flex: 1 1 auto;
-  width: auto;
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -146,6 +144,7 @@ body {
   scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
+
 
 
 .mini-nav-wrap::-webkit-scrollbar {
@@ -2550,15 +2549,16 @@ body {
    @media (max-width: 640px) {
  
 .mini-nav-shell {
-  width: 100%;
+  width: calc(100vw - 16px);
   max-width: none;
-  margin: 0;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
   gap: 8px;
 }
 
 .mini-nav-wrap {
-  width: auto;
-  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -2567,6 +2567,8 @@ body {
   height: 36px;
   font-size: 1rem;
 }
+
+
 
 
       :root { --media-frame-min-height: 260px; }
@@ -4266,39 +4268,52 @@ const applyRoadTripLayout = (levelKey = "base") => {
           if (href && href.startsWith("#")) link.classList.toggle("active", href === `#${activeId}`);
         });
       };
-     const updateMiniNavArrows = () => {
+    const NAV_SCROLL_AMOUNT = 220;
+
+const updateMiniNavArrows = () => {
   if (!miniNavWrap || !miniNavLeft || !miniNavRight) return;
 
-  const canScroll = miniNavWrap.scrollWidth > miniNavWrap.clientWidth + 8;
-  const atStart = miniNavWrap.scrollLeft <= 8;
-  const atEnd = miniNavWrap.scrollLeft + miniNavWrap.clientWidth >= miniNavWrap.scrollWidth - 8;
+  const maxScroll = Math.max(0, miniNavWrap.scrollWidth - miniNavWrap.clientWidth);
+  const currentScroll = miniNavWrap.scrollLeft;
 
-  miniNavLeft.disabled = !canScroll || atStart;
-  miniNavRight.disabled = !canScroll || atEnd;
+  const atStart = currentScroll <= 2;
+  const atEnd = currentScroll >= maxScroll - 2;
+
+  miniNavLeft.disabled = atStart;
+  miniNavRight.disabled = atEnd;
 };
 
-      updateProgressBar();
+const scrollMiniNav = (direction) => {
+  if (!miniNavWrap) return;
+
+  miniNavWrap.scrollBy({
+    left: direction * NAV_SCROLL_AMOUNT,
+    behavior: "smooth"
+  });
+
+  window.setTimeout(updateMiniNavArrows, 250);
+};
+
+updateProgressBar();
 setActiveMiniNav();
-updateMiniNavArrows();
 
 window.addEventListener("scroll", updateProgressBar, { passive: true });
 window.addEventListener("scroll", setActiveMiniNav, { passive: true });
 window.addEventListener("resize", updateMiniNavArrows);
+window.addEventListener("load", updateMiniNavArrows);
+
 miniNavWrap?.addEventListener("scroll", updateMiniNavArrows, { passive: true });
 
 miniNavLeft?.addEventListener("click", () => {
-  miniNavWrap?.scrollBy({
-    left: -220,
-    behavior: "smooth"
-  });
+  scrollMiniNav(-1);
 });
 
 miniNavRight?.addEventListener("click", () => {
-  miniNavWrap?.scrollBy({
-    left: 220,
-    behavior: "smooth"
-  });
+  scrollMiniNav(1);
 });
+
+requestAnimationFrame(updateMiniNavArrows);
+window.setTimeout(updateMiniNavArrows, 150);
 
 
 
