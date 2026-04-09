@@ -208,7 +208,7 @@
     .history-chat-log {
       position: relative;
       flex: 1 1 auto;
-      min-height: clamp(220px, 32vh, 380px);
+      min-height: clamp(240px, 34vh, 420px);
       overflow: auto;
       padding: 18px 18px 14px;
       display: flex;
@@ -216,7 +216,7 @@
       gap: 10px;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
-      scroll-padding-bottom: 20px;
+      overscroll-behavior: contain;
       border-top: 1px solid rgba(176, 150, 44, 0.12);
       background: linear-gradient(
         180deg,
@@ -258,7 +258,6 @@
       line-height: 1.5;
       font-size: 0.95rem;
       white-space: normal;
-      scroll-margin-bottom: 18px;
     }
 
     .history-msg small {
@@ -422,7 +421,7 @@
       }
 
       .history-chat-log {
-        min-height: clamp(240px, 34vh, 420px);
+        min-height: clamp(260px, 36vh, 440px);
         padding-top: 14px;
         padding-bottom: 12px;
       }
@@ -568,7 +567,6 @@
       const log = document.getElementById("history-chat-log");
       const askBtn = document.getElementById("history-ask-btn");
       const input = document.getElementById("history-question-input");
-      const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
       const followup = document.getElementById("history-chat-followup");
       const followupCopy = document.getElementById("history-followup-copy");
       const nameInput = document.getElementById("history-contact-name");
@@ -594,10 +592,12 @@
         extraQuickAsks.hidden = true;
       };
 
-      const focusChatArea = () => {
+      const scrollChatToLatest = (behavior = "smooth") => {
         requestAnimationFrame(() => {
-          log.scrollTo({ top: log.scrollHeight, behavior: "smooth" });
-          log.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          log.scrollTo({
+            top: log.scrollHeight,
+            behavior
+          });
         });
       };
 
@@ -748,12 +748,7 @@
         msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
         log.appendChild(msg);
         syncChatLogState();
-
-        requestAnimationFrame(() => {
-          msg.scrollIntoView({ behavior, block: "end" });
-          log.scrollTop = log.scrollHeight;
-        });
-
+        scrollChatToLatest(behavior);
         return msg;
       };
 
@@ -782,24 +777,15 @@
         syncChatLogState();
       };
 
-      const askHistoryQuestion = (question, source = "manual") => {
-        const q = (question || "").trim();
-        if (!q) return;
-
-        if (source === "quick") {
-          resetQuickFacts();
-        }
-
+      const runHistoryQuestion = (q) => {
         hideFollowup();
-        addMessage("user", q, "smooth");
-        focusChatArea();
+        addMessage("user", q, "auto");
 
         window.setTimeout(() => {
           const answer = findAnswer(q);
 
           if (answer) {
             addMessage("bot", answer, "smooth");
-            focusChatArea();
           } else {
             addMessage(
               "bot",
@@ -809,6 +795,23 @@
             showFollowup(q);
           }
         }, 180);
+      };
+
+      const askHistoryQuestion = (question, source = "manual") => {
+        const q = (question || "").trim();
+        if (!q) return;
+
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
+        }
+
+        if (source === "quick") {
+          resetQuickFacts();
+          window.setTimeout(() => runHistoryQuestion(q), 60);
+          return;
+        }
+
+        runHistoryQuestion(q);
       };
 
       askBtn.addEventListener("click", () => {
@@ -830,10 +833,10 @@
         }
       });
 
-      quickAskButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          askHistoryQuestion(button.dataset.question || "", "quick");
-        });
+      document.addEventListener("click", (event) => {
+        const quickButton = event.target.closest(".history-quick-ask");
+        if (!quickButton) return;
+        askHistoryQuestion(quickButton.dataset.question || "", "quick");
       });
 
       moreToggle.addEventListener("click", () => {
