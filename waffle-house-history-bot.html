@@ -535,6 +535,33 @@
     const closeBtn = document.getElementById("history-chat-close");
     const audioToggle = document.getElementById("history-audio-toggle");
     let pendingQuestion = "";
+const resetHistoryShellView = () => {
+  if (document.activeElement && typeof document.activeElement.blur === "function") {
+    document.activeElement.blur();
+  }
+
+  input?.blur();
+  nameInput?.blur();
+  unitInput?.blur();
+  emailInput?.blur();
+
+  window.scrollTo(0, 0);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+
+  const page = document.querySelector(".history-page");
+  const panel = document.querySelector(".history-chat-panel");
+
+  page?.scrollTo(0, 0);
+  panel?.scrollTo(0, 0);
+
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+    page?.scrollTo(0, 0);
+    panel?.scrollTo(0, 0);
+  }, 60);
+};
+
 
     const updateHistoryAudioButton = (muted) => {
       if (!audioToggle) return;
@@ -745,8 +772,15 @@
 
     window.addEventListener("message", (event) => {
       const data = event.data;
+
+      if (data && data.type === "history-shell-reset-view") {
+  resetHistoryShellView();
+  return;
+}
+
       if (data && data.type === "history-audio-state") {
         updateHistoryAudioButton(!!data.muted);
+        return;
       }
     });
 
