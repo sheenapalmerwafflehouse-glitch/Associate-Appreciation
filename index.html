@@ -5690,6 +5690,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyAudio = document.getElementById("history-audio");
 
   const HISTORY_AUDIO_VOLUME = 0.08;
+  const HISTORY_MUTE_STORAGE_KEY = "waffle-history-audio-muted";
+
+  const isHistoryShellOpen = () => historyShell?.classList.contains("open");
+
+  const applyStoredHistoryAudioState = () => {
+    if (!historyAudio) return;
+    historyAudio.volume = HISTORY_AUDIO_VOLUME;
+    historyAudio.muted = localStorage.getItem(HISTORY_MUTE_STORAGE_KEY) === "true";
+  };
 
   const sendHistoryAudioStateToFrame = () => {
     historyFrame?.contentWindow?.postMessage(
@@ -5701,37 +5710,67 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   };
 
+  const updateHistoryMuteButton = () => {
+    sendHistoryAudioStateToFrame();
+  };
+
   if (historyAudio) {
-    historyAudio.volume = HISTORY_AUDIO_VOLUME;
-    historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
+    applyStoredHistoryAudioState();
     historyAudio.preload = "auto";
     historyAudio.load();
   }
 
-  const playHistoryAudio = async () => {
+  const startHistoryAudioFromTop = async () => {
     if (!historyAudio) return;
 
     try {
       historyAudio.pause();
       historyAudio.currentTime = 0;
-      historyAudio.volume = HISTORY_AUDIO_VOLUME;
-      historyAudio.muted = localStorage.getItem("waffle-history-audio-muted") === "true";
+      applyStoredHistoryAudioState();
 
-      const playPromise = historyAudio.play();
-      if (playPromise && typeof playPromise.then === "function") {
-        await playPromise;
+      if (!historyAudio.muted) {
+        const playPromise = historyAudio.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          await playPromise;
+        }
       }
     } catch (error) {
       console.log("History audio could not start:", error);
     }
 
-    sendHistoryAudioStateToFrame();
+    updateHistoryMuteButton();
+  };
+
+  const resumeHistoryAudioIfNeeded = async () => {
+    if (!isHistoryShellOpen() || !historyAudio) return;
+
+    try {
+      applyStoredHistoryAudioState();
+
+      if (!historyAudio.muted && historyAudio.paused) {
+        const playPromise = historyAudio.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          await playPromise;
+        }
+      }
+    } catch (error) {
+      console.log("History audio could not resume:", error);
+    }
+
+    updateHistoryMuteButton();
+  };
+
+  const pauseHistoryAudio = () => {
+    if (!historyAudio) return;
+    historyAudio.pause();
+    updateHistoryMuteButton();
   };
 
   const stopHistoryAudio = () => {
     if (!historyAudio) return;
     historyAudio.pause();
     historyAudio.currentTime = 0;
+    updateHistoryMuteButton();
   };
 
   const openHistoryShell = () => {
@@ -5741,13 +5780,14 @@ document.addEventListener("DOMContentLoaded", () => {
     historyLauncher?.setAttribute("aria-expanded", "true");
     document.body.classList.add("lightbox-open");
 
-    playHistoryAudio();
+    startHistoryAudioFromTop();
 
     window.setTimeout(() => {
       historyFrame?.contentWindow?.postMessage(
         { type: "history-shell-reset-view" },
         "*"
       );
+      sendHistoryAudioStateToFrame();
     }, 80);
   };
 
@@ -5757,10 +5797,11 @@ document.addEventListener("DOMContentLoaded", () => {
     historyShell?.setAttribute("aria-hidden", "true");
     historyLauncher?.setAttribute("aria-expanded", "false");
     document.body.classList.remove("lightbox-open");
+
     stopHistoryAudio();
   };
 
-  historyLauncher?.addEventListener("pointerup", (event) => {
+  historyLauncher?.addEventListener("click", (event) => {
     event.preventDefault();
     openHistoryShell();
   });
@@ -5779,34 +5820,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (data && data.type === "toggle-history-audio") {
       historyAudio.muted = !historyAudio.muted;
-      localStorage.setItem("waffle-history-audio-muted", String(historyAudio.muted));
-      sendHistoryAudioStateToFrame();
+      localStorage.setItem(HISTORY_MUTE_STORAGE_KEY, String(historyAudio.muted));
+
+      if (!historyAudio.muted && isHistoryShellOpen() && historyAudio.paused) {
+        resumeHistoryAudioIfNeeded();
+      } else {
+        updateHistoryMuteButton();
+      }
       return;
     }
 
     if (data && data.type === "request-history-audio-state") {
-      sendHistoryAudioStateToFrame();
+      applyStoredHistoryAudioState();
+      updateHistoryMuteButton();
     }
   });
 
   historyFrame?.addEventListener("load", () => {
-    sendHistoryAudioStateToFrame();
+    updateHistoryMuteButton();
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && historyShell?.classList.contains("open")) {
+    if (event.key === "Escape" && isHistoryShellOpen()) {
       closeHistoryShell();
     }
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopHistoryAudio();
+    if (document.hidden) {
+      pauseHistoryAudio();
+    } else {
+      window.setTimeout(() => {
+        resumeHistoryAudioIfNeeded();
+      }, 120);
+    }
+  });
+
+  window.addEventListener("pageshow", () => {
+    window.setTimeout(() => {
+      resumeHistoryAudioIfNeeded();
+    }, 120);
+  });
+
+  window.addEventListener("focus", () => {
+    window.setTimeout(() => {
+      resumeHistoryAudioIfNeeded();
+    }, 120);
   });
 
   window.addEventListener("pagehide", stopHistoryAudio);
   window.addEventListener("beforeunload", stopHistoryAudio);
+
+  updateHistoryMuteButton();
 });
 </script>
+
 
 
 </body>
