@@ -19,7 +19,8 @@
 
     * { box-sizing: border-box; }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
       height: 100%;
@@ -188,7 +189,9 @@
       flex: 0 0 auto;
     }
 
-    .history-quick-asks-extra[hidden] { display: none; }
+    .history-quick-asks-extra[hidden] {
+      display: none;
+    }
 
     .history-quick-ask {
       border: 1px solid rgba(176, 150, 44, 0.18);
@@ -219,12 +222,6 @@
       transform: none;
     }
 
-    .history-chat-panel.is-conversation .history-quick-toolbar,
-    .history-chat-panel.is-conversation .history-quick-asks,
-    .history-chat-panel.is-conversation .history-quick-asks-extra {
-      display: none;
-    }
-
     .history-chat-log {
       position: relative;
       flex: 1 1 auto;
@@ -250,11 +247,11 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 42%;
-      width: min(86%, 640px);
-      height: min(66%, 420px);
+      top: 50%;
+      width: 112%;
+      height: 112%;
       transform: translate(-50%, -50%);
-      background: url("Images/history-watermark.jpg") center center / contain no-repeat;
+      background: url("Images/history-watermark.jpg") center center / cover no-repeat;
       opacity: 0.18;
       pointer-events: none;
       z-index: 0;
@@ -315,7 +312,9 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .history-chat-followup[hidden] { display: none; }
+    .history-chat-followup[hidden] {
+      display: none;
+    }
 
     .history-followup-grid {
       display: grid;
@@ -441,9 +440,9 @@
       }
 
       .history-chat-log::before {
-        top: 46%;
-        width: 92%;
-        height: 50%;
+        top: 50%;
+        width: 128%;
+        height: 128%;
         opacity: 0.16;
       }
 
@@ -606,9 +605,7 @@
         extraQuickAsks.hidden = true;
       };
 
-      const enterConversationMode = () => {
-        resetQuickFacts();
-        panel.classList.add("is-conversation");
+      const prepareInteractionView = () => {
         setAppHeight();
       };
 
@@ -784,11 +781,7 @@
         if (!cleanText) return null;
 
         const last = log.lastElementChild;
-        if (
-          last &&
-          last.dataset.role === role &&
-          last.dataset.message === cleanText
-        ) {
+        if (last && last.dataset.role === role && last.dataset.message === cleanText) {
           return last;
         }
 
@@ -817,7 +810,7 @@
 
       const showFollowup = (question) => {
         pendingQuestion = question;
-        enterConversationMode();
+        prepareInteractionView();
         followup.hidden = false;
         askRow.hidden = true;
 
@@ -840,7 +833,7 @@
         if (!q || isRapidDuplicateQuestion(q)) return;
 
         hideFollowup();
-        enterConversationMode();
+        prepareInteractionView();
         isResponding = true;
         setQuestionUiBusy(true);
 
