@@ -148,6 +148,30 @@
       box-shadow: 0 8px 16px rgba(17,17,17,0.06);
     }
 
+.history-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.history-audio-toggle {
+  border: 1px solid rgba(176, 150, 44, 0.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.96);
+  color: #4a3d00;
+  font-weight: 800;
+  padding: 8px 12px;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(17,17,17,0.06);
+  white-space: nowrap;
+}
+
+.history-audio-toggle.is-muted {
+  background: rgba(255,255,255,0.92);
+  color: #6a6a6a;
+}
+
     .history-quick-asks,
     .history-quick-asks-extra {
       display: flex;
@@ -386,9 +410,32 @@
         <p>Tap a question below for an instant answer, or ask your own question in the chat and I'll help you send it to the archivist.</p>
       </div>
       <div class="history-quick-toolbar">
-        <div class="history-quick-title">Quick questions</div>
-        <button class="history-more-toggle" id="history-more-toggle" type="button" aria-expanded="false" aria-controls="history-quick-asks-extra">More facts</button>
-      </div>
+  <div class="history-quick-title">Quick questions</div>
+
+  <div class="history-quick-actions">
+    <button
+      class="history-audio-toggle"
+      id="history-audio-toggle"
+      type="button"
+      aria-pressed="false"
+      aria-label="Mute history audio"
+      title="Mute history audio"
+    >
+      🔊 Sound On
+    </button>
+
+    <button
+      class="history-more-toggle"
+      id="history-more-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="history-quick-asks-extra"
+    >
+      More facts
+    </button>
+  </div>
+</div>
+
       <div class="history-quick-asks" id="history-quick-asks">
         <button class="history-quick-ask" type="button" data-question="How long did pies and hashbrowns take to make at Unit #1?">Unit #1 prep time</button>
         <button class="history-quick-ask" type="button" data-question="Why is the sign yellow?">Why the sign is yellow</button>
