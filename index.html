@@ -3180,31 +3180,6 @@
         height: 44px;
       }   
     }
-.history-audio-controls {
-  position: fixed;
-  left: 16px;
-  bottom: 70px;
-  z-index: 4560;
-}
-
-.history-audio-btn {
-  width: 42px;
-  height: 42px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #ffe66a, #f5d547);
-  color: #111;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(17,17,17,0.12);
-}
-
-@media (max-width: 700px) {
-  .history-audio-controls {
-    left: 12px;
-    bottom: 62px;
-  }
-}
 
   </style>
 </head>
@@ -5689,11 +5664,7 @@ const getRoadTripEndReason = () => {
       <span class="history-fab-label">Explore Waffle House History</span>
     </button>
   </div>
-  <div class="history-audio-controls" id="history-audio-controls" hidden>
-  <button class="history-audio-btn" id="history-audio-mute" type="button" aria-label="Mute history audio">🔊</button>
-</div>
-
-
+ 
   <div class="history-shell-overlay" id="history-shell-overlay"></div>
 
   <aside class="history-shell" id="history-chat-shell" aria-hidden="true" role="dialog" aria-label="Waffle House History Bot">
