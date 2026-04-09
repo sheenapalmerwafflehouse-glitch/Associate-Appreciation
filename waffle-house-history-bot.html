@@ -43,6 +43,7 @@
       justify-content: stretch;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,231,0.98));
       overflow: hidden;
+      overscroll-behavior: none;
     }
 
     .history-chat-panel {
@@ -53,11 +54,15 @@
       flex-direction: column;
       overflow: hidden;
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,231,0.98));
+      position: relative;
+      overscroll-behavior: contain;
     }
 
     .history-chat-top {
-      position: relative;
-      padding: 18px 76px 14px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: max(18px, calc(18px + env(safe-area-inset-top))) 76px 14px 18px;
       background: linear-gradient(180deg, #ffe66a 0%, #f5d547 100%);
       border-bottom: 1px solid rgba(176, 150, 44, 0.18);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
@@ -97,9 +102,9 @@
     }
 
     .history-chat-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
+      position: fixed;
+      top: max(16px, calc(16px + env(safe-area-inset-top)));
+      right: max(16px, calc(16px + env(safe-area-inset-right)));
       width: 44px;
       height: 44px;
       border: none;
@@ -113,6 +118,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      z-index: 30;
     }
 
     .history-chat-close:hover {
@@ -205,23 +211,37 @@
       transform: translateY(-1px);
     }
 
+    .history-quick-ask:disabled,
+    .history-ask-btn:disabled,
+    .history-send-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .history-chat-panel.is-conversation .history-quick-toolbar,
+    .history-chat-panel.is-conversation .history-quick-asks,
+    .history-chat-panel.is-conversation .history-quick-asks-extra {
+      display: none;
+    }
+
     .history-chat-log {
       position: relative;
       flex: 1 1 auto;
-      min-height: clamp(240px, 34vh, 420px);
+      min-height: 0;
       overflow: auto;
-      padding: 18px 18px 14px;
+      padding: 14px 18px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
+      scroll-padding-bottom: 18px;
       overscroll-behavior: contain;
-      border-top: 1px solid rgba(176, 150, 44, 0.12);
       background: linear-gradient(
         180deg,
-        rgba(255,255,255,0.94),
-        rgba(255,250,231,0.94)
+        rgba(255,255,255,0.95),
+        rgba(255,250,231,0.95)
       );
       isolation: isolate;
     }
@@ -230,19 +250,19 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: 54%;
-      width: min(112%, 760px);
-      height: min(88%, 560px);
+      top: 42%;
+      width: min(86%, 640px);
+      height: min(66%, 420px);
       transform: translate(-50%, -50%);
       background: url("Images/history-watermark.jpg") center center / contain no-repeat;
-      opacity: 0.22;
+      opacity: 0.18;
       pointer-events: none;
       z-index: 0;
       transition: opacity 0.25s ease;
     }
 
     .history-chat-log.has-messages::before {
-      opacity: 0.08;
+      opacity: 0.055;
     }
 
     .history-chat-log > * {
@@ -258,6 +278,7 @@
       line-height: 1.5;
       font-size: 0.95rem;
       white-space: normal;
+      scroll-margin-bottom: 18px;
     }
 
     .history-msg small {
@@ -285,7 +306,7 @@
     .history-chat-followup {
       display: grid;
       gap: 10px;
-      padding: 12px 18px 8px;
+      padding: 12px 18px 10px;
       border-top: 1px solid rgba(176, 150, 44, 0.14);
       background: rgba(255,255,255,0.84);
       flex: 0 0 auto;
@@ -295,12 +316,6 @@
     }
 
     .history-chat-followup[hidden] { display: none; }
-
-    .history-followup-copy {
-      color: #4f4f4f;
-      line-height: 1.45;
-      font-size: 0.9rem;
-    }
 
     .history-followup-grid {
       display: grid;
@@ -385,7 +400,7 @@
       }
 
       .history-chat-top {
-        padding: 16px 68px 12px 16px;
+        padding: max(16px, calc(16px + env(safe-area-inset-top))) 68px 12px 16px;
       }
 
       .history-quick-toolbar,
@@ -421,27 +436,26 @@
       }
 
       .history-chat-log {
-        min-height: clamp(260px, 36vh, 440px);
-        padding-top: 14px;
-        padding-bottom: 12px;
+        padding-top: 12px;
+        padding-bottom: 10px;
       }
 
       .history-chat-log::before {
-        top: 56%;
-        width: 118%;
-        height: 84%;
-        opacity: 0.18;
+        top: 46%;
+        width: 92%;
+        height: 50%;
+        opacity: 0.16;
       }
 
       .history-chat-log.has-messages::before {
-        opacity: 0.07;
+        opacity: 0.05;
       }
     }
   </style>
 </head>
 <body>
   <main class="history-page">
-    <section class="history-chat-panel" aria-label="Waffle House History Bot">
+    <section class="history-chat-panel" id="history-chat-panel" aria-label="Waffle House History Bot">
       <div class="history-chat-top">
         <div class="history-chat-eyebrow">Since 1955</div>
         <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history bot">&times;</button>
@@ -499,10 +513,6 @@
       <div class="history-chat-log" id="history-chat-log" aria-live="polite"></div>
 
       <div class="history-chat-followup" id="history-chat-followup" hidden>
-        <div class="history-followup-copy" id="history-followup-copy">
-          Great question! Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email address and I'll package your message for the archivist.
-        </div>
-
         <div class="history-followup-grid">
           <input id="history-contact-name" type="text" placeholder="Your name" aria-label="Your name" />
           <input id="history-contact-unit" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Your unit number" aria-label="Your unit number" />
@@ -564,11 +574,12 @@
         { answer: "Waffle House sells about 200 million servings of hashbrowns each year.", keywords: ["hashbrowns", "200 million", "servings", "sell each year", "annual sales"] }
       ];
 
+      const panel = document.getElementById("history-chat-panel");
       const log = document.getElementById("history-chat-log");
       const askBtn = document.getElementById("history-ask-btn");
       const input = document.getElementById("history-question-input");
+      const quickAskButtons = Array.from(document.querySelectorAll(".history-quick-ask"));
       const followup = document.getElementById("history-chat-followup");
-      const followupCopy = document.getElementById("history-followup-copy");
       const nameInput = document.getElementById("history-contact-name");
       const unitInput = document.getElementById("history-contact-unit");
       const emailInput = document.getElementById("history-contact-email");
@@ -581,6 +592,9 @@
       const audioToggle = document.getElementById("history-audio-toggle");
 
       let pendingQuestion = "";
+      let isResponding = false;
+      let lastQuestionKey = "";
+      let lastQuestionAt = 0;
 
       const syncChatLogState = () => {
         log.classList.toggle("has-messages", log.children.length > 0);
@@ -592,12 +606,15 @@
         extraQuickAsks.hidden = true;
       };
 
-      const scrollChatToLatest = (behavior = "smooth") => {
+      const enterConversationMode = () => {
+        resetQuickFacts();
+        panel.classList.add("is-conversation");
+        setAppHeight();
+      };
+
+      const scrollChatToBottom = (behavior = "smooth") => {
         requestAnimationFrame(() => {
-          log.scrollTo({
-            top: log.scrollHeight,
-            behavior
-          });
+          log.scrollTo({ top: log.scrollHeight, behavior });
         });
       };
 
@@ -616,8 +633,6 @@
         document.documentElement.scrollTop = 0;
 
         const page = document.querySelector(".history-page");
-        const panel = document.querySelector(".history-chat-panel");
-
         page?.scrollTo(0, 0);
         panel?.scrollTo(0, 0);
 
@@ -633,14 +648,8 @@
 
         audioToggle.classList.toggle("is-muted", muted);
         audioToggle.setAttribute("aria-pressed", String(muted));
-        audioToggle.setAttribute(
-          "aria-label",
-          muted ? "Unmute history audio" : "Mute history audio"
-        );
-        audioToggle.setAttribute(
-          "title",
-          muted ? "Unmute history audio" : "Mute history audio"
-        );
+        audioToggle.setAttribute("aria-label", muted ? "Unmute history audio" : "Mute history audio");
+        audioToggle.setAttribute("title", muted ? "Unmute history audio" : "Mute history audio");
         audioToggle.textContent = muted ? "🔇 Sound Off" : "🔊 Sound On";
       };
 
@@ -657,12 +666,21 @@
         resetQuickFacts();
       };
 
-      const keepTypingAreaVisible = (targetEl) => {
+      const focusWithoutScroll = (el) => {
+        if (!el) return;
+        try {
+          el.focus({ preventScroll: true });
+        } catch {
+          el.focus();
+        }
+      };
+
+      const keepTypingAreaVisible = () => {
         collapseExtraFactsForTyping();
         setAppHeight();
         window.setTimeout(() => {
-          (targetEl || askRow || input)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 180);
+          scrollChatToBottom("smooth");
+        }, 60);
       };
 
       const closeHistoryBot = () => {
@@ -741,20 +759,57 @@
           : top.fact.answer;
       };
 
+      const setQuestionUiBusy = (busy) => {
+        askBtn.disabled = busy;
+        quickAskButtons.forEach((button) => {
+          button.disabled = busy;
+        });
+      };
+
+      const isRapidDuplicateQuestion = (question) => {
+        const key = normalize(question);
+        const now = Date.now();
+
+        if (!key) return true;
+        if (isResponding) return true;
+        if (key === lastQuestionKey && now - lastQuestionAt < 900) return true;
+
+        lastQuestionKey = key;
+        lastQuestionAt = now;
+        return false;
+      };
+
       const addMessage = (role, text, behavior = "smooth") => {
+        const cleanText = (text || "").trim();
+        if (!cleanText) return null;
+
+        const last = log.lastElementChild;
+        if (
+          last &&
+          last.dataset.role === role &&
+          last.dataset.message === cleanText
+        ) {
+          return last;
+        }
+
         const msg = document.createElement("div");
         msg.className = `history-msg ${role}`;
+        msg.dataset.role = role;
+        msg.dataset.message = cleanText;
+
         const label = role === "bot" ? "Waffle House History Bot" : "You";
-        msg.innerHTML = `<small>${label}</small>${escapeHtml(text).replace(/\n/g, "<br>")}`;
+        msg.innerHTML = `<small>${label}</small>${escapeHtml(cleanText).replace(/\n/g, "<br>")}`;
+
         log.appendChild(msg);
         syncChatLogState();
-        scrollChatToLatest(behavior);
+        scrollChatToBottom(behavior);
         return msg;
       };
 
       const hideFollowup = () => {
         followup.hidden = true;
         askRow.hidden = false;
+        pendingQuestion = "";
         nameInput.value = "";
         unitInput.value = "";
         emailInput.value = "";
@@ -762,12 +817,13 @@
 
       const showFollowup = (question) => {
         pendingQuestion = question;
+        enterConversationMode();
         followup.hidden = false;
         askRow.hidden = true;
-        followupCopy.textContent = "Great question. Waffle House history is still being written, and our archivist has access to photos, timelines, menus, memorabilia, and records that may help answer it. Add your name, Unit number, and email and I'll package your note for the archivist.";
+
         window.setTimeout(() => {
-          keepTypingAreaVisible(followup);
-          nameInput.focus();
+          keepTypingAreaVisible();
+          focusWithoutScroll(nameInput);
         }, 70);
       };
 
@@ -775,10 +831,19 @@
         log.innerHTML = "";
         hideFollowup();
         syncChatLogState();
+        isResponding = false;
+        setQuestionUiBusy(false);
       };
 
-      const runHistoryQuestion = (q) => {
+      const askHistoryQuestion = (question) => {
+        const q = (question || "").trim();
+        if (!q || isRapidDuplicateQuestion(q)) return;
+
         hideFollowup();
+        enterConversationMode();
+        isResponding = true;
+        setQuestionUiBusy(true);
+
         addMessage("user", q, "auto");
 
         window.setTimeout(() => {
@@ -786,6 +851,7 @@
 
           if (answer) {
             addMessage("bot", answer, "smooth");
+            keepTypingAreaVisible();
           } else {
             addMessage(
               "bot",
@@ -794,37 +860,23 @@
             );
             showFollowup(q);
           }
-        }, 180);
-      };
 
-      const askHistoryQuestion = (question, source = "manual") => {
-        const q = (question || "").trim();
-        if (!q) return;
-
-        if (document.activeElement && typeof document.activeElement.blur === "function") {
-          document.activeElement.blur();
-        }
-
-        if (source === "quick") {
-          resetQuickFacts();
-          window.setTimeout(() => runHistoryQuestion(q), 60);
-          return;
-        }
-
-        runHistoryQuestion(q);
+          isResponding = false;
+          setQuestionUiBusy(false);
+        }, 160);
       };
 
       askBtn.addEventListener("click", () => {
         const q = (input.value || "").trim();
         if (!q) return;
-        askHistoryQuestion(q, "manual");
+        askHistoryQuestion(q);
         input.value = "";
       });
 
-      input.addEventListener("focus", () => keepTypingAreaVisible(askRow));
-      nameInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
-      unitInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
-      emailInput.addEventListener("focus", () => keepTypingAreaVisible(followup));
+      input.addEventListener("focus", keepTypingAreaVisible);
+      nameInput.addEventListener("focus", keepTypingAreaVisible);
+      unitInput.addEventListener("focus", keepTypingAreaVisible);
+      emailInput.addEventListener("focus", keepTypingAreaVisible);
 
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -833,10 +885,8 @@
         }
       });
 
-      document.addEventListener("click", (event) => {
-        const quickButton = event.target.closest(".history-quick-ask");
-        if (!quickButton) return;
-        askHistoryQuestion(quickButton.dataset.question || "", "quick");
+      quickAskButtons.forEach((button) => {
+        button.addEventListener("click", () => askHistoryQuestion(button.dataset.question || ""));
       });
 
       moreToggle.addEventListener("click", () => {
@@ -852,9 +902,8 @@
       });
 
       cancelEmailBtn.addEventListener("click", () => {
-        addMessage("bot", "No problem — your question is still here if you want to send it to the archivist later.");
         hideFollowup();
-        keepTypingAreaVisible(askRow);
+        keepTypingAreaVisible();
       });
 
       closeBtn.addEventListener("click", closeHistoryBot);
@@ -892,9 +941,9 @@
 
         if (!name || !unit || !email) {
           addMessage("bot", "Please enter your name, Unit number, and email before sending your question.");
-          if (!name) nameInput.focus();
-          else if (!unit) unitInput.focus();
-          else emailInput.focus();
+          if (!name) focusWithoutScroll(nameInput);
+          else if (!unit) focusWithoutScroll(unitInput);
+          else focusWithoutScroll(emailInput);
           return;
         }
 
@@ -916,7 +965,7 @@
           window.location.href = mailto;
           addMessage("bot", "Your draft for the archivist is ready in your email app — just review and send.");
           hideFollowup();
-          keepTypingAreaVisible(askRow);
+          keepTypingAreaVisible();
         }, 520);
       });
 
