@@ -472,7 +472,7 @@
         <div class="history-chat-eyebrow">Since 1955</div>
         <button class="history-chat-close" id="history-chat-close" type="button" aria-label="Close history bot">&times;</button>
         <h1>Welcome to the Archive</h1>
-        <p>Tap a question below for an instant answer, or ask your own question in the chat and I'll help you send it to the archivist.</p>
+        <p>Tap a fact below for an instant answer, or ask your own question in the chat and I'll help you send it to the archivist.</p>
       </div>
 
       <div class="history-quick-toolbar">
@@ -487,7 +487,7 @@
             aria-label="Mute history audio"
             title="Mute history audio"
           >
-            🔊 Sound On
+            🔊 Music On
           </button>
 
           <button
@@ -710,7 +710,7 @@
         audioToggle.setAttribute("aria-pressed", String(muted));
         audioToggle.setAttribute("aria-label", muted ? "Unmute history audio" : "Mute history audio");
         audioToggle.setAttribute("title", muted ? "Unmute history audio" : "Mute history audio");
-        audioToggle.textContent = muted ? "🔇 Sound Off" : "🔊 Sound On";
+        audioToggle.textContent = muted ? "🔇 Music Off" : "🔊 Music On";
       };
 
       const requestHistoryAudioState = () => {
