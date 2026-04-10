@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Selfie Booth Test</title>
+  <style>
+    :root {
+      --bg: #f7f4ea;
+      --card: rgba(255,255,255,0.9);
+      --text: #111;
+      --muted: #5b5b5b;
+      --yellow: #f5d547;
+      --yellow-dark: #d4b000;
+      --border: rgba(176, 150, 44, 0.18);
+      --shadow: 0 16px 36px rgba(17, 17, 17, 0.12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #faf8f2 0%, #f2eee1 40%, #e8e3d1 100%);
+    }
+
+    body {
+      padding: 18px;
+    }
+
+    .page {
+      width: min(100%, 1080px);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero,
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero {
+      padding: 22px 18px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff7c8;
+      border: 1px solid rgba(212, 176, 0, 0.18);
+      color: #6f5f00;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 14px auto 0;
+      max-width: 42ch;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .booth-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+
+    .stage-wrap {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f3ea 100%);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+      isolation: isolate;
+    }
+
+    .camera-video,
+    .template-preview,
+    .capture-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .camera-video {
+      background: #d9d9d9;
+      z-index: 1;
+      transform: scaleX(-1);
+    }
+
+    .camera-video.environment {
+      transform: none;
+    }
+
+    .capture-preview {
+      z-index: 2;
+      display: none;
+      object-fit: contain;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f3ea 100%);
+    }
+
+    .template-preview {
+      z-index: 3;
+      pointer-events: none;
+      object-fit: cover;
+    }
+
+    .camera-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .guide-box {
+      width: 58%;
+      aspect-ratio: 4 / 5;
+      border-radius: 22px;
+      border: 2px dashed rgba(255,255,255,0.95);
+      box-shadow: 0 0 0 999px rgba(0,0,0,0.22);
+    }
+
+    .status-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #3d3d3d;
+      font-weight: 800;
+      font-size: 0.88rem;
+      box-shadow: 0 8px 18px rgba(17,17,17,0.1);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c9c9c9;
+      flex: 0 0 10px;
+    }
+
+    .status-pill.live .status-dot {
+      background: #29b34a;
+      box-shadow: 0 0 0 6px rgba(41,179,74,0.12);
+    }
+
+    .status-pill.error .status-dot {
+      background: #da3232;
+      box-shadow: 0 0 0 6px rgba(218,50,50,0.12);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 18px;
+      min-height: 52px;
+      padding: 12px 14px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      background: #fff;
+      color: #1e1e1e;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 20px rgba(17,17,17,0.12);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+    }
+
+    .btn.secondary {
+      background: #fffdf4;
+    }
+
+    .btn.wide {
+      grid-column: 1 / -1;
+    }
+
+    .meta {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fffef7 0%, #faf6e8 100%);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .card p:last-child,
+    .card ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .card ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+
+    .mini-preview {
+      width: 100%;
+      border-radius: 18px;
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      background: #fff;
+      display: block;
+    }
+
+    .fineprint {
+      font-size: 0.84rem;
+      color: #6b6b6b;
+      line-height: 1.55;
+    }
+
+    .hidden-canvas {
+      display: none;
+    }
+
+    @media (max-width: 860px) {
+      .booth-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .hero,
+      .panel {
+        border-radius: 22px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-box {
+        width: 64%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Selfie Booth Test</div>
+      <h1>Associate Selfie Booth</h1>
+      <p>
+        This standalone test page lets an associate open the camera, take a selfie,
+        place it into a branded template, and save a high-quality JPEG.
+      </p>
+    </section>
+
+    <section class="booth-grid">
+      <div class="panel stage-wrap">
+        <div class="stage" aria-label="Selfie booth camera area">
+          <video id="camera" class="camera-video" playsinline autoplay muted></video>
+          <img id="capturePreview" class="capture-preview" alt="Captured selfie preview" />
+          <img id="templatePreview" class="template-preview" src="Images/selfie-template.jpg" alt="Selfie template overlay" />
+
+          <div class="camera-overlay" aria-hidden="true">
+            <div class="guide-box"></div>
+          </div>
+
+          <div id="statusPill" class="status-pill">
+            <span class="status-dot"></span>
+            <span id="statusText">Camera not started</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="btn primary" type="button">Start Camera</button>
+          <button id="switchBtn" class="btn secondary" type="button" disabled>Switch Camera</button>
+          <button id="captureBtn" class="btn primary" type="button" disabled>Take Selfie</button>
+          <button id="retakeBtn" class="btn secondary" type="button" disabled>Retake</button>
+          <button id="saveBtn" class="btn primary wide" type="button" disabled>Save High-Quality JPEG</button>
+        </div>
+      </div>
+
+      <aside class="meta">
+        <div class="card">
+          <h2>Before you test</h2>
+          <p>
+            Put your branded JPEG here:
+            <strong>Images/selfie-template.jpg</strong>
+          </p>
+          <p>
+            The code places the selfie inside a photo area on that template. You can move or resize
+            that area by editing the four numbers in the JavaScript.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>What this version does well</h3>
+          <ul>
+            <li>Works as a standalone test page.</li>
+            <li>Uses front camera by default on phones.</li>
+            <li>Saves a large, high-quality JPEG file.</li>
+            <li>Supports mobile and desktop camera use.</li>
+            <li>Keeps the booth logic out of your main index page.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Important note</h3>
+          <p>
+            This version creates a branded photo-booth layout. It does <strong>not</strong> remove the real background
+            behind the person. If you later want the associate cut out and placed in front of a digital background,
+            that would be a separate version using person-segmentation.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Template preview</h3>
+          <img class="mini-preview" src="Images/selfie-template.jpg" alt="Template preview" />
+          <p class="fineprint">
+            Replace this image path if your JPEG lives somewhere else.
+          </p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <canvas id="outputCanvas" class="hidden-canvas"></canvas>
+
+  <script>
+    const TEMPLATE_IMAGE_PATH = "Images/selfie-template.jpg";
+
+    // Adjust these four numbers so the selfie lands exactly where you want on your JPEG template.
+    // Values are based on the FINAL output image size.
+    const PHOTO_RECT = {
+      x: 760,
+      y: 520,
+      width: 1080,
+      height: 1350
+    };
+
+    const OUTPUT_SETTINGS = {
+      width: 2400,
+      height: 3000,
+      quality: 0.95,
+      fileName: "associate-selfie.jpg"
+    };
+
+    const camera = document.getElementById("camera");
+    const capturePreview = document.getElementById("capturePreview");
+    const templatePreview = document.getElementById("templatePreview");
+    const outputCanvas = document.getElementById("outputCanvas");
+
+    const statusPill = document.getElementById("statusPill");
+    const statusText = document.getElementById("statusText");
+
+    const startBtn = document.getElementById("startBtn");
+    const switchBtn = document.getElementById("switchBtn");
+    const captureBtn = document.getElementById("captureBtn");
+    const retakeBtn = document.getElementById("retakeBtn");
+    const saveBtn = document.getElementById("saveBtn");
+
+    templatePreview.src = TEMPLATE_IMAGE_PATH;
+
+    let stream = null;
+    let currentFacingMode = "user";
+    let capturedBlobUrl = "";
+    let capturedDataUrl = "";
+    let usingCapturedPreview = false;
+
+    function setStatus(message, state = "idle") {
+      statusText.textContent = message;
+      statusPill.classList.remove("live", "error");
+      if (state === "live") statusPill.classList.add("live");
+      if (state === "error") statusPill.classList.add("error");
+    }
+
+    function setPreviewMode(captured) {
+      usingCapturedPreview = captured;
+      capturePreview.style.display = captured ? "block" : "none";
+      camera.style.visibility = captured ? "hidden" : "visible";
+    }
+
+    function setButtonState({
+      startDisabled,
+      switchDisabled,
+      captureDisabled,
+      retakeDisabled,
+      saveDisabled
+    }) {
+      startBtn.disabled = startDisabled;
+      switchBtn.disabled = switchDisabled;
+      captureBtn.disabled = captureDisabled;
+      retakeBtn.disabled = retakeDisabled;
+      saveBtn.disabled = saveDisabled;
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+    }
+
+    async function startCamera() {
+      stopCamera();
+      setStatus("Opening camera...", "idle");
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: currentFacingMode },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          },
+          audio: false
+        });
+
+        camera.srcObject = stream;
+        await camera.play();
+
+        camera.classList.toggle("environment", currentFacingMode === "environment");
+        setPreviewMode(false);
+        setStatus(currentFacingMode === "user" ? "Front camera live" : "Back camera live", "live");
+
+        setButtonState({
+          startDisabled: true,
+          switchDisabled: false,
+          captureDisabled: false,
+          retakeDisabled: true,
+          saveDisabled: true
+        });
+      } catch (error) {
+        console.error(error);
+        setStatus("Camera access failed. Use HTTPS or localhost and allow camera access.", "error");
+        setButtonState({
+          startDisabled: false,
+          switchDisabled: true,
+          captureDisabled: true,
+          retakeDisabled: true,
+          saveDisabled: true
+        });
+      }
+    }
+
+    function coverImage(ctx, image, x, y, width, height) {
+      const imgRatio = image.width / image.height;
+      const boxRatio = width / height;
+
+      let drawWidth;
+      let drawHeight;
+      let drawX = x;
+      let drawY = y;
+
+      if (imgRatio > boxRatio) {
+        drawHeight = height;
+        drawWidth = height * imgRatio;
+        drawX = x - (drawWidth - width) / 2;
+      } else {
+        drawWidth = width;
+        drawHeight = width / imgRatio;
+        drawY = y - (drawHeight - height) / 2;
+      }
+
+      ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+    }
+
+    async function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    async function buildComposite() {
+      const ctx = outputCanvas.getContext("2d");
+      outputCanvas.width = OUTPUT_SETTINGS.width;
+      outputCanvas.height = OUTPUT_SETTINGS.height;
+
+      const templateImg = await loadImage(TEMPLATE_IMAGE_PATH);
+
+      ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+
+      if (currentFacingMode === "user") {
+        ctx.save();
+        ctx.translate(PHOTO_RECT.x + PHOTO_RECT.width, 0);
+        ctx.scale(-1, 1);
+        coverImage(ctx, camera, 0, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
+        ctx.restore();
+      } else {
+        coverImage(ctx, camera, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
+      }
+
+      ctx.drawImage(templateImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
+    }
+
+    async function captureSelfie() {
+      if (!stream) return;
+
+      try {
+        await buildComposite();
+        capturedDataUrl = outputCanvas.toDataURL("image/jpeg", OUTPUT_SETTINGS.quality);
+        capturePreview.src = capturedDataUrl;
+        setPreviewMode(true);
+        setStatus("Preview ready", "live");
+
+        setButtonState({
+          startDisabled: true,
+          switchDisabled: true,
+          captureDisabled: true,
+          retakeDisabled: false,
+          saveDisabled: false
+        });
+      } catch (error) {
+        console.error(error);
+        setStatus("Capture failed. Check your template image path.", "error");
+      }
+    }
+
+    function retakeSelfie() {
+      if (capturedBlobUrl) {
+        URL.revokeObjectURL(capturedBlobUrl);
+        capturedBlobUrl = "";
+      }
+      capturedDataUrl = "";
+      capturePreview.removeAttribute("src");
+      setPreviewMode(false);
+      setStatus(currentFacingMode === "user" ? "Front camera live" : "Back camera live", "live");
+
+      setButtonState({
+        startDisabled: true,
+        switchDisabled: false,
+        captureDisabled: false,
+        retakeDisabled: true,
+        saveDisabled: true
+      });
+    }
+
+    async function saveImage() {
+      try {
+        if (!capturedDataUrl) {
+          await buildComposite();
+        }
+
+        outputCanvas.toBlob((blob) => {
+          if (!blob) {
+            setStatus("Could not create JPEG file.", "error");
+            return;
+          }
+
+          if (capturedBlobUrl) URL.revokeObjectURL(capturedBlobUrl);
+          capturedBlobUrl = URL.createObjectURL(blob);
+
+          const link = document.createElement("a");
+          link.href = capturedBlobUrl;
+          link.download = OUTPUT_SETTINGS.fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+
+          setStatus("JPEG saved", "live");
+        }, "image/jpeg", OUTPUT_SETTINGS.quality);
+      } catch (error) {
+        console.error(error);
+        setStatus("Save failed.", "error");
+      }
+    }
+
+    async function switchCamera() {
+      currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+      await startCamera();
+    }
+
+    startBtn.addEventListener("click", startCamera);
+    switchBtn.addEventListener("click", switchCamera);
+    captureBtn.addEventListener("click", captureSelfie);
+    retakeBtn.addEventListener("click", retakeSelfie);
+    saveBtn.addEventListener("click", saveImage);
+
+    window.addEventListener("beforeunload", stopCamera);
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setStatus("This browser does not support camera access.", "error");
+      setButtonState({
+        startDisabled: true,
+        switchDisabled: true,
+        captureDisabled: true,
+        retakeDisabled: true,
+        saveDisabled: true
+      });
+    }
+  </script>
+</body>
+</html>
