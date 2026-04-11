@@ -39,19 +39,23 @@
       gap: 16px;
     }
 
-    .hero,
-    .panel {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
+   .hero,
+.panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
 
-    .hero {
-      padding: 20px 18px;
-      text-align: center;
-    }
+.hero {
+  background: linear-gradient(180deg, #fff4b8 0%, #ffe66a 45%, var(--yellow) 100%);
+  padding: 20px 18px;
+  text-align: center;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.92);
+}
 
     .eyebrow {
       display: inline-flex;
@@ -365,9 +369,9 @@
         <button id="saveBtn" class="btn primary wide" type="button" disabled>Save or Share Selfie</button>
       </div>
 
-      <div class="subnote">
-        On phones, Save may open your share sheet. On desktop, it will usually download the image.
-      </div>
+     <div class="subnote">
+  On phones or tablets, tapping Save may open a menu with options to text, email, post, or save your selfie. On desktop, it will usually download the image to your computer.
+</div>
     </section>
   </main>
 
