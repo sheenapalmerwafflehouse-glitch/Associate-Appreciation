@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Selfie Booth</title>
+  <title>Associate Selfie Booth</title>
   <style>
     :root {
       --text: #111111;
@@ -94,7 +94,7 @@
     .stage {
       position: relative;
       width: 100%;
-      aspect-ratio: 1455 / 2000;
+      aspect-ratio: 768 / 1024;
       overflow: hidden;
       border-radius: 24px;
       border: 1px solid rgba(176, 150, 44, 0.14);
@@ -114,27 +114,14 @@
 
     .camera-window {
       position: absolute;
-      left: 18%;
-      top: 13%;
+      left: 18.2%;
+      top: 26.4%;
       width: 64%;
-      height: 43%;
+      height: 50.6%;
       z-index: 2;
       overflow: hidden;
-      border-radius: 28px;
-      background: rgba(255,255,255,0.12);
-      box-shadow:
-        inset 0 0 0 2px rgba(255,255,255,0.8),
-        0 10px 24px rgba(17,17,17,0.12);
-    }
-
-    .camera-window::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 28px;
-      border: 4px dashed rgba(255,255,255,0.96);
-      pointer-events: none;
-      z-index: 4;
+      border-radius: 26px;
+      background: rgba(255,255,255,0.04);
     }
 
     .camera-video,
@@ -318,9 +305,8 @@
         border-radius: 22px;
       }
 
-      .camera-window,
-      .camera-window::after {
-        border-radius: 24px;
+      .camera-window {
+        border-radius: 22px;
       }
     }
   </style>
@@ -338,7 +324,7 @@
         <img
           id="templateBackground"
           class="template-background"
-          src="Images/selfie-background.jpg"
+          src="Images/selfie-background.png"
           alt=""
         />
 
@@ -382,21 +368,22 @@
   <canvas id="outputCanvas" class="hidden-canvas"></canvas>
 
   <script>
-    const BACKGROUND_IMAGE_PATH = "Images/selfie-background.jpg";
+    const BACKGROUND_IMAGE_PATH = "Images/selfie-background.png";
 
     const OUTPUT_SETTINGS = {
-      width: 1455,
-      height: 2000,
+      width: 768,
+      height: 1024,
       quality: 0.95,
       fileName: "associate-selfie.jpg"
     };
 
+    // Lowered to match the printed dashed frame in your updated artwork.
     const PHOTO_RECT = {
-      x: 262,
-      y: 260,
-      width: 931,
-      height: 860,
-      radius: 42
+      x: 140,
+      y: 270,
+      width: 492,
+      height: 518,
+      radius: 24
     };
 
     const camera = document.getElementById("camera");
@@ -590,14 +577,6 @@
       }
 
       ctx.restore();
-
-      ctx.save();
-      ctx.setLineDash([22, 14]);
-      ctx.lineWidth = 6;
-      ctx.strokeStyle = "rgba(255,255,255,0.98)";
-      roundRectPath(ctx, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height, PHOTO_RECT.radius);
-      ctx.stroke();
-      ctx.restore();
     }
 
     async function captureSelfie() {
@@ -670,7 +649,7 @@
               await navigator.share({
                 files: [file],
                 title: "Associate Selfie",
-                text: "Check out my Waffle House Associate Appreciation selfie"
+                text: "Your selfie is ready"
               });
               closePreviewModal();
               setStatus("Selfie ready to save/share", "live");
