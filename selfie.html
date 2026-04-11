@@ -3,21 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Selfie Booth Test</title>
+  <title>Associate Selfie Booth</title>
   <style>
     :root {
-      --bg: #f7f4ea;
-      --card: rgba(255,255,255,0.9);
-      --text: #111;
+      --text: #111111;
       --muted: #5b5b5b;
       --yellow: #f5d547;
-      --yellow-dark: #d4b000;
+      --yellow-soft: #fff7c8;
       --border: rgba(176, 150, 44, 0.18);
       --shadow: 0 16px 36px rgba(17, 17, 17, 0.12);
-      --radius: 24px;
+      --radius: 28px;
+      --preview-left: 17.5%;
+      --preview-top: 12.33%;
+      --preview-width: 65%;
+      --preview-height: 54%;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
@@ -29,19 +33,19 @@
     }
 
     body {
-      padding: 18px;
+      padding: 16px;
     }
 
     .page {
-      width: min(100%, 1080px);
+      width: min(100%, 760px);
       margin: 0 auto;
       display: grid;
-      gap: 18px;
+      gap: 16px;
     }
 
     .hero,
     .panel {
-      background: var(--card);
+      background: rgba(255, 255, 255, 0.92);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -49,7 +53,7 @@
     }
 
     .hero {
-      padding: 22px 18px;
+      padding: 20px 18px;
       text-align: center;
     }
 
@@ -59,7 +63,7 @@
       justify-content: center;
       padding: 8px 12px;
       border-radius: 999px;
-      background: #fff7c8;
+      background: var(--yellow-soft);
       border: 1px solid rgba(212, 176, 0, 0.18);
       color: #6f5f00;
       font-size: 0.78rem;
@@ -71,32 +75,24 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-size: clamp(1.7rem, 5vw, 2.6rem);
       line-height: 1;
       text-transform: uppercase;
       letter-spacing: -0.03em;
     }
 
     .hero p {
-      margin: 14px auto 0;
-      max-width: 42ch;
+      margin: 12px auto 0;
+      max-width: 34ch;
       color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .booth-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
-      gap: 18px;
+      line-height: 1.55;
+      font-size: 0.98rem;
     }
 
     .panel {
-      padding: 16px;
-    }
-
-    .stage-wrap {
+      padding: 14px;
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
 
     .stage {
@@ -104,27 +100,53 @@
       width: 100%;
       aspect-ratio: 4 / 5;
       overflow: hidden;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #ffffff 0%, #f5f3ea 100%);
+      border-radius: 24px;
       border: 1px solid rgba(176, 150, 44, 0.14);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+      background: #ffffff;
       isolation: isolate;
     }
 
-    .camera-video,
-    .template-preview,
-    .capture-preview {
+    .template-background,
+    .template-overlay {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       display: block;
+      object-fit: cover;
+    }
+
+    .template-background {
+      z-index: 1;
+    }
+
+    .template-overlay {
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .camera-window {
+      position: absolute;
+      left: var(--preview-left);
+      top: var(--preview-top);
+      width: var(--preview-width);
+      height: var(--preview-height);
+      z-index: 2;
+      overflow: hidden;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .camera-video,
+    .capture-preview {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #d9d9d9;
     }
 
     .camera-video {
-      background: #d9d9d9;
-      z-index: 1;
       transform: scaleX(-1);
     }
 
@@ -133,34 +155,7 @@
     }
 
     .capture-preview {
-      z-index: 2;
       display: none;
-      object-fit: contain;
-      background: linear-gradient(180deg, #ffffff 0%, #f5f3ea 100%);
-    }
-
-    .template-preview {
-      z-index: 3;
-      pointer-events: none;
-      object-fit: cover;
-    }
-
-    .camera-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      pointer-events: none;
-      display: grid;
-      place-items: center;
-      padding: 18px;
-    }
-
-    .guide-box {
-      width: 58%;
-      aspect-ratio: 4 / 5;
-      border-radius: 22px;
-      border: 2px dashed rgba(255,255,255,0.95);
-      box-shadow: 0 0 0 999px rgba(0,0,0,0.22);
     }
 
     .status-pill {
@@ -179,7 +174,7 @@
       color: #3d3d3d;
       font-weight: 800;
       font-size: 0.88rem;
-      box-shadow: 0 8px 18px rgba(17,17,17,0.1);
+      box-shadow: 0 8px 18px rgba(17,17,17,0.10);
     }
 
     .status-dot {
@@ -210,7 +205,7 @@
       appearance: none;
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 18px;
-      min-height: 52px;
+      min-height: 54px;
       padding: 12px 14px;
       font: inherit;
       font-weight: 800;
@@ -243,65 +238,16 @@
       grid-column: 1 / -1;
     }
 
-    .meta {
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
-      padding: 16px;
-      border-radius: 20px;
-      background: linear-gradient(180deg, #fffef7 0%, #faf6e8 100%);
-      border: 1px solid rgba(176, 150, 44, 0.14);
-    }
-
-    .card h2,
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .card p,
-    .card li {
+    .subnote {
+      text-align: center;
       color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .card p:last-child,
-    .card ul:last-child {
-      margin-bottom: 0;
-    }
-
-    .card ul {
-      margin: 10px 0 0 18px;
-      padding: 0;
-    }
-
-    .mini-preview {
-      width: 100%;
-      border-radius: 18px;
-      border: 1px solid rgba(176, 150, 44, 0.14);
-      background: #fff;
-      display: block;
-    }
-
-    .fineprint {
-      font-size: 0.84rem;
-      color: #6b6b6b;
-      line-height: 1.55;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      padding: 0 6px 2px;
     }
 
     .hidden-canvas {
       display: none;
-    }
-
-    @media (max-width: 860px) {
-      .booth-grid {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 640px) {
@@ -309,17 +255,21 @@
         padding: 12px;
       }
 
-      .hero,
-      .panel {
-        border-radius: 22px;
-      }
-
       .controls {
         grid-template-columns: 1fr;
       }
 
-      .guide-box {
-        width: 64%;
+      .panel,
+      .hero {
+        border-radius: 24px;
+      }
+
+      .stage {
+        border-radius: 22px;
+      }
+
+      .camera-window {
+        border-radius: 24px;
       }
     }
   </style>
@@ -327,97 +277,59 @@
 <body>
   <main class="page">
     <section class="hero">
-      <div class="eyebrow">Selfie Booth Test</div>
-      <h1>Associate Selfie Booth</h1>
-      <p>
-        This standalone test page lets an associate open the camera, take a selfie,
-        place it into a branded template, and save a high-quality JPEG.
-      </p>
+      <div class="eyebrow">Selfie Booth</div>
+      <h1>Strike a Pose</h1>
+      <p>Center yourself in the frame, take your selfie, then save or share it.</p>
     </section>
 
-    <section class="booth-grid">
-      <div class="panel stage-wrap">
-        <div class="stage" aria-label="Selfie booth camera area">
+    <section class="panel">
+      <div class="stage" aria-label="Associate selfie booth">
+        <img
+          id="templateBackground"
+          class="template-background"
+          src="Images/selfie-background.jpg"
+          alt=""
+        />
+
+        <div id="cameraWindow" class="camera-window">
           <video id="camera" class="camera-video" playsinline autoplay muted></video>
           <img id="capturePreview" class="capture-preview" alt="Captured selfie preview" />
-          <img id="templatePreview" class="template-preview" src="Images/selfie-template.jpg" alt="Selfie template overlay" />
-
-          <div class="camera-overlay" aria-hidden="true">
-            <div class="guide-box"></div>
-          </div>
-
-          <div id="statusPill" class="status-pill">
-            <span class="status-dot"></span>
-            <span id="statusText">Camera not started</span>
-          </div>
         </div>
 
-        <div class="controls">
-          <button id="startBtn" class="btn primary" type="button">Start Camera</button>
-          <button id="switchBtn" class="btn secondary" type="button" disabled>Switch Camera</button>
-          <button id="captureBtn" class="btn primary" type="button" disabled>Take Selfie</button>
-          <button id="retakeBtn" class="btn secondary" type="button" disabled>Retake</button>
-          <button id="saveBtn" class="btn primary wide" type="button" disabled>Save High-Quality JPEG</button>
+        <img
+          id="templateOverlay"
+          class="template-overlay"
+          src="Images/selfie-overlay.png"
+          alt=""
+        />
+
+        <div id="statusPill" class="status-pill">
+          <span class="status-dot"></span>
+          <span id="statusText">Camera not started</span>
         </div>
       </div>
 
-      <aside class="meta">
-        <div class="card">
-          <h2>Before you test</h2>
-          <p>
-            Put your branded JPEG here:
-            <strong>Images/selfie-template.jpg</strong>
-          </p>
-          <p>
-            The code places the selfie inside a photo area on that template. You can move or resize
-            that area by editing the four numbers in the JavaScript.
-          </p>
-        </div>
+      <div class="controls">
+        <button id="startBtn" class="btn primary" type="button">Start Camera</button>
+        <button id="switchBtn" class="btn secondary" type="button" disabled>Switch Camera</button>
+        <button id="captureBtn" class="btn primary" type="button" disabled>Take Selfie</button>
+        <button id="retakeBtn" class="btn secondary" type="button" disabled>Retake</button>
+        <button id="saveBtn" class="btn primary wide" type="button" disabled>Save or Share Selfie</button>
+      </div>
 
-        <div class="card">
-          <h3>What this version does well</h3>
-          <ul>
-            <li>Works as a standalone test page.</li>
-            <li>Uses front camera by default on phones.</li>
-            <li>Saves a large, high-quality JPEG file.</li>
-            <li>Supports mobile and desktop camera use.</li>
-            <li>Keeps the booth logic out of your main index page.</li>
-          </ul>
-        </div>
-
-        <div class="card">
-          <h3>Important note</h3>
-          <p>
-            This version creates a branded photo-booth layout. It does <strong>not</strong> remove the real background
-            behind the person. If you later want the associate cut out and placed in front of a digital background,
-            that would be a separate version using person-segmentation.
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>Template preview</h3>
-          <img class="mini-preview" src="Images/selfie-template.jpg" alt="Template preview" />
-          <p class="fineprint">
-            Replace this image path if your JPEG lives somewhere else.
-          </p>
-        </div>
-      </aside>
+      <div class="subnote">
+        On phones, Save may open your share sheet. On desktop, it will usually download the image.
+      </div>
     </section>
   </main>
 
   <canvas id="outputCanvas" class="hidden-canvas"></canvas>
 
   <script>
-    const TEMPLATE_IMAGE_PATH = "Images/selfie-template.jpg";
+    const BACKGROUND_IMAGE_PATH = "Images/selfie-background.jpg";
+    const OVERLAY_IMAGE_PATH = "Images/selfie-overlay.png";
 
-    // Adjust these numbers so the selfie lands where you want on the template.
-    const PHOTO_RECT = {
-      x: 760,
-      y: 520,
-      width: 1080,
-      height: 1350
-    };
-
+    // Final output image size.
     const OUTPUT_SETTINGS = {
       width: 2400,
       height: 3000,
@@ -425,9 +337,19 @@
       fileName: "associate-selfie.jpg"
     };
 
+    // Selfie placement on the final saved image.
+    const PHOTO_RECT = {
+      x: 420,
+      y: 370,
+      width: 1560,
+      height: 1620
+    };
+
     const camera = document.getElementById("camera");
+    const cameraWindow = document.getElementById("cameraWindow");
     const capturePreview = document.getElementById("capturePreview");
-    const templatePreview = document.getElementById("templatePreview");
+    const templateBackground = document.getElementById("templateBackground");
+    const templateOverlay = document.getElementById("templateOverlay");
     const outputCanvas = document.getElementById("outputCanvas");
 
     const statusPill = document.getElementById("statusPill");
@@ -439,13 +361,25 @@
     const retakeBtn = document.getElementById("retakeBtn");
     const saveBtn = document.getElementById("saveBtn");
 
-    templatePreview.src = TEMPLATE_IMAGE_PATH;
+    templateBackground.src = BACKGROUND_IMAGE_PATH;
+    templateOverlay.src = OVERLAY_IMAGE_PATH;
 
     let stream = null;
     let currentFacingMode = "user";
     let capturedBlobUrl = "";
     let capturedDataUrl = "";
-    let usingCapturedPreview = false;
+
+    function applyPreviewWindowFromRect() {
+      const left = (PHOTO_RECT.x / OUTPUT_SETTINGS.width) * 100;
+      const top = (PHOTO_RECT.y / OUTPUT_SETTINGS.height) * 100;
+      const width = (PHOTO_RECT.width / OUTPUT_SETTINGS.width) * 100;
+      const height = (PHOTO_RECT.height / OUTPUT_SETTINGS.height) * 100;
+
+      cameraWindow.style.left = `${left}%`;
+      cameraWindow.style.top = `${top}%`;
+      cameraWindow.style.width = `${width}%`;
+      cameraWindow.style.height = `${height}%`;
+    }
 
     function setStatus(message, state = "idle") {
       statusText.textContent = message;
@@ -455,7 +389,6 @@
     }
 
     function setPreviewMode(captured) {
-      usingCapturedPreview = captured;
       capturePreview.style.display = captured ? "block" : "none";
       camera.style.visibility = captured ? "hidden" : "visible";
     }
@@ -500,7 +433,11 @@
 
         camera.classList.toggle("environment", currentFacingMode === "environment");
         setPreviewMode(false);
-        setStatus(currentFacingMode === "user" ? "Front camera live" : "Back camera live", "live");
+
+        setStatus(
+          currentFacingMode === "user" ? "Front camera live" : "Back camera live",
+          "live"
+        );
 
         setButtonState({
           startDisabled: true,
@@ -511,7 +448,8 @@
         });
       } catch (error) {
         console.error(error);
-        setStatus("Camera access failed. Use HTTPS or localhost and allow camera access.", "error");
+        setStatus("Camera access failed. Allow camera access and use HTTPS.", "error");
+
         setButtonState({
           startDisabled: false,
           switchDisabled: true,
@@ -558,11 +496,11 @@
       outputCanvas.width = OUTPUT_SETTINGS.width;
       outputCanvas.height = OUTPUT_SETTINGS.height;
 
-      const templateImg = await loadImage(TEMPLATE_IMAGE_PATH);
+      const backgroundImg = await loadImage(BACKGROUND_IMAGE_PATH);
+      const overlayImg = await loadImage(OVERLAY_IMAGE_PATH);
 
       ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, outputCanvas.width, outputCanvas.height);
+      ctx.drawImage(backgroundImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
 
       if (currentFacingMode === "user") {
         ctx.save();
@@ -574,7 +512,7 @@
         coverImage(ctx, camera, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
       }
 
-      ctx.drawImage(templateImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
+      ctx.drawImage(overlayImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
     }
 
     async function captureSelfie() {
@@ -596,7 +534,7 @@
         });
       } catch (error) {
         console.error(error);
-        setStatus("Capture failed. Check your template image path.", "error");
+        setStatus("Capture failed. Check your image files.", "error");
       }
     }
 
@@ -609,7 +547,11 @@
       capturedDataUrl = "";
       capturePreview.removeAttribute("src");
       setPreviewMode(false);
-      setStatus(currentFacingMode === "user" ? "Front camera live" : "Back camera live", "live");
+
+      setStatus(
+        currentFacingMode === "user" ? "Front camera live" : "Back camera live",
+        "live"
+      );
 
       setButtonState({
         startDisabled: true,
@@ -643,8 +585,7 @@
               });
               setStatus("Selfie ready to save/share", "live");
               return;
-            } catch (shareError) {
-              // User canceled or share failed, so fall back to download.
+            } catch (error) {
             }
           }
 
@@ -679,6 +620,8 @@
 
     window.addEventListener("beforeunload", stopCamera);
 
+    applyPreviewWindowFromRect();
+
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       setStatus("This browser does not support camera access.", "error");
       setButtonState({
@@ -692,8 +635,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
