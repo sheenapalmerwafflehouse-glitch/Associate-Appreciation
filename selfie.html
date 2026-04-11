@@ -19,7 +19,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       min-height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -39,23 +40,26 @@
       gap: 16px;
     }
 
-   .hero,
-.panel {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-}
+    .hero,
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
 
-.hero {
-  background: linear-gradient(180deg, #fff4b8 0%, #ffe66a 45%, var(--yellow) 100%);
-  padding: 20px 18px;
-  text-align: center;
-}
+    .hero {
+      background: linear-gradient(180deg, #fff4b8 0%, #ffe66a 45%, var(--yellow) 100%);
+      padding: 20px 18px;
+      text-align: center;
+    }
 
-.panel {
-  background: rgba(255, 255, 255, 0.92);
-}
+    .panel {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
 
     .eyebrow {
       display: inline-flex;
@@ -89,12 +93,6 @@
       font-size: 0.98rem;
     }
 
-    .panel {
-      padding: 14px;
-      display: grid;
-      gap: 14px;
-    }
-
     .stage {
       position: relative;
       width: 100%;
@@ -125,7 +123,7 @@
       z-index: 2;
       overflow: hidden;
       border-radius: 26px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .camera-video,
@@ -160,12 +158,12 @@
       min-height: 38px;
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.96);
+      background: rgba(255, 255, 255, 0.96);
       border: 1px solid rgba(176, 150, 44, 0.18);
       color: #3d3d3d;
       font-weight: 800;
       font-size: 0.88rem;
-      box-shadow: 0 8px 18px rgba(17,17,17,0.10);
+      box-shadow: 0 8px 18px rgba(17, 17, 17, 0.10);
     }
 
     .status-dot {
@@ -178,12 +176,12 @@
 
     .status-pill.live .status-dot {
       background: #29b34a;
-      box-shadow: 0 0 0 6px rgba(41,179,74,0.12);
+      box-shadow: 0 0 0 6px rgba(41, 179, 74, 0.12);
     }
 
     .status-pill.error .status-dot {
       background: #da3232;
-      box-shadow: 0 0 0 6px rgba(218,50,50,0.12);
+      box-shadow: 0 0 0 6px rgba(218, 50, 50, 0.12);
     }
 
     .controls {
@@ -203,13 +201,13 @@
       cursor: pointer;
       background: #fff;
       color: #1e1e1e;
-      box-shadow: 0 8px 16px rgba(17,17,17,0.08);
+      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
       transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
     .btn:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 12px 20px rgba(17,17,17,0.12);
+      box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
     }
 
     .btn:disabled {
@@ -228,6 +226,7 @@
     .btn.wide {
       grid-column: 1 / -1;
     }
+
     .back-row {
       display: flex;
       justify-content: center;
@@ -241,7 +240,7 @@
       width: 100%;
       max-width: 320px;
     }
-    
+
     .subnote {
       text-align: center;
       color: var(--muted);
@@ -273,10 +272,10 @@
       width: min(100%, 760px);
       max-height: 92vh;
       overflow: auto;
-      background: rgba(255,255,255,0.98);
+      background: rgba(255, 255, 255, 0.98);
       border-radius: 24px;
       padding: 14px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
     }
 
     .preview-title {
@@ -330,9 +329,10 @@
 </head>
 <body>
   <main class="page">
-     <div class="back-row">
+    <div class="back-row">
       <a href="index.html" class="btn secondary back-link">← Back to Celebration Page</a>
     </div>
+
     <section class="hero">
       <div class="eyebrow">Celebration Selfie</div>
       <h1>Smile and say "Covered!"</h1>
@@ -367,9 +367,9 @@
         <button id="saveBtn" class="btn primary wide" type="button" disabled>Save or Share Selfie</button>
       </div>
 
-     <div class="subnote">
-  On phones or tablets, tapping Save may open a menu with options to text, email, post, or save your selfie. On desktop, it will usually download the image to your computer.
-</div>
+      <div class="subnote">
+        On phones or tablets, tapping Save may open a menu with options to text, email, post, or save your selfie. On desktop, it will usually download the image to your computer.
+      </div>
     </section>
   </main>
 
@@ -397,7 +397,6 @@
       fileName: "associate-selfie.jpg"
     };
 
-    // Lowered to match the printed dashed frame in your updated artwork.
     const PHOTO_RECT = {
       x: 146,
       y: 252,
@@ -424,6 +423,8 @@
     const previewModalImage = document.getElementById("previewModalImage");
     const previewRetakeBtn = document.getElementById("previewRetakeBtn");
     const previewSaveBtn = document.getElementById("previewSaveBtn");
+
+    const isEmbedded = window.self !== window.top;
 
     templateBackground.src = BACKGROUND_IMAGE_PATH;
 
@@ -473,7 +474,7 @@
 
     function stopCamera() {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
         stream = null;
       }
     }
@@ -512,7 +513,13 @@
         });
       } catch (error) {
         console.error(error);
-        setStatus("Camera access failed. Allow camera access and use HTTPS.", "error");
+
+        setStatus(
+          isEmbedded
+            ? "Camera access is blocked in this embedded view. Open the selfie page directly."
+            : "Camera access failed. Allow camera access and use HTTPS.",
+          "error"
+        );
 
         setButtonState({
           startDisabled: false,
@@ -720,7 +727,13 @@
     window.addEventListener("beforeunload", stopCamera);
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setStatus("This browser does not support camera access.", "error");
+      setStatus(
+        isEmbedded
+          ? "Camera is blocked in this embedded view. Open the selfie page directly."
+          : "This browser does not support camera access.",
+        "error"
+      );
+
       setButtonState({
         startDisabled: true,
         switchDisabled: true,
