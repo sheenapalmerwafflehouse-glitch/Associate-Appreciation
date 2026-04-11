@@ -3561,13 +3561,15 @@ body::before {
       <p>I'm the celebration suprise worth smiling for. What am I?</p>
 
       <div class="links">
-        <a
-          class="section-link pressable"
-          href="selfie.html"
-          target="_top"
-          rel="noopener">
-          Tap to Reveal
-        </a>
+       <a
+  class="section-link pressable"
+  id="open-selfie-page"
+  href="selfie.html"
+  target="_top"
+  rel="noopener">
+  Tap to Reveal
+</a>
+
       </div>
     </div>
   </div>
@@ -3775,6 +3777,7 @@ body::before {
       const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
       const roadtripModal = document.getElementById("roadtrip-game-modal");
       const openRoadtripGame = document.getElementById("open-roadtrip-game");
+      const openSelfiePageLink = document.getElementById("open-selfie-page");
       const closeRoadtripGame = document.getElementById("close-roadtrip-game");
       const roadtripMap = document.getElementById("roadtrip-map");
       const roadtripMapLock = document.getElementById("roadtrip-map-lock");
@@ -4963,6 +4966,17 @@ window.setTimeout(updateMiniNavArrows, 150);
         { frequency: 392, duration: 0.055, volume: 0.128, type: "triangle", gap: 0.05 },
         { frequency: 494, duration: 0.065, volume: 0.017, type: "triangle", gap: 0.065 }
       ]);
+const playCelebrationSelfieOpenSound = () => {
+  playNoiseBurst({ duration: 0.025, volume: 0.018, frequency: 2100, q: 0.95 });
+
+  window.setTimeout(() => {
+    playRoadtripToneSequence([
+      { frequency: 1318.51, duration: 0.04, volume: 0.012, type: "triangle", gap: 0.035 },
+      { frequency: 1567.98, duration: 0.055, volume: 0.011, type: "triangle", gap: 0.045 },
+      { frequency: 1975.53, duration: 0.075, volume: 0.010, type: "triangle", gap: 0.06 }
+    ]);
+  }, 8);
+};
 
 const spawnRoadtripPopup = (text, x, y, variant = "points", delay = 0) => {
         if (!roadtripPointPopups || !text) return;
@@ -5639,6 +5653,19 @@ const getRoadTripEndReason = () => {
         unlockRoadtripAudio();
         openRoadTripModal();
       });
+
+      openSelfiePageLink?.addEventListener("click", (e) => {
+  e.preventDefault();
+  unlockRoadtripAudio();
+  playCelebrationSelfieOpenSound();
+
+  const destination = openSelfiePageLink.getAttribute("href") || "selfie.html";
+
+  window.setTimeout(() => {
+    window.location.href = destination;
+  }, 180);
+});
+
 
       closeRoadtripGame?.addEventListener("click", closeRoadTripModalFn);
       roadtripMapRestart?.addEventListener("click", restartRoadTripWithFeedback);
