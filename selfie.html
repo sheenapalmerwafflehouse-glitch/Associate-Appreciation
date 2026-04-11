@@ -13,10 +13,6 @@
       --border: rgba(176, 150, 44, 0.18);
       --shadow: 0 16px 36px rgba(17, 17, 17, 0.12);
       --radius: 28px;
-      --preview-left: 17.5%;
-      --preview-top: 12.33%;
-      --preview-width: 65%;
-      --preview-height: 54%;
     }
 
     * {
@@ -98,7 +94,7 @@
     .stage {
       position: relative;
       width: 100%;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 1455 / 2000;
       overflow: hidden;
       border-radius: 24px;
       border: 1px solid rgba(176, 150, 44, 0.14);
@@ -106,35 +102,39 @@
       isolation: isolate;
     }
 
-    .template-background,
-    .template-overlay {
+    .template-background {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
-    }
-
-    .template-background {
       z-index: 1;
-    }
-
-    .template-overlay {
-      z-index: 4;
-      pointer-events: none;
     }
 
     .camera-window {
       position: absolute;
-      left: var(--preview-left);
-      top: var(--preview-top);
-      width: var(--preview-width);
-      height: var(--preview-height);
+      left: 18%;
+      top: 13%;
+      width: 64%;
+      height: 43%;
       z-index: 2;
       overflow: hidden;
       border-radius: 28px;
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.12);
+      box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.8),
+        0 10px 24px rgba(17,17,17,0.12);
+    }
+
+    .camera-window::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      border: 4px dashed rgba(255,255,255,0.96);
+      pointer-events: none;
+      z-index: 4;
     }
 
     .camera-video,
@@ -268,7 +268,8 @@
         border-radius: 22px;
       }
 
-      .camera-window {
+      .camera-window,
+      .camera-window::after {
         border-radius: 24px;
       }
     }
@@ -296,13 +297,6 @@
           <img id="capturePreview" class="capture-preview" alt="Captured selfie preview" />
         </div>
 
-        <img
-          id="templateOverlay"
-          class="template-overlay"
-          src="Images/selfie-overlay.png"
-          alt=""
-        />
-
         <div id="statusPill" class="status-pill">
           <span class="status-dot"></span>
           <span id="statusText">Camera not started</span>
@@ -327,29 +321,28 @@
 
   <script>
     const BACKGROUND_IMAGE_PATH = "Images/selfie-background.jpg";
-    const OVERLAY_IMAGE_PATH = "Images/selfie-overlay.png";
 
-    // Final output image size.
+    // Final saved image size.
     const OUTPUT_SETTINGS = {
-      width: 2400,
-      height: 3000,
+      width: 1455,
+      height: 2000,
       quality: 0.95,
       fileName: "associate-selfie.jpg"
     };
 
-    // Selfie placement on the final saved image.
+    // Selfie placement on the saved image.
+    // These match the visible dashed frame closely.
     const PHOTO_RECT = {
-      x: 420,
-      y: 370,
-      width: 1560,
-      height: 1620
+      x: 262,
+      y: 260,
+      width: 931,
+      height: 860,
+      radius: 42
     };
 
     const camera = document.getElementById("camera");
-    const cameraWindow = document.getElementById("cameraWindow");
     const capturePreview = document.getElementById("capturePreview");
     const templateBackground = document.getElementById("templateBackground");
-    const templateOverlay = document.getElementById("templateOverlay");
     const outputCanvas = document.getElementById("outputCanvas");
 
     const statusPill = document.getElementById("statusPill");
@@ -362,24 +355,11 @@
     const saveBtn = document.getElementById("saveBtn");
 
     templateBackground.src = BACKGROUND_IMAGE_PATH;
-    templateOverlay.src = OVERLAY_IMAGE_PATH;
 
     let stream = null;
     let currentFacingMode = "user";
     let capturedBlobUrl = "";
     let capturedDataUrl = "";
-
-    function applyPreviewWindowFromRect() {
-      const left = (PHOTO_RECT.x / OUTPUT_SETTINGS.width) * 100;
-      const top = (PHOTO_RECT.y / OUTPUT_SETTINGS.height) * 100;
-      const width = (PHOTO_RECT.width / OUTPUT_SETTINGS.width) * 100;
-      const height = (PHOTO_RECT.height / OUTPUT_SETTINGS.height) * 100;
-
-      cameraWindow.style.left = `${left}%`;
-      cameraWindow.style.top = `${top}%`;
-      cameraWindow.style.width = `${width}%`;
-      cameraWindow.style.height = `${height}%`;
-    }
 
     function setStatus(message, state = "idle") {
       statusText.textContent = message;
@@ -460,8 +440,25 @@
       }
     }
 
+    function roundRectPath(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + width - r, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+      ctx.lineTo(x + width, y + height - r);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      ctx.lineTo(x + r, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
     function coverImage(ctx, image, x, y, width, height) {
-      const imgRatio = image.width / image.height;
+      const imgRatio = image.videoWidth
+        ? image.videoWidth / image.videoHeight
+        : image.width / image.height;
       const boxRatio = width / height;
 
       let drawWidth;
@@ -497,10 +494,13 @@
       outputCanvas.height = OUTPUT_SETTINGS.height;
 
       const backgroundImg = await loadImage(BACKGROUND_IMAGE_PATH);
-      const overlayImg = await loadImage(OVERLAY_IMAGE_PATH);
 
       ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
       ctx.drawImage(backgroundImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
+
+      ctx.save();
+      roundRectPath(ctx, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height, PHOTO_RECT.radius);
+      ctx.clip();
 
       if (currentFacingMode === "user") {
         ctx.save();
@@ -512,7 +512,15 @@
         coverImage(ctx, camera, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
       }
 
-      ctx.drawImage(overlayImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
+      ctx.restore();
+
+      ctx.save();
+      ctx.setLineDash([22, 14]);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "rgba(255,255,255,0.98)";
+      roundRectPath(ctx, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height, PHOTO_RECT.radius);
+      ctx.stroke();
+      ctx.restore();
     }
 
     async function captureSelfie() {
@@ -534,7 +542,7 @@
         });
       } catch (error) {
         console.error(error);
-        setStatus("Capture failed. Check your image files.", "error");
+        setStatus("Capture failed. Check your image file.", "error");
       }
     }
 
@@ -619,8 +627,6 @@
     saveBtn.addEventListener("click", saveImage);
 
     window.addEventListener("beforeunload", stopCamera);
-
-    applyPreviewWindowFromRect();
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       setStatus("This browser does not support camera access.", "error");
