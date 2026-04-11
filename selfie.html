@@ -410,8 +410,7 @@
   <script>
     const TEMPLATE_IMAGE_PATH = "Images/selfie-template.jpg";
 
-    // Adjust these four numbers so the selfie lands exactly where you want on your JPEG template.
-    // Values are based on the FINAL output image size.
+    // Adjust these numbers so the selfie lands where you want on the template.
     const PHOTO_RECT = {
       x: 760,
       y: 520,
@@ -606,6 +605,7 @@
         URL.revokeObjectURL(capturedBlobUrl);
         capturedBlobUrl = "";
       }
+
       capturedDataUrl = "";
       capturePreview.removeAttribute("src");
       setPreviewMode(false);
@@ -626,10 +626,26 @@
           await buildComposite();
         }
 
-        outputCanvas.toBlob((blob) => {
+        outputCanvas.toBlob(async (blob) => {
           if (!blob) {
             setStatus("Could not create JPEG file.", "error");
             return;
+          }
+
+          const file = new File([blob], OUTPUT_SETTINGS.fileName, { type: "image/jpeg" });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+            try {
+              await navigator.share({
+                files: [file],
+                title: "Associate Selfie",
+                text: "Your selfie is ready"
+              });
+              setStatus("Selfie ready to save/share", "live");
+              return;
+            } catch (shareError) {
+              // User canceled or share failed, so fall back to download.
+            }
           }
 
           if (capturedBlobUrl) URL.revokeObjectURL(capturedBlobUrl);
@@ -676,3 +692,8 @@
   </script>
 </body>
 </html>
+
+
+
+
+
