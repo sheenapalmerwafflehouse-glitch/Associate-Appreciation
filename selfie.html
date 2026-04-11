@@ -2,548 +2,557 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Associate Selfie Booth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selfie Booth</title>
+
   <style>
     :root {
       --text: #111111;
-      --muted: #5b5b5b;
+      --muted: #5a5a5a;
       --yellow: #f5d547;
+      --yellow-dark: #d4b000;
       --yellow-soft: #fff7c8;
       --border: rgba(176, 150, 44, 0.18);
-      --shadow: 0 16px 36px rgba(17, 17, 17, 0.12);
-      --radius: 28px;
+      --shadow: 0 12px 30px rgba(92, 77, 19, 0.08);
+      --shadow-hover: 0 18px 40px rgba(92, 77, 19, 0.12);
+      --max: 1120px;
+
+      /* live camera box */
+      --cutout-top: 32%;
+      --cutout-width: 56%;
+      --cutout-height: 35%;
+      --cutout-radius: 28px;
+
+      /* optional tweak for the live badge */
+      --status-top: 18px;
+      --status-left: 18px;
+    }
+
+    @media (min-width: 900px) {
+      :root {
+        /* desktop balance tweak */
+        --cutout-top: 31.5%;
+        --cutout-width: 54%;
+        --cutout-height: 35%;
+      }
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, #faf8f2 0%, #f2eee1 40%, #e8e3d1 100%);
+    html,
+    body {
+      width: 100%;
+      min-width: 100%;
+      overflow-x: hidden;
     }
 
     body {
-      padding: 16px;
+      margin: 0;
+      min-height: 100svh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #f8f7f2 0%, #f1efe7 35%, #e8e5da 100%);
     }
 
-    .page {
-      width: min(100%, 760px);
+    img,
+    video,
+    canvas {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(253, 253, 253, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(176, 150, 44, 0.18);
+      box-shadow: 0 6px 18px rgba(92, 77, 19, 0.09);
+    }
+
+    .topbar-inner {
+      width: min(var(--max), calc(100vw - 32px));
       margin: 0 auto;
-      display: grid;
-      gap: 16px;
-    }
-
-    .hero,
-    .panel {
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .hero {
-      padding: 20px 18px;
+      padding: 10px 16px 14px;
       text-align: center;
     }
 
-    .eyebrow {
+    .nav-logo {
+      height: 84px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 8px;
+    }
+
+    .back-link {
+      display: inline-block;
+      padding: 8px 14px;
+      background: #ffffff;
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      color: #111;
+      box-shadow: 0 4px 10px rgba(92, 77, 19, 0.05);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: rgba(255, 244, 214, 0.98);
+      border-color: rgba(212, 176, 0, 0.24);
+      transform: translateY(-1px);
+    }
+
+    .page {
+      width: min(var(--max), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 16px 34px;
+    }
+
+    .hero {
+      max-width: 920px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,249,235,0.84));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 20px 18px 22px;
+    }
+
+    .kicker {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 12px;
+      padding: 8px 14px;
       border-radius: 999px;
-      background: var(--yellow-soft);
-      border: 1px solid rgba(212, 176, 0, 0.18);
+      background: rgba(255, 247, 200, 0.94);
       color: #6f5f00;
+      border: 1px solid rgba(212, 176, 0, 0.18);
       font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      font-weight: 900;
       text-transform: uppercase;
+      letter-spacing: 0.08em;
       margin-bottom: 12px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.7rem, 5vw, 2.6rem);
-      line-height: 1;
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      line-height: 0.98;
       text-transform: uppercase;
       letter-spacing: -0.03em;
     }
 
     .hero p {
-      margin: 12px auto 0;
-      max-width: 34ch;
+      max-width: 30ch;
+      margin: 16px auto 0;
       color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.98rem;
+      line-height: 1.6;
+      font-size: clamp(1rem, 2.5vw, 1.05rem);
     }
 
-    .panel {
-      padding: 14px;
+    .booth-shell {
+      max-width: 920px;
+      margin: 0 auto;
       display: grid;
-      gap: 14px;
+      gap: 22px;
     }
 
-    .stage {
+    .booth-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(247,249,235,0.9));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 22px 18px 20px;
+    }
+
+    .stage-wrap {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .selfie-stage {
       position: relative;
       width: 100%;
-      aspect-ratio: 768 / 1024;
+      aspect-ratio: 2 / 3;
+      border-radius: 28px;
       overflow: hidden;
-      border-radius: 24px;
-      border: 1px solid rgba(176, 150, 44, 0.14);
       background: #ffffff;
-      isolation: isolate;
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
     }
 
-    .template-background {
+    .template-base,
+    .template-overlay,
+    .preview-full {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      display: block;
       object-fit: cover;
+    }
+
+    .template-base {
       z-index: 1;
     }
 
     .camera-window {
       position: absolute;
-      left: 18.2%;
-      top: 26.4%;
-      width: 64%;
-      height: 50.6%;
-      z-index: 2;
+      left: 50%;
+      top: var(--cutout-top);
+      width: var(--cutout-width);
+      height: var(--cutout-height);
+      transform: translateX(-50%);
+      border-radius: var(--cutout-radius);
       overflow: hidden;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.04);
-    }
-
-    .camera-video,
-    .capture-preview {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      background: #d9d9d9;
+      z-index: 2;
+      background: #e9e7dd;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.18),
+        0 8px 18px rgba(17, 17, 17, 0.08);
     }
 
     .camera-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #d9d6cb;
+    }
+
+    .camera-video.is-front {
       transform: scaleX(-1);
     }
 
-    .camera-video.environment {
-      transform: none;
+    .template-overlay {
+      z-index: 3;
+      pointer-events: none;
     }
 
-    .capture-preview {
+    .preview-full {
+      z-index: 4;
+      display: none;
+      background: #fff;
+    }
+
+    .selfie-stage.has-capture .template-base,
+    .selfie-stage.has-capture .camera-window,
+    .selfie-stage.has-capture .template-overlay {
       display: none;
     }
 
-    .status-pill {
+    .selfie-stage.has-capture .preview-full {
+      display: block;
+    }
+
+    .camera-status {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: var(--status-top);
+      left: var(--status-left);
       z-index: 5;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      min-height: 38px;
-      padding: 8px 12px;
+      gap: 10px;
+      min-height: 56px;
+      padding: 10px 18px 10px 14px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid rgba(176, 150, 44, 0.18);
-      color: #3d3d3d;
-      font-weight: 800;
-      font-size: 0.88rem;
-      box-shadow: 0 8px 18px rgba(17,17,17,0.10);
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      box-shadow: 0 8px 18px rgba(92, 77, 19, 0.08);
+      font-weight: 900;
+      font-size: clamp(1rem, 2.6vw, 1.1rem);
+      color: #333;
     }
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
+    .camera-status-dot {
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: #c9c9c9;
-      flex: 0 0 10px;
+      background: #bbb;
+      box-shadow: 0 0 0 8px rgba(0,0,0,0.06);
+      flex: 0 0 18px;
     }
 
-    .status-pill.live .status-dot {
-      background: #29b34a;
-      box-shadow: 0 0 0 6px rgba(41,179,74,0.12);
-    }
-
-    .status-pill.error .status-dot {
-      background: #da3232;
-      box-shadow: 0 0 0 6px rgba(218,50,50,0.12);
+    .camera-status.live .camera-status-dot {
+      background: #2fc15d;
     }
 
     .controls {
+      max-width: 760px;
+      margin: 18px auto 0;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: 16px;
     }
 
     .btn {
       appearance: none;
       border: 1px solid rgba(176, 150, 44, 0.18);
-      border-radius: 18px;
-      min-height: 54px;
-      padding: 12px 14px;
-      font: inherit;
-      font-weight: 800;
+      border-radius: 999px;
+      min-height: 72px;
+      padding: 0 22px;
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      font-weight: 900;
       cursor: pointer;
-      background: #fff;
-      color: #1e1e1e;
-      box-shadow: 0 8px 16px rgba(17,17,17,0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+      box-shadow:
+        0 2px 0 rgba(92, 77, 19, 0.08),
+        0 10px 20px rgba(92, 77, 19, 0.08);
     }
 
-    .btn:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 20px rgba(17,17,17,0.12);
+    .btn:hover:not(:disabled),
+    .btn:focus-visible:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow:
+        0 2px 0 rgba(92, 77, 19, 0.08),
+        0 14px 24px rgba(92, 77, 19, 0.12);
     }
 
     .btn:disabled {
-      opacity: 0.45;
+      opacity: 0.58;
       cursor: not-allowed;
     }
 
-    .btn.primary {
+    .btn-primary {
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+      color: #111;
     }
 
-    .btn.secondary {
-      background: #fffdf4;
+    .btn-secondary {
+      background: rgba(255,255,255,0.94);
+      color: #111;
     }
 
-    .btn.wide {
-      grid-column: 1 / -1;
+    .btn-soft {
+      background: linear-gradient(180deg, #fff6d8 0%, #f7efb6 100%);
+      color: #111;
     }
 
-    .subnote {
+    .message {
+      max-width: 760px;
+      margin: 2px auto 0;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      color: var(--muted);
+      line-height: 1.55;
+      text-align: center;
+      font-size: 0.96rem;
+    }
+
+    .message.error {
+      color: #8a1f1f;
+      background: #fff4f4;
+      border-color: rgba(170, 44, 44, 0.18);
+    }
+
+    .helper {
+      max-width: 760px;
+      margin: 0 auto;
       text-align: center;
       color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
-      padding: 0 6px 2px;
+      line-height: 1.55;
+      font-size: 0.95rem;
     }
 
     .hidden-canvas {
       display: none;
     }
 
-    .preview-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 17, 17, 0.82);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 9999;
-    }
-
-    .preview-modal.open {
-      display: flex;
-    }
-
-    .preview-modal-inner {
-      width: min(100%, 760px);
-      max-height: 92vh;
-      overflow: auto;
-      background: rgba(255,255,255,0.98);
-      border-radius: 24px;
-      padding: 14px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    }
-
-    .preview-title {
-      margin: 0 0 12px;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .preview-image {
+    .page-footer {
+      margin-top: 28px;
       width: 100%;
-      display: block;
-      border-radius: 18px;
-      background: #fff;
-      border: 1px solid rgba(176, 150, 44, 0.14);
+      text-align: center;
+      background: #2b271d;
+      color: rgba(255,255,255,0.82);
+      padding: 18px 16px 28px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      border-top: 1px solid rgba(245, 213, 71, 0.16);
     }
 
-    .preview-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 12px;
+    @media (max-width: 700px) {
+      .topbar-inner,
+      .page {
+        width: calc(100vw - 20px);
       }
 
-      .controls,
-      .preview-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .panel,
-      .hero {
+      .booth-card {
+        padding: 18px 12px 18px;
         border-radius: 24px;
       }
 
-      .stage {
-        border-radius: 22px;
+      .camera-status {
+        min-height: 52px;
+        padding: 9px 16px 9px 13px;
       }
 
-      .camera-window {
-        border-radius: 22px;
+      .btn {
+        min-height: 68px;
       }
     }
   </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <img src="Images/Mission Module Pics (17).png" class="nav-logo" alt="Waffle House Logo" />
+      <a href="index.html" target="_top" class="back-link">← Back to Celebration Page</a>
+    </div>
+  </header>
+
   <main class="page">
     <section class="hero">
-      <div class="eyebrow">Selfie Booth</div>
-      <h1>Strike a Pose</h1>
-      <p>Center yourself in the frame, take your selfie, then save or share it.</p>
-    </section>
-
-    <section class="panel">
-      <div class="stage" aria-label="Associate selfie booth">
-        <img
-          id="templateBackground"
-          class="template-background"
-          src="Images/selfie-background.png"
-          alt=""
-        />
-
-        <div id="cameraWindow" class="camera-window">
-          <video id="camera" class="camera-video" playsinline autoplay muted></video>
-          <img id="capturePreview" class="capture-preview" alt="Captured selfie preview" />
-        </div>
-
-        <div id="statusPill" class="status-pill">
-          <span class="status-dot"></span>
-          <span id="statusText">Camera not started</span>
-        </div>
-      </div>
-
-      <div class="controls">
-        <button id="startBtn" class="btn primary" type="button">Start Camera</button>
-        <button id="switchBtn" class="btn secondary" type="button" disabled>Switch Camera</button>
-        <button id="captureBtn" class="btn primary" type="button" disabled>Take Selfie</button>
-        <button id="retakeBtn" class="btn secondary" type="button" disabled>Retake</button>
-        <button id="saveBtn" class="btn primary wide" type="button" disabled>Save or Share Selfie</button>
-      </div>
-
-      <div class="subnote">
-        On phones, Save may open your share sheet. On desktop, it will usually download the image.
+      <div class="hero-card">
+        <div class="kicker">Selfie Booth</div>
+        <h1>Strike a Pose</h1>
+        <p>Center yourself in the frame, take your selfie, review it, then save or share it.</p>
       </div>
     </section>
+
+    <section class="booth-shell">
+      <div class="booth-card">
+        <div class="stage-wrap">
+          <div class="selfie-stage" id="selfie-stage">
+            <!--
+              Make sure these two files exist:
+              1) Images/selfie-template.jpg
+              2) Images/selfie-template-overlay.png
+            -->
+            <img
+              id="template-base"
+              class="template-base"
+              src="Images/selfie-template.jpg"
+              alt="Selfie template background"
+            />
+
+            <div class="camera-window" id="camera-window">
+              <video
+                id="camera-video"
+                class="camera-video"
+                autoplay
+                playsinline
+                muted
+              ></video>
+            </div>
+
+            <img
+              id="template-overlay"
+              class="template-overlay"
+              src="Images/selfie-template-overlay.png"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <img
+              id="preview-full"
+              class="preview-full"
+              alt="Selfie preview"
+            />
+
+            <div class="camera-status" id="camera-status">
+              <span class="camera-status-dot"></span>
+              <span id="camera-status-text">Camera off</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="start-camera-btn" class="btn btn-soft" type="button">Start Camera</button>
+          <button id="switch-camera-btn" class="btn btn-secondary" type="button" disabled>Switch Camera</button>
+          <button id="take-selfie-btn" class="btn btn-primary" type="button" disabled>Take Selfie</button>
+          <button id="retake-btn" class="btn btn-secondary" type="button" disabled>Retake</button>
+          <button id="save-share-btn" class="btn btn-primary" type="button" disabled>Save or Share Photo</button>
+        </div>
+
+        <p class="message" id="message">
+          Start the camera first. After you take a photo, the full finished selfie will preview here before you save it.
+        </p>
+
+        <p class="helper">
+          On supported phones, the share sheet may offer apps like Instagram, Facebook, TikTok, Messages, AirDrop, or Save Image. That depends on the device and browser.
+        </p>
+      </div>
+    </section>
+
+    <canvas id="output-canvas" class="hidden-canvas"></canvas>
   </main>
 
-  <div id="previewModal" class="preview-modal" aria-hidden="true">
-    <div class="preview-modal-inner">
-      <h2 class="preview-title">Preview Your Selfie</h2>
-      <img id="previewModalImage" class="preview-image" alt="Selfie preview" />
-
-      <div class="preview-actions">
-        <button id="previewRetakeBtn" class="btn secondary" type="button">Retake</button>
-        <button id="previewSaveBtn" class="btn primary" type="button">Save or Share</button>
-      </div>
-    </div>
-  </div>
-
-  <canvas id="outputCanvas" class="hidden-canvas"></canvas>
+  <footer class="page-footer">
+    ©2026 WH Intellectual, LLC. ®™ All Waffle House trademarks are owned by WH Intellectual, LLC and licensed to Waffle House, Inc.
+  </footer>
 
   <script>
-    const BACKGROUND_IMAGE_PATH = "Images/selfie-background.png";
+    const TEMPLATE_BASE_SRC = "Images/selfie-template.jpg";
+    const TEMPLATE_OVERLAY_SRC = "Images/selfie-template-overlay.png";
 
-    const OUTPUT_SETTINGS = {
-      width: 768,
-      height: 1024,
-      quality: 0.95,
-      fileName: "associate-selfie.jpg"
+    const OUTPUT_CROP = {
+      leftPct: 22,
+      topPct: 32,
+      widthPct: 56,
+      heightPct: 35
     };
 
-    // Lowered to match the printed dashed frame in your updated artwork.
-    const PHOTO_RECT = {
-      x: 140,
-      y: 270,
-      width: 492,
-      height: 518,
-      radius: 24
+    const selfieStage = document.getElementById("selfie-stage");
+    const cameraVideo = document.getElementById("camera-video");
+    const previewFull = document.getElementById("preview-full");
+    const outputCanvas = document.getElementById("output-canvas");
+
+    const startCameraBtn = document.getElementById("start-camera-btn");
+    const switchCameraBtn = document.getElementById("switch-camera-btn");
+    const takeSelfieBtn = document.getElementById("take-selfie-btn");
+    const retakeBtn = document.getElementById("retake-btn");
+    const saveShareBtn = document.getElementById("save-share-btn");
+
+    const cameraStatus = document.getElementById("camera-status");
+    const cameraStatusText = document.getElementById("camera-status-text");
+    const messageEl = document.getElementById("message");
+
+    const state = {
+      stream: null,
+      facingMode: "user",
+      cameraReady: false,
+      hasCapture: false,
+      hasMultipleCameras: false
     };
 
-    const camera = document.getElementById("camera");
-    const capturePreview = document.getElementById("capturePreview");
-    const templateBackground = document.getElementById("templateBackground");
-    const outputCanvas = document.getElementById("outputCanvas");
+    let baseImage = null;
+    let overlayImage = null;
 
-    const statusPill = document.getElementById("statusPill");
-    const statusText = document.getElementById("statusText");
-
-    const startBtn = document.getElementById("startBtn");
-    const switchBtn = document.getElementById("switchBtn");
-    const captureBtn = document.getElementById("captureBtn");
-    const retakeBtn = document.getElementById("retakeBtn");
-    const saveBtn = document.getElementById("saveBtn");
-
-    const previewModal = document.getElementById("previewModal");
-    const previewModalImage = document.getElementById("previewModalImage");
-    const previewRetakeBtn = document.getElementById("previewRetakeBtn");
-    const previewSaveBtn = document.getElementById("previewSaveBtn");
-
-    templateBackground.src = BACKGROUND_IMAGE_PATH;
-
-    let stream = null;
-    let currentFacingMode = "user";
-    let capturedBlobUrl = "";
-    let capturedDataUrl = "";
-
-    function setStatus(message, state = "idle") {
-      statusText.textContent = message;
-      statusPill.classList.remove("live", "error");
-      if (state === "live") statusPill.classList.add("live");
-      if (state === "error") statusPill.classList.add("error");
+    function setMessage(text, type = "") {
+      messageEl.textContent = text;
+      messageEl.className = `message${type ? " " + type : ""}`;
     }
 
-    function setPreviewMode(captured) {
-      capturePreview.style.display = captured ? "block" : "none";
-      camera.style.visibility = captured ? "hidden" : "visible";
+    function setStatus(text, isLive = false) {
+      cameraStatusText.textContent = text;
+      cameraStatus.classList.toggle("live", isLive);
     }
 
-    function setButtonState({
-      startDisabled,
-      switchDisabled,
-      captureDisabled,
-      retakeDisabled,
-      saveDisabled
-    }) {
-      startBtn.disabled = startDisabled;
-      switchBtn.disabled = switchDisabled;
-      captureBtn.disabled = captureDisabled;
-      retakeBtn.disabled = retakeDisabled;
-      saveBtn.disabled = saveDisabled;
+    function updateButtons() {
+      startCameraBtn.disabled = !!state.stream && state.cameraReady && !state.hasCapture;
+      switchCameraBtn.disabled = !state.stream || !state.cameraReady || !state.hasMultipleCameras;
+      takeSelfieBtn.disabled = !state.stream || !state.cameraReady || state.hasCapture;
+      retakeBtn.disabled = !state.hasCapture;
+      saveShareBtn.disabled = !state.hasCapture;
     }
 
-    function openPreviewModal(imageSrc) {
-      previewModalImage.src = imageSrc;
-      previewModal.classList.add("open");
-      previewModal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closePreviewModal() {
-      previewModal.classList.remove("open");
-      previewModal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    }
-
-    function stopCamera() {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-        stream = null;
-      }
-    }
-
-    async function startCamera() {
-      stopCamera();
-      setStatus("Opening camera...", "idle");
-
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: currentFacingMode },
-            width: { ideal: 1920 },
-            height: { ideal: 1080 }
-          },
-          audio: false
-        });
-
-        camera.srcObject = stream;
-        await camera.play();
-
-        camera.classList.toggle("environment", currentFacingMode === "environment");
-        setPreviewMode(false);
-
-        setStatus(
-          currentFacingMode === "user" ? "Front camera live" : "Back camera live",
-          "live"
-        );
-
-        setButtonState({
-          startDisabled: true,
-          switchDisabled: false,
-          captureDisabled: false,
-          retakeDisabled: true,
-          saveDisabled: true
-        });
-      } catch (error) {
-        console.error(error);
-        setStatus("Camera access failed. Allow camera access and use HTTPS.", "error");
-
-        setButtonState({
-          startDisabled: false,
-          switchDisabled: true,
-          captureDisabled: true,
-          retakeDisabled: true,
-          saveDisabled: true
-        });
-      }
-    }
-
-    function roundRectPath(ctx, x, y, width, height, radius) {
-      const r = Math.min(radius, width / 2, height / 2);
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.lineTo(x + width - r, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + r);
-      ctx.lineTo(x + width, y + height - r);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-      ctx.lineTo(x + r, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - r);
-      ctx.lineTo(x, y + r);
-      ctx.quadraticCurveTo(x, y, x + r, y);
-      ctx.closePath();
-    }
-
-    function coverImage(ctx, image, x, y, width, height) {
-      const imgRatio = image.videoWidth
-        ? image.videoWidth / image.videoHeight
-        : image.width / image.height;
-      const boxRatio = width / height;
-
-      let drawWidth;
-      let drawHeight;
-      let drawX = x;
-      let drawY = y;
-
-      if (imgRatio > boxRatio) {
-        drawHeight = height;
-        drawWidth = height * imgRatio;
-        drawX = x - (drawWidth - width) / 2;
-      } else {
-        drawWidth = width;
-        drawHeight = width / imgRatio;
-        drawY = y - (drawHeight - height) / 2;
-      }
-
-      ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
-    }
-
-    async function loadImage(src) {
+    function loadImage(src) {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);
@@ -552,163 +561,285 @@
       });
     }
 
-    async function buildComposite() {
-      const ctx = outputCanvas.getContext("2d");
-      outputCanvas.width = OUTPUT_SETTINGS.width;
-      outputCanvas.height = OUTPUT_SETTINGS.height;
+    const assetsReady = (async () => {
+      baseImage = await loadImage(TEMPLATE_BASE_SRC);
+      try {
+        overlayImage = await loadImage(TEMPLATE_OVERLAY_SRC);
+      } catch (error) {
+        overlayImage = null;
+      }
+    })();
 
-      const backgroundImg = await loadImage(BACKGROUND_IMAGE_PATH);
+    async function detectCameras() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputs = devices.filter((d) => d.kind === "videoinput");
+        state.hasMultipleCameras = videoInputs.length > 1;
+      } catch (error) {
+        state.hasMultipleCameras = false;
+      }
+      updateButtons();
+    }
 
-      ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-      ctx.drawImage(backgroundImg, 0, 0, OUTPUT_SETTINGS.width, OUTPUT_SETTINGS.height);
+    async function stopCamera() {
+      if (state.stream) {
+        state.stream.getTracks().forEach((track) => track.stop());
+      }
+      state.stream = null;
+      state.cameraReady = false;
+      cameraVideo.srcObject = null;
+      updateButtons();
+    }
+
+    async function startCamera() {
+      try {
+        setMessage("Starting camera…");
+        previewFull.removeAttribute("src");
+        state.hasCapture = false;
+        selfieStage.classList.remove("has-capture");
+
+        await stopCamera();
+
+        let stream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: state.facingMode },
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
+            },
+            audio: false
+          });
+        } catch (firstError) {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+          });
+        }
+
+        state.stream = stream;
+        cameraVideo.srcObject = stream;
+
+        await new Promise((resolve) => {
+          cameraVideo.onloadedmetadata = () => resolve();
+        });
+
+        await cameraVideo.play();
+
+        state.cameraReady = true;
+        cameraVideo.classList.toggle("is-front", state.facingMode === "user");
+
+        setStatus(
+          state.facingMode === "user" ? "Front camera live" : "Back camera live",
+          true
+        );
+        setMessage("Camera is live. Center yourself in the frame, then tap Take Selfie.");
+        await detectCameras();
+        updateButtons();
+      } catch (error) {
+        console.error(error);
+        setStatus("Camera unavailable", false);
+        setMessage(
+          "Camera access failed. Make sure this page is opened from your live GitHub Pages site and that camera permission is allowed.",
+          "error"
+        );
+        updateButtons();
+      }
+    }
+
+    function drawCoverImage(ctx, source, dx, dy, dWidth, dHeight, mirror = false) {
+      const sWidth = source.videoWidth || source.naturalWidth || source.width;
+      const sHeight = source.videoHeight || source.naturalHeight || source.height;
+
+      if (!sWidth || !sHeight) return;
+
+      const scale = Math.max(dWidth / sWidth, dHeight / sHeight);
+      const drawWidth = sWidth * scale;
+      const drawHeight = sHeight * scale;
+      const offsetX = (dWidth - drawWidth) / 2;
+      const offsetY = (dHeight - drawHeight) / 2;
 
       ctx.save();
-      roundRectPath(ctx, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height, PHOTO_RECT.radius);
+      ctx.beginPath();
+      ctx.rect(dx, dy, dWidth, dHeight);
       ctx.clip();
 
-      if (currentFacingMode === "user") {
-        ctx.save();
-        ctx.translate(PHOTO_RECT.x + PHOTO_RECT.width, 0);
+      if (mirror) {
+        ctx.translate(dx + dWidth, dy);
         ctx.scale(-1, 1);
-        coverImage(ctx, camera, 0, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
-        ctx.restore();
+        ctx.drawImage(source, offsetX, offsetY, drawWidth, drawHeight);
       } else {
-        coverImage(ctx, camera, PHOTO_RECT.x, PHOTO_RECT.y, PHOTO_RECT.width, PHOTO_RECT.height);
+        ctx.drawImage(source, dx + offsetX, dy + offsetY, drawWidth, drawHeight);
       }
 
       ctx.restore();
     }
 
-    async function captureSelfie() {
-      if (!stream) return;
+    async function renderComposite() {
+      await assetsReady;
 
-      try {
-        await buildComposite();
-        capturedDataUrl = outputCanvas.toDataURL("image/jpeg", OUTPUT_SETTINGS.quality);
-        capturePreview.src = capturedDataUrl;
-        setPreviewMode(true);
-        setStatus("Preview ready", "live");
+      const width = baseImage?.naturalWidth || 1080;
+      const height = baseImage?.naturalHeight || 1620;
 
-        setButtonState({
-          startDisabled: true,
-          switchDisabled: true,
-          captureDisabled: true,
-          retakeDisabled: false,
-          saveDisabled: false
-        });
+      outputCanvas.width = width;
+      outputCanvas.height = height;
 
-        openPreviewModal(capturedDataUrl);
-      } catch (error) {
-        console.error(error);
-        setStatus("Capture failed. Check your image file.", "error");
-      }
-    }
+      const ctx = outputCanvas.getContext("2d");
+      ctx.clearRect(0, 0, width, height);
 
-    function retakeSelfie() {
-      closePreviewModal();
-
-      if (capturedBlobUrl) {
-        URL.revokeObjectURL(capturedBlobUrl);
-        capturedBlobUrl = "";
+      if (baseImage) {
+        ctx.drawImage(baseImage, 0, 0, width, height);
+      } else {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
       }
 
-      capturedDataUrl = "";
-      capturePreview.removeAttribute("src");
-      setPreviewMode(false);
+      const cropX = Math.round(width * (OUTPUT_CROP.leftPct / 100));
+      const cropY = Math.round(height * (OUTPUT_CROP.topPct / 100));
+      const cropW = Math.round(width * (OUTPUT_CROP.widthPct / 100));
+      const cropH = Math.round(height * (OUTPUT_CROP.heightPct / 100));
 
-      setStatus(
-        currentFacingMode === "user" ? "Front camera live" : "Back camera live",
-        "live"
+      drawCoverImage(
+        ctx,
+        cameraVideo,
+        cropX,
+        cropY,
+        cropW,
+        cropH,
+        state.facingMode === "user"
       );
 
-      setButtonState({
-        startDisabled: true,
-        switchDisabled: false,
-        captureDisabled: false,
-        retakeDisabled: true,
-        saveDisabled: true
-      });
+      if (overlayImage) {
+        ctx.drawImage(overlayImage, 0, 0, width, height);
+      }
+
+      const previewUrl = outputCanvas.toDataURL("image/jpeg", 0.96);
+      previewFull.src = previewUrl;
+      selfieStage.classList.add("has-capture");
+      state.hasCapture = true;
+
+      setStatus("Preview ready", false);
+      setMessage("This is the finished selfie. If it looks good, save or share it. If not, tap Retake.");
+      updateButtons();
     }
 
-    async function saveImage() {
+    async function takeSelfie() {
+      if (!state.stream || !state.cameraReady) {
+        setMessage("Start the camera first.", "error");
+        return;
+      }
+
       try {
-        if (!capturedDataUrl) {
-          await buildComposite();
-        }
-
-        outputCanvas.toBlob(async (blob) => {
-          if (!blob) {
-            setStatus("Could not create JPEG file.", "error");
-            return;
-          }
-
-          const file = new File([blob], OUTPUT_SETTINGS.fileName, { type: "image/jpeg" });
-
-          if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-            try {
-              await navigator.share({
-                files: [file],
-                title: "Associate Selfie",
-                text: "Your selfie is ready"
-              });
-              closePreviewModal();
-              setStatus("Selfie ready to save/share", "live");
-              return;
-            } catch (error) {
-            }
-          }
-
-          if (capturedBlobUrl) URL.revokeObjectURL(capturedBlobUrl);
-          capturedBlobUrl = URL.createObjectURL(blob);
-
-          const link = document.createElement("a");
-          link.href = capturedBlobUrl;
-          link.download = OUTPUT_SETTINGS.fileName;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-
-          closePreviewModal();
-          setStatus("JPEG saved", "live");
-        }, "image/jpeg", OUTPUT_SETTINGS.quality);
+        await renderComposite();
       } catch (error) {
         console.error(error);
-        setStatus("Save failed.", "error");
+        setMessage("Could not create the selfie preview. Please try again.", "error");
       }
+    }
+
+    async function retakeSelfie() {
+      state.hasCapture = false;
+      selfieStage.classList.remove("has-capture");
+      previewFull.removeAttribute("src");
+      setStatus(
+        state.facingMode === "user" ? "Front camera live" : "Back camera live",
+        !!state.stream
+      );
+      setMessage("Camera is live again. Adjust your position and take another selfie.");
+      updateButtons();
+
+      if (!state.stream) {
+        await startCamera();
+      }
+    }
+
+    function downloadBlob(blob, fileName) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function saveOrShare() {
+      if (!state.hasCapture) {
+        setMessage("Take a selfie first so you can preview it before saving.", "error");
+        return;
+      }
+
+      outputCanvas.toBlob(async (blob) => {
+        if (!blob) {
+          setMessage("Could not prepare the image for saving.", "error");
+          return;
+        }
+
+        const fileName = `waffle-house-selfie-${Date.now()}.jpg`;
+        const file = new File([blob], fileName, { type: "image/jpeg" });
+
+        try {
+          const canShareFiles =
+            navigator.share &&
+            navigator.canShare &&
+            navigator.canShare({ files: [file] });
+
+          if (canShareFiles) {
+            await navigator.share({
+              title: "Waffle House Selfie",
+              text: "My Associate Appreciation selfie",
+              files: [file]
+            });
+            setMessage("Your device share sheet opened. You can save it or send it to a supported app.");
+            return;
+          }
+        } catch (error) {
+          if (error && error.name === "AbortError") {
+            setMessage("Share canceled. Your selfie is still ready if you want to try again.");
+            return;
+          }
+          console.error(error);
+        }
+
+        downloadBlob(blob, fileName);
+        setMessage("Your selfie was downloaded as a high-quality JPEG.");
+      }, "image/jpeg", 0.96);
     }
 
     async function switchCamera() {
-      currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+      state.facingMode = state.facingMode === "user" ? "environment" : "user";
       await startCamera();
     }
 
-    startBtn.addEventListener("click", startCamera);
-    switchBtn.addEventListener("click", switchCamera);
-    captureBtn.addEventListener("click", captureSelfie);
+    startCameraBtn.addEventListener("click", startCamera);
+    switchCameraBtn.addEventListener("click", switchCamera);
+    takeSelfieBtn.addEventListener("click", takeSelfie);
     retakeBtn.addEventListener("click", retakeSelfie);
-    saveBtn.addEventListener("click", saveImage);
-
-    previewRetakeBtn.addEventListener("click", retakeSelfie);
-    previewSaveBtn.addEventListener("click", saveImage);
-
-    previewModal.addEventListener("click", (event) => {
-      if (event.target === previewModal) {
-        closePreviewModal();
-      }
-    });
+    saveShareBtn.addEventListener("click", saveOrShare);
 
     window.addEventListener("beforeunload", stopCamera);
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setStatus("This browser does not support camera access.", "error");
-      setButtonState({
-        startDisabled: true,
-        switchDisabled: true,
-        captureDisabled: true,
-        retakeDisabled: true,
-        saveDisabled: true
-      });
-    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && state.stream) {
+        // keep stream running if you want; leaving it alone is usually best for phones
+      }
+    });
+
+    (async function init() {
+      setStatus("Camera off", false);
+      updateButtons();
+      try {
+        await assetsReady;
+      } catch (error) {
+        console.error(error);
+        setMessage(
+          "Your selfie template images could not be loaded. Double-check the image file names in this file.",
+          "error"
+        );
+      }
+      await detectCameras();
+    })();
   </script>
 </body>
 </html>
