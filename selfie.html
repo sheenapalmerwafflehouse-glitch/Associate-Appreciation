@@ -250,12 +250,62 @@
       display: none;
     }
 
+    .preview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 9999;
+    }
+
+    .preview-modal.open {
+      display: flex;
+    }
+
+    .preview-modal-inner {
+      width: min(100%, 760px);
+      max-height: 92vh;
+      overflow: auto;
+      background: rgba(255,255,255,0.98);
+      border-radius: 24px;
+      padding: 14px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    }
+
+    .preview-title {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .preview-image {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(176, 150, 44, 0.14);
+    }
+
+    .preview-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
     @media (max-width: 640px) {
       body {
         padding: 12px;
       }
 
-      .controls {
+      .controls,
+      .preview-actions {
         grid-template-columns: 1fr;
       }
 
@@ -317,12 +367,23 @@
     </section>
   </main>
 
+  <div id="previewModal" class="preview-modal" aria-hidden="true">
+    <div class="preview-modal-inner">
+      <h2 class="preview-title">Preview Your Selfie</h2>
+      <img id="previewModalImage" class="preview-image" alt="Selfie preview" />
+
+      <div class="preview-actions">
+        <button id="previewRetakeBtn" class="btn secondary" type="button">Retake</button>
+        <button id="previewSaveBtn" class="btn primary" type="button">Save or Share</button>
+      </div>
+    </div>
+  </div>
+
   <canvas id="outputCanvas" class="hidden-canvas"></canvas>
 
   <script>
     const BACKGROUND_IMAGE_PATH = "Images/selfie-background.jpg";
 
-    // Final saved image size.
     const OUTPUT_SETTINGS = {
       width: 1455,
       height: 2000,
@@ -330,8 +391,6 @@
       fileName: "associate-selfie.jpg"
     };
 
-    // Selfie placement on the saved image.
-    // These match the visible dashed frame closely.
     const PHOTO_RECT = {
       x: 262,
       y: 260,
@@ -353,6 +412,11 @@
     const captureBtn = document.getElementById("captureBtn");
     const retakeBtn = document.getElementById("retakeBtn");
     const saveBtn = document.getElementById("saveBtn");
+
+    const previewModal = document.getElementById("previewModal");
+    const previewModalImage = document.getElementById("previewModalImage");
+    const previewRetakeBtn = document.getElementById("previewRetakeBtn");
+    const previewSaveBtn = document.getElementById("previewSaveBtn");
 
     templateBackground.src = BACKGROUND_IMAGE_PATH;
 
@@ -385,6 +449,19 @@
       captureBtn.disabled = captureDisabled;
       retakeBtn.disabled = retakeDisabled;
       saveBtn.disabled = saveDisabled;
+    }
+
+    function openPreviewModal(imageSrc) {
+      previewModalImage.src = imageSrc;
+      previewModal.classList.add("open");
+      previewModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePreviewModal() {
+      previewModal.classList.remove("open");
+      previewModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
 
     function stopCamera() {
@@ -540,6 +617,8 @@
           retakeDisabled: false,
           saveDisabled: false
         });
+
+        openPreviewModal(capturedDataUrl);
       } catch (error) {
         console.error(error);
         setStatus("Capture failed. Check your image file.", "error");
@@ -547,6 +626,8 @@
     }
 
     function retakeSelfie() {
+      closePreviewModal();
+
       if (capturedBlobUrl) {
         URL.revokeObjectURL(capturedBlobUrl);
         capturedBlobUrl = "";
@@ -591,6 +672,7 @@
                 title: "Associate Selfie",
                 text: "Your selfie is ready"
               });
+              closePreviewModal();
               setStatus("Selfie ready to save/share", "live");
               return;
             } catch (error) {
@@ -607,6 +689,7 @@
           link.click();
           link.remove();
 
+          closePreviewModal();
           setStatus("JPEG saved", "live");
         }, "image/jpeg", OUTPUT_SETTINGS.quality);
       } catch (error) {
@@ -625,6 +708,15 @@
     captureBtn.addEventListener("click", captureSelfie);
     retakeBtn.addEventListener("click", retakeSelfie);
     saveBtn.addEventListener("click", saveImage);
+
+    previewRetakeBtn.addEventListener("click", retakeSelfie);
+    previewSaveBtn.addEventListener("click", saveImage);
+
+    previewModal.addEventListener("click", (event) => {
+      if (event.target === previewModal) {
+        closePreviewModal();
+      }
+    });
 
     window.addEventListener("beforeunload", stopCamera);
 
