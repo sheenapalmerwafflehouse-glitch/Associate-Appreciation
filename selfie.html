@@ -19,8 +19,7 @@
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       min-height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -56,9 +55,6 @@
 
     .panel {
       background: rgba(255, 255, 255, 0.92);
-      padding: 14px;
-      display: grid;
-      gap: 14px;
     }
 
     .eyebrow {
@@ -93,6 +89,12 @@
       font-size: 0.98rem;
     }
 
+    .panel {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
     .stage {
       position: relative;
       width: 100%;
@@ -123,7 +125,7 @@
       z-index: 2;
       overflow: hidden;
       border-radius: 26px;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.04);
     }
 
     .camera-video,
@@ -158,12 +160,12 @@
       min-height: 38px;
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255,255,255,0.96);
       border: 1px solid rgba(176, 150, 44, 0.18);
       color: #3d3d3d;
       font-weight: 800;
       font-size: 0.88rem;
-      box-shadow: 0 8px 18px rgba(17, 17, 17, 0.10);
+      box-shadow: 0 8px 18px rgba(17,17,17,0.10);
     }
 
     .status-dot {
@@ -176,12 +178,12 @@
 
     .status-pill.live .status-dot {
       background: #29b34a;
-      box-shadow: 0 0 0 6px rgba(41, 179, 74, 0.12);
+      box-shadow: 0 0 0 6px rgba(41,179,74,0.12);
     }
 
     .status-pill.error .status-dot {
       background: #da3232;
-      box-shadow: 0 0 0 6px rgba(218, 50, 50, 0.12);
+      box-shadow: 0 0 0 6px rgba(218,50,50,0.12);
     }
 
     .controls {
@@ -201,13 +203,13 @@
       cursor: pointer;
       background: #fff;
       color: #1e1e1e;
-      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
+      box-shadow: 0 8px 16px rgba(17,17,17,0.08);
       transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
     .btn:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
+      box-shadow: 0 12px 20px rgba(17,17,17,0.12);
     }
 
     .btn:disabled {
@@ -272,10 +274,10 @@
       width: min(100%, 760px);
       max-height: 92vh;
       overflow: auto;
-      background: rgba(255, 255, 255, 0.98);
+      background: rgba(255,255,255,0.98);
       border-radius: 24px;
       padding: 14px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.28);
     }
 
     .preview-title {
@@ -330,7 +332,7 @@
 <body>
   <main class="page">
     <div class="back-row">
-      <a href="index.html" class="btn secondary back-link">← Back to Celebration Page</a>
+      <a href="index.html" class="btn secondary back-link" target="_top" rel="noopener">← Back to Celebration Page</a>
     </div>
 
     <section class="hero">
@@ -357,6 +359,16 @@
           <span class="status-dot"></span>
           <span id="statusText">Tap Start Camera Below</span>
         </div>
+      </div>
+
+      <div id="embeddedOpenRow" class="back-row" style="display:none;">
+        <a
+          href="https://sheenapalmerwafflehouse.github.io/Associate-Appreciation/selfie.html"
+          target="_top"
+          rel="noopener"
+          class="btn primary back-link">
+          Open Selfie Page Directly
+        </a>
       </div>
 
       <div class="controls">
@@ -388,6 +400,7 @@
   <canvas id="outputCanvas" class="hidden-canvas"></canvas>
 
   <script>
+    const STANDALONE_SELFIE_URL = "https://sheenapalmerwafflehouse.github.io/Associate-Appreciation/selfie.html";
     const BACKGROUND_IMAGE_PATH = "Images/selfie-background.png";
 
     const OUTPUT_SETTINGS = {
@@ -423,6 +436,7 @@
     const previewModalImage = document.getElementById("previewModalImage");
     const previewRetakeBtn = document.getElementById("previewRetakeBtn");
     const previewSaveBtn = document.getElementById("previewSaveBtn");
+    const embeddedOpenRow = document.getElementById("embeddedOpenRow");
 
     const isEmbedded = window.self !== window.top;
 
@@ -438,6 +452,24 @@
       statusPill.classList.remove("live", "error");
       if (state === "live") statusPill.classList.add("live");
       if (state === "error") statusPill.classList.add("error");
+    }
+
+    function tryOpenStandaloneSelfiePage() {
+      if (!isEmbedded) return false;
+
+      try {
+        window.top.location.href = STANDALONE_SELFIE_URL;
+        return true;
+      } catch (error) {
+      }
+
+      try {
+        window.open(STANDALONE_SELFIE_URL, "_top");
+        return true;
+      } catch (error) {
+      }
+
+      return false;
     }
 
     function setPreviewMode(captured) {
@@ -474,7 +506,7 @@
 
     function stopCamera() {
       if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+        stream.getTracks().forEach(track => track.stop());
         stream = null;
       }
     }
@@ -513,7 +545,6 @@
         });
       } catch (error) {
         console.error(error);
-
         setStatus(
           isEmbedded
             ? "Camera access is blocked in this embedded view. Open the selfie page directly."
@@ -725,6 +756,13 @@
     });
 
     window.addEventListener("beforeunload", stopCamera);
+
+    if (isEmbedded) {
+      const escaped = tryOpenStandaloneSelfiePage();
+      if (!escaped && embeddedOpenRow) {
+        embeddedOpenRow.style.display = "flex";
+      }
+    }
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       setStatus(
