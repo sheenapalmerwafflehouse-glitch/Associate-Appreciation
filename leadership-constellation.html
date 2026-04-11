@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leadership Constellation</title>
+  <style>
+    :root {
+      --text: #111111;
+      --muted: #565656;
+      --yellow: #f5d547;
+      --yellow-soft: #fff7c8;
+      --border: rgba(176, 150, 44, 0.18);
+      --shadow: 0 16px 34px rgba(17, 17, 17, 0.10);
+      --shadow-strong: 0 24px 48px rgba(17, 17, 17, 0.16);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #faf8f2 0%, #f2eee1 40%, #e8e3d1 100%);
+    }
+
+    body {
+      padding: 18px;
+    }
+
+    .page {
+      width: min(100%, 1180px);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .hero,
+    .panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .back-row {
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn,
+    .back-link,
+    .chip {
+      appearance: none;
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      border-radius: 18px;
+      min-height: 50px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      background: #fff;
+      color: #1e1e1e;
+      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover,
+    .back-link:hover,
+    .chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
+    }
+
+    .btn.primary,
+    .chip.active {
+      background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 28px 22px;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0) 22%),
+        linear-gradient(180deg, #fff4b8 0%, #ffe66a 42%, #f5d547 100%);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      left: -30px;
+      top: -50px;
+      background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 72%);
+    }
+
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      right: -60px;
+      bottom: -70px;
+      background: radial-gradient(circle, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0) 72%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(212, 176, 0, 0.18);
+      color: #6f5f00;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 0.98;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      margin: 12px auto 0;
+      max-width: 58ch;
+      color: #474747;
+      line-height: 1.65;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel {
+      padding: 18px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .control-shell {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,249,228,0.96));
+      border: 1px solid rgba(176, 150, 44, 0.16);
+    }
+
+    .control-top {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .control-top input {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 18px;
+      border: 1px solid rgba(176, 150, 44, 0.2);
+      padding: 12px 14px;
+      font: inherit;
+      font-size: 1rem;
+      background: #fff;
+      color: #111;
+      outline: none;
+    }
+
+    .control-top input:focus {
+      border-color: rgba(217, 179, 0, 0.45);
+      box-shadow: 0 0 0 4px rgba(245, 213, 71, 0.18);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .chip {
+      min-height: 42px;
+      border-radius: 999px;
+      padding: 8px 14px;
+      box-shadow: 0 6px 12px rgba(17, 17, 17, 0.05);
+      background: #fff;
+    }
+
+    .status-note {
+      min-height: 22px;
+      text-align: center;
+      color: #6a6a6a;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .status-note.error {
+      color: #b12727;
+      font-weight: 700;
+    }
+
+    .constellation-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(176, 150, 44, 0.16);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 20%),
+        linear-gradient(180deg, #0f1932 0%, #13224a 42%, #102446 70%, #0b1831 100%);
+      box-shadow: var(--shadow-strong);
+      aspect-ratio: 16 / 10;
+      min-height: 560px;
+      isolation: isolate;
+    }
+
+    .constellation-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(10,16,30,0.08), rgba(10,16,30,0.22));
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .constellation-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .overlay-card {
+      width: min(520px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
+      border: 1px solid rgba(176, 150, 44, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.22);
+      padding: 24px 22px;
+      text-align: center;
+    }
+
+    .overlay-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe66a, #f5d547);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      color: #5d4f00;
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .overlay-card h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      line-height: 1.06;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .overlay-card p {
+      margin: 0 0 16px;
+      color: #4b4b4b;
+      line-height: 1.6;
+    }
+
+    .starfield,
+    .line-layer,
+    .node-layer,
+    .label-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .starfield {
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .twinkle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      animation: twinkle linear infinite;
+      opacity: 0.18;
+      box-shadow: 0 0 8px rgba(255,255,255,0.28);
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 0.15;
+        transform: scale(0.92);
+      }
+      50% {
+        opacity: 0.95;
+        transform: scale(1.08);
+      }
+    }
+
+    .line-layer {
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .line-layer svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .constellation-line {
+      fill: none;
+      stroke: rgba(255, 230, 106, 0.18);
+      stroke-width: 0.32;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 0 6px rgba(255, 230, 106, 0.16));
+      transition: opacity 0.25s ease;
+    }
+
+    .constellation-line.dimmed {
+      opacity: 0.08;
+    }
+
+    .label-layer {
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .role-band-label {
+      position: absolute;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.82);
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(2px);
+      white-space: nowrap;
+    }
+
+    .node-layer {
+      z-index: 4;
+    }
+
+    .leader-node {
+      position: absolute;
+      transform: translate(-50%, -50%) scale(0.72);
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      opacity: 0;
+      transition: transform 0.45s ease, opacity 0.45s ease, filter 0.28s ease;
+      will-change: transform, opacity;
+    }
+
+    .constellation-shell.launched .leader-node {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .leader-node.hidden-by-filter {
+      opacity: 0.12 !important;
+      pointer-events: none;
+      filter: grayscale(0.2);
+    }
+
+    .leader-node.dimmed-by-search {
+      opacity: 0.2 !important;
+      filter: blur(0.15px);
+    }
+
+    .leader-node.is-match .leader-core,
+    .leader-node.is-active .leader-core {
+      box-shadow:
+        0 0 0 8px rgba(255, 230, 106, 0.12),
+        0 0 22px rgba(255, 230, 106, 0.88),
+        0 0 42px rgba(255, 230, 106, 0.24);
+    }
+
+    .leader-node:hover,
+    .leader-node:focus-visible {
+      transform: translate(-50%, -50%) scale(1.08) !important;
+      outline: none;
+      z-index: 6;
+    }
+
+    .leader-core {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #fff6cf, #ffe66a);
+      border: 2px solid rgba(255,255,255,0.88);
+      box-shadow:
+        0 0 0 6px rgba(255, 230, 106, 0.08),
+        0 0 16px rgba(255, 230, 106, 0.55);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .leader-node.role-executive_vice_president .leader-core {
+      width: 18px;
+      height: 18px;
+    }
+
+    .leader-node.role-senior_vice_president .leader-core {
+      width: 17px;
+      height: 17px;
+    }
+
+    .leader-node.role-area_region_manager .leader-core {
+      width: 16px;
+      height: 16px;
+    }
+
+    .leader-tag {
+      position: absolute;
+      left: 50%;
+      top: -14px;
+      transform: translate(-50%, -100%);
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: rgba(12, 24, 52, 0.88);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .leader-node:hover .leader-tag,
+    .leader-node.is-active .leader-tag,
+    .leader-node:focus-visible .leader-tag {
+      opacity: 1;
+      transform: translate(-50%, -106%);
+    }
+
+    .wilson-ship {
+      position: absolute;
+      left: -10%;
+      top: 68%;
+      width: clamp(110px, 16vw, 180px);
+      z-index: 5;
+      pointer-events: none;
+      filter: drop-shadow(0 16px 22px rgba(0,0,0,0.24));
+      opacity: 0.92;
+    }
+
+    .constellation-shell.launched .wilson-ship {
+      animation: wilsonLaunch 7s ease-in-out forwards;
+    }
+
+    @keyframes wilsonLaunch {
+      0% {
+        left: -12%;
+        top: 70%;
+        transform: rotate(-6deg) scale(0.95);
+      }
+      22% {
+        left: 12%;
+        top: 60%;
+        transform: rotate(-2deg) scale(1);
+      }
+      48% {
+        left: 40%;
+        top: 40%;
+        transform: rotate(2deg) scale(1.02);
+      }
+      72% {
+        left: 66%;
+        top: 24%;
+        transform: rotate(4deg) scale(0.96);
+      }
+      100% {
+        left: 86%;
+        top: 10%;
+        transform: rotate(8deg) scale(0.9);
+        opacity: 0.75;
+      }
+    }
+
+    .detail-card {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      box-shadow: 0 18px 32px rgba(17,17,17,0.08);
+    }
+
+    .detail-kicker {
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6f5f00;
+    }
+
+    .detail-name {
+      font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .detail-role {
+      color: #4a4a4a;
+      font-weight: 700;
+      line-height: 1.55;
+    }
+
+    .detail-closing {
+      color: #5e5e5e;
+      line-height: 1.6;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #606060;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      max-width: 70ch;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .control-top {
+        grid-template-columns: 1fr;
+      }
+
+      .constellation-shell {
+        min-height: 500px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .panel,
+      .hero {
+        border-radius: 24px;
+      }
+
+      .constellation-shell {
+        border-radius: 24px;
+        min-height: 460px;
+      }
+
+      .role-band-label {
+        font-size: 0.64rem;
+        padding: 5px 8px;
+      }
+
+      .leader-tag {
+        font-size: 0.66rem;
+      }
+
+      .wilson-ship {
+        width: 110px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="back-row">
+      <a href="index.html" class="back-link" target="_top" rel="noopener">← Back to Celebration Page</a>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Leadership Lights the Way</div>
+      <h1>Leadership Constellation</h1>
+      <p>
+        Let’s first shout out the leaders who support the leaders who support your stores.
+        Each point of light represents someone helping connect day-to-day store support with the broader leadership team and the company as a whole.
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="control-shell">
+        <div class="control-top">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search by name or role"
+            aria-label="Search by name or role"
+          />
+          <button id="launchBtn" class="btn primary" type="button">Launch Constellation</button>
+          <button id="resetBtn" class="btn" type="button">Reset View</button>
+        </div>
+
+        <div class="chip-row" id="filterChips"></div>
+
+        <div class="status-note" id="statusNote">
+          Add <strong>leaders.csv</strong> and <strong>spaceship.gif</strong> to this same folder, then click Launch Constellation.
+        </div>
+      </div>
+
+      <div class="constellation-shell" id="constellationShell">
+        <div class="constellation-overlay" id="constellationOverlay">
+          <div class="overlay-card">
+            <div class="overlay-kicker">Wilson Leads the Way</div>
+            <h2>Launch the Leadership Constellation</h2>
+            <p>
+              Wilson Waffle kicks things off, then the constellation lights up with the leaders who help support the field.
+            </p>
+            <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
+          </div>
+        </div>
+
+        <div class="starfield" id="starfield"></div>
+
+        <div class="line-layer">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <g id="lineGroup"></g>
+          </svg>
+        </div>
+
+        <div class="label-layer" id="labelLayer"></div>
+        <div class="node-layer" id="nodeLayer"></div>
+
+        <img
+          src="spaceship.gif"
+          alt="Wilson Waffle flying in a spaceship"
+          class="wilson-ship"
+          id="wilsonShip"
+        />
+      </div>
+
+      <div class="detail-card" id="detailCard">
+        <div class="detail-kicker">Recognition Spotlight</div>
+        <div class="detail-name" id="detailName">Ready for launch</div>
+        <div class="detail-role" id="detailRole">
+          Click a point of light to spotlight a leader.
+        </div>
+        <div class="detail-closing" id="detailClosing">
+          Every name helps light the way for our stores, our associates, and the company as a whole.
+        </div>
+      </div>
+
+      <p class="footer-note">
+        This page accepts either your current wide export with leadership columns or a simple two-column CSV using <strong>Name</strong> and <strong>Role</strong>. Duplicate names in the same role are automatically grouped into one point of light.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const CSV_URL = "leaders.csv";
+
+    const ROLE_META = [
+      {
+        key: "executive_vice_president",
+        label: "Executive Vice President",
+        short: "EVP",
+        x: 86,
+        y: 13
+      },
+      {
+        key: "senior_vice_president",
+        label: "Senior Vice President",
+        short: "SVP",
+        x: 74,
+        y: 24
+      },
+      {
+        key: "area_region_manager",
+        label: "Area / Region Manager",
+        short: "Area / Region",
+        x: 60,
+        y: 38
+      },
+      {
+        key: "division_manager",
+        label: "Division Manager",
+        short: "Division",
+        x: 46,
+        y: 53
+      },
+      {
+        key: "district_manager",
+        label: "District Manager",
+        short: "District",
+        x: 32,
+        y: 66
+      },
+      {
+        key: "unit_manager",
+        label: "Unit Manager",
+        short: "Unit",
+        x: 18,
+        y: 80
+      }
+    ];
+
+    const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
+
+    const ROLE_ALIASES = {
+      executive_vice_president: [
+        "executive vice president",
+        "executive_vice_president",
+        "evp"
+      ],
+      senior_vice_president: [
+        "senior vice president",
+        "senior_vice_president",
+        "svp"
+      ],
+      area_region_manager: [
+        "area region manager",
+        "area/region manager",
+        "area_region_manager",
+        "region manager",
+        "area manager"
+      ],
+      division_manager: [
+        "division manager",
+        "division_manager"
+      ],
+      district_manager: [
+        "district manager",
+        "district_manager"
+      ],
+      unit_manager: [
+        "unit manager",
+        "unit_manager",
+        "manager"
+      ]
+    };
+
+    const HEADER_ALIASES = {
+      name: ["name", "full name", "leader", "person"],
+      role: ["role", "title", "level"]
+    };
+
+    const DEMO_LEADERS = [
+      { name: "Jordan Mitchell", role: "Executive Vice President" },
+      { name: "Casey Reynolds", role: "Senior Vice President" },
+      { name: "Taylor Brooks", role: "Area / Region Manager" },
+      { name: "Morgan Hayes", role: "Division Manager" },
+      { name: "Avery Bennett", role: "District Manager" },
+      { name: "Riley Carter", role: "Unit Manager" },
+      { name: "Devon Price", role: "Area / Region Manager" },
+      { name: "Harper Stone", role: "Division Manager" },
+      { name: "Jamie Palmer", role: "District Manager" },
+      { name: "Cameron Ellis", role: "Unit Manager" },
+      { name: "Alex Turner", role: "District Manager" },
+      { name: "Parker Reed", role: "Unit Manager" },
+      { name: "Sydney Morgan", role: "Unit Manager" },
+      { name: "Dakota Lane", role: "Division Manager" }
+    ];
+
+    const constellationShell = document.getElementById("constellationShell");
+    const constellationOverlay = document.getElementById("constellationOverlay");
+    const overlayLaunchBtn = document.getElementById("overlayLaunchBtn");
+    const launchBtn = document.getElementById("launchBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const searchInput = document.getElementById("searchInput");
+    const statusNote = document.getElementById("statusNote");
+    const nodeLayer = document.getElementById("nodeLayer");
+    const labelLayer = document.getElementById("labelLayer");
+    const lineGroup = document.getElementById("lineGroup");
+    const starfield = document.getElementById("starfield");
+    const filterChips = document.getElementById("filterChips");
+    const detailName = document.getElementById("detailName");
+    const detailRole = document.getElementById("detailRole");
+    const detailClosing = document.getElementById("detailClosing");
+
+    let leaders = [];
+    let launched = false;
+    let activeRoleFilter = "all";
+    let activeSearch = "";
+    let activeLeaderId = "";
+
+    function normalizeText(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .replace(/[^\w\s/]/g, "");
+    }
+
+    function parseCSVLine(line) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"' && inQuotes && next === '"') {
+          current += '"';
+          i++;
+          continue;
+        }
+
+        if (char === '"') {
+          inQuotes = !inQuotes;
+          continue;
+        }
+
+        if (char === "," && !inQuotes) {
+          result.push(current);
+          current = "";
+          continue;
+        }
+
+        current += char;
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function canonicalRoleFromString(rawRole) {
+      const normalized = normalizeText(rawRole);
+      for (const [roleKey, aliases] of Object.entries(ROLE_ALIASES)) {
+        if (aliases.includes(normalized)) {
+          return roleKey;
+        }
+      }
+      return null;
+    }
+
+    function roleLabelFromKey(roleKey) {
+      return ROLE_KEY_MAP[roleKey]?.label || roleKey;
+    }
+
+    function buildLeadersFromLongForm(rows, headerIndex) {
+      const seen = new Set();
+      const results = [];
+
+      rows.forEach((row) => {
+        const name = (row[headerIndex.name] || "").trim();
+        const roleRaw = (row[headerIndex.role] || "").trim();
+        const roleKey = canonicalRoleFromString(roleRaw);
+
+        if (!name || !roleKey) return;
+
+        const uniqueKey = `${name.toLowerCase()}|${roleKey}`;
+        if (seen.has(uniqueKey)) return;
+        seen.add(uniqueKey);
+
+        results.push({
+          id: uniqueKey.replace(/[^\w]/g, "-"),
+          name,
+          roleKey,
+          roleLabel: roleLabelFromKey(roleKey)
+        });
+      });
+
+      return results;
+    }
+
+    function buildLeadersFromWideForm(rows, headerMap) {
+      const seen = new Set();
+      const results = [];
+
+      rows.forEach((row) => {
+        ROLE_META.forEach((role) => {
+          const idx = headerMap[role.key];
+          if (idx === undefined) return;
+
+          const name = (row[idx] || "").trim();
+          if (!name) return;
+
+          const uniqueKey = `${name.toLowerCase()}|${role.key}`;
+          if (seen.has(uniqueKey)) return;
+          seen.add(uniqueKey);
+
+          results.push({
+            id: uniqueKey.replace(/[^\w]/g, "-"),
+            name,
+            roleKey: role.key,
+            roleLabel: role.label
+          });
+        });
+      });
+
+      return results;
+    }
+
+    function parseLeadersCSV(text) {
+      const lines = text
+        .replace(/^\uFEFF/, "")
+        .split(/\r?\n/)
+        .filter((line) => line.trim().length > 0);
+
+      if (!lines.length) return [];
+
+      const headers = parseCSVLine(lines[0]).map((header) => normalizeText(header));
+      const rows = lines.slice(1).map(parseCSVLine);
+
+      const longFormIndex = {};
+      Object.entries(HEADER_ALIASES).forEach(([key, aliases]) => {
+        const idx = headers.findIndex((header) => aliases.includes(header));
+        if (idx !== -1) longFormIndex[key] = idx;
+      });
+
+      if (longFormIndex.name !== undefined && longFormIndex.role !== undefined) {
+        return buildLeadersFromLongForm(rows, longFormIndex);
+      }
+
+      const wideHeaderMap = {};
+      Object.entries(ROLE_ALIASES).forEach(([roleKey, aliases]) => {
+        const idx = headers.findIndex((header) => aliases.includes(header));
+        if (idx !== -1) wideHeaderMap[roleKey] = idx;
+      });
+
+      if (Object.keys(wideHeaderMap).length) {
+        return buildLeadersFromWideForm(rows, wideHeaderMap);
+      }
+
+      return [];
+    }
+
+    async function loadLeaders() {
+      try {
+        const response = await fetch(CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("CSV not found");
+
+        const text = await response.text();
+        const parsed = parseLeadersCSV(text);
+
+        if (!parsed.length) throw new Error("No usable leader rows found");
+
+        leaders = parsed;
+        statusNote.innerHTML = `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
+      } catch (error) {
+        leaders = DEMO_LEADERS.map((item) => {
+          const roleKey = canonicalRoleFromString(item.role);
+          return {
+            id: `${item.name.toLowerCase()}-${roleKey}`.replace(/[^\w]/g, "-"),
+            name: item.name,
+            roleKey,
+            roleLabel: roleLabelFromKey(roleKey)
+          };
+        });
+
+        statusNote.innerHTML = `Could not read <strong>leaders.csv</strong>, so demo leader data is showing for preview.`;
+      }
+
+      buildFilterChips();
+      buildStarfield();
+      renderConstellation();
+    }
+
+    function seededValue(input) {
+      let hash = 0;
+      const text = String(input || "");
+      for (let i = 0; i < text.length; i++) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash) / 2147483647;
+    }
+
+    function buildStarfield() {
+      starfield.innerHTML = "";
+      const total = 60;
+
+      for (let i = 0; i < total; i++) {
+        const star = document.createElement("span");
+        star.className = "twinkle";
+        const size = 1 + (i % 3);
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${(seededValue(`x-${i}`) * 100).toFixed(2)}%`;
+        star.style.top = `${(seededValue(`y-${i}`) * 100).toFixed(2)}%`;
+        star.style.animationDuration = `${2.5 + seededValue(`d-${i}`) * 4}s`;
+        star.style.animationDelay = `${seededValue(`a-${i}`) * 3}s`;
+        starfield.appendChild(star);
+      }
+    }
+
+    function buildFilterChips() {
+      filterChips.innerHTML = "";
+
+      const allChip = document.createElement("button");
+      allChip.type = "button";
+      allChip.className = `chip ${activeRoleFilter === "all" ? "active" : ""}`;
+      allChip.textContent = "All Roles";
+      allChip.addEventListener("click", () => {
+        activeRoleFilter = "all";
+        buildFilterChips();
+        renderConstellation();
+      });
+      filterChips.appendChild(allChip);
+
+      ROLE_META.forEach((role) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = `chip ${activeRoleFilter === role.key ? "active" : ""}`;
+        chip.textContent = role.short;
+        chip.addEventListener("click", () => {
+          activeRoleFilter = role.key;
+          buildFilterChips();
+          renderConstellation();
+        });
+        filterChips.appendChild(chip);
+      });
+    }
+
+    function getGroupedLeaders() {
+      const grouped = {};
+      ROLE_META.forEach((role) => {
+        grouped[role.key] = leaders.filter((leader) => leader.roleKey === role.key);
+      });
+      return grouped;
+    }
+
+    function getLeaderPositions() {
+      const grouped = getGroupedLeaders();
+      const positioned = [];
+
+      ROLE_META.forEach((role) => {
+        const people = grouped[role.key].slice().sort((a, b) => a.name.localeCompare(b.name));
+        const count = people.length || 1;
+        const baseRadius = Math.max(5, Math.min(16, 7 + count * 0.65));
+
+        people.forEach((leader, index) => {
+          const seedA = seededValue(`${leader.name}-${leader.roleKey}-a`);
+          const seedB = seededValue(`${leader.name}-${leader.roleKey}-b`);
+          const angle = ((index / count) * Math.PI * 2) + (seedA * 0.9);
+          const radius = baseRadius + ((seedB - 0.5) * 6);
+
+          const x = Math.max(8, Math.min(92, role.x + Math.cos(angle) * radius));
+          const y = Math.max(10, Math.min(90, role.y + Math.sin(angle) * (radius * 0.65)));
+
+          positioned.push({
+            ...leader,
+            x,
+            y
+          });
+        });
+      });
+
+      return positioned;
+    }
+
+    function matchesSearch(leader) {
+      if (!activeSearch) return true;
+      const needle = activeSearch.toLowerCase();
+      return leader.name.toLowerCase().includes(needle) || leader.roleLabel.toLowerCase().includes(needle);
+    }
+
+    function passesRoleFilter(leader) {
+      return activeRoleFilter === "all" || leader.roleKey === activeRoleFilter;
+    }
+
+    function getVisibleLeaders(positionedLeaders) {
+      return positionedLeaders.map((leader) => ({
+        ...leader,
+        passesFilter: passesRoleFilter(leader),
+        matchesSearch: matchesSearch(leader)
+      }));
+    }
+
+    function buildLines(visibleLeaders) {
+      lineGroup.innerHTML = "";
+
+      const grouped = {};
+      ROLE_META.forEach((role) => {
+        grouped[role.key] = visibleLeaders.filter((leader) => leader.roleKey === role.key && leader.passesFilter);
+      });
+
+      for (let i = 0; i < ROLE_META.length - 1; i++) {
+        const currentRole = ROLE_META[i];
+        const nextRole = ROLE_META[i + 1];
+
+        grouped[currentRole.key].forEach((leader) => {
+          if (!grouped[nextRole.key].length) return;
+
+          let nearest = null;
+          let nearestDistance = Infinity;
+
+          grouped[nextRole.key].forEach((candidate) => {
+            const dx = candidate.x - leader.x;
+            const dy = candidate.y - leader.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+              nearest = candidate;
+            }
+          });
+
+          if (!nearest) return;
+
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", leader.x);
+          line.setAttribute("y1", leader.y);
+          line.setAttribute("x2", nearest.x);
+          line.setAttribute("y2", nearest.y);
+          line.setAttribute("class", "constellation-line");
+
+          const shouldDim = activeSearch && !(leader.matchesSearch || nearest.matchesSearch);
+          if (shouldDim) line.classList.add("dimmed");
+
+          lineGroup.appendChild(line);
+        });
+      }
+    }
+
+    function buildRoleLabels() {
+      labelLayer.innerHTML = "";
+
+      ROLE_META.forEach((role) => {
+        const label = document.createElement("div");
+        label.className = "role-band-label";
+        label.textContent = role.short;
+        label.style.left = `${role.x}%`;
+        label.style.top = `${Math.max(4, role.y - 7)}%`;
+        label.style.transform = "translate(-50%, -50%)";
+        labelLayer.appendChild(label);
+      });
+    }
+
+    function updateDetailCard(leader) {
+      if (!leader) {
+        detailName.textContent = launched ? "Constellation launched" : "Ready for launch";
+        detailRole.textContent = launched
+          ? "Click a point of light to spotlight a leader."
+          : "Click Launch Constellation to begin.";
+        detailClosing.textContent = "Every name helps light the way for our stores, our associates, and the company as a whole.";
+        return;
+      }
+
+      detailName.textContent = leader.name;
+      detailRole.textContent = leader.roleLabel;
+      detailClosing.textContent = `${leader.name} is one of the leaders helping connect day-to-day store support with the broader leadership team and the company as a whole.`;
+    }
+
+    function renderNodes(visibleLeaders) {
+      nodeLayer.innerHTML = "";
+
+      visibleLeaders.forEach((leader, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `leader-node role-${leader.roleKey}`;
+        button.style.left = `${leader.x}%`;
+        button.style.top = `${leader.y}%`;
+        button.style.transitionDelay = launched ? `${index * 14}ms` : "0ms";
+        button.setAttribute("aria-label", `${leader.name}, ${leader.roleLabel}`);
+
+        if (!leader.passesFilter) {
+          button.classList.add("hidden-by-filter");
+        } else if (activeSearch && !leader.matchesSearch) {
+          button.classList.add("dimmed-by-search");
+        }
+
+        if (activeSearch && leader.matchesSearch) {
+          button.classList.add("is-match");
+        }
+
+        if (activeLeaderId === leader.id) {
+          button.classList.add("is-active");
+        }
+
+        button.innerHTML = `
+          <span class="leader-core"></span>
+          <span class="leader-tag">${leader.name}</span>
+        `;
+
+        button.addEventListener("click", () => {
+          activeLeaderId = leader.id;
+          updateDetailCard(leader);
+          renderConstellation();
+        });
+
+        nodeLayer.appendChild(button);
+      });
+    }
+
+    function renderConstellation() {
+      buildRoleLabels();
+
+      const positionedLeaders = getLeaderPositions();
+      const visibleLeaders = getVisibleLeaders(positionedLeaders);
+
+      buildLines(visibleLeaders);
+      renderNodes(visibleLeaders);
+    }
+
+    function launchConstellation() {
+      launched = true;
+      constellationShell.classList.add("launched");
+      constellationOverlay.classList.add("hidden");
+      activeLeaderId = "";
+      updateDetailCard(null);
+      renderConstellation();
+      statusNote.innerHTML = `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
+    }
+
+    function resetView() {
+      activeRoleFilter = "all";
+      activeSearch = "";
+      activeLeaderId = "";
+      searchInput.value = "";
+      buildFilterChips();
+      updateDetailCard(null);
+      renderConstellation();
+    }
+
+    searchInput.addEventListener("input", (event) => {
+      activeSearch = event.target.value.trim();
+      activeLeaderId = "";
+      renderConstellation();
+
+      const matches = leaders.filter((leader) => matchesSearch(leader) && passesRoleFilter(leader)).length;
+      if (activeSearch && matches === 0) {
+        statusNote.textContent = `No leaders matched "${activeSearch}".`;
+        statusNote.classList.add("error");
+      } else {
+        statusNote.classList.remove("error");
+        if (activeSearch) {
+          statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}.`;
+        } else if (leaders.length) {
+          statusNote.innerHTML = `Loaded <strong>${leaders.length}</strong> leaders${leaders === DEMO_LEADERS ? " (demo)" : ""}.`;
+        }
+      }
+    });
+
+    launchBtn.addEventListener("click", launchConstellation);
+    overlayLaunchBtn.addEventListener("click", launchConstellation);
+    resetBtn.addEventListener("click", resetView);
+
+    window.addEventListener("resize", renderConstellation);
+
+    updateDetailCard(null);
+    loadLeaders();
+  </script>
+</body>
+</html>
