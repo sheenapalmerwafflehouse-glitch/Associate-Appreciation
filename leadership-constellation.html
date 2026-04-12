@@ -385,7 +385,7 @@
         <div class="status-note" id="statusNote">Loading leadership data...</div>
       </div>
 
-      <div class="hint" id="scrollHint">Swipe left or right to explore the full constellation.</div>
+      <div class="hint" id="scrollHint">Swipe left or right to see the full leadership constellation.</div>
 
       <div class="stage-scroll" id="stageScroll">
         <div class="stage" id="stage">
@@ -691,6 +691,7 @@
       allChip.textContent = `All Roles · ${totalCount.toLocaleString()}`;
       allChip.addEventListener("click", () => {
         activeRole = "all";
+        hintDismissed = false;
         refreshView();
       });
       filterChips.appendChild(allChip);
@@ -984,22 +985,22 @@
       let endY;
 
       if (activeRole === "all") {
-        endX = stageWidth * 0.86;
-        endY = stageHeight * 0.16;
+        endX = stageWidth * 0.91;
+        endY = stageHeight * 0.10;
       } else {
         const layout = ROLE_META_MAP[activeRole].single;
-        endX = stageWidth * layout.cx;
-        endY = stageHeight * Math.max(0.20, layout.cy - 0.04);
+        endX = stageWidth * Math.min(0.94, layout.cx + 0.04);
+        endY = stageHeight * Math.max(0.10, layout.cy - 0.10);
       }
 
-      const eased = 1 - Math.pow(1 - t, 2.15);
+      const eased = 1 - Math.pow(1 - t, 2.45);
       const x = startX + (endX - startX) * eased;
-      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.6) * 5;
-      const angle = (-12 + 18 * eased) * Math.PI / 180;
+      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.2) * 4;
+      const angle = (-12 + 20 * eased) * Math.PI / 180;
 
       let alpha = 1;
-      if (t < 0.08) alpha = t / 0.08;
-      else if (t > 0.92) alpha = (1 - t) / 0.08;
+      if (t < 0.06) alpha = t / 0.06;
+      else if (t > 0.97) alpha = (1 - t) / 0.03;
 
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
@@ -1051,8 +1052,7 @@
       }
 
       const canScroll = stageScroll.scrollWidth > stageScroll.clientWidth + 8;
-      const nearEnd = stageScroll.scrollLeft + stageScroll.clientWidth >= stageScroll.scrollWidth - 12;
-      scrollHint.classList.toggle("show", canScroll && !hintDismissed && !nearEnd);
+      scrollHint.classList.toggle("show", canScroll);
     }
 
     function positionStageScroll() {
@@ -1119,4 +1119,3 @@
   </script>
 </body>
 </html>
-
