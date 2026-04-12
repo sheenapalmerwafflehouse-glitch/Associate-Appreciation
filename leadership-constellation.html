@@ -7,22 +7,22 @@
   <style>
     :root {
       --text: #111111;
-      --muted: #565656;
+      --muted: #5a5a5a;
       --yellow: #f5d547;
+      --yellow-dark: #d7b31a;
       --border: rgba(176, 150, 44, 0.18);
-      --shadow: 0 16px 34px rgba(17, 17, 17, 0.10);
-      --shadow-strong: 0 24px 48px rgba(17, 17, 17, 0.16);
+      --shadow: 0 14px 30px rgba(17, 17, 17, 0.10);
+      --shadow-strong: 0 20px 44px rgba(17, 17, 17, 0.16);
       --radius: 28px;
-      --space-bg-a: #0f1932;
-      --space-bg-b: #13224a;
-      --space-bg-c: #102446;
-      --space-bg-d: #0b1831;
+      --space-a: #0f1932;
+      --space-b: #13224a;
+      --space-c: #102446;
+      --space-d: #0b1831;
     }
 
     * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       min-height: 100%;
       overflow-x: hidden;
@@ -32,9 +32,7 @@
         radial-gradient(circle at top left, #faf8f2 0%, #f2eee1 40%, #e8e3d1 100%);
     }
 
-    body {
-      padding: 18px;
-    }
+    body { padding: 18px; }
 
     .page {
       width: min(100%, 1180px);
@@ -43,67 +41,63 @@
       gap: 16px;
     }
 
-    .hero,
-    .panel {
-      background: rgba(255, 255, 255, 0.92);
+    .card {
+      background: rgba(255,255,255,0.92);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
 
-    .back-row {
+    .top-row {
       display: flex;
       justify-content: center;
     }
 
-    .btn,
     .back-link,
+    .btn,
     .chip {
       appearance: none;
       border: 1px solid rgba(176, 150, 44, 0.18);
-      border-radius: 18px;
+      border-radius: 20px;
       min-height: 50px;
-      padding: 12px 16px;
+      padding: 12px 18px;
       font: inherit;
       font-weight: 800;
       cursor: pointer;
       background: #fff;
-      color: #1e1e1e;
-      box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
-      transition:
-        transform 0.18s ease,
-        box-shadow 0.18s ease,
-        background 0.18s ease,
-        border-color 0.18s ease,
-        opacity 0.18s ease;
+      color: #1f1f1f;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+      white-space: nowrap;
     }
 
-    .btn:hover,
     .back-link:hover,
+    .btn:hover,
     .chip:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
+      box-shadow: 0 12px 20px rgba(17,17,17,0.12);
     }
 
     .btn.primary,
     .chip.active {
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+      border-color: rgba(212, 176, 0, 0.28);
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
+      padding: 26px 22px;
       text-align: center;
-      padding: 28px 22px;
       background:
-        radial-gradient(circle at 50% 26%, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0) 22%),
-        linear-gradient(180deg, #fff4b8 0%, #ffe66a 42%, #f5d547 100%);
+        radial-gradient(circle at 50% 18%, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0) 24%),
+        linear-gradient(180deg, #fff1a6 0%, #ffe66a 42%, #f5d547 100%);
+      overflow: hidden;
+      position: relative;
     }
 
     .hero::before,
@@ -118,33 +112,33 @@
     .hero::before {
       width: 220px;
       height: 220px;
-      left: -30px;
-      top: -50px;
-      background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 72%);
+      left: -34px;
+      top: -54px;
+      background: radial-gradient(circle, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0) 72%);
     }
 
     .hero::after {
-      width: 260px;
-      height: 260px;
+      width: 240px;
+      height: 240px;
       right: -60px;
-      bottom: -70px;
-      background: radial-gradient(circle, rgba(255,255,255,0.34) 0%, rgba(255,255,255,0) 72%);
+      bottom: -80px;
+      background: radial-gradient(circle, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 72%);
     }
 
     .eyebrow {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 12px;
+      padding: 9px 14px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.86);
+      background: rgba(255,255,255,0.9);
       border: 1px solid rgba(212, 176, 0, 0.18);
       color: #6f5f00;
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-size: 0.8rem;
+      font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       position: relative;
       z-index: 1;
     }
@@ -152,19 +146,9 @@
     h1 {
       margin: 0;
       font-size: clamp(2rem, 5vw, 3.2rem);
-      line-height: 0.98;
-      text-transform: uppercase;
+      line-height: 0.96;
       letter-spacing: -0.03em;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero p {
-      margin: 12px auto 0;
-      max-width: 70ch;
-      color: #474747;
-      line-height: 1.65;
-      font-size: 1rem;
+      text-transform: uppercase;
       position: relative;
       z-index: 1;
     }
@@ -172,10 +156,10 @@
     .panel {
       padding: 18px;
       display: grid;
-      gap: 18px;
+      gap: 16px;
     }
 
-    .control-shell {
+    .controls {
       display: grid;
       gap: 14px;
       padding: 16px;
@@ -184,7 +168,7 @@
       border: 1px solid rgba(176, 150, 44, 0.16);
     }
 
-    .control-top {
+    .controls-top {
       display: flex;
       justify-content: center;
       gap: 10px;
@@ -202,17 +186,15 @@
       min-height: 42px;
       border-radius: 999px;
       padding: 8px 14px;
-      box-shadow: 0 6px 12px rgba(17, 17, 17, 0.05);
-      background: #fff;
-      white-space: nowrap;
+      box-shadow: 0 6px 12px rgba(17,17,17,0.05);
     }
 
     .status-note {
-      min-height: 22px;
       text-align: center;
       color: #6a6a6a;
       font-size: 0.92rem;
       line-height: 1.45;
+      min-height: 22px;
     }
 
     .status-note.error {
@@ -220,18 +202,12 @@
       font-weight: 700;
     }
 
-    .mobile-prelaunch-hidden {
-      display: grid;
-    }
-
-    .constellation-scroll-hint {
+    .hint {
       display: none;
-      margin: 0 0 12px;
       text-align: center;
       font-size: 0.78rem;
       line-height: 1.42;
       font-weight: 800;
-      letter-spacing: 0.01em;
       color: #7b6c00;
       padding: 14px 18px;
       border-radius: 28px;
@@ -240,30 +216,32 @@
       box-shadow: 0 8px 18px rgba(92, 77, 19, 0.08);
     }
 
-    .constellation-scroll-hint.show {
-      display: block;
-    }
+    .hint.show { display: block; }
 
-    .constellation-scroll {
+    .stage-scroll {
       width: 100%;
       overflow: visible;
     }
 
-    .constellation-shell {
+    .stage {
       position: relative;
       overflow: hidden;
       border-radius: 28px;
       border: 1px solid rgba(176, 150, 44, 0.16);
       background:
-        radial-gradient(circle at 50% 18%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 20%),
-        linear-gradient(180deg, var(--space-bg-a) 0%, var(--space-bg-b) 42%, var(--space-bg-c) 70%, var(--space-bg-d) 100%);
+        radial-gradient(circle at 58% 20%, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0) 21%),
+        linear-gradient(180deg, var(--space-a) 0%, var(--space-b) 42%, var(--space-c) 70%, var(--space-d) 100%);
       box-shadow: var(--shadow-strong);
       aspect-ratio: 16 / 10;
       min-height: 560px;
       isolation: isolate;
     }
 
-    .constellation-canvas {
+    .stage.single-role-mobile {
+      width: 100%;
+    }
+
+    canvas {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -272,51 +250,8 @@
       z-index: 1;
     }
 
-    .constellation-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: linear-gradient(180deg, rgba(10,16,30,0.08), rgba(10,16,30,0.22));
-      transition: opacity 0.45s ease, visibility 0.45s ease;
-    }
-
-    .constellation-overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .overlay-card {
-      width: min(520px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
-      border: 1px solid rgba(176, 150, 44, 0.2);
-      border-radius: 24px;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.22);
-      padding: 24px 22px;
-      text-align: center;
-    }
-
-    .overlay-card h2 {
-      margin: 0 0 10px;
-      font-size: clamp(1.3rem, 3vw, 2rem);
-      line-height: 1.06;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .overlay-card p {
-      margin: 0 0 16px;
-      color: #4b4b4b;
-      line-height: 1.6;
-    }
-
-    .sky-label,
-    .legend-pill,
-    .focus-badge {
+    .focus-badge,
+    .allrole-label {
       position: absolute;
       z-index: 4;
       pointer-events: none;
@@ -332,92 +267,55 @@
       backdrop-filter: blur(4px);
       white-space: nowrap;
       box-shadow: 0 10px 18px rgba(0,0,0,0.18);
-      transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
     }
 
-    .sky-label.hidden,
-    .legend-pill.hidden,
-    .focus-badge.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .sky-label.active,
-    .legend-pill.active,
     .focus-badge.active {
       background: rgba(255, 230, 106, 0.92);
       color: #1d1d1d;
       border-color: rgba(255,255,255,0.25);
     }
 
-    .legend-left {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 4;
-      display: grid;
-      gap: 18px;
-      width: 160px;
-      max-width: 22%;
+    .focus-badge.hidden,
+    .allrole-label.hidden {
+      opacity: 0;
+      visibility: hidden;
     }
 
-    .legend-top {
-      position: absolute;
-      right: 18px;
-      top: 18px;
-      z-index: 4;
-      display: grid;
-      gap: 12px;
-      justify-items: end;
+    .allrole-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
+
+    #allLabelEVP { right: 18px; top: 18px; }
+    #allLabelSVP { right: 18px; top: 66px; }
+    #allLabelArea { left: 18px; top: 132px; }
+    #allLabelDivision { left: 18px; top: 188px; }
+    #allLabelDistrict { left: 18px; top: 244px; }
+    #allLabelUnit { left: 18px; top: 300px; }
 
     .focus-badge {
-      left: 18px;
       top: 18px;
+      right: 18px;
       display: none;
     }
 
-    .wilson-ship {
+    .ship-layer {
       position: absolute;
       inset: 0;
+      pointer-events: none;
       z-index: 3;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .wilson-ship.visible {
-      opacity: 1;
-    }
-
-    .legend-wrap.hidden-before-launch,
-    .wilson-ship.hidden-before-launch {
-      opacity: 0;
-      pointer-events: none;
     }
 
     @media (max-width: 900px) {
-      .constellation-shell {
-        min-height: 500px;
-      }
+      .stage { min-height: 500px; }
     }
 
     @media (max-width: 700px) {
-      body {
-        padding: 12px;
-      }
+      body { padding: 12px; }
+      .card, .stage { border-radius: 24px; }
 
-      .panel,
-      .hero {
-        border-radius: 24px;
-      }
-
-      .mobile-prelaunch-hidden.is-hidden-mobile {
-        display: none;
-      }
-
-      .constellation-scroll {
+      .stage-scroll {
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
@@ -426,56 +324,39 @@
         scrollbar-width: thin;
       }
 
-      .constellation-shell {
+      .stage {
         width: clamp(720px, 168vw, 980px);
-        border-radius: 24px;
         min-height: 520px;
       }
 
-      .constellation-shell.single-role-mobile {
+      .stage.single-role-mobile {
         width: 100%;
         min-height: 500px;
       }
 
-      .overlay-card {
-        width: min(320px, calc(100vw - 44px));
-        max-width: calc(100vw - 44px);
-        padding: 18px 16px;
-      }
-
-      .overlay-card h2 {
-        font-size: clamp(1.15rem, 5.4vw, 1.55rem);
-      }
-
-      .overlay-card p {
-        font-size: 0.92rem;
-        line-height: 1.5;
-      }
-
-      .legend-left,
-      .legend-top {
-        display: none;
-      }
-
       .focus-badge {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-size: 0.68rem;
         padding: 7px 11px;
         max-width: calc(100% - 24px);
+        top: 16px;
+        right: 16px;
       }
 
-      .focus-badge.all-hidden-mobile {
+      .allrole-label {
         display: none;
       }
     }
 
     @media (max-width: 520px) {
-      .constellation-shell {
+      .stage {
         width: clamp(680px, 175vw, 920px);
         min-height: 500px;
       }
 
-      .constellation-shell.single-role-mobile {
+      .stage.single-role-mobile {
         width: 100%;
         min-height: 480px;
       }
@@ -484,72 +365,41 @@
 </head>
 <body>
   <main class="page">
-    <div class="back-row">
-      <a href="index.html" class="back-link" target="_top" rel="noopener">← Back to Celebration Page</a>
+    <div class="top-row">
+      <a href="index.html" class="back-link" target="_top" rel="noopener">â† Back to Celebration Page</a>
     </div>
 
-    <section class="hero">
+    <section class="card hero">
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
-      <p>
-        Let’s first celebrate the leadership teams that help drive your unit’s success.
-        Each point of light represents someone connecting the day-to-day work of the field
-        to the bigger picture, where the pride you take in your work helps strengthen your unit,
-        your unit helps strengthen the company, and every person plays a part in making
-        Waffle House America’s Place.
-      </p>
     </section>
 
-    <section class="panel">
-      <div class="control-shell mobile-prelaunch-hidden" id="controlShell">
-        <div class="control-top">
-          <button id="launchBtn" class="btn primary" type="button">Launch Constellation</button>
+    <section class="card panel">
+      <div class="controls">
+        <div class="controls-top">
           <button id="resetBtn" class="btn" type="button">Reset View</button>
         </div>
 
         <div class="chip-row" id="filterChips"></div>
 
-        <div class="status-note" id="statusNote">
-          Preparing constellation...
-        </div>
+        <div class="status-note" id="statusNote">Loading leadership data...</div>
       </div>
 
-      <div class="constellation-scroll-hint" id="constellationScrollHint">
-        Swipe left or right to explore the full constellation.
-      </div>
+      <div class="hint" id="scrollHint">Swipe left or right to explore the full constellation.</div>
 
-      <div class="constellation-scroll" id="constellationScroll">
-        <div class="constellation-shell" id="constellationShell">
-          <canvas id="constellationCanvas" class="constellation-canvas" aria-hidden="true"></canvas>
+      <div class="stage-scroll" id="stageScroll">
+        <div class="stage" id="stage">
+          <canvas id="skyCanvas" aria-hidden="true"></canvas>
 
-          <div class="legend-wrap hidden-before-launch" id="legendWrap">
-            <div class="legend-top">
-              <div class="sky-label" id="labelEVP">EVP</div>
-              <div class="sky-label" id="labelSVP">SVP</div>
-            </div>
-
-            <div class="legend-left">
-              <div class="legend-pill" id="labelArea">Area / Region</div>
-              <div class="legend-pill" id="labelDivision">Division</div>
-              <div class="legend-pill" id="labelDistrict">District</div>
-              <div class="legend-pill" id="labelUnit">Unit</div>
-            </div>
-          </div>
+          <div class="allrole-label hidden" id="allLabelEVP">EVP</div>
+          <div class="allrole-label hidden" id="allLabelSVP">SVP</div>
+          <div class="allrole-label hidden" id="allLabelArea">Area / Region</div>
+          <div class="allrole-label hidden" id="allLabelDivision">Division</div>
+          <div class="allrole-label hidden" id="allLabelDistrict">District</div>
+          <div class="allrole-label hidden" id="allLabelUnit">Unit</div>
 
           <div class="focus-badge hidden" id="focusBadge">Role</div>
-
-          <div class="wilson-ship hidden-before-launch" id="wilsonShipLayer"></div>
-
-          <div class="constellation-overlay" id="constellationOverlay">
-            <div class="overlay-card">
-              <h2>Launch the Leadership Constellation</h2>
-              <p>
-                Tap below to light up the leadership groups that support your unit managers
-                and help move every unit forward.
-              </p>
-              <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
-            </div>
-          </div>
+          <div class="ship-layer" id="shipLayer"></div>
         </div>
       </div>
     </section>
@@ -564,59 +414,53 @@
         key: "executive_vice_president",
         label: "Executive Vice President",
         short: "EVP",
-        chipLabel: "EVP",
         countLabel: "EVP",
-        all: { cx: 0.88, cy: 0.18, rx: 0.08, ry: 0.08, size: 4.8, lineAlpha: 0.38 },
-        single: { cx: 0.76, cy: 0.28, rx: 0.18, ry: 0.10, size: 5.0, badgeX: 0.90, badgeY: 0.08 }
+        single: { cx: 0.72, cy: 0.36, rx: 0.18, ry: 0.11, size: 5.0 },
+        all: { cx: 0.88, cy: 0.18, rx: 0.08, ry: 0.08, size: 4.9, lineAlpha: 0.34 }
       },
       {
         key: "senior_vice_president",
         label: "Senior Vice President",
         short: "SVP",
-        chipLabel: "SVP",
         countLabel: "SVP",
-        all: { cx: 0.77, cy: 0.31, rx: 0.09, ry: 0.08, size: 4.4, lineAlpha: 0.34 },
-        single: { cx: 0.60, cy: 0.34, rx: 0.20, ry: 0.11, size: 4.6, badgeX: 0.90, badgeY: 0.08 }
+        single: { cx: 0.67, cy: 0.42, rx: 0.20, ry: 0.12, size: 4.5 },
+        all: { cx: 0.78, cy: 0.31, rx: 0.09, ry: 0.08, size: 4.4, lineAlpha: 0.30 }
       },
       {
         key: "area_region_manager",
         label: "Area / Region Manager",
         short: "Area / Region",
-        chipLabel: "Area / Region",
         countLabel: "Area / Region",
-        all: { cx: 0.68, cy: 0.45, rx: 0.12, ry: 0.09, size: 4.0, lineAlpha: 0.28 },
-        single: { cx: 0.70, cy: 0.48, rx: 0.22, ry: 0.13, size: 4.1, badgeX: 0.10, badgeY: 0.12 }
+        single: { cx: 0.71, cy: 0.52, rx: 0.24, ry: 0.14, size: 4.0 },
+        all: { cx: 0.67, cy: 0.45, rx: 0.12, ry: 0.09, size: 4.0, lineAlpha: 0.26 }
       },
       {
         key: "division_manager",
         label: "Division Manager",
         short: "Division",
-        chipLabel: "Division",
         countLabel: "Division",
-        all: { cx: 0.56, cy: 0.60, rx: 0.12, ry: 0.08, size: 3.6, lineAlpha: 0.24 },
-        single: { cx: 0.66, cy: 0.60, rx: 0.24, ry: 0.13, size: 3.8, badgeX: 0.10, badgeY: 0.12 }
+        single: { cx: 0.70, cy: 0.58, rx: 0.25, ry: 0.14, size: 3.7 },
+        all: { cx: 0.56, cy: 0.60, rx: 0.12, ry: 0.08, size: 3.6, lineAlpha: 0.22 }
       },
       {
         key: "district_manager",
         label: "District Manager",
         short: "District",
-        chipLabel: "District",
         countLabel: "District",
-        all: { cx: 0.43, cy: 0.73, rx: 0.11, ry: 0.075, size: 3.1, lineAlpha: 0.20 },
-        single: { cx: 0.66, cy: 0.70, rx: 0.28, ry: 0.10, size: 3.1, badgeX: 0.10, badgeY: 0.12 }
+        single: { cx: 0.67, cy: 0.69, rx: 0.28, ry: 0.11, size: 3.1 },
+        all: { cx: 0.43, cy: 0.73, rx: 0.11, ry: 0.075, size: 3.1, lineAlpha: 0.18 }
       },
       {
         key: "unit_manager",
         label: "Unit Manager",
         short: "Unit",
-        chipLabel: "Unit",
         countLabel: "Unit",
-        all: { cx: 0.28, cy: 0.84, rx: 0.17, ry: 0.065, size: 1.85, lineAlpha: 0.0 },
-        single: { cx: 0.57, cy: 0.78, rx: 0.33, ry: 0.09, size: 1.85, badgeX: 0.10, badgeY: 0.12 }
+        single: { cx: 0.58, cy: 0.79, rx: 0.31, ry: 0.10, size: 1.85 },
+        all: { cx: 0.28, cy: 0.84, rx: 0.17, ry: 0.065, size: 1.75, lineAlpha: 0.0 }
       }
     ];
 
-    const ROLE_DRAW_ORDER = [
+    const ROLE_ORDER = [
       "unit_manager",
       "district_manager",
       "division_manager",
@@ -625,10 +469,12 @@
       "executive_vice_president"
     ];
 
+    const ROLE_META_MAP = Object.fromEntries(ROLE_META.map(role => [role.key, role]));
+
     const ROLE_ALIAS_MAP = {
       executive_vice_president: ["executive vice president", "executive_vice_president", "evp"],
       senior_vice_president: ["senior vice president", "senior_vice_president", "svp"],
-      area_region_manager: ["area region manager", "area/region manager", "area_region_manager", "region manager", "area manager"],
+      area_region_manager: ["area region manager", "area/region manager", "area_region_manager", "area / region manager", "region manager", "area manager"],
       division_manager: ["division manager", "division_manager"],
       district_manager: ["district manager", "district_manager"],
       unit_manager: ["unit manager", "unit_manager", "manager"]
@@ -638,8 +484,6 @@
       name: ["name", "full name", "leader", "person"],
       role: ["role", "title", "level"]
     };
-
-    const ROLE_META_MAP = Object.fromEntries(ROLE_META.map(role => [role.key, role]));
 
     const DEMO_LEADERS = [
       { name: "Jordan Mitchell", role: "Executive Vice President" },
@@ -658,49 +502,42 @@
       { name: "Riley Carter", role: "Unit Manager" }
     ];
 
-    const canvas = document.getElementById("constellationCanvas");
+    const canvas = document.getElementById("skyCanvas");
     const ctx = canvas.getContext("2d");
-    const constellationShell = document.getElementById("constellationShell");
-    const constellationOverlay = document.getElementById("constellationOverlay");
-    const constellationScroll = document.getElementById("constellationScroll");
-    const constellationScrollHint = document.getElementById("constellationScrollHint");
-    const overlayLaunchBtn = document.getElementById("overlayLaunchBtn");
-    const launchBtn = document.getElementById("launchBtn");
-    const resetBtn = document.getElementById("resetBtn");
-    const filterChips = document.getElementById("filterChips");
-    const statusNote = document.getElementById("statusNote");
-    const controlShell = document.getElementById("controlShell");
-    const legendWrap = document.getElementById("legendWrap");
-    const focusBadge = document.getElementById("focusBadge");
-    const wilsonShipLayer = document.getElementById("wilsonShipLayer");
+    const staticCanvas = document.createElement("canvas");
+    const staticCtx = staticCanvas.getContext("2d");
 
-    const labelEls = {
-      executive_vice_president: document.getElementById("labelEVP"),
-      senior_vice_president: document.getElementById("labelSVP"),
-      area_region_manager: document.getElementById("labelArea"),
-      division_manager: document.getElementById("labelDivision"),
-      district_manager: document.getElementById("labelDistrict"),
-      unit_manager: document.getElementById("labelUnit")
+    const stage = document.getElementById("stage");
+    const stageScroll = document.getElementById("stageScroll");
+    const scrollHint = document.getElementById("scrollHint");
+    const filterChips = document.getElementById("filterChips");
+    const resetBtn = document.getElementById("resetBtn");
+    const statusNote = document.getElementById("statusNote");
+    const focusBadge = document.getElementById("focusBadge");
+
+    const allLabels = {
+      executive_vice_president: document.getElementById("allLabelEVP"),
+      senior_vice_president: document.getElementById("allLabelSVP"),
+      area_region_manager: document.getElementById("allLabelArea"),
+      division_manager: document.getElementById("allLabelDivision"),
+      district_manager: document.getElementById("allLabelDistrict"),
+      unit_manager: document.getElementById("allLabelUnit")
     };
 
     let leaders = [];
     let roleCounts = {};
     let totalCount = 0;
     let usingDemoData = false;
-    let launched = false;
-    let activeRoleFilter = "all";
-    let constellationHintDismissed = false;
-    let dataPromise = null;
+    let activeRole = "all";
 
     let dpr = Math.max(1, window.devicePixelRatio || 1);
-    let shellWidth = 0;
-    let shellHeight = 0;
-
-    let stars = [];
-    let pointsByRole = {};
-    let animationFrame = 0;
-    let launchStartTime = 0;
+    let stageWidth = 0;
+    let stageHeight = 0;
+    let constellationPoints = {};
+    let starField = [];
     let shipImage = null;
+    let animationId = 0;
+    let hintDismissed = false;
 
     function normalizeText(value) {
       return String(value || "")
@@ -740,7 +577,7 @@
           continue;
         }
 
-        if (char === "," && !inQuotes) {
+        if (char === ',' && !inQuotes) {
           result.push(current);
           current = "";
           continue;
@@ -753,56 +590,12 @@
       return result;
     }
 
-    function canonicalRoleFromString(rawRole) {
+    function canonicalRole(rawRole) {
       const normalized = normalizeText(rawRole);
       for (const [roleKey, aliases] of Object.entries(ROLE_ALIAS_MAP)) {
         if (aliases.includes(normalized)) return roleKey;
       }
       return null;
-    }
-
-    function buildLeadersFromLongForm(rows, headerIndex) {
-      const seen = new Set();
-      const results = [];
-
-      rows.forEach((row) => {
-        const name = (row[headerIndex.name] || "").trim();
-        const roleRaw = (row[headerIndex.role] || "").trim();
-        const roleKey = canonicalRoleFromString(roleRaw);
-
-        if (!name || !roleKey) return;
-
-        const uniqueKey = `${name.toLowerCase()}|${roleKey}`;
-        if (seen.has(uniqueKey)) return;
-        seen.add(uniqueKey);
-
-        results.push({ name, roleKey });
-      });
-
-      return results;
-    }
-
-    function buildLeadersFromWideForm(rows, headerMap) {
-      const seen = new Set();
-      const results = [];
-
-      rows.forEach((row) => {
-        ROLE_META.forEach((role) => {
-          const idx = headerMap[role.key];
-          if (idx === undefined) return;
-
-          const name = (row[idx] || "").trim();
-          if (!name) return;
-
-          const uniqueKey = `${name.toLowerCase()}|${role.key}`;
-          if (seen.has(uniqueKey)) return;
-          seen.add(uniqueKey);
-
-          results.push({ name, roleKey: role.key });
-        });
-      });
-
-      return results;
     }
 
     function parseLeadersCSV(text) {
@@ -813,7 +606,7 @@
 
       if (!lines.length) return [];
 
-      const headers = parseCSVLine(lines[0]).map(header => normalizeText(header));
+      const headers = parseCSVLine(lines[0]).map(h => normalizeText(h));
       const rows = lines.slice(1).map(parseCSVLine);
 
       const longFormIndex = {};
@@ -822,8 +615,20 @@
         if (idx !== -1) longFormIndex[key] = idx;
       });
 
+      const results = [];
+      const seen = new Set();
+
       if (longFormIndex.name !== undefined && longFormIndex.role !== undefined) {
-        return buildLeadersFromLongForm(rows, longFormIndex);
+        rows.forEach((row) => {
+          const name = (row[longFormIndex.name] || "").trim();
+          const roleKey = canonicalRole(row[longFormIndex.role] || "");
+          if (!name || !roleKey) return;
+          const uniq = `${name.toLowerCase()}|${roleKey}`;
+          if (seen.has(uniq)) return;
+          seen.add(uniq);
+          results.push({ name, roleKey });
+        });
+        return results;
       }
 
       const wideHeaderMap = {};
@@ -833,204 +638,142 @@
       });
 
       if (Object.keys(wideHeaderMap).length) {
-        return buildLeadersFromWideForm(rows, wideHeaderMap);
+        rows.forEach((row) => {
+          ROLE_META.forEach((role) => {
+            const idx = wideHeaderMap[role.key];
+            if (idx === undefined) return;
+            const name = (row[idx] || "").trim();
+            if (!name) return;
+            const uniq = `${name.toLowerCase()}|${role.key}`;
+            if (seen.has(uniq)) return;
+            seen.add(uniq);
+            results.push({ name, roleKey: role.key });
+          });
+        });
       }
 
-      return [];
+      return results;
     }
 
-    function updateCounts() {
-      roleCounts = {};
-      totalCount = leaders.length;
+    async function loadLeaders() {
+      try {
+        const response = await fetch(CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("CSV not found");
+        const text = await response.text();
+        const parsed = parseLeadersCSV(text);
+        if (!parsed.length) throw new Error("No usable leader rows found");
+        leaders = parsed;
+        usingDemoData = false;
+      } catch (err) {
+        leaders = DEMO_LEADERS.map(item => ({ name: item.name, roleKey: canonicalRole(item.role) }));
+        usingDemoData = true;
+      }
 
+      roleCounts = {};
       ROLE_META.forEach((role) => {
         roleCounts[role.key] = leaders.filter(leader => leader.roleKey === role.key).length;
       });
+      totalCount = leaders.length;
+
+      buildChips();
+      updateStatus();
+      buildLayout();
+      renderStaticScene();
+      refreshView();
     }
 
-    function buildFilterChips() {
+    function buildChips() {
       filterChips.innerHTML = "";
 
       const allChip = document.createElement("button");
       allChip.type = "button";
-      allChip.className = `chip ${activeRoleFilter === "all" ? "active" : ""}`;
-      allChip.textContent = `All Roles · ${totalCount.toLocaleString()}`;
+      allChip.className = `chip ${activeRole === "all" ? "active" : ""}`;
+      allChip.textContent = `All Roles Â· ${totalCount.toLocaleString()}`;
       allChip.addEventListener("click", () => {
-        activeRoleFilter = "all";
-        refreshViewMode();
+        activeRole = "all";
+        refreshView();
       });
       filterChips.appendChild(allChip);
 
       ROLE_META.forEach((role) => {
         const chip = document.createElement("button");
         chip.type = "button";
-        chip.className = `chip ${activeRoleFilter === role.key ? "active" : ""}`;
-        chip.textContent = `${role.countLabel} · ${(roleCounts[role.key] || 0).toLocaleString()}`;
+        chip.className = `chip ${activeRole === role.key ? "active" : ""}`;
+        chip.textContent = `${role.countLabel} Â· ${(roleCounts[role.key] || 0).toLocaleString()}`;
         chip.addEventListener("click", () => {
-          activeRoleFilter = role.key;
-          refreshViewMode();
+          activeRole = role.key;
+          refreshView();
         });
         filterChips.appendChild(chip);
       });
     }
 
-    function updateStatusNote() {
+    function updateStatus() {
       statusNote.classList.remove("error");
-
-      if (!launched) {
-        statusNote.innerHTML = usingDemoData
-          ? `Loaded <strong>${totalCount.toLocaleString()}</strong> demo leaders. Choose a role if you want, then launch the constellation.`
-          : `Loaded <strong>${totalCount.toLocaleString()}</strong> leaders. Choose a role if you want, then launch the constellation.`;
+      if (usingDemoData) {
+        statusNote.innerHTML = `Showing <strong>${totalCount.toLocaleString()}</strong> demo leaders.`;
         return;
       }
 
-      if (activeRoleFilter === "all") {
+      if (activeRole === "all") {
         statusNote.innerHTML = `Showing <strong>${totalCount.toLocaleString()}</strong> leaders across all role groups.`;
-        return;
+      } else {
+        const role = ROLE_META_MAP[activeRole];
+        const count = roleCounts[activeRole] || 0;
+        statusNote.innerHTML = `Showing <strong>${count.toLocaleString()}</strong> ${role.label}${count === 1 ? "" : "s"}.`;
       }
-
-      const role = ROLE_META_MAP[activeRoleFilter];
-      const count = roleCounts[activeRoleFilter] || 0;
-      statusNote.innerHTML = `Showing <strong>${count.toLocaleString()}</strong> ${role.label}${count === 1 ? "" : "s"}.`;
-    }
-
-    function updateControlVisibility() {
-      const isMobile = window.innerWidth <= 700;
-      controlShell.classList.toggle("is-hidden-mobile", isMobile && !launched);
     }
 
     function isMobile() {
       return window.innerWidth <= 700;
     }
 
-    function isSingleRoleView() {
-      return launched && activeRoleFilter !== "all";
-    }
-
-    function updateLabels() {
-      const mobile = isMobile();
-      const single = isSingleRoleView();
-
-      ROLE_META.forEach((role) => {
-        const el = labelEls[role.key];
-        if (!el) return;
-
-        if (!launched) {
-          el.classList.add("hidden");
-          el.classList.remove("active");
-          return;
-        }
-
-        if (single) {
-          el.classList.add("hidden");
-          el.classList.remove("active");
-          return;
-        }
-
-        if (mobile) {
-          if (role.key === "executive_vice_president" || role.key === "senior_vice_president") {
-            el.classList.remove("hidden");
-          } else {
-            el.classList.add("hidden");
-          }
-        } else {
-          el.classList.remove("hidden");
-        }
-
-        el.classList.remove("active");
-      });
-
-      if (!launched) {
-        focusBadge.classList.add("hidden");
-        return;
-      }
-
-      if (single) {
-        const role = ROLE_META_MAP[activeRoleFilter];
-        focusBadge.textContent = role.short;
-        focusBadge.classList.remove("hidden");
-        focusBadge.classList.add("active");
-        focusBadge.classList.remove("all-hidden-mobile");
-      } else {
-        focusBadge.classList.add("hidden");
-        if (mobile) {
-          focusBadge.classList.add("all-hidden-mobile");
-        }
-      }
-    }
-
-    function updateScrollHint() {
-      if (!launched || activeRoleFilter !== "all" || !isMobile()) {
-        constellationScrollHint.classList.remove("show");
-        return;
-      }
-
-      const canScroll = constellationScroll.scrollWidth > constellationScroll.clientWidth + 8;
-      const nearEnd = constellationScroll.scrollLeft + constellationScroll.clientWidth >= constellationScroll.scrollWidth - 12;
-
-      constellationScrollHint.classList.toggle(
-        "show",
-        canScroll && !constellationHintDismissed && !nearEnd
-      );
-    }
-
-    function centerOverlayView() {
-      if (!isMobile()) return;
-      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
-      constellationScroll.scrollLeft = maxScroll / 2;
-    }
-
-    function setAllRolesView() {
-      if (!isMobile()) return;
-      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
-      constellationScroll.scrollLeft = maxScroll * 0.16;
-    }
-
-    function setSingleRoleViewPosition() {
-      if (!isMobile()) return;
-      constellationScroll.scrollLeft = 0;
+    function isSingleRole() {
+      return activeRole !== "all";
     }
 
     function buildStars() {
-      stars = [];
-      const count = isMobile() ? 26 : 40;
-
+      starField = [];
+      const count = isMobile() ? 22 : 34;
       for (let i = 0; i < count; i++) {
-        stars.push({
+        starField.push({
           x: seededValue(`star-x-${i}`),
           y: seededValue(`star-y-${i}`),
-          r: 0.7 + (i % 3) * 0.5,
-          alpha: 0.12 + seededValue(`star-a-${i}`) * 0.45,
-          speed: 0.8 + seededValue(`star-s-${i}`) * 1.6
+          r: 0.7 + (i % 3) * 0.45,
+          alpha: 0.10 + seededValue(`star-a-${i}`) * 0.36
         });
       }
     }
 
     function resizeCanvas() {
-      const rect = constellationShell.getBoundingClientRect();
-      shellWidth = Math.max(1, Math.round(rect.width));
-      shellHeight = Math.max(1, Math.round(rect.height));
+      const rect = stage.getBoundingClientRect();
+      stageWidth = Math.max(1, Math.round(rect.width));
+      stageHeight = Math.max(1, Math.round(rect.height));
       dpr = Math.max(1, window.devicePixelRatio || 1);
 
-      canvas.width = Math.round(shellWidth * dpr);
-      canvas.height = Math.round(shellHeight * dpr);
-      canvas.style.width = `${shellWidth}px`;
-      canvas.style.height = `${shellHeight}px`;
-
+      canvas.width = Math.round(stageWidth * dpr);
+      canvas.height = Math.round(stageHeight * dpr);
+      canvas.style.width = `${stageWidth}px`;
+      canvas.style.height = `${stageHeight}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      buildPointLayout();
-      positionBadges();
+
+      staticCanvas.width = Math.round(stageWidth * dpr);
+      staticCanvas.height = Math.round(stageHeight * dpr);
+      staticCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      buildStars();
+      buildLayout();
+      renderStaticScene();
     }
 
-    function currentLayout(roleKey) {
+    function getLayout(roleKey) {
       const role = ROLE_META_MAP[roleKey];
-      return isSingleRoleView() && activeRoleFilter === roleKey ? role.single : role.all;
+      return isSingleRole() && activeRole === roleKey ? role.single : role.all;
     }
 
-    function generateEllipsePoints(roleKey, count) {
-      const layout = currentLayout(roleKey);
+    function generatePoints(roleKey, count) {
+      const layout = getLayout(roleKey);
       const points = [];
-
       if (!count) return points;
 
       const seedBase = seededValue(`seed-${roleKey}`) * Math.PI * 2;
@@ -1039,114 +782,63 @@
       for (let i = 0; i < count; i++) {
         const t = Math.sqrt((i + 0.5) / count);
         const angle = i * golden + seedBase;
-
-        const jitterX = (seededValue(`${roleKey}-jx-${i}`) - 0.5) * 0.012;
-        const jitterY = (seededValue(`${roleKey}-jy-${i}`) - 0.5) * 0.012;
+        const jitterX = (seededValue(`${roleKey}-jx-${i}`) - 0.5) * 0.010;
+        const jitterY = (seededValue(`${roleKey}-jy-${i}`) - 0.5) * 0.010;
 
         let rx = layout.rx;
         let ry = layout.ry;
 
         if (roleKey === "unit_manager") {
-          rx *= 0.90 + seededValue(`${roleKey}-rx-${i}`) * 0.14;
-          ry *= 0.90 + seededValue(`${roleKey}-ry-${i}`) * 0.14;
+          rx *= 0.92 + seededValue(`${roleKey}-rx-${i}`) * 0.14;
+          ry *= 0.92 + seededValue(`${roleKey}-ry-${i}`) * 0.14;
         }
 
-        const x = (layout.cx + Math.cos(angle) * rx * t + jitterX) * shellWidth;
-        const y = (layout.cy + Math.sin(angle) * ry * t + jitterY) * shellHeight;
-
+        const x = (layout.cx + Math.cos(angle) * rx * t + jitterX) * stageWidth;
+        const y = (layout.cy + Math.sin(angle) * ry * t + jitterY) * stageHeight;
         points.push({ x, y, roleKey });
       }
 
       return points;
     }
 
-    function buildPointLayout() {
-      pointsByRole = {};
+    function buildLayout() {
+      constellationPoints = {};
       ROLE_META.forEach((role) => {
-        pointsByRole[role.key] = generateEllipsePoints(role.key, roleCounts[role.key] || 0);
+        constellationPoints[role.key] = generatePoints(role.key, roleCounts[role.key] || 0);
       });
     }
 
-    function positionBadges() {
-      const roleArea = ROLE_META_MAP.area_region_manager;
-      const roleDivision = ROLE_META_MAP.division_manager;
-      const roleDistrict = ROLE_META_MAP.district_manager;
-      const roleUnit = ROLE_META_MAP.unit_manager;
-
-      labelEls.executive_vice_president.style.right = "18px";
-      labelEls.executive_vice_president.style.top = "18px";
-
-      labelEls.senior_vice_president.style.right = "18px";
-      labelEls.senior_vice_president.style.top = "68px";
-
-      labelEls.area_region_manager.style.left = "18px";
-      labelEls.area_region_manager.style.top = `${Math.round(roleArea.all.cy * shellHeight - 18)}px`;
-
-      labelEls.division_manager.style.left = "18px";
-      labelEls.division_manager.style.top = `${Math.round(roleDivision.all.cy * shellHeight - 18)}px`;
-
-      labelEls.district_manager.style.left = "18px";
-      labelEls.district_manager.style.top = `${Math.round(roleDistrict.all.cy * shellHeight - 18)}px`;
-
-      labelEls.unit_manager.style.left = "18px";
-      labelEls.unit_manager.style.top = `${Math.round(roleUnit.all.cy * shellHeight - 18)}px`;
-
-      if (isSingleRoleView()) {
-        const role = ROLE_META_MAP[activeRoleFilter];
-        focusBadge.style.left = `${Math.round((role.single.badgeX || 0.1) * shellWidth)}px`;
-        focusBadge.style.top = `${Math.round((role.single.badgeY || 0.1) * shellHeight)}px`;
-      }
-    }
-
-    function getVisibleRoleKeys() {
-      if (activeRoleFilter === "all") return ROLE_DRAW_ORDER.slice();
-      return [activeRoleFilter];
-    }
-
-    function getRoleRevealFactor(roleKey, launchProgress) {
-      if (activeRoleFilter !== "all") return 1;
-      const idx = ROLE_DRAW_ORDER.indexOf(roleKey);
-      const start = idx * 0.12;
-      const end = start + 0.22;
-      if (launchProgress <= start) return 0;
-      if (launchProgress >= end) return 1;
-      return (launchProgress - start) / (end - start);
-    }
-
-    function drawBackground(timeSeconds) {
-      const grad = ctx.createLinearGradient(0, 0, 0, shellHeight);
+    function drawBackground(targetCtx) {
+      const grad = targetCtx.createLinearGradient(0, 0, 0, stageHeight);
       grad.addColorStop(0, "#0f1932");
       grad.addColorStop(0.42, "#13224a");
       grad.addColorStop(0.70, "#102446");
       grad.addColorStop(1, "#0b1831");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, shellWidth, shellHeight);
+      targetCtx.fillStyle = grad;
+      targetCtx.fillRect(0, 0, stageWidth, stageHeight);
 
-      const glow = ctx.createRadialGradient(
-        shellWidth * 0.58, shellHeight * 0.18, 0,
-        shellWidth * 0.58, shellHeight * 0.18, shellWidth * 0.28
+      const glow = targetCtx.createRadialGradient(
+        stageWidth * 0.58, stageHeight * 0.18, 0,
+        stageWidth * 0.58, stageHeight * 0.18, stageWidth * 0.28
       );
       glow.addColorStop(0, "rgba(255,255,255,0.18)");
-      glow.addColorStop(0.22, "rgba(255,255,255,0.08)");
+      glow.addColorStop(0.20, "rgba(255,255,255,0.08)");
       glow.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, shellWidth, shellHeight);
+      targetCtx.fillStyle = glow;
+      targetCtx.fillRect(0, 0, stageWidth, stageHeight);
 
-      stars.forEach((star, idx) => {
-        const pulse = 0.65 + 0.35 * Math.sin(timeSeconds * star.speed + idx);
-        ctx.globalAlpha = star.alpha * pulse;
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(star.x * shellWidth, star.y * shellHeight, star.r, 0, Math.PI * 2);
-        ctx.fill();
+      starField.forEach((star) => {
+        targetCtx.globalAlpha = star.alpha;
+        targetCtx.fillStyle = "#ffffff";
+        targetCtx.beginPath();
+        targetCtx.arc(star.x * stageWidth, star.y * stageHeight, star.r, 0, Math.PI * 2);
+        targetCtx.fill();
       });
-
-      ctx.globalAlpha = 1;
+      targetCtx.globalAlpha = 1;
     }
 
-    function buildInterRoleConnections() {
+    function buildAllRoleConnections() {
       const lines = [];
-
       const pairs = [
         ["district_manager", "unit_manager", 90],
         ["division_manager", "district_manager", 70],
@@ -1156,21 +848,18 @@
       ];
 
       pairs.forEach(([fromKey, toKey, maxLines]) => {
-        const fromPoints = pointsByRole[fromKey] || [];
-        const toPoints = pointsByRole[toKey] || [];
-        if (!fromPoints.length || !toPoints.length) return;
+        const fromPts = constellationPoints[fromKey] || [];
+        const toPts = constellationPoints[toKey] || [];
+        if (!fromPts.length || !toPts.length) return;
 
-        const count = Math.min(maxLines, fromPoints.length);
-        const stride = Math.max(1, Math.floor(fromPoints.length / count));
+        const count = Math.min(maxLines, fromPts.length);
+        const stride = Math.max(1, Math.floor(fromPts.length / count));
 
-        for (let i = 0; i < fromPoints.length; i += stride) {
-          const a = fromPoints[i];
-          const mappedIndex = Math.min(
-            toPoints.length - 1,
-            Math.floor((i / Math.max(1, fromPoints.length - 1)) * (toPoints.length - 1))
-          );
-          const b = toPoints[mappedIndex];
-          lines.push({ a, b, fromKey, toKey });
+        for (let i = 0; i < fromPts.length; i += stride) {
+          const a = fromPts[i];
+          const mapped = Math.min(toPts.length - 1, Math.floor((i / Math.max(1, fromPts.length - 1)) * (toPts.length - 1)));
+          const b = toPts[mapped];
+          lines.push({ a, b, fromKey });
           if (lines.length >= maxLines && fromKey === "district_manager") break;
         }
       });
@@ -1178,8 +867,8 @@
       return lines;
     }
 
-    function buildIntraRoleConnections(roleKey) {
-      const pts = pointsByRole[roleKey] || [];
+    function buildSingleRoleConnections(roleKey) {
+      const pts = constellationPoints[roleKey] || [];
       const lines = [];
       if (pts.length < 2) return lines;
 
@@ -1187,12 +876,7 @@
         const sampleCount = Math.min(220, pts.length);
         const stride = Math.max(1, Math.floor(pts.length / sampleCount));
         for (let i = 0; i < pts.length - stride; i += stride) {
-          lines.push({
-            a: pts[i],
-            b: pts[Math.min(pts.length - 1, i + stride)],
-            fromKey: roleKey,
-            toKey: roleKey
-          });
+          lines.push({ a: pts[i], b: pts[Math.min(pts.length - 1, i + stride)] });
         }
         return lines;
       }
@@ -1200,142 +884,125 @@
       const limit = Math.min(pts.length - 1, 95);
       const stride = Math.max(1, Math.floor((pts.length - 1) / Math.max(1, limit)));
       for (let i = 0; i < pts.length - 1; i += stride) {
-        const a = pts[i];
-        const b = pts[Math.min(pts.length - 1, i + stride)];
-        lines.push({ a, b, fromKey: roleKey, toKey: roleKey });
+        lines.push({ a: pts[i], b: pts[Math.min(pts.length - 1, i + stride)] });
       }
       return lines;
     }
 
-    function drawLines(launchProgress) {
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-
-      if (activeRoleFilter === "all") {
-        const lines = buildInterRoleConnections();
-
-        lines.forEach((line) => {
-          const reveal = Math.min(
-            getRoleRevealFactor(line.fromKey, launchProgress),
-            getRoleRevealFactor(line.toKey, launchProgress)
-          );
-          if (reveal <= 0) return;
-
-          const fromMeta = ROLE_META_MAP[line.fromKey];
-          const alpha = fromMeta.all.lineAlpha * reveal;
-
-          ctx.strokeStyle = `rgba(255, 230, 106, ${alpha})`;
-          ctx.lineWidth = line.fromKey === "district_manager" ? 1.2 : 1.0;
-
-          ctx.beginPath();
-          ctx.moveTo(line.a.x, line.a.y);
-          ctx.lineTo(line.b.x, line.b.y);
-          ctx.stroke();
-        });
-
-        return;
-      }
-
-      const roleKey = activeRoleFilter;
-      const roleMeta = ROLE_META_MAP[roleKey];
-      const lines = buildIntraRoleConnections(roleKey);
+    function drawAllRoleLines(targetCtx) {
+      const lines = buildAllRoleConnections();
+      targetCtx.lineCap = "round";
+      targetCtx.lineJoin = "round";
 
       lines.forEach((line) => {
-        ctx.strokeStyle = `rgba(255, 230, 106, ${Math.max(0.18, roleMeta.all.lineAlpha || 0.18)})`;
-        ctx.lineWidth = roleKey === "unit_manager" ? 0.9 : 1.1;
-        ctx.beginPath();
-        ctx.moveTo(line.a.x, line.a.y);
-        ctx.lineTo(line.b.x, line.b.y);
-        ctx.stroke();
+        const alpha = ROLE_META_MAP[line.fromKey].all.lineAlpha || 0.18;
+        targetCtx.strokeStyle = `rgba(255, 230, 106, ${alpha})`;
+        targetCtx.lineWidth = line.fromKey === "district_manager" ? 1.15 : 1.0;
+        targetCtx.beginPath();
+        targetCtx.moveTo(line.a.x, line.a.y);
+        targetCtx.lineTo(line.b.x, line.b.y);
+        targetCtx.stroke();
       });
     }
 
-    function drawPoint(point, size, alpha) {
-      if (alpha <= 0) return;
+    function drawSingleRoleLines(targetCtx, roleKey) {
+      const role = ROLE_META_MAP[roleKey];
+      const lines = buildSingleRoleConnections(roleKey);
+      targetCtx.lineCap = "round";
+      targetCtx.lineJoin = "round";
 
-      ctx.globalAlpha = alpha * 0.30;
-      ctx.fillStyle = "#ffe66a";
-      ctx.beginPath();
-      ctx.ellipse(point.x, point.y, size * 1.15, size * 2.6, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = "#fffef2";
-      ctx.beginPath();
-      ctx.ellipse(point.x, point.y, size * 0.45, size * 1.95, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.globalAlpha = alpha * 0.72;
-      ctx.fillStyle = "#ffffff";
-      ctx.beginPath();
-      ctx.ellipse(point.x, point.y, Math.max(0.4, size * 0.18), size * 0.9, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.globalAlpha = 1;
+      lines.forEach((line) => {
+        targetCtx.strokeStyle = `rgba(255, 230, 106, ${Math.max(0.18, role.all.lineAlpha || 0.18)})`;
+        targetCtx.lineWidth = roleKey === "unit_manager" ? 0.9 : 1.1;
+        targetCtx.beginPath();
+        targetCtx.moveTo(line.a.x, line.a.y);
+        targetCtx.lineTo(line.b.x, line.b.y);
+        targetCtx.stroke();
+      });
     }
 
-    function drawRolePoints(roleKey, launchProgress) {
+    function drawPoint(targetCtx, point, size, alpha) {
+      if (alpha <= 0) return;
+
+      targetCtx.globalAlpha = alpha * 0.26;
+      targetCtx.fillStyle = "#ffe66a";
+      targetCtx.beginPath();
+      targetCtx.ellipse(point.x, point.y, size * 1.05, size * 2.25, 0, 0, Math.PI * 2);
+      targetCtx.fill();
+
+      targetCtx.globalAlpha = alpha;
+      targetCtx.fillStyle = "#fffef2";
+      targetCtx.beginPath();
+      targetCtx.ellipse(point.x, point.y, size * 0.40, size * 1.72, 0, 0, Math.PI * 2);
+      targetCtx.fill();
+
+      targetCtx.globalAlpha = 1;
+    }
+
+    function drawRolePoints(targetCtx, roleKey) {
       const role = ROLE_META_MAP[roleKey];
-      const layout = currentLayout(roleKey);
-      const points = pointsByRole[roleKey] || [];
-      if (!points.length) return;
+      const layout = getLayout(roleKey);
+      const pts = constellationPoints[roleKey] || [];
+      let alpha = 0.98;
+      let size = layout.size;
 
-      const reveal = getRoleRevealFactor(roleKey, launchProgress);
-      if (reveal <= 0) return;
+      if (activeRole === "all" && roleKey === "unit_manager") {
+        alpha = 0.72;
+        size = 1.55;
+      } else if (activeRole === "unit_manager") {
+        alpha = 0.86;
+        size = 1.75;
+      }
 
-      const visibleCount =
-        activeRoleFilter === "all"
-          ? Math.max(1, Math.floor(points.length * reveal))
-          : points.length;
+      pts.forEach((point) => drawPoint(targetCtx, point, size, alpha));
+    }
 
-      for (let i = 0; i < visibleCount; i++) {
-        let alpha = 0.98;
-        let size = layout.size;
+    function renderStaticScene() {
+      if (!stageWidth || !stageHeight) return;
+      staticCtx.clearRect(0, 0, stageWidth, stageHeight);
+      drawBackground(staticCtx);
 
-        if (activeRoleFilter === "all" && roleKey === "unit_manager") {
-          alpha = 0.72;
-          size = 1.55;
-        } else if (activeRoleFilter === "unit_manager") {
-          alpha = 0.86;
-          size = 1.75;
-        }
-
-        drawPoint(points[i], size, alpha);
+      if (activeRole === "all") {
+        drawAllRoleLines(staticCtx);
+        ROLE_ORDER.forEach((roleKey) => drawRolePoints(staticCtx, roleKey));
+      } else {
+        drawSingleRoleLines(staticCtx, activeRole);
+        drawRolePoints(staticCtx, activeRole);
       }
     }
 
-    function drawShip(now) {
-      if (!launched || !shipImage || !shipImage.complete) return;
+    function drawShipFrame(now) {
+      if (!shipImage || !shipImage.complete) return;
 
-      const elapsed = (now - launchStartTime) / 1000;
-      const cycle = activeRoleFilter === "all" ? 11 : 8;
+      const elapsed = now / 1000;
+      const cycle = activeRole === "all" ? 10 : 8;
       const t = (elapsed % cycle) / cycle;
+
+      let startX = stageWidth * 0.12;
+      let startY = stageHeight * 0.88;
+      let endX;
+      let endY;
+
+      if (activeRole === "all") {
+        endX = stageWidth * 0.86;
+        endY = stageHeight * 0.16;
+      } else {
+        const layout = ROLE_META_MAP[activeRole].single;
+        endX = stageWidth * layout.cx;
+        endY = stageHeight * Math.max(0.20, layout.cy - 0.04);
+      }
+
+      const eased = 1 - Math.pow(1 - t, 2.15);
+      const x = startX + (endX - startX) * eased;
+      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.6) * 5;
+      const angle = (-12 + 18 * eased) * Math.PI / 180;
 
       let alpha = 1;
       if (t < 0.08) alpha = t / 0.08;
       else if (t > 0.92) alpha = (1 - t) / 0.08;
 
-      let startX, startY, endX, endY;
-
-      if (activeRoleFilter === "all") {
-        startX = shellWidth * 0.12;
-        startY = shellHeight * 0.86;
-        endX = shellWidth * 0.83;
-        endY = shellHeight * 0.20;
-      } else {
-        const role = ROLE_META_MAP[activeRoleFilter];
-        startX = shellWidth * 0.14;
-        startY = shellHeight * 0.86;
-        endX = shellWidth * role.single.cx;
-        endY = shellHeight * role.single.cy;
-      }
-
-      const eased = 1 - Math.pow(1 - t, 2.2);
-      const x = startX + (endX - startX) * eased;
-      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 4) * 8;
-      const angle = (-14 + 22 * eased) * Math.PI / 180;
-
-      const w = Math.min(104, shellWidth * 0.11);
+      const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
+      const w = Math.max(60, baseSize);
       const h = w;
 
       ctx.save();
@@ -1344,138 +1011,111 @@
       ctx.rotate(angle);
       ctx.drawImage(shipImage, -w / 2, -h / 2, w, h);
       ctx.restore();
-
       ctx.globalAlpha = 1;
     }
 
-    function draw(now) {
-      const timeSeconds = now / 1000;
-      const launchProgress = launched
-        ? Math.min(1, (now - launchStartTime) / 1800)
-        : 0;
-
-      ctx.clearRect(0, 0, shellWidth, shellHeight);
-      drawBackground(timeSeconds);
-      drawLines(launchProgress);
-
-      const visibleRoles = getVisibleRoleKeys();
-      visibleRoles.forEach((roleKey) => {
-        drawRolePoints(roleKey, launchProgress);
-      });
-
-      drawShip(now);
-      animationFrame = requestAnimationFrame(draw);
+    function drawFrame(now) {
+      ctx.clearRect(0, 0, stageWidth, stageHeight);
+      ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
+      drawShipFrame(now);
+      animationId = requestAnimationFrame(drawFrame);
     }
 
-    async function loadLeaders() {
-      try {
-        const response = await fetch(CSV_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("CSV not found");
+    function updateLabels() {
+      const single = isSingleRole();
+      const mobile = isMobile();
 
-        const text = await response.text();
-        const parsed = parseLeadersCSV(text);
-        if (!parsed.length) throw new Error("No usable leader rows found");
+      Object.entries(allLabels).forEach(([roleKey, el]) => {
+        if (!el) return;
+        if (activeRole === "all" && !mobile) {
+          el.classList.remove("hidden");
+        } else {
+          el.classList.add("hidden");
+        }
+      });
 
-        leaders = parsed;
-        usingDemoData = false;
-      } catch (error) {
-        leaders = DEMO_LEADERS.map((item) => ({
-          name: item.name,
-          roleKey: canonicalRoleFromString(item.role)
-        }));
-        usingDemoData = true;
+      if (single) {
+        focusBadge.textContent = ROLE_META_MAP[activeRole].short;
+        focusBadge.classList.remove("hidden");
+        focusBadge.classList.add("active");
+      } else {
+        focusBadge.classList.add("hidden");
+        focusBadge.classList.remove("active");
+      }
+    }
+
+    function updateScrollHint() {
+      if (!(isMobile() && activeRole === "all")) {
+        scrollHint.classList.remove("show");
+        return;
       }
 
-      updateCounts();
-      buildFilterChips();
-      updateStatusNote();
-      buildPointLayout();
+      const canScroll = stageScroll.scrollWidth > stageScroll.clientWidth + 8;
+      const nearEnd = stageScroll.scrollLeft + stageScroll.clientWidth >= stageScroll.scrollWidth - 12;
+      scrollHint.classList.toggle("show", canScroll && !hintDismissed && !nearEnd);
+    }
+
+    function positionStageScroll() {
+      if (!isMobile()) {
+        stageScroll.scrollLeft = 0;
+        return;
+      }
+
+      if (activeRole === "all") {
+        const maxScroll = Math.max(0, stageScroll.scrollWidth - stageScroll.clientWidth);
+        stageScroll.scrollLeft = maxScroll * 0.18;
+      } else {
+        stageScroll.scrollLeft = 0;
+      }
+    }
+
+    function refreshView() {
+      buildChips();
+      updateStatus();
+      stage.classList.toggle("single-role-mobile", isMobile() && isSingleRole());
+      resizeCanvas();
+      renderStaticScene();
       updateLabels();
-      positionBadges();
+      positionStageScroll();
+      updateScrollHint();
     }
 
-    async function launchConstellation() {
-      overlayLaunchBtn.disabled = true;
-      launchBtn.disabled = true;
-      overlayLaunchBtn.textContent = "Launching...";
+    resetBtn.addEventListener("click", () => {
+      activeRole = "all";
+      hintDismissed = false;
+      refreshView();
+    });
 
-      if (dataPromise) await dataPromise;
-
-      launched = true;
-      launchStartTime = performance.now();
-      constellationOverlay.classList.add("hidden");
-      wilsonShipLayer.classList.add("visible");
-      updateControlVisibility();
-      refreshViewMode(false);
-
-      overlayLaunchBtn.textContent = "Start Launch";
-      overlayLaunchBtn.disabled = false;
-      launchBtn.disabled = false;
-    }
-
-    function refreshViewMode(alsoScroll = true) {
-      buildFilterChips();
-      updateStatusNote();
-
-      const mobile = isMobile();
-      const single = isSingleRoleView();
-
-      constellationShell.classList.toggle("single-role-mobile", mobile && single);
-
-      requestAnimationFrame(() => {
-        resizeCanvas();
-        updateLabels();
-        updateControlVisibility();
-
-        if (alsoScroll) {
-          if (!launched) centerOverlayView();
-          else if (activeRoleFilter === "all") setAllRolesView();
-          else setSingleRoleViewPosition();
-        }
-
-        updateScrollHint();
-      });
-    }
-
-    function resetView() {
-      activeRoleFilter = "all";
-      refreshViewMode(true);
-    }
-
-    function preloadShip() {
-      shipImage = new Image();
-      shipImage.src = SHIP_SRC;
-    }
-
-    overlayLaunchBtn.addEventListener("click", launchConstellation);
-    launchBtn.addEventListener("click", launchConstellation);
-    resetBtn.addEventListener("click", resetView);
-
-    constellationScroll.addEventListener("scroll", () => {
-      if (constellationScroll.scrollLeft > 12) constellationHintDismissed = true;
+    stageScroll.addEventListener("scroll", () => {
+      if (stageScroll.scrollLeft > 12) hintDismissed = true;
       updateScrollHint();
     }, { passive: true });
 
     window.addEventListener("resize", () => {
-      buildStars();
-      refreshViewMode(false);
+      refreshView();
     });
 
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        cancelAnimationFrame(animationFrame);
+        cancelAnimationFrame(animationId);
       } else {
-        animationFrame = requestAnimationFrame(draw);
+        animationId = requestAnimationFrame(drawFrame);
       }
     });
 
-    preloadShip();
+    shipImage = new Image();
+    shipImage.src = SHIP_SRC;
+    shipImage.addEventListener("load", () => {
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(drawFrame);
+    });
+
     buildStars();
     resizeCanvas();
-    updateControlVisibility();
-    centerOverlayView();
-    dataPromise = loadLeaders();
-    animationFrame = requestAnimationFrame(draw);
+    loadLeaders().then(() => {
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(drawFrame);
+    });
   </script>
 </body>
 </html>
