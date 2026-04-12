@@ -291,7 +291,7 @@
       white-space: nowrap;
     }
 
-    .ship-trail {
+    .ship-card {
       position: absolute;
       z-index: 6;
       pointer-events: none;
@@ -304,30 +304,20 @@
       box-shadow: 0 14px 24px rgba(0,0,0,0.18);
       backdrop-filter: blur(8px);
       transform: translate(-50%, -50%);
-      transition: opacity 0.18s ease;
+      transition: opacity 0.16s ease;
       opacity: 0;
     }
 
-    .ship-trail.show { opacity: 1; }
+    .ship-card.show { opacity: 1; }
 
-    .ship-trail-kicker {
-      font-size: 0.68rem;
-      line-height: 1.1;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #7b6c00;
-      margin-bottom: 6px;
-    }
-
-    .ship-trail-name {
+    .ship-card-name {
       font-size: 0.96rem;
       line-height: 1.2;
       font-weight: 900;
       color: #1f1f1f;
     }
 
-    .ship-trail-role {
+    .ship-card-role {
       margin-top: 4px;
       font-size: 0.8rem;
       line-height: 1.2;
@@ -462,7 +452,7 @@
         top: 14px;
       }
 
-      .ship-trail {
+      .ship-card {
         min-width: 150px;
         max-width: 190px;
         padding: 9px 10px;
@@ -536,10 +526,9 @@
           <canvas id="skyCanvas" aria-hidden="true"></canvas>
           <div class="map-badge" id="mapBadge">All Leadership Roles</div>
 
-          <div class="ship-trail" id="shipTrail" aria-live="polite">
-            <div class="ship-trail-kicker">Now Passing</div>
-            <div class="ship-trail-name" id="shipTrailName">Loading…</div>
-            <div class="ship-trail-role" id="shipTrailRole">Leadership</div>
+          <div class="ship-card" id="shipCard" aria-live="polite">
+            <div class="ship-card-name" id="shipCardName">Loading…</div>
+            <div class="ship-card-role" id="shipCardRole">Leadership</div>
           </div>
         </div>
       </div>
@@ -566,48 +555,42 @@
 
   <script>
     const CSV_URL = "leaders.csv";
-    const SHIP_SRC = "spaceship.png"; // change only if your Wilson file name is different
+    const SHIP_SRC = "spaceship.png";
 
     const ROLE_META = [
       {
         key: "executive_vice_president",
         label: "Executive Vice President",
-        short: "EVP",
         countLabel: "EVP",
         single: { cx: 0.72, cy: 0.36, rx: 0.16, ry: 0.10, size: 5.2 }
       },
       {
         key: "senior_vice_president",
         label: "Senior Vice President",
-        short: "SVP",
         countLabel: "SVP",
         single: { cx: 0.67, cy: 0.42, rx: 0.18, ry: 0.11, size: 4.6 }
       },
       {
         key: "area_region_manager",
         label: "Area / Region Manager",
-        short: "Area / Region",
         countLabel: "Area / Region",
         single: { cx: 0.68, cy: 0.52, rx: 0.21, ry: 0.12, size: 4.1 }
       },
       {
         key: "division_manager",
         label: "Division Manager",
-        short: "Division",
         countLabel: "Division",
         single: { cx: 0.66, cy: 0.61, rx: 0.22, ry: 0.12, size: 3.7 }
       },
       {
         key: "district_manager",
         label: "District Manager",
-        short: "District",
         countLabel: "District",
         single: { cx: 0.62, cy: 0.72, rx: 0.25, ry: 0.10, size: 3.05 }
       },
       {
         key: "unit_manager",
         label: "Unit Manager",
-        short: "Unit",
         countLabel: "Unit",
         single: { cx: 0.55, cy: 0.80, rx: 0.29, ry: 0.08, size: 1.8 }
       }
@@ -695,9 +678,9 @@
     const statusNote = document.getElementById("statusNote");
     const mapBadge = document.getElementById("mapBadge");
 
-    const shipTrail = document.getElementById("shipTrail");
-    const shipTrailName = document.getElementById("shipTrailName");
-    const shipTrailRole = document.getElementById("shipTrailRole");
+    const shipCard = document.getElementById("shipCard");
+    const shipCardName = document.getElementById("shipCardName");
+    const shipCardRole = document.getElementById("shipCardRole");
 
     const nameList = document.getElementById("nameList");
     const emptyState = document.getElementById("emptyState");
@@ -728,7 +711,7 @@
     let flightStartMs = performance.now();
     let sessionSeed = Math.floor(Math.random() * 1000000);
 
-    let trailState = {
+    let cardState = {
       allStageKey: null,
       allLeader: null,
       singleStep: -1,
@@ -891,7 +874,7 @@
 
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         const ordered = leaders.filter(leader => leader.roleKey === roleKey);
-        byRole[roleKey] = ordered; // single-role views follow CSV order
+        byRole[roleKey] = ordered;
         allRolePools[roleKey] = shuffleWithSeed(ordered, `all-role-${roleKey}`);
       });
 
@@ -923,13 +906,23 @@
       return sessionOrderByRole[activeRole] || [];
     }
 
-    function resetTrailIndexes() {
+    function getNextLeaderForRole(roleKey) {
+      const pool = sessionOrderByRole[roleKey] || [];
+      if (!pool.length) return null;
+
+      const index = roleTrailIndexes[roleKey] || 0;
+      const leader = pool[index % pool.length];
+      roleTrailIndexes[roleKey] = (index + 1) % pool.length;
+      return leader;
+    }
+
+    function resetCardIndexes() {
       roleTrailIndexes = {};
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         roleTrailIndexes[roleKey] = 0;
       });
 
-      trailState = {
+      cardState = {
         allStageKey: null,
         allLeader: null,
         singleStep: -1,
@@ -993,10 +986,10 @@
 
     function buildTwinkleStars() {
       twinkleStars = [];
-      const count = isMobile() ? 56 : 90;
+      const count = isMobile() ? 72 : 120;
       let attempts = 0;
 
-      while (twinkleStars.length < count && attempts < 1800) {
+      while (twinkleStars.length < count && attempts < 2200) {
         attempts += 1;
 
         const x = seededValue(`twinkle-x-${attempts}`);
@@ -1006,16 +999,16 @@
         const dy = (y - 0.58) / 0.24;
         const insideCore = (dx * dx + dy * dy) < 1.0;
 
-        if (insideCore && seededValue(`keep-${attempts}`) < 0.55) continue;
+        if (insideCore && seededValue(`keep-${attempts}`) < 0.48) continue;
 
         twinkleStars.push({
           x,
           y,
-          r: 0.9 + seededValue(`r-${attempts}`) * 1.7,
-          alphaBase: 0.34 + seededValue(`a-${attempts}`) * 0.34,
-          speed: 0.8 + seededValue(`s-${attempts}`) * 1.9,
+          r: 0.9 + seededValue(`r-${attempts}`) * 1.9,
+          alphaBase: 0.38 + seededValue(`a-${attempts}`) * 0.34,
+          speed: 0.8 + seededValue(`s-${attempts}`) * 2.0,
           phase: seededValue(`p-${attempts}`) * Math.PI * 2,
-          flare: seededValue(`f-${attempts}`) > 0.72
+          flare: seededValue(`f-${attempts}`) > 0.66
         });
       }
     }
@@ -1103,25 +1096,25 @@
 
       twinkleStars.forEach((star) => {
         const pulse = 0.55 + 0.45 * Math.sin((t * star.speed) + star.phase);
-        const alpha = star.alphaBase + pulse * 0.28;
+        const alpha = star.alphaBase + pulse * 0.30;
         const px = star.x * stageWidth;
         const py = star.y * stageHeight;
 
-        targetCtx.globalAlpha = Math.max(0.18, Math.min(0.72, alpha * 0.42));
+        targetCtx.globalAlpha = Math.max(0.18, Math.min(0.74, alpha * 0.46));
         targetCtx.fillStyle = "#ffffff";
         targetCtx.beginPath();
-        targetCtx.arc(px, py, star.r * 3.4, 0, Math.PI * 2);
+        targetCtx.arc(px, py, star.r * 3.5, 0, Math.PI * 2);
         targetCtx.fill();
 
-        targetCtx.globalAlpha = Math.max(0.32, Math.min(0.98, alpha));
+        targetCtx.globalAlpha = Math.max(0.34, Math.min(1, alpha));
         targetCtx.beginPath();
         targetCtx.arc(px, py, star.r, 0, Math.PI * 2);
         targetCtx.fill();
 
-        if (star.flare && pulse > 0.84) {
-          targetCtx.globalAlpha = Math.max(0.14, Math.min(0.50, alpha * 0.52));
-          targetCtx.fillRect(px - (star.r * 4.6), py - 0.55, star.r * 9.2, 1.1);
-          targetCtx.fillRect(px - 0.55, py - (star.r * 4.6), 1.1, star.r * 9.2);
+        if (star.flare && pulse > 0.82) {
+          targetCtx.globalAlpha = Math.max(0.15, Math.min(0.55, alpha * 0.55));
+          targetCtx.fillRect(px - (star.r * 4.8), py - 0.55, star.r * 9.6, 1.1);
+          targetCtx.fillRect(px - 0.55, py - (star.r * 4.8), 1.1, star.r * 9.6);
         }
       });
 
@@ -1260,19 +1253,8 @@
       }
     }
 
-    function getNextLeaderForRole(roleKey) {
-      const pool = sessionOrderByRole[roleKey] || [];
-      if (!pool.length) return null;
-
-      const index = roleTrailIndexes[roleKey] || 0;
-      const leader = pool[index % pool.length];
-      roleTrailIndexes[roleKey] = (index + 1) % pool.length;
-      return leader;
-    }
-
     function getAllRoleStageForShipY(shipY) {
       const yNorm = shipY / stageHeight;
-
       const ordered = ALL_ROLE_STAGE_ORDER.map((roleKey) => ({
         roleKey,
         cy: ALL_ROLE_LAYOUT[roleKey].cy
@@ -1288,50 +1270,76 @@
 
     function getShipFlight(now) {
       const elapsed = Math.max(0, now - flightStartMs);
-      const cycleMs = activeRole === "all" ? 15600 : 12800;
-      const t = (elapsed % cycleMs) / cycleMs;
-
-      const startX = stageWidth * 0.12;
-      const startY = stageHeight * 0.88;
-
-      let x, y, angle;
 
       if (activeRole === "all") {
-        const endX = stageWidth * 1.12;
-        const endY = stageHeight * -0.10;
-        const eased = 1 - Math.pow(1 - t, 2.75);
+        const cycleMs = 19800;
+        const t = (elapsed % cycleMs) / cycleMs;
 
-        x = startX + (endX - startX) * eased;
-        y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.1) * 3.5;
-        angle = (-12 + 22 * eased) * Math.PI / 180;
+        const startX = stageWidth * 0.12;
+        const startY = stageHeight * 0.90;
+        const endX = stageWidth * 1.10;
+        const endY = stageHeight * -0.12;
+        const eased = 1 - Math.pow(1 - t, 2.55);
+
+        const x = startX + (endX - startX) * eased;
+        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.8) * 3.2;
+        const angle = (-12 + 22 * eased) * Math.PI / 180;
+
+        let alpha = 1;
+        if (t < 0.04) alpha = t / 0.04;
+        else if (t > 0.985) alpha = (1 - t) / 0.015;
+
+        const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
+        const w = Math.max(60, baseSize);
+        const h = w;
+
+        return { mode: "all", t, x, y, angle, alpha, elapsed, width: w, height: h };
+      }
+
+      const cycleMs = 15400;
+      const t = (elapsed % cycleMs) / cycleMs;
+      const layout = ROLE_META_MAP[activeRole].single;
+
+      const startX = stageWidth * 0.12;
+      const startY = stageHeight * 0.91;
+
+      const approachX = stageWidth * Math.max(0.28, layout.cx - 0.05);
+      const approachY = stageHeight * Math.min(0.90, layout.cy + 0.10);
+
+      const hoverStartX = stageWidth * Math.max(0.34, layout.cx - 0.02);
+      const hoverStartY = stageHeight * Math.min(0.86, layout.cy + 0.05);
+
+      const hoverEndX = stageWidth * Math.min(0.92, layout.cx + 0.08);
+      const hoverEndY = stageHeight * Math.max(0.12, layout.cy - 0.05);
+
+      const exitX = Math.min(stageWidth * 1.08, hoverEndX + stageWidth * 0.14);
+      const exitY = stageHeight * -0.12;
+
+      const p1 = 0.42;
+      const p2 = 0.78;
+
+      let x, y, angle, spotlightActive = false, spotlightProgress = 0;
+
+      if (t < p1) {
+        const local = t / p1;
+        const eased = 1 - Math.pow(1 - local, 2.45);
+        x = startX + (approachX - startX) * eased;
+        y = startY + (approachY - startY) * eased + Math.sin(local * Math.PI * 1.2) * 2.5;
+        angle = (-14 + 16 * eased) * Math.PI / 180;
+      } else if (t < p2) {
+        const local = (t - p1) / (p2 - p1);
+        const eased = 1 - Math.pow(1 - local, 2.2);
+        x = hoverStartX + (hoverEndX - hoverStartX) * eased;
+        y = hoverStartY + (hoverEndY - hoverStartY) * eased + Math.sin(local * Math.PI * 2.0) * 2.6;
+        angle = (2 + 10 * eased) * Math.PI / 180;
+        spotlightActive = true;
+        spotlightProgress = local;
       } else {
-        const layout = ROLE_META_MAP[activeRole].single;
-
-        const passX = stageWidth * Math.min(
-          0.90,
-          layout.cx + (activeRole === "unit_manager" ? 0.00 : 0.04)
-        );
-        const passY = stageHeight * Math.max(0.16, layout.cy + 0.015);
-
-        const exitX = Math.min(stageWidth * 1.08, passX + stageWidth * 0.16);
-        const exitY = stageHeight * -0.12;
-        const pivot = 0.70;
-
-        if (t < pivot) {
-          const local = t / pivot;
-          const eased = 1 - Math.pow(1 - local, 2.5);
-
-          x = startX + (passX - startX) * eased;
-          y = startY + (passY - startY) * eased + Math.sin(local * Math.PI * 1.5) * 3.2;
-          angle = (-14 + 20 * eased) * Math.PI / 180;
-        } else {
-          const local = (t - pivot) / (1 - pivot);
-          const eased = 1 - Math.pow(1 - local, 2.8);
-
-          x = passX + (exitX - passX) * eased;
-          y = passY + (exitY - passY) * eased;
-          angle = (6 + 12 * eased) * Math.PI / 180;
-        }
+        const local = (t - p2) / (1 - p2);
+        const eased = 1 - Math.pow(1 - local, 2.8);
+        x = hoverEndX + (exitX - hoverEndX) * eased;
+        y = hoverEndY + (exitY - hoverEndY) * eased;
+        angle = (10 + 12 * eased) * Math.PI / 180;
       }
 
       let alpha = 1;
@@ -1342,7 +1350,11 @@
       const w = Math.max(60, baseSize);
       const h = w;
 
-      return { t, x, y, angle, alpha, elapsed, width: w, height: h };
+      return {
+        mode: "single",
+        t, x, y, angle, alpha, elapsed, width: w, height: h,
+        spotlightActive, spotlightProgress
+      };
     }
 
     function drawShipFrame(now) {
@@ -1361,67 +1373,7 @@
       return flight;
     }
 
-    function updateShipTrail(shipState) {
-      const shipGone =
-        !shipState ||
-        shipState.alpha < 0.14 ||
-        shipState.x < (-shipState.width * 0.18) ||
-        shipState.x > (stageWidth + shipState.width * 0.18) ||
-        shipState.y < (-shipState.height * 0.18) ||
-        shipState.y > (stageHeight + shipState.height * 0.18) ||
-        shipState.t >= (activeRole === "all" ? 0.955 : 0.94);
-
-      if (shipGone) {
-        shipTrail.classList.remove("show");
-        trailState.allStageKey = null;
-        trailState.allLeader = null;
-        trailState.singleStep = -1;
-        trailState.singleLeader = null;
-        return;
-      }
-
-      let currentLeader = null;
-
-      if (activeRole === "all") {
-        const stageWindow = getAllRoleStageForShipY(shipState.y);
-        if (!stageWindow) {
-          shipTrail.classList.remove("show");
-          return;
-        }
-
-        if (trailState.allStageKey !== stageWindow.roleKey) {
-          trailState.allStageKey = stageWindow.roleKey;
-          trailState.allLeader = getNextLeaderForRole(stageWindow.roleKey);
-        }
-
-        currentLeader = trailState.allLeader;
-      } else {
-        const pool = sessionOrderByRole[activeRole] || [];
-        if (!pool.length) {
-          shipTrail.classList.remove("show");
-          return;
-        }
-
-        const stepDuration = 2500;
-        const maxUsableTime = Math.min(shipState.elapsed, 9800);
-        const step = Math.floor(maxUsableTime / stepDuration);
-
-        if (step !== trailState.singleStep) {
-          trailState.singleStep = step;
-          trailState.singleLeader = pool[step % pool.length];
-        }
-
-        currentLeader = trailState.singleLeader;
-      }
-
-      if (!currentLeader) {
-        shipTrail.classList.remove("show");
-        return;
-      }
-
-      shipTrailName.textContent = currentLeader.name;
-      shipTrailRole.textContent = ROLE_META_MAP[currentLeader.roleKey].label;
-
+    function positionCardNearShip(shipState) {
       const isTight = isMobile();
       let left = shipState.x - (isTight ? 110 : 120);
       let top = shipState.y - (isTight ? 72 : 76);
@@ -1434,9 +1386,107 @@
       left = Math.max(minLeft, Math.min(maxLeft, left));
       top = Math.max(minTop, Math.min(maxTop, top));
 
-      shipTrail.style.left = `${left}px`;
-      shipTrail.style.top = `${top}px`;
-      shipTrail.classList.add("show");
+      shipCard.style.left = `${left}px`;
+      shipCard.style.top = `${top}px`;
+    }
+
+    function positionCardForSingleRole() {
+      const layout = ROLE_META_MAP[activeRole].single;
+      const clusterX = stageWidth * layout.cx;
+      const clusterY = stageHeight * layout.cy;
+
+      let left = clusterX - (isMobile() ? 92 : 124);
+      let top = clusterY - (isMobile() ? 78 : 86);
+
+      const minLeft = isMobile() ? 92 : 110;
+      const maxLeft = stageWidth - (isMobile() ? 92 : 110);
+      const minTop = 74;
+      const maxTop = stageHeight - 72;
+
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
+
+      shipCard.style.left = `${left}px`;
+      shipCard.style.top = `${top}px`;
+    }
+
+    function updateShipCard(shipState) {
+      const shipGone =
+        !shipState ||
+        shipState.alpha < 0.14 ||
+        shipState.x < (-shipState.width * 0.18) ||
+        shipState.x > (stageWidth + shipState.width * 0.18) ||
+        shipState.y < (-shipState.height * 0.18) ||
+        shipState.y > (stageHeight + shipState.height * 0.18) ||
+        shipState.t >= (activeRole === "all" ? 0.955 : 0.94);
+
+      if (shipGone) {
+        shipCard.classList.remove("show");
+        cardState.allStageKey = null;
+        cardState.allLeader = null;
+        cardState.singleStep = -1;
+        cardState.singleLeader = null;
+        return;
+      }
+
+      let currentLeader = null;
+
+      if (activeRole === "all") {
+        const stageWindow = getAllRoleStageForShipY(shipState.y);
+        if (!stageWindow) {
+          shipCard.classList.remove("show");
+          return;
+        }
+
+        if (cardState.allStageKey !== stageWindow.roleKey) {
+          cardState.allStageKey = stageWindow.roleKey;
+          cardState.allLeader = getNextLeaderForRole(stageWindow.roleKey);
+        }
+
+        currentLeader = cardState.allLeader;
+        if (!currentLeader) {
+          shipCard.classList.remove("show");
+          return;
+        }
+
+        shipCardName.textContent = currentLeader.name;
+        shipCardRole.textContent = ROLE_META_MAP[currentLeader.roleKey].label;
+        positionCardNearShip(shipState);
+        shipCard.classList.add("show");
+        return;
+      }
+
+      if (!shipState.spotlightActive || shipState.spotlightProgress < 0.06 || shipState.spotlightProgress > 0.98) {
+        shipCard.classList.remove("show");
+        return;
+      }
+
+      const pool = sessionOrderByRole[activeRole] || [];
+      if (!pool.length) {
+        shipCard.classList.remove("show");
+        return;
+      }
+
+      const spotlightMs = (0.78 - 0.42) * 15400;
+      const stepDuration = Math.max(90, Math.min(320, Math.floor(spotlightMs / Math.max(1, pool.length))));
+      const spotlightElapsed = Math.max(0, (shipState.t - 0.42) * 15400);
+      const step = Math.floor(spotlightElapsed / stepDuration);
+
+      if (step !== cardState.singleStep) {
+        cardState.singleStep = step;
+        cardState.singleLeader = pool[step % pool.length];
+      }
+
+      currentLeader = cardState.singleLeader;
+      if (!currentLeader) {
+        shipCard.classList.remove("show");
+        return;
+      }
+
+      shipCardName.textContent = currentLeader.name;
+      shipCardRole.textContent = ROLE_META_MAP[currentLeader.roleKey].label;
+      positionCardForSingleRole();
+      shipCard.classList.add("show");
     }
 
     function drawFrame(now) {
@@ -1444,7 +1494,7 @@
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
       drawTwinkleStars(ctx, now);
       const shipState = drawShipFrame(now);
-      updateShipTrail(shipState);
+      updateShipCard(shipState);
       animationId = requestAnimationFrame(drawFrame);
     }
 
@@ -1478,11 +1528,11 @@
 
     function restartFlight() {
       flightStartMs = performance.now();
-      trailState.allStageKey = null;
-      trailState.allLeader = null;
-      trailState.singleStep = -1;
-      trailState.singleLeader = null;
-      shipTrail.classList.remove("show");
+      cardState.allStageKey = null;
+      cardState.allLeader = null;
+      cardState.singleStep = -1;
+      cardState.singleLeader = null;
+      shipCard.classList.remove("show");
     }
 
     function renderPagedList() {
@@ -1580,7 +1630,7 @@
 
       totalCount = leaders.length;
       buildSessionOrders();
-      resetTrailIndexes();
+      resetCardIndexes();
       currentPage = 1;
       restartFlight();
       refreshView();
@@ -1628,7 +1678,7 @@
       animationId = requestAnimationFrame(drawFrame);
     });
     shipImage.addEventListener("error", () => {
-      shipTrail.classList.remove("show");
+      shipCard.classList.remove("show");
     });
 
     buildTwinkleStars();
