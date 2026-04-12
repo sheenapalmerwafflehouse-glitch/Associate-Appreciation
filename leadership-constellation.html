@@ -10,6 +10,7 @@
       --muted: #5a5a5a;
       --yellow: #f5d547;
       --yellow-dark: #d7b31a;
+      --yellow-soft: #fff7c8;
       --border: rgba(176, 150, 44, 0.18);
       --shadow: 0 14px 30px rgba(17, 17, 17, 0.10);
       --shadow-strong: 0 20px 44px rgba(17, 17, 17, 0.16);
@@ -56,7 +57,8 @@
 
     .back-link,
     .btn,
-    .chip {
+    .chip,
+    .pager-btn {
       appearance: none;
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 20px;
@@ -68,7 +70,7 @@
       background: #fff;
       color: #1f1f1f;
       box-shadow: 0 8px 16px rgba(17,17,17,0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -79,7 +81,8 @@
 
     .back-link:hover,
     .btn:hover,
-    .chip:hover {
+    .chip:hover,
+    .pager-btn:hover {
       transform: translateY(-1px);
       box-shadow: 0 12px 20px rgba(17,17,17,0.12);
     }
@@ -88,6 +91,13 @@
     .chip.active {
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
       border-color: rgba(212, 176, 0, 0.28);
+    }
+
+    .pager-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      transform: none;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.05);
     }
 
     .hero {
@@ -153,6 +163,16 @@
       z-index: 1;
     }
 
+    .hero-copy {
+      max-width: 960px;
+      margin: 18px auto 0;
+      color: #494949;
+      font-size: clamp(1.02rem, 2.1vw, 1.14rem);
+      line-height: 1.58;
+      position: relative;
+      z-index: 1;
+    }
+
     .panel {
       padding: 18px;
       display: grid;
@@ -192,7 +212,7 @@
     .status-note {
       text-align: center;
       color: #6a6a6a;
-      font-size: 0.92rem;
+      font-size: 0.94rem;
       line-height: 1.45;
       min-height: 22px;
     }
@@ -205,7 +225,7 @@
     .hint {
       display: none;
       text-align: center;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       line-height: 1.42;
       font-weight: 800;
       color: #7b6c00;
@@ -250,65 +270,182 @@
       z-index: 1;
     }
 
-    .focus-badge,
-    .allrole-label {
+    .map-badge {
       position: absolute;
-      z-index: 4;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
       pointer-events: none;
-      padding: 8px 12px;
+      padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(12, 24, 52, 0.84);
-      border: 1px solid rgba(255,255,255,0.16);
-      color: rgba(255,255,255,0.96);
+      background: rgba(255, 230, 106, 0.94);
+      border: 1px solid rgba(255,255,255,0.24);
+      color: #1b1b1b;
       font-size: 0.74rem;
       font-weight: 900;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      backdrop-filter: blur(4px);
-      white-space: nowrap;
+      backdrop-filter: blur(5px);
       box-shadow: 0 10px 18px rgba(0,0,0,0.18);
+      max-width: calc(100% - 32px);
+      text-align: center;
+      white-space: nowrap;
     }
 
-    .focus-badge.active {
-      background: rgba(255, 230, 106, 0.92);
-      color: #1d1d1d;
-      border-color: rgba(255,255,255,0.25);
-    }
-
-    .focus-badge.hidden,
-    .allrole-label.hidden {
+    .map-badge.hidden {
       opacity: 0;
       visibility: hidden;
     }
 
-    .allrole-label {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #allLabelEVP { right: 18px; top: 18px; }
-    #allLabelSVP { right: 18px; top: 66px; }
-    #allLabelArea { left: 18px; top: 132px; }
-    #allLabelDivision { left: 18px; top: 188px; }
-    #allLabelDistrict { left: 18px; top: 244px; }
-    #allLabelUnit { left: 18px; top: 300px; }
-
-    .focus-badge {
-      top: 18px;
-      right: 18px;
-      display: none;
-    }
-
-    .ship-layer {
+    .ship-trail {
       position: absolute;
-      inset: 0;
+      z-index: 6;
       pointer-events: none;
-      z-index: 3;
+      min-width: 170px;
+      max-width: 220px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      box-shadow: 0 14px 24px rgba(0,0,0,0.18);
+      backdrop-filter: blur(8px);
+      transform: translate(-50%, -50%);
+      transition: opacity 0.18s ease;
+      opacity: 0;
+    }
+
+    .ship-trail.show { opacity: 1; }
+
+    .ship-trail-kicker {
+      font-size: 0.68rem;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7b6c00;
+      margin-bottom: 6px;
+    }
+
+    .ship-trail-name {
+      font-size: 0.96rem;
+      line-height: 1.2;
+      font-weight: 900;
+      color: #1f1f1f;
+    }
+
+    .ship-trail-role {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      line-height: 1.2;
+      color: #616161;
+      font-weight: 700;
+    }
+
+    .list-card {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,249,228,0.96));
+    }
+
+    .list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .list-kicker {
+      font-size: 0.78rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7b6c00;
+      margin-bottom: 8px;
+    }
+
+    .list-title {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      line-height: 1.05;
+    }
+
+    .list-meta {
+      color: #656565;
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .name-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .name-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(176, 150, 44, 0.14);
+      box-shadow: 0 8px 16px rgba(17,17,17,0.05);
+    }
+
+    .name-item-title {
+      font-size: 0.98rem;
+      line-height: 1.2;
+      font-weight: 900;
+      color: #1e1e1e;
+      overflow-wrap: anywhere;
+    }
+
+    .name-item-subtitle {
+      font-size: 0.8rem;
+      line-height: 1.2;
+      color: #666666;
+      font-weight: 700;
+    }
+
+    .pager {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pager-info {
+      color: #666666;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .pager-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .empty-state {
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.88);
+      border: 1px dashed rgba(176, 150, 44, 0.25);
+      text-align: center;
+      color: #666666;
+      font-weight: 700;
     }
 
     @media (max-width: 900px) {
       .stage { min-height: 500px; }
+      .name-list { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 700px) {
@@ -325,7 +462,7 @@
       }
 
       .stage {
-        width: clamp(720px, 168vw, 980px);
+        width: clamp(760px, 182vw, 1040px);
         min-height: 520px;
       }
 
@@ -334,33 +471,48 @@
         min-height: 500px;
       }
 
-      .focus-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.68rem;
-        padding: 7px 11px;
-        max-width: calc(100% - 32px);
+      .map-badge {
+        font-size: 0.64rem;
+        line-height: 1.15;
+        padding: 8px 14px;
+        max-width: calc(100% - 28px);
         top: 14px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
       }
 
-      .allrole-label {
-        display: none;
+      .ship-trail {
+        min-width: 150px;
+        max-width: 185px;
+        padding: 9px 10px;
       }
     }
 
     @media (max-width: 520px) {
       .stage {
-        width: clamp(680px, 175vw, 920px);
+        width: clamp(720px, 190vw, 980px);
         min-height: 500px;
       }
 
       .stage.single-role-mobile {
         width: 100%;
         min-height: 480px;
+      }
+
+      .hero-copy {
+        font-size: 0.98rem;
+        line-height: 1.55;
+      }
+
+      .chip-row {
+        gap: 8px;
+      }
+
+      .chip {
+        padding: 8px 12px;
+        font-size: 0.92rem;
+      }
+
+      .list-card {
+        padding: 16px;
       }
     }
   </style>
@@ -374,6 +526,13 @@
     <section class="card hero">
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
+      <div class="hero-copy">
+        Let’s first celebrate the leadership teams that help drive your unit’s success.
+        Each point of light represents someone connecting the day-to-day work of the field
+        to the bigger picture, where the pride you take in your work helps strengthen your unit,
+        your unit helps strengthen the company, and every person plays a part in making
+        Waffle House America’s Place.
+      </div>
     </section>
 
     <section class="card panel">
@@ -392,16 +551,34 @@
       <div class="stage-scroll" id="stageScroll">
         <div class="stage" id="stage">
           <canvas id="skyCanvas" aria-hidden="true"></canvas>
+          <div class="map-badge" id="mapBadge">All Leadership Roles</div>
 
-          <div class="allrole-label hidden" id="allLabelEVP">EVP</div>
-          <div class="allrole-label hidden" id="allLabelSVP">SVP</div>
-          <div class="allrole-label hidden" id="allLabelArea">Area / Region</div>
-          <div class="allrole-label hidden" id="allLabelDivision">Division</div>
-          <div class="allrole-label hidden" id="allLabelDistrict">District</div>
-          <div class="allrole-label hidden" id="allLabelUnit">Unit</div>
+          <div class="ship-trail" id="shipTrail" aria-live="polite">
+            <div class="ship-trail-kicker">Now Passing</div>
+            <div class="ship-trail-name" id="shipTrailName">Loading…</div>
+            <div class="ship-trail-role" id="shipTrailRole">Leadership</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <div class="focus-badge hidden" id="focusBadge">Role</div>
-          <div class="ship-layer" id="shipLayer"></div>
+    <section class="card list-card">
+      <div class="list-head">
+        <div>
+          <div class="list-kicker">Leadership Roll Call</div>
+          <h2 class="list-title">Paged leadership list</h2>
+        </div>
+        <div class="list-meta" id="listMeta">Loading list…</div>
+      </div>
+
+      <ul class="name-list" id="nameList"></ul>
+      <div class="empty-state" id="emptyState" hidden>No leaders to display yet.</div>
+
+      <div class="pager">
+        <div class="pager-info" id="pagerInfo">Page 1 of 1</div>
+        <div class="pager-actions">
+          <button class="pager-btn" id="prevPageBtn" type="button">Previous</button>
+          <button class="pager-btn" id="nextPageBtn" type="button">Next</button>
         </div>
       </div>
     </section>
@@ -409,7 +586,7 @@
 
   <script>
     const CSV_URL = "leaders.csv";
-    const SHIP_SRC = "spaceship.png"; // change to your exact file name if needed
+    const SHIP_SRC = "spaceship.png"; // change this only if your Wilson file name is different
 
     const ROLE_META = [
       {
@@ -417,52 +594,55 @@
         label: "Executive Vice President",
         short: "EVP",
         countLabel: "EVP",
-        single: { cx: 0.72, cy: 0.36, rx: 0.18, ry: 0.11, size: 5.0 },
-        all: { cx: 0.88, cy: 0.18, rx: 0.08, ry: 0.08, size: 4.9, lineAlpha: 0.34 }
+        single: { cx: 0.72, cy: 0.36, rx: 0.16, ry: 0.10, size: 5.2 }
       },
       {
         key: "senior_vice_president",
         label: "Senior Vice President",
         short: "SVP",
         countLabel: "SVP",
-        single: { cx: 0.67, cy: 0.42, rx: 0.20, ry: 0.12, size: 4.5 },
-        all: { cx: 0.78, cy: 0.31, rx: 0.09, ry: 0.08, size: 4.4, lineAlpha: 0.30 }
+        single: { cx: 0.67, cy: 0.42, rx: 0.18, ry: 0.11, size: 4.6 }
       },
       {
         key: "area_region_manager",
         label: "Area / Region Manager",
         short: "Area / Region",
         countLabel: "Area / Region",
-        single: { cx: 0.71, cy: 0.52, rx: 0.24, ry: 0.14, size: 4.0 },
-        all: { cx: 0.67, cy: 0.45, rx: 0.12, ry: 0.09, size: 4.0, lineAlpha: 0.26 }
+        single: { cx: 0.68, cy: 0.52, rx: 0.21, ry: 0.12, size: 4.1 }
       },
       {
         key: "division_manager",
         label: "Division Manager",
         short: "Division",
         countLabel: "Division",
-        single: { cx: 0.70, cy: 0.58, rx: 0.25, ry: 0.14, size: 3.7 },
-        all: { cx: 0.56, cy: 0.60, rx: 0.12, ry: 0.08, size: 3.6, lineAlpha: 0.22 }
+        single: { cx: 0.66, cy: 0.61, rx: 0.22, ry: 0.12, size: 3.7 }
       },
       {
         key: "district_manager",
         label: "District Manager",
         short: "District",
         countLabel: "District",
-        single: { cx: 0.67, cy: 0.69, rx: 0.28, ry: 0.11, size: 3.1 },
-        all: { cx: 0.43, cy: 0.73, rx: 0.11, ry: 0.075, size: 3.1, lineAlpha: 0.18 }
+        single: { cx: 0.62, cy: 0.72, rx: 0.25, ry: 0.10, size: 3.05 }
       },
       {
         key: "unit_manager",
         label: "Unit Manager",
         short: "Unit",
         countLabel: "Unit",
-        single: { cx: 0.58, cy: 0.79, rx: 0.31, ry: 0.10, size: 1.85 },
-        all: { cx: 0.28, cy: 0.84, rx: 0.17, ry: 0.065, size: 1.75, lineAlpha: 0.0 }
+        single: { cx: 0.55, cy: 0.80, rx: 0.29, ry: 0.08, size: 1.8 }
       }
     ];
 
-    const ROLE_ORDER = [
+    const ROLE_META_MAP = Object.fromEntries(ROLE_META.map(role => [role.key, role]));
+    const ROLE_DISPLAY_ORDER = [
+      "executive_vice_president",
+      "senior_vice_president",
+      "area_region_manager",
+      "division_manager",
+      "district_manager",
+      "unit_manager"
+    ];
+    const ROLE_DRAW_ORDER = [
       "unit_manager",
       "district_manager",
       "division_manager",
@@ -471,7 +651,14 @@
       "executive_vice_president"
     ];
 
-    const ROLE_META_MAP = Object.fromEntries(ROLE_META.map(role => [role.key, role]));
+    const ALL_ROLE_LAYOUT = {
+      executive_vice_president: { cx: 0.90, cy: 0.15, rx: 0.07, ry: 0.06, size: 4.9, lineAlpha: 0.34 },
+      senior_vice_president:    { cx: 0.82, cy: 0.28, rx: 0.08, ry: 0.07, size: 4.4, lineAlpha: 0.30 },
+      area_region_manager:      { cx: 0.70, cy: 0.42, rx: 0.10, ry: 0.08, size: 4.0, lineAlpha: 0.26 },
+      division_manager:         { cx: 0.55, cy: 0.57, rx: 0.11, ry: 0.09, size: 3.55, lineAlpha: 0.22 },
+      district_manager:         { cx: 0.38, cy: 0.73, rx: 0.12, ry: 0.08, size: 3.0, lineAlpha: 0.18 },
+      unit_manager:             { cx: 0.22, cy: 0.84, rx: 0.15, ry: 0.06, size: 1.65, lineAlpha: 0.0 }
+    };
 
     const ROLE_ALIAS_MAP = {
       executive_vice_president: ["executive vice president", "executive_vice_president", "evp"],
@@ -515,31 +702,39 @@
     const filterChips = document.getElementById("filterChips");
     const resetBtn = document.getElementById("resetBtn");
     const statusNote = document.getElementById("statusNote");
-    const focusBadge = document.getElementById("focusBadge");
+    const mapBadge = document.getElementById("mapBadge");
 
-    const allLabels = {
-      executive_vice_president: document.getElementById("allLabelEVP"),
-      senior_vice_president: document.getElementById("allLabelSVP"),
-      area_region_manager: document.getElementById("allLabelArea"),
-      division_manager: document.getElementById("allLabelDivision"),
-      district_manager: document.getElementById("allLabelDistrict"),
-      unit_manager: document.getElementById("allLabelUnit")
-    };
+    const shipTrail = document.getElementById("shipTrail");
+    const shipTrailName = document.getElementById("shipTrailName");
+    const shipTrailRole = document.getElementById("shipTrailRole");
 
-    let leaders = [];
-    let roleCounts = {};
-    let totalCount = 0;
-    let usingDemoData = false;
-    let activeRole = "all";
+    const nameList = document.getElementById("nameList");
+    const emptyState = document.getElementById("emptyState");
+    const listMeta = document.getElementById("listMeta");
+    const pagerInfo = document.getElementById("pagerInfo");
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
 
     let dpr = Math.max(1, window.devicePixelRatio || 1);
     let stageWidth = 0;
     let stageHeight = 0;
+
+    let leaders = [];
+    let usingDemoData = false;
+    let roleCounts = {};
+    let totalCount = 0;
+
     let constellationPoints = {};
     let twinkleStars = [];
+    let sessionOrderByRole = {};
+    let activeRole = "all";
+    let currentPage = 1;
+    let hintDismissed = false;
+
     let shipImage = null;
     let animationId = 0;
-    let hintDismissed = false;
+    let flightStartMs = performance.now();
+    let sessionSeed = Math.floor(Math.random() * 1000000);
 
     function normalizeText(value) {
       return String(value || "")
@@ -557,6 +752,28 @@
         hash |= 0;
       }
       return Math.abs(hash) / 2147483647;
+    }
+
+    function mulberry32(seed) {
+      let t = seed >>> 0;
+      return function() {
+        t += 0x6D2B79F5;
+        let r = Math.imul(t ^ t >>> 15, t | 1);
+        r ^= r + Math.imul(r ^ r >>> 7, r | 61);
+        return ((r ^ r >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    function shuffleWithSeed(array, seedString) {
+      const clone = array.slice();
+      const seedBase = Math.floor(seededValue(`${seedString}-${sessionSeed}`) * 1000000000);
+      const random = mulberry32(seedBase);
+
+      for (let i = clone.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [clone[i], clone[j]] = [clone[j], clone[i]];
+      }
+      return clone;
     }
 
     function parseCSVLine(line) {
@@ -657,31 +874,37 @@
       return results;
     }
 
-    async function loadLeaders() {
-      try {
-        const response = await fetch(CSV_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("CSV not found");
-        const text = await response.text();
-        const parsed = parseLeadersCSV(text);
-        if (!parsed.length) throw new Error("No usable leader rows found");
-        leaders = parsed;
-        usingDemoData = false;
-      } catch (err) {
-        leaders = DEMO_LEADERS.map(item => ({ name: item.name, roleKey: canonicalRole(item.role) }));
-        usingDemoData = true;
-      }
+    function isMobile() {
+      return window.innerWidth <= 700;
+    }
 
-      roleCounts = {};
-      ROLE_META.forEach((role) => {
-        roleCounts[role.key] = leaders.filter(leader => leader.roleKey === role.key).length;
+    function isSingleRole() {
+      return activeRole !== "all";
+    }
+
+    function pageSize() {
+      return isMobile() ? 12 : 20;
+    }
+
+    function buildSessionOrders() {
+      const byRole = {};
+
+      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
+        const members = leaders.filter(leader => leader.roleKey === roleKey);
+        byRole[roleKey] = shuffleWithSeed(members, `role-${roleKey}`);
       });
-      totalCount = leaders.length;
 
-      buildChips();
-      updateStatus();
-      buildLayout();
-      renderStaticScene();
-      refreshView();
+      byRole.all = ROLE_DISPLAY_ORDER.flatMap(roleKey => byRole[roleKey]);
+      sessionOrderByRole = byRole;
+    }
+
+    function getActiveOrder() {
+      return sessionOrderByRole[activeRole] || [];
+    }
+
+    function getLayout(roleKey) {
+      if (activeRole === "all") return ALL_ROLE_LAYOUT[roleKey];
+      return ROLE_META_MAP[roleKey].single;
     }
 
     function buildChips() {
@@ -693,18 +916,23 @@
       allChip.textContent = `All Roles · ${totalCount.toLocaleString()}`;
       allChip.addEventListener("click", () => {
         activeRole = "all";
+        currentPage = 1;
         hintDismissed = false;
+        restartFlight();
         refreshView();
       });
       filterChips.appendChild(allChip);
 
-      ROLE_META.forEach((role) => {
+      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
+        const role = ROLE_META_MAP[roleKey];
         const chip = document.createElement("button");
         chip.type = "button";
-        chip.className = `chip ${activeRole === role.key ? "active" : ""}`;
-        chip.textContent = `${role.countLabel} · ${(roleCounts[role.key] || 0).toLocaleString()}`;
+        chip.className = `chip ${activeRole === roleKey ? "active" : ""}`;
+        chip.textContent = `${role.countLabel} · ${(roleCounts[roleKey] || 0).toLocaleString()}`;
         chip.addEventListener("click", () => {
-          activeRole = role.key;
+          activeRole = roleKey;
+          currentPage = 1;
+          restartFlight();
           refreshView();
         });
         filterChips.appendChild(chip);
@@ -728,39 +956,29 @@
       }
     }
 
-    function isMobile() {
-      return window.innerWidth <= 700;
-    }
-
-    function isSingleRole() {
-      return activeRole !== "all";
-    }
-
     function buildTwinkleStars() {
       twinkleStars = [];
-      const count = isMobile() ? 26 : 40;
+      const count = isMobile() ? 42 : 64;
       let attempts = 0;
 
-      while (twinkleStars.length < count && attempts < 500) {
+      while (twinkleStars.length < count && attempts < 1000) {
         attempts += 1;
 
         const x = seededValue(`twinkle-x-${attempts}`);
         const y = seededValue(`twinkle-y-${attempts}`);
 
-        const dx = (x - 0.56) / 0.40;
-        const dy = (y - 0.58) / 0.28;
+        const dx = (x - 0.56) / 0.42;
+        const dy = (y - 0.58) / 0.30;
         const insideProtectedZone = (dx * dx + dy * dy) < 1.0;
 
-        if (insideProtectedZone && seededValue(`keep-${attempts}`) < 0.85) {
-          continue;
-        }
+        if (insideProtectedZone && seededValue(`keep-${attempts}`) < 0.76) continue;
 
         twinkleStars.push({
           x,
           y,
-          r: 0.7 + seededValue(`r-${attempts}`) * 1.6,
-          alphaBase: 0.12 + seededValue(`a-${attempts}`) * 0.25,
-          speed: 0.8 + seededValue(`s-${attempts}`) * 1.6,
+          r: 1.1 + seededValue(`r-${attempts}`) * 1.9,
+          alphaBase: 0.22 + seededValue(`a-${attempts}`) * 0.26,
+          speed: 0.7 + seededValue(`s-${attempts}`) * 1.8,
           phase: seededValue(`p-${attempts}`) * Math.PI * 2
         });
       }
@@ -785,11 +1003,6 @@
       buildTwinkleStars();
       buildLayout();
       renderStaticScene();
-    }
-
-    function getLayout(roleKey) {
-      const role = ROLE_META_MAP[roleKey];
-      return isSingleRole() && activeRole === roleKey ? role.single : role.all;
     }
 
     function generatePoints(roleKey, count) {
@@ -824,8 +1037,8 @@
 
     function buildLayout() {
       constellationPoints = {};
-      ROLE_META.forEach((role) => {
-        constellationPoints[role.key] = generatePoints(role.key, roleCounts[role.key] || 0);
+      ROLE_DRAW_ORDER.forEach((roleKey) => {
+        constellationPoints[roleKey] = generatePoints(roleKey, roleCounts[roleKey] || 0);
       });
     }
 
@@ -851,21 +1064,31 @@
 
     function drawTwinkleStars(targetCtx, nowMs) {
       const t = nowMs / 1000;
+
       twinkleStars.forEach((star) => {
         const pulse = 0.55 + 0.45 * Math.sin(t * star.speed + star.phase);
-        const alpha = star.alphaBase + pulse * 0.22;
+        const alpha = star.alphaBase + pulse * 0.26;
+        const px = star.x * stageWidth;
+        const py = star.y * stageHeight;
 
-        targetCtx.globalAlpha = Math.max(0.05, Math.min(0.65, alpha));
+        targetCtx.globalAlpha = Math.max(0.12, Math.min(0.82, alpha * 0.42));
         targetCtx.fillStyle = "#ffffff";
         targetCtx.beginPath();
-        targetCtx.arc(star.x * stageWidth, star.y * stageHeight, star.r, 0, Math.PI * 2);
+        targetCtx.arc(px, py, star.r * 2.8, 0, Math.PI * 2);
         targetCtx.fill();
 
-        targetCtx.globalAlpha = Math.max(0.02, Math.min(0.20, alpha * 0.45));
+        targetCtx.globalAlpha = Math.max(0.18, Math.min(0.95, alpha));
         targetCtx.beginPath();
-        targetCtx.arc(star.x * stageWidth, star.y * stageHeight, star.r * 2.4, 0, Math.PI * 2);
+        targetCtx.arc(px, py, star.r, 0, Math.PI * 2);
         targetCtx.fill();
+
+        if (pulse > 0.88) {
+          targetCtx.globalAlpha = Math.max(0.10, Math.min(0.40, alpha * 0.42));
+          targetCtx.fillRect(px - (star.r * 3.8), py - 0.45, star.r * 7.6, 0.9);
+          targetCtx.fillRect(px - 0.45, py - (star.r * 3.8), 0.9, star.r * 7.6);
+        }
       });
+
       targetCtx.globalAlpha = 1;
     }
 
@@ -873,7 +1096,7 @@
       const lines = [];
       const pairs = [
         ["district_manager", "unit_manager", 90],
-        ["division_manager", "district_manager", 70],
+        ["division_manager", "district_manager", 72],
         ["area_region_manager", "division_manager", 48],
         ["senior_vice_president", "area_region_manager", 26],
         ["executive_vice_president", "senior_vice_president", 12]
@@ -892,7 +1115,7 @@
           const mapped = Math.min(toPts.length - 1, Math.floor((i / Math.max(1, fromPts.length - 1)) * (toPts.length - 1)));
           const b = toPts[mapped];
           lines.push({ a, b, fromKey });
-          if (lines.length >= maxLines && fromKey === "district_manager") break;
+          if (fromKey === "district_manager" && lines.length >= maxLines) break;
         }
       });
 
@@ -927,7 +1150,7 @@
       targetCtx.lineJoin = "round";
 
       lines.forEach((line) => {
-        const alpha = ROLE_META_MAP[line.fromKey].all.lineAlpha || 0.18;
+        const alpha = ALL_ROLE_LAYOUT[line.fromKey].lineAlpha || 0.18;
         targetCtx.strokeStyle = `rgba(255, 230, 106, ${alpha})`;
         targetCtx.lineWidth = line.fromKey === "district_manager" ? 1.15 : 1.0;
         targetCtx.beginPath();
@@ -938,13 +1161,12 @@
     }
 
     function drawSingleRoleLines(targetCtx, roleKey) {
-      const role = ROLE_META_MAP[roleKey];
       const lines = buildSingleRoleConnections(roleKey);
       targetCtx.lineCap = "round";
       targetCtx.lineJoin = "round";
 
       lines.forEach((line) => {
-        targetCtx.strokeStyle = `rgba(255, 230, 106, ${Math.max(0.18, role.all.lineAlpha || 0.18)})`;
+        targetCtx.strokeStyle = "rgba(255, 230, 106, 0.22)";
         targetCtx.lineWidth = roleKey === "unit_manager" ? 0.9 : 1.1;
         targetCtx.beginPath();
         targetCtx.moveTo(line.a.x, line.a.y);
@@ -972,7 +1194,6 @@
     }
 
     function drawRolePoints(targetCtx, roleKey) {
-      const role = ROLE_META_MAP[roleKey];
       const layout = getLayout(roleKey);
       const pts = constellationPoints[roleKey] || [];
       let alpha = 0.98;
@@ -996,35 +1217,34 @@
 
       if (activeRole === "all") {
         drawAllRoleLines(staticCtx);
-        ROLE_ORDER.forEach((roleKey) => drawRolePoints(staticCtx, roleKey));
+        ROLE_DRAW_ORDER.forEach((roleKey) => drawRolePoints(staticCtx, roleKey));
       } else {
         drawSingleRoleLines(staticCtx, activeRole);
         drawRolePoints(staticCtx, activeRole);
       }
     }
 
-    function drawShipFrame(now) {
-      if (!shipImage || !shipImage.complete) return;
+    function getShipFlight(now) {
+      const elapsed = Math.max(0, now - flightStartMs);
+      const cycleMs = activeRole === "all" ? 10500 : 8500;
+      const t = (elapsed % cycleMs) / cycleMs;
 
-      const elapsed = now / 1000;
-      const cycle = activeRole === "all" ? 10 : 8;
-      const t = (elapsed % cycle) / cycle;
+      const startX = stageWidth * 0.12;
+      const startY = stageHeight * 0.88;
 
-      let startX = stageWidth * 0.12;
-      let startY = stageHeight * 0.88;
       let endX;
       let endY;
 
       if (activeRole === "all") {
-        endX = stageWidth * 1.06;
-        endY = stageHeight * -0.03;
+        endX = stageWidth * 1.07;
+        endY = stageHeight * -0.04;
       } else {
         const layout = ROLE_META_MAP[activeRole].single;
-        endX = stageWidth * Math.min(1.03, layout.cx + 0.16);
-        endY = stageHeight * Math.max(-0.03, layout.cy - 0.18);
+        endX = stageWidth * Math.min(1.05, layout.cx + 0.19);
+        endY = stageHeight * Math.max(-0.04, layout.cy - 0.26);
       }
 
-      const eased = 1 - Math.pow(1 - t, 2.7);
+      const eased = 1 - Math.pow(1 - t, 2.75);
       const x = startX + (endX - startX) * eased;
       const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.1) * 3.5;
       const angle = (-12 + 22 * eased) * Math.PI / 180;
@@ -1033,58 +1253,79 @@
       if (t < 0.04) alpha = t / 0.04;
       else if (t > 0.99) alpha = (1 - t) / 0.01;
 
+      return { t, x, y, angle, alpha, elapsed };
+    }
+
+    function drawShipFrame(now) {
+      if (!shipImage || !shipImage.complete) return null;
+
+      const flight = getShipFlight(now);
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
       const h = w;
 
       ctx.save();
-      ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
-      ctx.translate(x, y);
-      ctx.rotate(angle);
+      ctx.globalAlpha = Math.max(0, Math.min(1, flight.alpha));
+      ctx.translate(flight.x, flight.y);
+      ctx.rotate(flight.angle);
       ctx.drawImage(shipImage, -w / 2, -h / 2, w, h);
       ctx.restore();
       ctx.globalAlpha = 1;
+
+      return { ...flight, width: w, height: h };
+    }
+
+    function updateShipTrail(shipState) {
+      const order = getActiveOrder();
+      if (!shipState || !order.length || shipState.alpha < 0.08) {
+        shipTrail.classList.remove("show");
+        return;
+      }
+
+      const index = Math.floor(shipState.elapsed / 1800) % order.length;
+      const currentLeader = order[index];
+
+      shipTrailName.textContent = currentLeader.name;
+      shipTrailRole.textContent = ROLE_META_MAP[currentLeader.roleKey].label;
+
+      const isTight = isMobile();
+      let left = shipState.x - (isTight ? 110 : 120);
+      let top = shipState.y - (isTight ? 72 : 76);
+
+      const minLeft = isTight ? 92 : 108;
+      const maxLeft = stageWidth - (isTight ? 92 : 110);
+      const minTop = 72;
+      const maxTop = stageHeight - 70;
+
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
+
+      shipTrail.style.left = `${left}px`;
+      shipTrail.style.top = `${top}px`;
+      shipTrail.classList.add("show");
     }
 
     function drawFrame(now) {
       ctx.clearRect(0, 0, stageWidth, stageHeight);
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
       drawTwinkleStars(ctx, now);
-      drawShipFrame(now);
+      const shipState = drawShipFrame(now);
+      updateShipTrail(shipState);
       animationId = requestAnimationFrame(drawFrame);
     }
 
-    function updateLabels() {
-      const single = isSingleRole();
-      const mobile = isMobile();
-
-      Object.entries(allLabels).forEach(([roleKey, el]) => {
-        if (!el) return;
-        if (activeRole === "all" && !mobile) {
-          el.classList.remove("hidden");
-        } else {
-          el.classList.add("hidden");
-        }
-      });
-
-      if (single) {
-        focusBadge.textContent = ROLE_META_MAP[activeRole].short;
-        focusBadge.classList.remove("hidden");
-        focusBadge.classList.add("active");
+    function updateMapBadge() {
+      if (activeRole === "all") {
+        mapBadge.textContent = "All Leadership Roles";
       } else {
-        focusBadge.classList.add("hidden");
-        focusBadge.classList.remove("active");
+        mapBadge.textContent = ROLE_META_MAP[activeRole].label;
       }
     }
 
     function updateScrollHint() {
-      if (!(isMobile() && activeRole === "all")) {
-        scrollHint.classList.remove("show");
-        return;
-      }
-
       const canScroll = stageScroll.scrollWidth > stageScroll.clientWidth + 8;
-      scrollHint.classList.toggle("show", canScroll);
+      const shouldShow = isMobile() && activeRole === "all" && canScroll && !hintDismissed;
+      scrollHint.classList.toggle("show", shouldShow);
     }
 
     function positionStageScroll() {
@@ -1101,20 +1342,125 @@
       }
     }
 
+    function restartFlight() {
+      flightStartMs = performance.now();
+    }
+
+    function renderPagedList() {
+      const order = getActiveOrder();
+      const total = order.length;
+      const perPage = pageSize();
+      const totalPages = Math.max(1, Math.ceil(total / perPage));
+
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const start = (currentPage - 1) * perPage;
+      const end = Math.min(total, start + perPage);
+      const pageItems = order.slice(start, end);
+
+      nameList.innerHTML = "";
+      emptyState.hidden = total > 0;
+
+      if (!total) {
+        emptyState.hidden = false;
+        listMeta.textContent = "No names available";
+        pagerInfo.textContent = "Page 1 of 1";
+        prevPageBtn.disabled = true;
+        nextPageBtn.disabled = true;
+        return;
+      }
+
+      if (activeRole === "all") {
+        listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} leaders`;
+      } else {
+        listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} ${ROLE_META_MAP[activeRole].label}${total === 1 ? "" : "s"}`;
+      }
+
+      pageItems.forEach((leader) => {
+        const li = document.createElement("li");
+        li.className = "name-item";
+
+        const title = document.createElement("div");
+        title.className = "name-item-title";
+        title.textContent = leader.name;
+
+        const subtitle = document.createElement("div");
+        subtitle.className = "name-item-subtitle";
+        subtitle.textContent = ROLE_META_MAP[leader.roleKey].label;
+
+        li.appendChild(title);
+
+        if (activeRole === "all") {
+          li.appendChild(subtitle);
+        }
+
+        nameList.appendChild(li);
+      });
+
+      pagerInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+
     function refreshView() {
       buildChips();
       updateStatus();
+      updateMapBadge();
+
       stage.classList.toggle("single-role-mobile", isMobile() && isSingleRole());
+
       resizeCanvas();
       renderStaticScene();
-      updateLabels();
       positionStageScroll();
       updateScrollHint();
+      renderPagedList();
     }
+
+    async function loadLeaders() {
+      try {
+        const response = await fetch(CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("CSV not found");
+        const text = await response.text();
+        const parsed = parseLeadersCSV(text);
+        if (!parsed.length) throw new Error("No usable leader rows found");
+        leaders = parsed;
+        usingDemoData = false;
+      } catch (error) {
+        leaders = DEMO_LEADERS.map(item => ({
+          name: item.name,
+          roleKey: canonicalRole(item.role)
+        }));
+        usingDemoData = true;
+      }
+
+      roleCounts = {};
+      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
+        roleCounts[roleKey] = leaders.filter(leader => leader.roleKey === roleKey).length;
+      });
+
+      totalCount = leaders.length;
+      buildSessionOrders();
+      currentPage = 1;
+      restartFlight();
+      refreshView();
+    }
+
+    prevPageBtn.addEventListener("click", () => {
+      currentPage -= 1;
+      renderPagedList();
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+      currentPage += 1;
+      renderPagedList();
+    });
 
     resetBtn.addEventListener("click", () => {
       activeRole = "all";
+      currentPage = 1;
       hintDismissed = false;
+      restartFlight();
       refreshView();
     });
 
@@ -1140,6 +1486,9 @@
     shipImage.addEventListener("load", () => {
       cancelAnimationFrame(animationId);
       animationId = requestAnimationFrame(drawFrame);
+    });
+    shipImage.addEventListener("error", () => {
+      shipTrail.classList.remove("show");
     });
 
     buildTwinkleStars();
