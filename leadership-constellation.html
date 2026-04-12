@@ -247,7 +247,7 @@
       border-radius: 28px;
       border: 1px solid rgba(176, 150, 44, 0.16);
       background:
-        radial-gradient(circle at 58% 20%, rgba(255,255,255,0.17) 0%, rgba(255,255,255,0) 21%),
+        radial-gradient(circle at 58% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 22%),
         linear-gradient(180deg, var(--space-a) 0%, var(--space-b) 42%, var(--space-c) 70%, var(--space-d) 100%);
       box-shadow: var(--shadow-strong);
       aspect-ratio: 16 / 10;
@@ -699,9 +699,9 @@
     let totalCount = 0;
 
     let constellationPoints = {};
-    let twinkleStars = [];
     let sessionOrderByRole = {};
     let roleTrailIndexes = {};
+    let roleLoopOffsets = {};
     let activeRole = "all";
     let currentPage = 1;
     let hintDismissed = false;
@@ -715,7 +715,9 @@
       allStageKey: null,
       allLeader: null,
       singleStep: -1,
-      singleLeader: null
+      singleLeader: null,
+      singleCycleIndex: -1,
+      singleRoleKey: null
     };
 
     function normalizeText(value) {
@@ -918,15 +920,19 @@
 
     function resetCardIndexes() {
       roleTrailIndexes = {};
+      roleLoopOffsets = {};
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         roleTrailIndexes[roleKey] = 0;
+        roleLoopOffsets[roleKey] = 0;
       });
 
       cardState = {
         allStageKey: null,
         allLeader: null,
         singleStep: -1,
-        singleLeader: null
+        singleLeader: null,
+        singleCycleIndex: -1,
+        singleRoleKey: null
       };
     }
 
@@ -984,35 +990,6 @@
       }
     }
 
-    function buildTwinkleStars() {
-      twinkleStars = [];
-      const count = isMobile() ? 72 : 120;
-      let attempts = 0;
-
-      while (twinkleStars.length < count && attempts < 2200) {
-        attempts += 1;
-
-        const x = seededValue(`twinkle-x-${attempts}`);
-        const y = seededValue(`twinkle-y-${attempts}`);
-
-        const dx = (x - 0.56) / 0.34;
-        const dy = (y - 0.58) / 0.24;
-        const insideCore = (dx * dx + dy * dy) < 1.0;
-
-        if (insideCore && seededValue(`keep-${attempts}`) < 0.48) continue;
-
-        twinkleStars.push({
-          x,
-          y,
-          r: 0.9 + seededValue(`r-${attempts}`) * 1.9,
-          alphaBase: 0.38 + seededValue(`a-${attempts}`) * 0.34,
-          speed: 0.8 + seededValue(`s-${attempts}`) * 2.0,
-          phase: seededValue(`p-${attempts}`) * Math.PI * 2,
-          flare: seededValue(`f-${attempts}`) > 0.66
-        });
-      }
-    }
-
     function resizeCanvas() {
       const rect = stage.getBoundingClientRect();
       stageWidth = Math.max(1, Math.round(rect.width));
@@ -1029,7 +1006,6 @@
       staticCanvas.height = Math.round(stageHeight * dpr);
       staticCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      buildTwinkleStars();
       buildLayout();
       renderStaticScene();
     }
@@ -1084,41 +1060,11 @@
         stageWidth * 0.58, stageHeight * 0.18, 0,
         stageWidth * 0.58, stageHeight * 0.18, stageWidth * 0.28
       );
-      glow.addColorStop(0, "rgba(255,255,255,0.17)");
-      glow.addColorStop(0.20, "rgba(255,255,255,0.08)");
+      glow.addColorStop(0, "rgba(255,255,255,0.12)");
+      glow.addColorStop(0.24, "rgba(255,255,255,0.05)");
       glow.addColorStop(1, "rgba(255,255,255,0)");
       targetCtx.fillStyle = glow;
       targetCtx.fillRect(0, 0, stageWidth, stageHeight);
-    }
-
-    function drawTwinkleStars(targetCtx, nowMs) {
-      const t = nowMs / 1000;
-
-      twinkleStars.forEach((star) => {
-        const pulse = 0.55 + 0.45 * Math.sin((t * star.speed) + star.phase);
-        const alpha = star.alphaBase + pulse * 0.30;
-        const px = star.x * stageWidth;
-        const py = star.y * stageHeight;
-
-        targetCtx.globalAlpha = Math.max(0.18, Math.min(0.74, alpha * 0.46));
-        targetCtx.fillStyle = "#ffffff";
-        targetCtx.beginPath();
-        targetCtx.arc(px, py, star.r * 3.5, 0, Math.PI * 2);
-        targetCtx.fill();
-
-        targetCtx.globalAlpha = Math.max(0.34, Math.min(1, alpha));
-        targetCtx.beginPath();
-        targetCtx.arc(px, py, star.r, 0, Math.PI * 2);
-        targetCtx.fill();
-
-        if (star.flare && pulse > 0.82) {
-          targetCtx.globalAlpha = Math.max(0.15, Math.min(0.55, alpha * 0.55));
-          targetCtx.fillRect(px - (star.r * 4.8), py - 0.55, star.r * 9.6, 1.1);
-          targetCtx.fillRect(px - 0.55, py - (star.r * 4.8), 1.1, star.r * 9.6);
-        }
-      });
-
-      targetCtx.globalAlpha = 1;
     }
 
     function buildAllRoleConnections() {
@@ -1262,24 +1208,12 @@
       const svpY = ALL_ROLE_LAYOUT.senior_vice_president.cy;
       const evpY = ALL_ROLE_LAYOUT.executive_vice_president.cy;
 
-      if (yNorm >= districtY) {
-        return { roleKey: "unit_manager" };
-      }
-      if (yNorm >= divisionY) {
-        return { roleKey: "district_manager" };
-      }
-      if (yNorm >= areaY) {
-        return { roleKey: "division_manager" };
-      }
-      if (yNorm >= svpY) {
-        return { roleKey: "area_region_manager" };
-      }
-      if (yNorm >= evpY) {
-        return { roleKey: "senior_vice_president" };
-      }
-      if (yNorm >= 0.03) {
-        return { roleKey: "executive_vice_president" };
-      }
+      if (yNorm >= districtY) return { roleKey: "unit_manager" };
+      if (yNorm >= divisionY) return { roleKey: "district_manager" };
+      if (yNorm >= areaY) return { roleKey: "division_manager" };
+      if (yNorm >= svpY) return { roleKey: "area_region_manager" };
+      if (yNorm >= evpY) return { roleKey: "senior_vice_president" };
+      if (yNorm >= 0.03) return { roleKey: "executive_vice_president" };
 
       return null;
     }
@@ -1288,31 +1222,33 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 19800;
+        const cycleMs = 15600;
+        const cycleIndex = Math.floor(elapsed / cycleMs);
         const t = (elapsed % cycleMs) / cycleMs;
 
-        const startX = stageWidth * 0.12;
-        const startY = stageHeight * 0.90;
-        const endX = stageWidth * 1.10;
-        const endY = stageHeight * -0.12;
-        const eased = 1 - Math.pow(1 - t, 2.55);
+        const startX = stageWidth * 0.10;
+        const startY = stageHeight * 0.91;
+        const endX = stageWidth * 1.06;
+        const endY = stageHeight * -0.10;
+        const eased = 1 - Math.pow(1 - t, 2.45);
 
         const x = startX + (endX - startX) * eased;
-        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.8) * 3.2;
-        const angle = (-12 + 22 * eased) * Math.PI / 180;
+        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.7) * 2.8;
+        const angle = (-12 + 21 * eased) * Math.PI / 180;
 
         let alpha = 1;
-        if (t < 0.04) alpha = t / 0.04;
-        else if (t > 0.985) alpha = (1 - t) / 0.015;
+        if (t < 0.025) alpha = t / 0.025;
+        else if (t > 0.992) alpha = (1 - t) / 0.008;
 
         const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
         const w = Math.max(60, baseSize);
         const h = w;
 
-        return { mode: "all", t, x, y, angle, alpha, elapsed, width: w, height: h };
+        return { mode: "all", cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h };
       }
 
-      const cycleMs = 15400;
+      const cycleMs = 13800;
+      const cycleIndex = Math.floor(elapsed / cycleMs);
       const t = (elapsed % cycleMs) / cycleMs;
       const layout = ROLE_META_MAP[activeRole].single;
 
@@ -1328,25 +1264,25 @@
       const hoverEndX = stageWidth * Math.min(0.92, layout.cx + 0.08);
       const hoverEndY = stageHeight * Math.max(0.12, layout.cy - 0.05);
 
-      const exitX = Math.min(stageWidth * 1.08, hoverEndX + stageWidth * 0.14);
-      const exitY = stageHeight * -0.12;
+      const exitX = Math.min(stageWidth * 1.06, hoverEndX + stageWidth * 0.12);
+      const exitY = stageHeight * -0.10;
 
-      const p1 = 0.42;
-      const p2 = 0.78;
+      const p1 = 0.40;
+      const p2 = 0.80;
 
       let x, y, angle, spotlightActive = false, spotlightProgress = 0;
 
       if (t < p1) {
         const local = t / p1;
-        const eased = 1 - Math.pow(1 - local, 2.45);
+        const eased = 1 - Math.pow(1 - local, 2.35);
         x = startX + (approachX - startX) * eased;
-        y = startY + (approachY - startY) * eased + Math.sin(local * Math.PI * 1.2) * 2.5;
+        y = startY + (approachY - startY) * eased + Math.sin(local * Math.PI * 1.2) * 2.4;
         angle = (-14 + 16 * eased) * Math.PI / 180;
       } else if (t < p2) {
         const local = (t - p1) / (p2 - p1);
-        const eased = 1 - Math.pow(1 - local, 2.2);
+        const eased = 1 - Math.pow(1 - local, 2.15);
         x = hoverStartX + (hoverEndX - hoverStartX) * eased;
-        y = hoverStartY + (hoverEndY - hoverStartY) * eased + Math.sin(local * Math.PI * 2.0) * 2.6;
+        y = hoverStartY + (hoverEndY - hoverStartY) * eased + Math.sin(local * Math.PI * 2.0) * 2.4;
         angle = (2 + 10 * eased) * Math.PI / 180;
         spotlightActive = true;
         spotlightProgress = local;
@@ -1359,8 +1295,8 @@
       }
 
       let alpha = 1;
-      if (t < 0.04) alpha = t / 0.04;
-      else if (t > 0.985) alpha = (1 - t) / 0.015;
+      if (t < 0.025) alpha = t / 0.025;
+      else if (t > 0.992) alpha = (1 - t) / 0.008;
 
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
@@ -1368,8 +1304,8 @@
 
       return {
         mode: "single",
-        t, x, y, angle, alpha, elapsed, width: w, height: h,
-        spotlightActive, spotlightProgress
+        cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h,
+        spotlightActive, spotlightProgress, cycleMs
       };
     }
 
@@ -1433,8 +1369,7 @@
         shipState.x < (-shipState.width * 0.18) ||
         shipState.x > (stageWidth + shipState.width * 0.18) ||
         shipState.y < (-shipState.height * 0.18) ||
-        shipState.y > (stageHeight + shipState.height * 0.18) ||
-        shipState.t >= (activeRole === "all" ? 0.955 : 0.94);
+        shipState.y > (stageHeight + shipState.height * 0.18);
 
       if (shipGone) {
         shipCard.classList.remove("show");
@@ -1442,6 +1377,8 @@
         cardState.allLeader = null;
         cardState.singleStep = -1;
         cardState.singleLeader = null;
+        cardState.singleCycleIndex = -1;
+        cardState.singleRoleKey = activeRole;
         return;
       }
 
@@ -1472,9 +1409,11 @@
         return;
       }
 
-      if (!shipState.spotlightActive || shipState.spotlightProgress < 0.06 || shipState.spotlightProgress > 0.98) {
-        shipCard.classList.remove("show");
-        return;
+      if (cardState.singleRoleKey !== activeRole) {
+        cardState.singleRoleKey = activeRole;
+        cardState.singleCycleIndex = -1;
+        cardState.singleStep = -1;
+        cardState.singleLeader = null;
       }
 
       const pool = sessionOrderByRole[activeRole] || [];
@@ -1483,14 +1422,33 @@
         return;
       }
 
-      const spotlightMs = (0.78 - 0.42) * 15400;
+      const spotlightStart = 0.40;
+      const spotlightEnd = 0.80;
+      const spotlightMs = (spotlightEnd - spotlightStart) * shipState.cycleMs;
       const stepDuration = Math.max(90, Math.min(320, Math.floor(spotlightMs / Math.max(1, pool.length))));
-      const spotlightElapsed = Math.max(0, (shipState.t - 0.42) * 15400);
+      const stepsPerCycle = Math.max(1, Math.floor(spotlightMs / stepDuration));
+
+      if (shipState.cycleIndex !== cardState.singleCycleIndex) {
+        if (cardState.singleCycleIndex >= 0) {
+          roleLoopOffsets[activeRole] = ((roleLoopOffsets[activeRole] || 0) + stepsPerCycle) % pool.length;
+        }
+        cardState.singleCycleIndex = shipState.cycleIndex;
+        cardState.singleStep = -1;
+        cardState.singleLeader = null;
+      }
+
+      if (!shipState.spotlightActive || shipState.spotlightProgress < 0.06 || shipState.spotlightProgress > 0.98) {
+        shipCard.classList.remove("show");
+        return;
+      }
+
+      const spotlightElapsed = Math.max(0, (shipState.t - spotlightStart) * shipState.cycleMs);
       const step = Math.floor(spotlightElapsed / stepDuration);
+      const baseOffset = roleLoopOffsets[activeRole] || 0;
 
       if (step !== cardState.singleStep) {
         cardState.singleStep = step;
-        cardState.singleLeader = pool[step % pool.length];
+        cardState.singleLeader = pool[(baseOffset + step) % pool.length];
       }
 
       currentLeader = cardState.singleLeader;
@@ -1508,7 +1466,6 @@
     function drawFrame(now) {
       ctx.clearRect(0, 0, stageWidth, stageHeight);
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
-      drawTwinkleStars(ctx, now);
       const shipState = drawShipFrame(now);
       updateShipCard(shipState);
       animationId = requestAnimationFrame(drawFrame);
@@ -1548,6 +1505,8 @@
       cardState.allLeader = null;
       cardState.singleStep = -1;
       cardState.singleLeader = null;
+      cardState.singleCycleIndex = -1;
+      cardState.singleRoleKey = activeRole;
       shipCard.classList.remove("show");
     }
 
@@ -1697,7 +1656,6 @@
       shipCard.classList.remove("show");
     });
 
-    buildTwinkleStars();
     resizeCanvas();
     loadLeaders().then(() => {
       cancelAnimationFrame(animationId);
