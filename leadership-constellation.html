@@ -1222,30 +1222,30 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 15600;
-        const cycleIndex = Math.floor(elapsed / cycleMs);
-        const t = (elapsed % cycleMs) / cycleMs;
+  const cycleMs = 12400;
+  const cycleIndex = Math.floor(elapsed / cycleMs);
+  const t = (elapsed % cycleMs) / cycleMs;
 
-        const startX = stageWidth * 0.10;
-        const startY = stageHeight * 0.91;
-        const endX = stageWidth * 1.06;
-        const endY = stageHeight * -0.10;
-        const eased = 1 - Math.pow(1 - t, 2.45);
+  const startX = stageWidth * 0.06;
+  const startY = stageHeight * 0.89;
+  const endX = stageWidth * 1.01;
+  const endY = stageHeight * -0.03;
+  const eased = 1 - Math.pow(1 - t, 2.35);
 
-        const x = startX + (endX - startX) * eased;
-        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.7) * 2.8;
-        const angle = (-12 + 21 * eased) * Math.PI / 180;
+  const x = startX + (endX - startX) * eased;
+  const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.55) * 2.2;
+  const angle = (-12 + 20 * eased) * Math.PI / 180;
 
-        let alpha = 1;
-        if (t < 0.025) alpha = t / 0.025;
-        else if (t > 0.992) alpha = (1 - t) / 0.008;
+  let alpha = 1;
+  if (t < 0.02) alpha = t / 0.02;
+  else if (t > 0.994) alpha = (1 - t) / 0.006;
 
-        const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
-        const w = Math.max(60, baseSize);
-        const h = w;
+  const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
+  const w = Math.max(60, baseSize);
+  const h = w;
 
-        return { mode: "all", cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h };
-      }
+  return { mode: "all", cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h };
+}
 
       const cycleMs = 13800;
       const cycleIndex = Math.floor(elapsed / cycleMs);
