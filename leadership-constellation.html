@@ -24,6 +24,7 @@
     body {
       margin: 0;
       min-height: 100%;
+      overflow-x: hidden;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
       color: var(--text);
       background:
@@ -227,6 +228,31 @@
     .status-note.error {
       color: #b12727;
       font-weight: 700;
+    }
+
+    .constellation-scroll-hint {
+      display: none;
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 0.78rem;
+      line-height: 1.42;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: #7b6c00;
+      padding: 14px 18px;
+      border-radius: 28px;
+      background: rgba(255, 247, 200, 0.92);
+      border: 1px solid rgba(212, 176, 0, 0.18);
+      box-shadow: 0 8px 18px rgba(92, 77, 19, 0.08);
+    }
+
+    .constellation-scroll-hint.show {
+      display: block;
+    }
+
+    .constellation-scroll {
+      width: 100%;
+      overflow: visible;
     }
 
     .constellation-shell {
@@ -490,6 +516,8 @@
       pointer-events: none;
       filter: drop-shadow(0 16px 22px rgba(0,0,0,0.24));
       opacity: 0.92;
+      background: transparent !important;
+      mix-blend-mode: normal;
     }
 
     .constellation-shell.launched .wilson-ship {
@@ -579,7 +607,7 @@
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 700px) {
       body {
         padding: 12px;
       }
@@ -589,9 +617,34 @@
         border-radius: 24px;
       }
 
+      .constellation-scroll {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        margin-inline: -2px;
+        padding-bottom: 4px;
+        scrollbar-width: thin;
+      }
+
       .constellation-shell {
+        width: clamp(680px, 165vw, 980px);
         border-radius: 24px;
-        min-height: 460px;
+        min-height: 520px;
+      }
+
+      .overlay-card {
+        width: min(320px, calc(100vw - 44px));
+        max-width: calc(100vw - 44px);
+        padding: 18px 16px;
+      }
+
+      .overlay-card h2 {
+        font-size: clamp(1.15rem, 5.4vw, 1.55rem);
+      }
+
+      .overlay-card p {
+        font-size: 0.92rem;
+        line-height: 1.5;
       }
 
       .role-band-label {
@@ -604,7 +657,14 @@
       }
 
       .wilson-ship {
-        width: 110px;
+        width: 100px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .constellation-shell {
+        width: clamp(640px, 170vw, 920px);
+        min-height: 500px;
       }
     }
   </style>
@@ -644,35 +704,41 @@
         </div>
       </div>
 
-      <div class="constellation-shell" id="constellationShell">
-        <div class="constellation-overlay" id="constellationOverlay">
-          <div class="overlay-card">
-            <div class="overlay-kicker">Wilson Leads the Way</div>
-            <h2>Launch the Leadership Constellation</h2>
-            <p>
-              Wilson Waffle kicks things off, then the constellation lights up with the leaders who help support the field.
-            </p>
-            <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
+      <div class="constellation-scroll-hint" id="constellationScrollHint">
+        Swipe left or right to explore the full constellation.
+      </div>
+
+      <div class="constellation-scroll" id="constellationScroll">
+        <div class="constellation-shell" id="constellationShell">
+          <div class="constellation-overlay" id="constellationOverlay">
+            <div class="overlay-card">
+              <div class="overlay-kicker">Wilson Leads the Way</div>
+              <h2>Launch the Leadership Constellation</h2>
+              <p>
+                Wilson Waffle kicks things off, then the constellation lights up with the leaders who help support the field.
+              </p>
+              <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
+            </div>
           </div>
+
+          <div class="starfield" id="starfield"></div>
+
+          <div class="line-layer">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <g id="lineGroup"></g>
+            </svg>
+          </div>
+
+          <div class="label-layer" id="labelLayer"></div>
+          <div class="node-layer" id="nodeLayer"></div>
+
+          <img
+            src="spaceship.gif"
+            alt="Wilson Waffle flying in a spaceship"
+            class="wilson-ship"
+            id="wilsonShip"
+          />
         </div>
-
-        <div class="starfield" id="starfield"></div>
-
-        <div class="line-layer">
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <g id="lineGroup"></g>
-          </svg>
-        </div>
-
-        <div class="label-layer" id="labelLayer"></div>
-        <div class="node-layer" id="nodeLayer"></div>
-
-        <img
-          src="spaceship.gif"
-          alt="Wilson Waffle flying in a spaceship"
-          class="wilson-ship"
-          id="wilsonShip"
-        />
       </div>
 
       <div class="detail-card" id="detailCard">
@@ -696,83 +762,23 @@
     const CSV_URL = "leaders.csv";
 
     const ROLE_META = [
-      {
-        key: "executive_vice_president",
-        label: "Executive Vice President",
-        short: "EVP",
-        x: 86,
-        y: 13
-      },
-      {
-        key: "senior_vice_president",
-        label: "Senior Vice President",
-        short: "SVP",
-        x: 74,
-        y: 24
-      },
-      {
-        key: "area_region_manager",
-        label: "Area / Region Manager",
-        short: "Area / Region",
-        x: 60,
-        y: 38
-      },
-      {
-        key: "division_manager",
-        label: "Division Manager",
-        short: "Division",
-        x: 46,
-        y: 53
-      },
-      {
-        key: "district_manager",
-        label: "District Manager",
-        short: "District",
-        x: 32,
-        y: 66
-      },
-      {
-        key: "unit_manager",
-        label: "Unit Manager",
-        short: "Unit",
-        x: 18,
-        y: 80
-      }
+      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 86, y: 13 },
+      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 74, y: 24 },
+      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 60, y: 38 },
+      { key: "division_manager", label: "Division Manager", short: "Division", x: 46, y: 53 },
+      { key: "district_manager", label: "District Manager", short: "District", x: 32, y: 66 },
+      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 18, y: 80 }
     ];
 
     const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
 
     const ROLE_ALIASES = {
-      executive_vice_president: [
-        "executive vice president",
-        "executive_vice_president",
-        "evp"
-      ],
-      senior_vice_president: [
-        "senior vice president",
-        "senior_vice_president",
-        "svp"
-      ],
-      area_region_manager: [
-        "area region manager",
-        "area/region manager",
-        "area_region_manager",
-        "region manager",
-        "area manager"
-      ],
-      division_manager: [
-        "division manager",
-        "division_manager"
-      ],
-      district_manager: [
-        "district manager",
-        "district_manager"
-      ],
-      unit_manager: [
-        "unit manager",
-        "unit_manager",
-        "manager"
-      ]
+      executive_vice_president: ["executive vice president", "executive_vice_president", "evp"],
+      senior_vice_president: ["senior vice president", "senior_vice_president", "svp"],
+      area_region_manager: ["area region manager", "area/region manager", "area_region_manager", "region manager", "area manager"],
+      division_manager: ["division manager", "division_manager"],
+      district_manager: ["district manager", "district_manager"],
+      unit_manager: ["unit manager", "unit_manager", "manager"]
     };
 
     const HEADER_ALIASES = {
@@ -799,6 +805,8 @@
 
     const constellationShell = document.getElementById("constellationShell");
     const constellationOverlay = document.getElementById("constellationOverlay");
+    const constellationScroll = document.getElementById("constellationScroll");
+    const constellationScrollHint = document.getElementById("constellationScrollHint");
     const overlayLaunchBtn = document.getElementById("overlayLaunchBtn");
     const launchBtn = document.getElementById("launchBtn");
     const resetBtn = document.getElementById("resetBtn");
@@ -818,6 +826,8 @@
     let activeRoleFilter = "all";
     let activeSearch = "";
     let activeLeaderId = "";
+    let usingDemoData = false;
+    let constellationHintDismissed = false;
 
     function normalizeText(value) {
       return String(value || "")
@@ -863,9 +873,7 @@
     function canonicalRoleFromString(rawRole) {
       const normalized = normalizeText(rawRole);
       for (const [roleKey, aliases] of Object.entries(ROLE_ALIASES)) {
-        if (aliases.includes(normalized)) {
-          return roleKey;
-        }
+        if (aliases.includes(normalized)) return roleKey;
       }
       return null;
     }
@@ -962,6 +970,21 @@
       return [];
     }
 
+    function updateConstellationScrollHint() {
+      if (!constellationScroll || !constellationScrollHint) return;
+
+      const isMobile = window.innerWidth <= 700;
+      const canScroll = constellationScroll.scrollWidth > constellationScroll.clientWidth + 8;
+      const nearEnd =
+        constellationScroll.scrollLeft + constellationScroll.clientWidth >=
+        constellationScroll.scrollWidth - 12;
+
+      constellationScrollHint.classList.toggle(
+        "show",
+        isMobile && canScroll && !constellationHintDismissed && !nearEnd
+      );
+    }
+
     async function loadLeaders() {
       try {
         const response = await fetch(CSV_URL, { cache: "no-store" });
@@ -973,6 +996,7 @@
         if (!parsed.length) throw new Error("No usable leader rows found");
 
         leaders = parsed;
+        usingDemoData = false;
         statusNote.innerHTML = `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
       } catch (error) {
         leaders = DEMO_LEADERS.map((item) => {
@@ -985,12 +1009,14 @@
           };
         });
 
+        usingDemoData = true;
         statusNote.innerHTML = `Could not read <strong>leaders.csv</strong>, so demo leader data is showing for preview.`;
       }
 
       buildFilterChips();
       buildStarfield();
       renderConstellation();
+      setTimeout(updateConstellationScrollHint, 60);
     }
 
     function seededValue(input) {
@@ -1228,6 +1254,7 @@
 
       buildLines(visibleLeaders);
       renderNodes(visibleLeaders);
+      setTimeout(updateConstellationScrollHint, 30);
     }
 
     function launchConstellation() {
@@ -1237,7 +1264,12 @@
       activeLeaderId = "";
       updateDetailCard(null);
       renderConstellation();
-      statusNote.innerHTML = `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
+
+      statusNote.innerHTML = usingDemoData
+        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders.`
+        : `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
+
+      setTimeout(updateConstellationScrollHint, 60);
     }
 
     function resetView() {
@@ -1248,6 +1280,10 @@
       buildFilterChips();
       updateDetailCard(null);
       renderConstellation();
+
+      statusNote.innerHTML = usingDemoData
+        ? `Showing <strong>${leaders.length}</strong> demo leaders.`
+        : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
     }
 
     searchInput.addEventListener("input", (event) => {
@@ -1264,15 +1300,23 @@
         if (activeSearch) {
           statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}.`;
         } else if (leaders.length) {
-          statusNote.innerHTML = `Loaded <strong>${leaders.length}</strong> leaders${leaders === DEMO_LEADERS ? " (demo)" : ""}.`;
+          statusNote.innerHTML = usingDemoData
+            ? `Showing <strong>${leaders.length}</strong> demo leaders.`
+            : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
         }
       }
     });
+
+    constellationScroll?.addEventListener("scroll", () => {
+      if (constellationScroll.scrollLeft > 12) constellationHintDismissed = true;
+      updateConstellationScrollHint();
+    }, { passive: true });
 
     launchBtn.addEventListener("click", launchConstellation);
     overlayLaunchBtn.addEventListener("click", launchConstellation);
     resetBtn.addEventListener("click", resetView);
 
+    window.addEventListener("resize", updateConstellationScrollHint);
     window.addEventListener("resize", renderConstellation);
 
     updateDetailCard(null);
