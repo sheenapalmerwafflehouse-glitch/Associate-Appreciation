@@ -417,7 +417,7 @@
       padding: 0;
       cursor: pointer;
       opacity: 0;
-      transition: transform 0.45s ease, opacity 0.45s ease, filter 0.28s ease;
+      transition: transform 0.35s ease, opacity 0.35s ease, filter 0.22s ease;
       will-change: transform, opacity;
     }
 
@@ -461,7 +461,7 @@
       box-shadow:
         0 0 0 6px rgba(255, 230, 106, 0.08),
         0 0 16px rgba(255, 230, 106, 0.55);
-      transition: box-shadow 0.25s ease, transform 0.25s ease;
+      transition: box-shadow 0.25s ease;
     }
 
     .leader-node.role-executive_vice_president .leader-core {
@@ -544,63 +544,54 @@
         opacity: 0;
         transform: rotate(-8deg) scale(0.94);
       }
-
       6% {
         left: 12%;
         top: 78%;
         opacity: 1;
         transform: rotate(-7deg) scale(0.97);
       }
-
       22% {
         left: 26%;
         top: 64%;
         opacity: 1;
         transform: rotate(-4deg) scale(1);
       }
-
       40% {
         left: 42%;
         top: 50%;
         opacity: 1;
         transform: rotate(-1deg) scale(1.01);
       }
-
       58% {
         left: 58%;
         top: 36%;
         opacity: 1;
         transform: rotate(2deg) scale(1.01);
       }
-
       76% {
         left: 72%;
         top: 23%;
         opacity: 1;
         transform: rotate(5deg) scale(0.98);
       }
-
       90% {
         left: 84%;
         top: 12%;
         opacity: 0.95;
         transform: rotate(7deg) scale(0.95);
       }
-
       94% {
         left: 88%;
         top: 8%;
         opacity: 0;
         transform: rotate(8deg) scale(0.92);
       }
-
       95% {
         left: 8%;
         top: 82%;
         opacity: 0;
         transform: rotate(-8deg) scale(0.94);
       }
-
       100% {
         left: 8%;
         top: 82%;
@@ -627,6 +618,10 @@
       .panel,
       .hero {
         border-radius: 24px;
+      }
+
+      .control-shell.mobile-prelaunch-hidden {
+        display: none;
       }
 
       .constellation-scroll {
@@ -671,6 +666,16 @@
       .wilson-ship {
         width: 96px;
       }
+
+      .constellation-line {
+        filter: none;
+      }
+
+      .leader-core {
+        box-shadow:
+          0 0 0 4px rgba(255, 230, 106, 0.06),
+          0 0 10px rgba(255, 230, 106, 0.35);
+      }
     }
 
     @media (max-width: 520px) {
@@ -691,13 +696,13 @@
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
       <p>
-        Let’s first shout out the leadership network that supports your unit managers across the field.
-        Each point of light represents someone in that support structure, from unit managers through senior leadership.
+        Let’s first shout out the leadership teams that drive the success of each Unit.
+        Each point of light represents someone connecting daily operations with the larger company mission.
       </p>
     </section>
 
     <section class="panel">
-      <div class="control-shell">
+      <div class="control-shell mobile-prelaunch-hidden" id="controlShell">
         <div class="control-top">
           <input
             id="searchInput"
@@ -705,14 +710,14 @@
             placeholder="Search by name or role"
             aria-label="Search by name or role"
           />
-          <button id="launchBtn" class="btn primary" type="button">Launch Constellation</button>
+          <button id="launchBtn" class="btn primary" type="button">Launch</button>
           <button id="resetBtn" class="btn" type="button">Reset View</button>
         </div>
 
         <div class="chip-row" id="filterChips"></div>
 
         <div class="status-note" id="statusNote">
-          Add <strong>leaders.csv</strong> and <strong>spaceship.png</strong> to this same folder, then click Launch Constellation.
+          Preparing constellation...
         </div>
       </div>
 
@@ -725,9 +730,9 @@
           <div class="constellation-overlay" id="constellationOverlay">
             <div class="overlay-card">
               <div class="overlay-kicker">Wilson Leads the Way</div>
-              <h2>Launch the Leadership Constellation</h2>
+              <h2>Launch</h2>
               <p>
-                Wilson Waffle kicks things off, then the constellation lights up with the leadership network supporting your unit managers across the field.
+                Tap below to light up the leadership network and explore the leaders who support your Unit.
               </p>
               <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
             </div>
@@ -759,12 +764,12 @@
     const CSV_URL = "leaders.csv";
 
     const ROLE_META = [
-      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 84, y: 14 },
-      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 72, y: 26 },
+      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 78, y: 18 },
+      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 68, y: 28 },
       { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40 },
-      { key: "division_manager", label: "Division Manager", short: "Division", x: 42, y: 56 },
-      { key: "district_manager", label: "District Manager", short: "District", x: 26, y: 74 },
-      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 14, y: 86 }
+      { key: "division_manager", label: "Division Manager", short: "Division", x: 46, y: 55 },
+      { key: "district_manager", label: "District Manager", short: "District", x: 34, y: 69 },
+      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 24, y: 82 }
     ];
 
     const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
@@ -814,6 +819,7 @@
     const lineGroup = document.getElementById("lineGroup");
     const starfield = document.getElementById("starfield");
     const filterChips = document.getElementById("filterChips");
+    const controlShell = document.getElementById("controlShell");
 
     let leaders = [];
     let launched = false;
@@ -822,6 +828,8 @@
     let activeLeaderId = "";
     let usingDemoData = false;
     let constellationHintDismissed = false;
+    let dataPromise = null;
+    let hasRenderedOnce = false;
 
     function normalizeText(value) {
       return String(value || "")
@@ -974,45 +982,9 @@
       return Math.abs(hash) / 2147483647;
     }
 
-    function updateConstellationScrollHint() {
-      if (!constellationScroll || !constellationScrollHint) return;
-
-      const isMobile = window.innerWidth <= 700;
-      const canScroll = constellationScroll.scrollWidth > constellationScroll.clientWidth + 8;
-      const nearEnd =
-        constellationScroll.scrollLeft + constellationScroll.clientWidth >=
-        constellationScroll.scrollWidth - 12;
-
-      constellationScrollHint.classList.toggle(
-        "show",
-        isMobile && canScroll && !constellationHintDismissed && !nearEnd
-      );
-    }
-
-    function centerConstellationIntro(smooth = false) {
-      if (!constellationScroll) return;
-
-      if (window.innerWidth > 700) {
-        constellationScroll.scrollLeft = 0;
-        return;
-      }
-
-      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
-      const target = maxScroll / 2;
-
-      if (smooth) {
-        constellationScroll.scrollTo({
-          left: target,
-          behavior: "smooth"
-        });
-      } else {
-        constellationScroll.scrollLeft = target;
-      }
-    }
-
     function buildStarfield() {
       starfield.innerHTML = "";
-      const total = 60;
+      const total = window.innerWidth <= 700 ? 34 : 60;
 
       for (let i = 0; i < total; i++) {
         const star = document.createElement("span");
@@ -1028,6 +1000,15 @@
       }
     }
 
+    function updateControlVisibility() {
+      const isMobile = window.innerWidth <= 700;
+      if (!launched && isMobile) {
+        controlShell.classList.add("mobile-prelaunch-hidden");
+      } else {
+        controlShell.classList.remove("mobile-prelaunch-hidden");
+      }
+    }
+
     function buildFilterChips() {
       filterChips.innerHTML = "";
 
@@ -1038,7 +1019,7 @@
       allChip.addEventListener("click", () => {
         activeRoleFilter = "all";
         buildFilterChips();
-        renderConstellation();
+        if (hasRenderedOnce) renderConstellation();
       });
       filterChips.appendChild(allChip);
 
@@ -1050,7 +1031,7 @@
         chip.addEventListener("click", () => {
           activeRoleFilter = role.key;
           buildFilterChips();
-          renderConstellation();
+          if (hasRenderedOnce) renderConstellation();
         });
         filterChips.appendChild(chip);
       });
@@ -1073,20 +1054,20 @@
         const count = people.length || 1;
 
         if (role.key === "unit_manager") {
-          const radiusX = 18;
-          const radiusY = 8.5;
+          const radiusX = 14;
+          const radiusY = 6.5;
 
           people.forEach((leader, index) => {
             const t = Math.sqrt((index + 0.5) / count);
             const theta =
               index * 2.399963229728653 +
-              seededValue(`${leader.name}-${leader.roleKey}-u`) * 0.6;
+              seededValue(`${leader.name}-${leader.roleKey}-u`) * 0.45;
 
-            const jitterX = (seededValue(`${leader.name}-${leader.roleKey}-ux`) - 0.5) * 1.4;
-            const jitterY = (seededValue(`${leader.name}-${leader.roleKey}-uy`) - 0.5) * 1.2;
+            const jitterX = (seededValue(`${leader.name}-${leader.roleKey}-ux`) - 0.5) * 0.9;
+            const jitterY = (seededValue(`${leader.name}-${leader.roleKey}-uy`) - 0.5) * 0.8;
 
-            const x = Math.max(4, Math.min(34, role.x + Math.cos(theta) * radiusX * t + jitterX));
-            const y = Math.max(74, Math.min(95, role.y + Math.sin(theta) * radiusY * t + jitterY));
+            const x = Math.max(10, Math.min(38, role.x + Math.cos(theta) * radiusX * t + jitterX));
+            const y = Math.max(75, Math.min(90, role.y + Math.sin(theta) * radiusY * t + jitterY));
 
             positioned.push({
               ...leader,
@@ -1098,13 +1079,13 @@
           return;
         }
 
-        const baseRadius = Math.max(5, Math.min(16, 7 + count * 0.65));
+        const baseRadius = Math.max(4, Math.min(10, 5 + count * 0.35));
 
         people.forEach((leader, index) => {
           const seedA = seededValue(`${leader.name}-${leader.roleKey}-a`);
           const seedB = seededValue(`${leader.name}-${leader.roleKey}-b`);
           const angle = ((index / count) * Math.PI * 2) + (seedA * 0.9);
-          const radius = baseRadius + ((seedB - 0.5) * 6);
+          const radius = baseRadius + ((seedB - 0.5) * 3.2);
 
           const x = Math.max(8, Math.min(92, role.x + Math.cos(angle) * radius));
           const y = Math.max(10, Math.min(90, role.y + Math.sin(angle) * (radius * 0.65)));
@@ -1130,14 +1111,6 @@
       return activeRoleFilter === "all" || leader.roleKey === activeRoleFilter;
     }
 
-    function getVisibleLeaders(positionedLeaders) {
-      return positionedLeaders.map((leader) => ({
-        ...leader,
-        passesFilter: passesRoleFilter(leader),
-        matchesSearch: matchesSearch(leader)
-      }));
-    }
-
     function buildLines(visibleLeaders) {
       lineGroup.innerHTML = "";
 
@@ -1145,6 +1118,8 @@
       ROLE_META.forEach((role) => {
         grouped[role.key] = visibleLeaders.filter((leader) => leader.roleKey === role.key && leader.passesFilter);
       });
+
+      const frag = document.createDocumentFragment();
 
       for (let i = 0; i < ROLE_META.length - 1; i++) {
         const currentRole = ROLE_META[i];
@@ -1179,13 +1154,16 @@
           const shouldDim = activeSearch && !(leader.matchesSearch || nearest.matchesSearch);
           if (shouldDim) line.classList.add("dimmed");
 
-          lineGroup.appendChild(line);
+          frag.appendChild(line);
         });
       }
+
+      lineGroup.appendChild(frag);
     }
 
     function buildRoleLabels() {
       labelLayer.innerHTML = "";
+      const frag = document.createDocumentFragment();
 
       ROLE_META.forEach((role) => {
         const label = document.createElement("div");
@@ -1194,12 +1172,15 @@
         label.style.left = `${role.x}%`;
         label.style.top = `${Math.max(4, role.y - 7)}%`;
         label.style.transform = "translate(-50%, -50%)";
-        labelLayer.appendChild(label);
+        frag.appendChild(label);
       });
+
+      labelLayer.appendChild(frag);
     }
 
     function renderNodes(visibleLeaders) {
       nodeLayer.innerHTML = "";
+      const frag = document.createDocumentFragment();
 
       visibleLeaders.forEach((leader, index) => {
         const button = document.createElement("button");
@@ -1207,7 +1188,7 @@
         button.className = `leader-node role-${leader.roleKey}`;
         button.style.left = `${leader.x}%`;
         button.style.top = `${leader.y}%`;
-        button.style.transitionDelay = launched ? `${Math.min(index * 4, 900)}ms` : "0ms";
+        button.style.transitionDelay = `${Math.min(index * 2, 600)}ms`;
         button.setAttribute("aria-label", `${leader.name}, ${leader.roleLabel}`);
 
         if (!leader.passesFilter) {
@@ -1234,54 +1215,35 @@
           renderConstellation();
         });
 
-        nodeLayer.appendChild(button);
+        frag.appendChild(button);
       });
+
+      nodeLayer.appendChild(frag);
     }
 
     function renderConstellation() {
+      if (!launched) return;
+
       buildRoleLabels();
 
       const positionedLeaders = getLeaderPositions();
-      const visibleLeaders = getVisibleLeaders(positionedLeaders);
+      const visibleLeaders = positionedLeaders.map((leader) => ({
+        ...leader,
+        passesFilter: passesRoleFilter(leader),
+        matchesSearch: matchesSearch(leader)
+      }));
 
       buildLines(visibleLeaders);
       renderNodes(visibleLeaders);
-      setTimeout(updateConstellationScrollHint, 30);
+
+      hasRenderedOnce = true;
+      setTimeout(updateConstellationScrollHint, 40);
     }
 
     function statusDefaultText() {
       return usingDemoData
         ? `Could not read <strong>leaders.csv</strong>, so demo leadership data is showing for preview.`
         : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
-    }
-
-    function launchConstellation() {
-      launched = true;
-      constellationShell.classList.add("launched");
-      constellationOverlay.classList.add("hidden");
-      activeLeaderId = "";
-
-      centerConstellationIntro(false);
-      renderConstellation();
-
-      statusNote.innerHTML = usingDemoData
-        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders.`
-        : `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
-    }
-
-    function resetView() {
-      activeRoleFilter = "all";
-      activeSearch = "";
-      activeLeaderId = "";
-      searchInput.value = "";
-      buildFilterChips();
-      renderConstellation();
-      statusNote.innerHTML = statusDefaultText();
-
-      setTimeout(() => {
-        centerConstellationIntro(false);
-        updateConstellationScrollHint();
-      }, 80);
     }
 
     async function loadLeaders() {
@@ -1311,19 +1273,90 @@
       }
 
       buildFilterChips();
-      buildStarfield();
-      renderConstellation();
       statusNote.innerHTML = statusDefaultText();
+    }
 
-      setTimeout(() => {
-        centerConstellationIntro(false);
-        updateConstellationScrollHint();
-      }, 80);
+    function centerOverlayView() {
+      if (!constellationScroll) return;
+      if (window.innerWidth > 700) return;
+
+      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
+      constellationScroll.scrollLeft = maxScroll / 2;
+    }
+
+    function setLaunchView() {
+      if (!constellationScroll) return;
+      if (window.innerWidth > 700) return;
+
+      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
+      constellationScroll.scrollLeft = maxScroll * 0.18;
+    }
+
+    function updateConstellationScrollHint() {
+      if (!constellationScroll || !constellationScrollHint || !launched) {
+        constellationScrollHint.classList.remove("show");
+        return;
+      }
+
+      const isMobile = window.innerWidth <= 700;
+      const canScroll = constellationScroll.scrollWidth > constellationScroll.clientWidth + 8;
+      const nearEnd =
+        constellationScroll.scrollLeft + constellationScroll.clientWidth >=
+        constellationScroll.scrollWidth - 12;
+
+      constellationScrollHint.classList.toggle(
+        "show",
+        isMobile && canScroll && !constellationHintDismissed && !nearEnd
+      );
+    }
+
+    async function launchConstellation() {
+      overlayLaunchBtn.disabled = true;
+      overlayLaunchBtn.textContent = "Launching...";
+
+      if (dataPromise) {
+        await dataPromise;
+      }
+
+      launched = true;
+      constellationShell.classList.add("launched");
+      constellationOverlay.classList.add("hidden");
+      updateControlVisibility();
+
+      renderConstellation();
+      setLaunchView();
+
+      statusNote.innerHTML = usingDemoData
+        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders.`
+        : `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
+
+      overlayLaunchBtn.textContent = "Start Launch";
+      overlayLaunchBtn.disabled = false;
+    }
+
+    function resetView() {
+      activeRoleFilter = "all";
+      activeSearch = "";
+      activeLeaderId = "";
+      searchInput.value = "";
+      buildFilterChips();
+
+      if (launched) {
+        renderConstellation();
+        setLaunchView();
+      } else {
+        centerOverlayView();
+      }
+
+      statusNote.innerHTML = statusDefaultText();
+      setTimeout(updateConstellationScrollHint, 40);
     }
 
     searchInput.addEventListener("input", (event) => {
       activeSearch = event.target.value.trim();
       activeLeaderId = "";
+      if (!launched) return;
+
       renderConstellation();
 
       const matches = leaders.filter((leader) => matchesSearch(leader) && passesRoleFilter(leader)).length;
@@ -1340,7 +1373,7 @@
       }
     });
 
-    constellationScroll?.addEventListener("scroll", () => {
+    constellationScroll.addEventListener("scroll", () => {
       if (constellationScroll.scrollLeft > 12) constellationHintDismissed = true;
       updateConstellationScrollHint();
     }, { passive: true });
@@ -1350,14 +1383,22 @@
     resetBtn.addEventListener("click", resetView);
 
     window.addEventListener("resize", () => {
-      renderConstellation();
-      setTimeout(() => {
-        centerConstellationIntro(false);
-        updateConstellationScrollHint();
-      }, 80);
+      buildStarfield();
+      updateControlVisibility();
+
+      if (!launched) {
+        centerOverlayView();
+      } else {
+        renderConstellation();
+      }
+
+      setTimeout(updateConstellationScrollHint, 40);
     });
 
-    loadLeaders();
+    buildStarfield();
+    updateControlVisibility();
+    centerOverlayView();
+    dataPromise = loadLeaders();
   </script>
 </body>
 </html>
