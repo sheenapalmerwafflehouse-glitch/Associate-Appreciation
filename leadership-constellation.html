@@ -9,7 +9,6 @@
       --text: #111111;
       --muted: #565656;
       --yellow: #f5d547;
-      --yellow-soft: #fff7c8;
       --border: rgba(176, 150, 44, 0.18);
       --shadow: 0 16px 34px rgba(17, 17, 17, 0.10);
       --shadow-strong: 0 24px 48px rgba(17, 17, 17, 0.16);
@@ -70,7 +69,7 @@
       background: #fff;
       color: #1e1e1e;
       box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -79,7 +78,7 @@
 
     .btn:hover,
     .back-link:hover,
-    .chip:hover:not(.disabled) {
+    .chip:hover {
       transform: translateY(-1px);
       box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
     }
@@ -87,13 +86,6 @@
     .btn.primary,
     .chip.active {
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
-    }
-
-    .chip.disabled {
-      opacity: 0.48;
-      cursor: default;
-      pointer-events: none;
-      background: rgba(255,255,255,0.7);
     }
 
     .hero {
@@ -161,7 +153,7 @@
 
     .hero p {
       margin: 12px auto 0;
-      max-width: 60ch;
+      max-width: 62ch;
       color: #474747;
       line-height: 1.65;
       font-size: 1rem;
@@ -336,7 +328,6 @@
 
     .starfield,
     .line-layer,
-    .placeholder-layer,
     .node-layer,
     .label-layer {
       position: absolute;
@@ -394,12 +385,6 @@
       opacity: 0.08;
     }
 
-    .constellation-line.placeholder {
-      stroke: rgba(255, 230, 106, 0.08);
-      stroke-width: 0.22;
-      filter: none;
-    }
-
     .label-layer {
       z-index: 3;
       pointer-events: none;
@@ -418,32 +403,6 @@
       text-transform: uppercase;
       backdrop-filter: blur(2px);
       white-space: nowrap;
-    }
-
-    .role-band-label.inactive {
-      opacity: 0.45;
-    }
-
-    .role-band-note {
-      position: absolute;
-      transform: translate(-50%, 0);
-      color: rgba(255,255,255,0.42);
-      font-size: 0.66rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-
-    .placeholder-layer {
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .unit-placeholder-dot {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 240, 180, 0.30);
-      box-shadow: 0 0 8px rgba(255, 230, 106, 0.14);
     }
 
     .node-layer {
@@ -520,6 +479,15 @@
       height: 16px;
     }
 
+    .leader-node.role-unit_manager .leader-core {
+      width: 8px;
+      height: 8px;
+      border-width: 1.5px;
+      box-shadow:
+        0 0 0 4px rgba(255, 230, 106, 0.06),
+        0 0 10px rgba(255, 230, 106, 0.30);
+    }
+
     .leader-tag {
       position: absolute;
       left: 50%;
@@ -538,6 +506,10 @@
       pointer-events: none;
       box-shadow: 0 10px 20px rgba(0,0,0,0.16);
       transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .leader-node.role-unit_manager .leader-tag {
+      font-size: 0.66rem;
     }
 
     .leader-node:hover .leader-tag,
@@ -692,10 +664,6 @@
         padding: 5px 8px;
       }
 
-      .role-band-note {
-        font-size: 0.6rem;
-      }
-
       .leader-tag {
         font-size: 0.66rem;
       }
@@ -723,8 +691,8 @@
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
       <p>
-        Let’s first shout out the senior leadership that supports your unit managers.
-        Each point of light represents someone helping connect day-to-day field support with the broader leadership team and the company as a whole.
+        Let’s first shout out the leadership network that supports your unit managers across the field.
+        Each point of light represents someone in that support structure, from unit managers through senior leadership.
       </p>
     </section>
 
@@ -759,7 +727,7 @@
               <div class="overlay-kicker">Wilson Leads the Way</div>
               <h2>Launch the Leadership Constellation</h2>
               <p>
-                Wilson Waffle kicks things off, then the constellation lights up with the senior leadership that helps support your unit managers across the field.
+                Wilson Waffle kicks things off, then the constellation lights up with the leadership network supporting your unit managers across the field.
               </p>
               <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
             </div>
@@ -774,7 +742,6 @@
           </div>
 
           <div class="label-layer" id="labelLayer"></div>
-          <div class="placeholder-layer" id="placeholderLayer"></div>
           <div class="node-layer" id="nodeLayer"></div>
 
           <img
@@ -792,19 +759,13 @@
     const CSV_URL = "leaders.csv";
 
     const ROLE_META = [
-      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 84, y: 14, active: true },
-      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 72, y: 26, active: true },
-      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40, active: true },
-      { key: "division_manager", label: "Division Manager", short: "Division", x: 42, y: 56, active: true },
-      { key: "district_manager", label: "District Manager", short: "District", x: 26, y: 74, active: true },
-
-      /* Keep Unit visible in the design, but inactive for now.
-         If you ever want to activate live unit manager data later,
-         change active: false to active: true. */
-      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 14, y: 86, active: false, placeholder: true }
+      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 84, y: 14 },
+      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 72, y: 26 },
+      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40 },
+      { key: "division_manager", label: "Division Manager", short: "Division", x: 42, y: 56 },
+      { key: "district_manager", label: "District Manager", short: "District", x: 26, y: 74 },
+      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 14, y: 86 }
     ];
-
-    const ACTIVE_ROLES = ROLE_META.filter((role) => role.active);
 
     const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
 
@@ -832,7 +793,11 @@
       { name: "Harper Stone", role: "Division Manager" },
       { name: "Jamie Palmer", role: "District Manager" },
       { name: "Alex Turner", role: "District Manager" },
-      { name: "Dakota Lane", role: "Division Manager" }
+      { name: "Dakota Lane", role: "Division Manager" },
+      { name: "Riley Carter", role: "Unit Manager" },
+      { name: "Sydney Morgan", role: "Unit Manager" },
+      { name: "Parker Reed", role: "Unit Manager" },
+      { name: "Taylor James", role: "Unit Manager" }
     ];
 
     const constellationShell = document.getElementById("constellationShell");
@@ -849,7 +814,6 @@
     const lineGroup = document.getElementById("lineGroup");
     const starfield = document.getElementById("starfield");
     const filterChips = document.getElementById("filterChips");
-    const placeholderLayer = document.getElementById("placeholderLayer");
 
     let leaders = [];
     let launched = false;
@@ -920,9 +884,8 @@
         const name = (row[headerIndex.name] || "").trim();
         const roleRaw = (row[headerIndex.role] || "").trim();
         const roleKey = canonicalRoleFromString(roleRaw);
-        const roleMeta = ROLE_KEY_MAP[roleKey];
 
-        if (!name || !roleKey || !roleMeta || !roleMeta.active) return;
+        if (!name || !roleKey) return;
 
         const uniqueKey = `${name.toLowerCase()}|${roleKey}`;
         if (seen.has(uniqueKey)) return;
@@ -945,8 +908,6 @@
 
       rows.forEach((row) => {
         ROLE_META.forEach((role) => {
-          if (!role.active) return;
-
           const idx = headerMap[role.key];
           if (idx === undefined) return;
 
@@ -1040,7 +1001,10 @@
       const target = maxScroll / 2;
 
       if (smooth) {
-        constellationScroll.scrollTo({ left: target, behavior: "smooth" });
+        constellationScroll.scrollTo({
+          left: target,
+          behavior: "smooth"
+        });
       } else {
         constellationScroll.scrollLeft = target;
       }
@@ -1078,7 +1042,7 @@
       });
       filterChips.appendChild(allChip);
 
-      ACTIVE_ROLES.forEach((role) => {
+      ROLE_META.forEach((role) => {
         const chip = document.createElement("button");
         chip.type = "button";
         chip.className = `chip ${activeRoleFilter === role.key ? "active" : ""}`;
@@ -1090,22 +1054,11 @@
         });
         filterChips.appendChild(chip);
       });
-
-      const unitRole = ROLE_META.find((role) => role.key === "unit_manager");
-      if (unitRole) {
-        const chip = document.createElement("button");
-        chip.type = "button";
-        chip.className = "chip disabled";
-        chip.textContent = unitRole.short;
-        chip.setAttribute("aria-disabled", "true");
-        chip.title = "Visual placeholder only for now";
-        filterChips.appendChild(chip);
-      }
     }
 
     function getGroupedLeaders() {
       const grouped = {};
-      ACTIVE_ROLES.forEach((role) => {
+      ROLE_META.forEach((role) => {
         grouped[role.key] = leaders.filter((leader) => leader.roleKey === role.key);
       });
       return grouped;
@@ -1115,9 +1068,36 @@
       const grouped = getGroupedLeaders();
       const positioned = [];
 
-      ACTIVE_ROLES.forEach((role) => {
+      ROLE_META.forEach((role) => {
         const people = grouped[role.key].slice().sort((a, b) => a.name.localeCompare(b.name));
         const count = people.length || 1;
+
+        if (role.key === "unit_manager") {
+          const radiusX = 18;
+          const radiusY = 8.5;
+
+          people.forEach((leader, index) => {
+            const t = Math.sqrt((index + 0.5) / count);
+            const theta =
+              index * 2.399963229728653 +
+              seededValue(`${leader.name}-${leader.roleKey}-u`) * 0.6;
+
+            const jitterX = (seededValue(`${leader.name}-${leader.roleKey}-ux`) - 0.5) * 1.4;
+            const jitterY = (seededValue(`${leader.name}-${leader.roleKey}-uy`) - 0.5) * 1.2;
+
+            const x = Math.max(4, Math.min(34, role.x + Math.cos(theta) * radiusX * t + jitterX));
+            const y = Math.max(74, Math.min(95, role.y + Math.sin(theta) * radiusY * t + jitterY));
+
+            positioned.push({
+              ...leader,
+              x,
+              y
+            });
+          });
+
+          return;
+        }
+
         const baseRadius = Math.max(5, Math.min(16, 7 + count * 0.65));
 
         people.forEach((leader, index) => {
@@ -1162,13 +1142,13 @@
       lineGroup.innerHTML = "";
 
       const grouped = {};
-      ACTIVE_ROLES.forEach((role) => {
+      ROLE_META.forEach((role) => {
         grouped[role.key] = visibleLeaders.filter((leader) => leader.roleKey === role.key && leader.passesFilter);
       });
 
-      for (let i = 0; i < ACTIVE_ROLES.length - 1; i++) {
-        const currentRole = ACTIVE_ROLES[i];
-        const nextRole = ACTIVE_ROLES[i + 1];
+      for (let i = 0; i < ROLE_META.length - 1; i++) {
+        const currentRole = ROLE_META[i];
+        const nextRole = ROLE_META[i + 1];
 
         grouped[currentRole.key].forEach((leader) => {
           if (!grouped[nextRole.key].length) return;
@@ -1209,71 +1189,13 @@
 
       ROLE_META.forEach((role) => {
         const label = document.createElement("div");
-        label.className = `role-band-label ${role.active ? "" : "inactive"}`;
+        label.className = "role-band-label";
         label.textContent = role.short;
         label.style.left = `${role.x}%`;
         label.style.top = `${Math.max(4, role.y - 7)}%`;
         label.style.transform = "translate(-50%, -50%)";
         labelLayer.appendChild(label);
-
-        if (!role.active && role.key === "unit_manager") {
-          const note = document.createElement("div");
-          note.className = "role-band-note";
-          note.textContent = "≈ 2,000 unit managers";
-          note.style.left = `${role.x}%`;
-          note.style.top = `${Math.min(94, role.y + 4)}%`;
-          labelLayer.appendChild(note);
-        }
       });
-    }
-
-    function buildUnitPlaceholder() {
-      placeholderLayer.innerHTML = "";
-
-      const unitRole = ROLE_META.find((role) => role.key === "unit_manager");
-      const districtRole = ROLE_META.find((role) => role.key === "district_manager");
-      if (!unitRole || !districtRole) return;
-
-      const placeholderPoints = [];
-
-      for (let i = 0; i < 88; i++) {
-        const seedA = seededValue(`unit-a-${i}`);
-        const seedB = seededValue(`unit-b-${i}`);
-        const seedC = seededValue(`unit-c-${i}`);
-
-        const angle = seedA * Math.PI * 2;
-        const radiusX = 9 + (seedB * 7);
-        const radiusY = 4.5 + (seedC * 4.8);
-
-        const x = Math.max(4, Math.min(30, unitRole.x + Math.cos(angle) * radiusX));
-        const y = Math.max(74, Math.min(95, unitRole.y + Math.sin(angle) * radiusY));
-
-        placeholderPoints.push({ x, y });
-
-        const dot = document.createElement("span");
-        dot.className = "unit-placeholder-dot";
-        const size = 3 + Math.floor(seedA * 3);
-        dot.style.width = `${size}px`;
-        dot.style.height = `${size}px`;
-        dot.style.left = `${x}%`;
-        dot.style.top = `${y}%`;
-        dot.style.transform = "translate(-50%, -50%)";
-        dot.style.opacity = (0.14 + seedB * 0.22).toFixed(2);
-        placeholderLayer.appendChild(dot);
-      }
-
-      for (let i = 0; i < 14; i++) {
-        const target = placeholderPoints[i * 4];
-        if (!target) continue;
-
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", districtRole.x);
-        line.setAttribute("y1", districtRole.y);
-        line.setAttribute("x2", target.x);
-        line.setAttribute("y2", target.y);
-        line.setAttribute("class", "constellation-line placeholder");
-        lineGroup.appendChild(line);
-      }
     }
 
     function renderNodes(visibleLeaders) {
@@ -1285,7 +1207,7 @@
         button.className = `leader-node role-${leader.roleKey}`;
         button.style.left = `${leader.x}%`;
         button.style.top = `${leader.y}%`;
-        button.style.transitionDelay = launched ? `${index * 14}ms` : "0ms";
+        button.style.transitionDelay = launched ? `${Math.min(index * 4, 900)}ms` : "0ms";
         button.setAttribute("aria-label", `${leader.name}, ${leader.roleLabel}`);
 
         if (!leader.passesFilter) {
@@ -1323,17 +1245,14 @@
       const visibleLeaders = getVisibleLeaders(positionedLeaders);
 
       buildLines(visibleLeaders);
-      buildUnitPlaceholder();
       renderNodes(visibleLeaders);
       setTimeout(updateConstellationScrollHint, 30);
     }
 
     function statusDefaultText() {
-      const unitNote = " Unit Managers are currently shown as a faded visual placeholder.";
-      if (usingDemoData) {
-        return `Could not read <strong>leaders.csv</strong>, so demo leadership data is showing for preview.${unitNote}`;
-      }
-      return `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.${unitNote}`;
+      return usingDemoData
+        ? `Could not read <strong>leaders.csv</strong>, so demo leadership data is showing for preview.`
+        : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
     }
 
     function launchConstellation() {
@@ -1346,8 +1265,8 @@
       renderConstellation();
 
       statusNote.innerHTML = usingDemoData
-        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders. Unit Managers remain a faded visual placeholder.`
-        : `Constellation launched with <strong>${leaders.length}</strong> leaders. Unit Managers remain a faded visual placeholder.`;
+        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders.`
+        : `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
     }
 
     function resetView() {
@@ -1414,7 +1333,7 @@
       } else {
         statusNote.classList.remove("error");
         if (activeSearch) {
-          statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}. Unit Managers remain a faded visual placeholder.`;
+          statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}.`;
         } else {
           statusNote.innerHTML = statusDefaultText();
         }
