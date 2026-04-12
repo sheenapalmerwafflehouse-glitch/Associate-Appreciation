@@ -56,7 +56,8 @@
     .back-link,
     .btn,
     .chip,
-    .pager-btn {
+    .pager-btn,
+    .search-clear {
       appearance: none;
       border: 1px solid rgba(176, 150, 44, 0.18);
       border-radius: 20px;
@@ -80,7 +81,8 @@
     .back-link:hover,
     .btn:hover,
     .chip:hover,
-    .pager-btn:hover {
+    .pager-btn:hover,
+    .search-clear:hover {
       transform: translateY(-1px);
       box-shadow: 0 12px 20px rgba(17,17,17,0.12);
     }
@@ -91,7 +93,8 @@
       border-color: rgba(212, 176, 0, 0.28);
     }
 
-    .pager-btn:disabled {
+    .pager-btn:disabled,
+    .search-clear:disabled {
       opacity: 0.45;
       cursor: default;
       transform: none;
@@ -352,6 +355,35 @@
       font-weight: 700;
     }
 
+    .search-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-row.hidden {
+      display: none;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 18px;
+      border: 1px solid rgba(176, 150, 44, 0.18);
+      background: rgba(255,255,255,0.94);
+      color: #1f1f1f;
+      padding: 12px 16px;
+      font: inherit;
+      box-shadow: 0 8px 16px rgba(17,17,17,0.05);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: rgba(212, 176, 0, 0.34);
+      box-shadow: 0 0 0 4px rgba(245, 213, 71, 0.14), 0 8px 16px rgba(17,17,17,0.05);
+    }
+
     .name-list {
       margin: 0;
       padding: 0;
@@ -457,6 +489,10 @@
         max-width: 190px;
         padding: 9px 10px;
       }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 520px) {
@@ -538,6 +574,20 @@
       <div class="list-head">
         <h2 class="list-title">Leadership Roll Call</h2>
         <div class="list-meta" id="listMeta">Loading list…</div>
+      </div>
+
+      <div class="search-row hidden" id="searchRow">
+        <input
+          id="listSearchInput"
+          class="search-input"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Search names in this role"
+          aria-label="Search names in this role"
+        />
+        <button id="clearSearchBtn" class="search-clear" type="button" disabled>Clear Search</button>
       </div>
 
       <ul class="name-list" id="nameList"></ul>
@@ -648,6 +698,11 @@
       role: ["role", "title", "level"]
     };
 
+    const BAD_NAME_VALUES = new Set([
+      "", "N/A", "NA", "NULL", "NONE", "UNDEFINED", "NAN",
+      "FALSE", "TRUE", "BLANK", "(BLANK)", "—", "-", "_"
+    ]);
+
     const DEMO_LEADERS = [
       { name: "Jordan Mitchell", role: "Executive Vice President" },
       { name: "Casey Reynolds", role: "Senior Vice President" },
@@ -688,6 +743,9 @@
     const pagerInfo = document.getElementById("pagerInfo");
     const prevPageBtn = document.getElementById("prevPageBtn");
     const nextPageBtn = document.getElementById("nextPageBtn");
+    const searchRow = document.getElementById("searchRow");
+    const listSearchInput = document.getElementById("listSearchInput");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
 
     let dpr = Math.max(1, window.devicePixelRatio || 1);
     let stageWidth = 0;
@@ -699,6 +757,7 @@
     let totalCount = 0;
 
     let constellationPoints = {};
+    let leaderPointMap = {};
     let listOrderByRole = {};
     let flashPoolByRole = {};
     let roleTrailIndexes = {};
@@ -707,6 +766,7 @@
     let activeRole = "all";
     let currentPage = 1;
     let hintDismissed = false;
+    let listSearchQuery = "";
 
     let shipImage = null;
     let animationId = 0;
@@ -728,6 +788,10 @@
         .toLowerCase()
         .replace(/\s+/g, " ")
         .replace(/[^\w\s/]/g, "");
+    }
+
+    function normalizeSearch(value) {
+      return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
     }
 
     function seededValue(input) {
@@ -770,6 +834,28 @@
 
     function leaderKey(leader) {
       return `${leader.roleKey}|${leader.name}`;
+    }
+
+    function containsLetter(value) {
+      try {
+        return /\p{L}/u.test(value);
+      } catch {
+        return /[A-Za-z]/.test(value);
+      }
+    }
+
+    function cleanLeaderName(raw) {
+      const value = String(raw || "").replace(/\s+/g, " ").trim();
+      if (!value) return null;
+
+      const upper = value.toUpperCase();
+
+      if (BAD_NAME_VALUES.has(upper)) return null;
+      if (/^[=+\-@]/.test(value)) return null;
+      if (/^#(N\/A|VALUE!|REF!|DIV\/0!|NAME\?|NUM!|NULL!|SPILL!|CALC!|FIELD!|GETTING_DATA)$/i.test(value)) return null;
+      if (!containsLetter(value)) return null;
+
+      return value;
     }
 
     function parseCSVLine(line) {
@@ -835,7 +921,7 @@
 
       if (longFormIndex.name !== undefined && longFormIndex.role !== undefined) {
         rows.forEach((row) => {
-          const name = (row[longFormIndex.name] || "").trim();
+          const name = cleanLeaderName(row[longFormIndex.name] || "");
           const roleKey = canonicalRole(row[longFormIndex.role] || "");
           if (!name || !roleKey) return;
           const uniq = `${name.toLowerCase()}|${roleKey}`;
@@ -857,7 +943,7 @@
           ROLE_META.forEach((role) => {
             const idx = wideHeaderMap[role.key];
             if (idx === undefined) return;
-            const name = (row[idx] || "").trim();
+            const name = cleanLeaderName(row[idx] || "");
             if (!name) return;
             const uniq = `${name.toLowerCase()}|${role.key}`;
             if (seen.has(uniq)) return;
@@ -882,6 +968,12 @@
       return isMobile() ? 12 : 20;
     }
 
+    function clearListSearch() {
+      listSearchQuery = "";
+      listSearchInput.value = "";
+      currentPage = 1;
+    }
+
     function buildSessionOrders() {
       const lists = {};
       const flashes = {};
@@ -889,12 +981,13 @@
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         const roleLeaders = leaders.filter(leader => leader.roleKey === roleKey);
         lists[roleKey] = roleLeaders.slice().sort(compareLeadersByName);
-        flashes[roleKey] = shuffleWithSeed(lists[roleKey], `flash-${roleKey}`);
+        flashes[roleKey] = shuffleWithSeed(roleLeaders.slice(), `flash-${roleKey}`);
       });
 
       lists.all = leaders.slice().sort(compareLeadersByName);
-      flashPoolByRole = flashes;
+
       listOrderByRole = lists;
+      flashPoolByRole = flashes;
     }
 
     function getNextLeaderForRole(roleKey) {
@@ -916,6 +1009,21 @@
 
     function getActiveOrder() {
       return listOrderByRole[activeRole] || [];
+    }
+
+    function getFilteredActiveOrder() {
+      const order = getActiveOrder();
+      const q = normalizeSearch(listSearchQuery);
+      if (!q) return order;
+
+      return order.filter((leader) => leader.name.toLowerCase().includes(q));
+    }
+
+    function getSearchMatches() {
+      if (activeRole === "all") return [];
+      const q = normalizeSearch(listSearchQuery);
+      if (!q) return [];
+      return (listOrderByRole[activeRole] || []).filter((leader) => leader.name.toLowerCase().includes(q));
     }
 
     function resetCardIndexes() {
@@ -955,6 +1063,7 @@
         activeRole = "all";
         currentPage = 1;
         hintDismissed = false;
+        clearListSearch();
         restartFlight();
         refreshView();
       });
@@ -969,6 +1078,7 @@
         chip.addEventListener("click", () => {
           activeRole = roleKey;
           currentPage = 1;
+          clearListSearch();
           restartFlight();
           refreshView();
         });
@@ -990,6 +1100,18 @@
         const role = ROLE_META_MAP[activeRole];
         const count = roleCounts[activeRole] || 0;
         statusNote.innerHTML = `Showing <strong>${count.toLocaleString()}</strong> ${role.label}${count === 1 ? "" : "s"}.`;
+      }
+    }
+
+    function updateSearchUI() {
+      const showSearch = activeRole !== "all";
+      searchRow.classList.toggle("hidden", !showSearch);
+      clearSearchBtn.disabled = !listSearchQuery.trim();
+
+      if (showSearch) {
+        const label = ROLE_META_MAP[activeRole].label;
+        listSearchInput.placeholder = `Search names in ${label}`;
+        listSearchInput.setAttribute("aria-label", `Search names in ${label}`);
       }
     }
 
@@ -1037,7 +1159,7 @@
 
         const x = (layout.cx + Math.cos(angle) * rx * t + jitterX) * stageWidth;
         const y = (layout.cy + Math.sin(angle) * ry * t + jitterY) * stageHeight;
-        points.push({ x, y, roleKey });
+        points.push({ x, y, roleKey, index: i });
       }
 
       return points;
@@ -1045,8 +1167,18 @@
 
     function buildLayout() {
       constellationPoints = {};
+      leaderPointMap = {};
+
       ROLE_DRAW_ORDER.forEach((roleKey) => {
-        constellationPoints[roleKey] = generatePoints(roleKey, roleCounts[roleKey] || 0);
+        const roleLeaders = listOrderByRole[roleKey] || [];
+        const points = generatePoints(roleKey, roleLeaders.length);
+        constellationPoints[roleKey] = points;
+
+        roleLeaders.forEach((leader, index) => {
+          if (points[index]) {
+            leaderPointMap[leaderKey(leader)] = points[index];
+          }
+        });
       });
     }
 
@@ -1122,13 +1254,13 @@
       return lines;
     }
 
-    function drawAllRoleLines(targetCtx) {
+    function drawAllRoleLines(targetCtx, alphaMultiplier = 1) {
       const lines = buildAllRoleConnections();
       targetCtx.lineCap = "round";
       targetCtx.lineJoin = "round";
 
       lines.forEach((line) => {
-        const alpha = ALL_ROLE_LAYOUT[line.fromKey].lineAlpha || 0.18;
+        const alpha = (ALL_ROLE_LAYOUT[line.fromKey].lineAlpha || 0.18) * alphaMultiplier;
         targetCtx.strokeStyle = `rgba(255, 230, 106, ${alpha})`;
         targetCtx.lineWidth = line.fromKey === "district_manager" ? 1.15 : 1.0;
         targetCtx.beginPath();
@@ -1138,13 +1270,13 @@
       });
     }
 
-    function drawSingleRoleLines(targetCtx, roleKey) {
+    function drawSingleRoleLines(targetCtx, roleKey, alpha = 0.22) {
       const lines = buildSingleRoleConnections(roleKey);
       targetCtx.lineCap = "round";
       targetCtx.lineJoin = "round";
 
       lines.forEach((line) => {
-        targetCtx.strokeStyle = "rgba(255, 230, 106, 0.22)";
+        targetCtx.strokeStyle = `rgba(255, 230, 106, ${alpha})`;
         targetCtx.lineWidth = roleKey === "unit_manager" ? 0.9 : 1.1;
         targetCtx.beginPath();
         targetCtx.moveTo(line.a.x, line.a.y);
@@ -1171,21 +1303,34 @@
       targetCtx.globalAlpha = 1;
     }
 
-    function drawRolePoints(targetCtx, roleKey) {
+    function drawRolePoints(targetCtx, roleKey, opts = {}) {
       const layout = getLayout(roleKey);
       const pts = constellationPoints[roleKey] || [];
-      let alpha = 0.98;
-      let size = layout.size;
+      let alpha = opts.alpha ?? 0.98;
+      let size = opts.size ?? layout.size;
 
-      if (activeRole === "all" && roleKey === "unit_manager") {
+      if (activeRole === "all" && roleKey === "unit_manager" && opts.alpha === undefined) {
         alpha = 0.72;
         size = 1.55;
-      } else if (activeRole === "unit_manager") {
+      } else if (activeRole === "unit_manager" && opts.alpha === undefined) {
         alpha = 0.86;
         size = 1.75;
       }
 
       pts.forEach((point) => drawPoint(targetCtx, point, size, alpha));
+    }
+
+    function drawSingleRoleBackdrop(targetCtx, roleKey) {
+      drawAllRoleLines(targetCtx, 0.22);
+
+      ROLE_DRAW_ORDER.forEach((otherKey) => {
+        if (otherKey === roleKey) return;
+
+        const baseLayout = activeRole === "all" ? ALL_ROLE_LAYOUT[otherKey] : ROLE_META_MAP[otherKey].single;
+        const size = Math.max(1.1, (otherKey === "unit_manager" ? 1.45 : (baseLayout.size || 2.6)) * 0.84);
+        const alpha = otherKey === "unit_manager" ? 0.16 : 0.22;
+        drawRolePoints(targetCtx, otherKey, { alpha, size });
+      });
     }
 
     function renderStaticScene() {
@@ -1194,12 +1339,64 @@
       drawBackground(staticCtx);
 
       if (activeRole === "all") {
-        drawAllRoleLines(staticCtx);
+        drawAllRoleLines(staticCtx, 1);
         ROLE_DRAW_ORDER.forEach((roleKey) => drawRolePoints(staticCtx, roleKey));
       } else {
-        drawSingleRoleLines(staticCtx, activeRole);
-        drawRolePoints(staticCtx, activeRole);
+        drawSingleRoleBackdrop(staticCtx, activeRole);
+        drawSingleRoleLines(staticCtx, activeRole, 0.28);
+        drawRolePoints(staticCtx, activeRole, {
+          alpha: activeRole === "unit_manager" ? 0.88 : 0.98,
+          size: activeRole === "unit_manager" ? 1.78 : ROLE_META_MAP[activeRole].single.size
+        });
       }
+    }
+
+    function drawSearchHighlights(targetCtx, nowMs) {
+      if (activeRole === "all") return;
+
+      const matches = getSearchMatches();
+      if (!matches.length) return;
+
+      const pulse = 0.5 + 0.5 * Math.sin(nowMs / 250);
+      const beam = 0.5 + 0.5 * Math.sin(nowMs / 360 + 1.1);
+      const baseSize = activeRole === "unit_manager" ? 1.85 : ROLE_META_MAP[activeRole].single.size;
+
+      matches.forEach((leader) => {
+        const point = leaderPointMap[leaderKey(leader)];
+        if (!point) return;
+
+        const haloRadius = Math.max(18, (baseSize * 4.4) + (pulse * 8));
+        const glow = targetCtx.createRadialGradient(point.x, point.y, 0, point.x, point.y, haloRadius);
+        glow.addColorStop(0, "rgba(255,255,255,0.98)");
+        glow.addColorStop(0.16, `rgba(255,230,106,${0.66 + beam * 0.16})`);
+        glow.addColorStop(0.48, "rgba(255,230,106,0.24)");
+        glow.addColorStop(1, "rgba(255,230,106,0)");
+
+        targetCtx.fillStyle = glow;
+        targetCtx.beginPath();
+        targetCtx.arc(point.x, point.y, haloRadius, 0, Math.PI * 2);
+        targetCtx.fill();
+
+        targetCtx.strokeStyle = `rgba(255,255,255,${0.70 + pulse * 0.18})`;
+        targetCtx.lineWidth = 1.8;
+        targetCtx.beginPath();
+        targetCtx.arc(point.x, point.y, haloRadius * 0.48, 0, Math.PI * 2);
+        targetCtx.stroke();
+
+        targetCtx.strokeStyle = `rgba(255,230,106,${0.40 + beam * 0.22})`;
+        targetCtx.lineWidth = 1.15;
+        targetCtx.beginPath();
+        targetCtx.moveTo(point.x - haloRadius * 0.95, point.y);
+        targetCtx.lineTo(point.x + haloRadius * 0.95, point.y);
+        targetCtx.stroke();
+
+        targetCtx.beginPath();
+        targetCtx.moveTo(point.x, point.y - haloRadius * 0.95);
+        targetCtx.lineTo(point.x, point.y + haloRadius * 0.95);
+        targetCtx.stroke();
+
+        drawPoint(targetCtx, point, Math.max(2.1, baseSize * 0.92), 1);
+      });
     }
 
     function getAllRoleStageForShipY(shipY) {
@@ -1225,23 +1422,23 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 12000;
+        const cycleMs = 10800;
         const cycleIndex = Math.floor(elapsed / cycleMs);
         const t = (elapsed % cycleMs) / cycleMs;
 
-        const startX = stageWidth * 0.06;
+        const startX = stageWidth * 0.08;
         const startY = stageHeight * 0.89;
-        const endX = stageWidth * 1.12;
-        const endY = stageHeight * -0.16;
-        const eased = 1 - Math.pow(1 - t, 2.38);
+        const endX = stageWidth * 1.10;
+        const endY = stageHeight * -0.14;
+        const eased = 1 - Math.pow(1 - t, 2.34);
 
         const x = startX + (endX - startX) * eased;
-        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.55) * 2.2;
+        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.5) * 2.0;
         const angle = (-12 + 20 * eased) * Math.PI / 180;
 
         let alpha = 1;
-        if (t < 0.02) alpha = t / 0.02;
-        else if (t > 0.992) alpha = (1 - t) / 0.008;
+        if (t < 0.018) alpha = t / 0.018;
+        else if (t > 0.994) alpha = (1 - t) / 0.006;
 
         const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
         const w = Math.max(60, baseSize);
@@ -1483,6 +1680,7 @@
     function drawFrame(now) {
       ctx.clearRect(0, 0, stageWidth, stageHeight);
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
+      drawSearchHighlights(ctx, now);
       const shipState = drawShipFrame(now);
       updateShipCard(shipState);
       animationId = requestAnimationFrame(drawFrame);
@@ -1528,8 +1726,9 @@
     }
 
     function renderPagedList() {
-      const order = getActiveOrder();
-      const total = order.length;
+      const baseOrder = getActiveOrder();
+      const filteredOrder = getFilteredActiveOrder();
+      const total = filteredOrder.length;
       const perPage = pageSize();
       const totalPages = Math.max(1, Math.ceil(total / perPage));
 
@@ -1538,21 +1737,28 @@
 
       const start = (currentPage - 1) * perPage;
       const end = Math.min(total, start + perPage);
-      const pageItems = order.slice(start, end);
+      const pageItems = filteredOrder.slice(start, end);
 
       nameList.innerHTML = "";
       emptyState.hidden = total > 0;
 
+      const searching = !!normalizeSearch(listSearchQuery);
+
       if (!total) {
         emptyState.hidden = false;
-        listMeta.textContent = "No names available";
+        listMeta.textContent = searching ? "No matching names in this role" : "No names available";
+        emptyState.textContent = searching
+          ? "No matching leaders found in this role."
+          : "No leaders to display yet.";
         pagerInfo.textContent = "Page 1 of 1";
         prevPageBtn.disabled = true;
         nextPageBtn.disabled = true;
         return;
       }
 
-      if (activeRole === "all") {
+      if (searching) {
+        listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} matches in ${ROLE_META_MAP[activeRole].label}`;
+      } else if (activeRole === "all") {
         listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} leaders`;
       } else {
         listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} ${ROLE_META_MAP[activeRole].label}${total === 1 ? "" : "s"}`;
@@ -1588,6 +1794,7 @@
       buildChips();
       updateStatus();
       updateMapBadge();
+      updateSearchUI();
 
       stage.classList.toggle("single-role-mobile", isMobile() && isSingleRole());
 
@@ -1609,9 +1816,9 @@
         usingDemoData = false;
       } catch (error) {
         leaders = DEMO_LEADERS.map(item => ({
-          name: item.name,
+          name: cleanLeaderName(item.name),
           roleKey: canonicalRole(item.role)
-        }));
+        })).filter(item => item.name && item.roleKey);
         usingDemoData = true;
       }
 
@@ -1642,8 +1849,22 @@
       activeRole = "all";
       currentPage = 1;
       hintDismissed = false;
+      clearListSearch();
       restartFlight();
       refreshView();
+    });
+
+    listSearchInput.addEventListener("input", (event) => {
+      listSearchQuery = event.target.value || "";
+      currentPage = 1;
+      updateSearchUI();
+      renderPagedList();
+    });
+
+    clearSearchBtn.addEventListener("click", () => {
+      clearListSearch();
+      updateSearchUI();
+      renderPagedList();
     });
 
     stageScroll.addEventListener("scroll", () => {
