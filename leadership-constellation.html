@@ -699,9 +699,11 @@
     let totalCount = 0;
 
     let constellationPoints = {};
-    let sessionOrderByRole = {};
+    let listOrderByRole = {};
+    let flashPoolByRole = {};
     let roleTrailIndexes = {};
     let roleLoopOffsets = {};
+    let lastShownByRole = {};
     let activeRole = "all";
     let currentPage = 1;
     let hintDismissed = false;
@@ -758,6 +760,16 @@
         [clone[i], clone[j]] = [clone[j], clone[i]];
       }
       return clone;
+    }
+
+    function compareLeadersByName(a, b) {
+      const byName = a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+      if (byName !== 0) return byName;
+      return ROLE_META_MAP[a.roleKey].label.localeCompare(ROLE_META_MAP[b.roleKey].label, undefined, { sensitivity: "base" });
+    }
+
+    function leaderKey(leader) {
+      return `${leader.roleKey}|${leader.name}`;
     }
 
     function parseCSVLine(line) {
@@ -871,59 +883,50 @@
     }
 
     function buildSessionOrders() {
-      const byRole = {};
-      const allRolePools = {};
+      const lists = {};
+      const flashes = {};
 
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
-        const ordered = leaders.filter(leader => leader.roleKey === roleKey);
-        byRole[roleKey] = ordered;
-        allRolePools[roleKey] = shuffleWithSeed(ordered, `all-role-${roleKey}`);
+        const roleLeaders = leaders.filter(leader => leader.roleKey === roleKey);
+        lists[roleKey] = roleLeaders.slice().sort(compareLeadersByName);
+        flashes[roleKey] = shuffleWithSeed(lists[roleKey], `flash-${roleKey}`);
       });
 
-      const interleavedAll = [];
-      const perRoleIndex = {};
-      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
-        perRoleIndex[roleKey] = 0;
-      });
-
-      let added = true;
-      while (added) {
-        added = false;
-        ALL_ROLE_STAGE_ORDER.forEach((roleKey) => {
-          const list = allRolePools[roleKey];
-          const idx = perRoleIndex[roleKey];
-          if (idx < list.length) {
-            interleavedAll.push(list[idx]);
-            perRoleIndex[roleKey] += 1;
-            added = true;
-          }
-        });
-      }
-
-      byRole.all = interleavedAll;
-      sessionOrderByRole = byRole;
+      lists.all = leaders.slice().sort(compareLeadersByName);
+      flashPoolByRole = flashes;
+      listOrderByRole = lists;
     }
 
     function getNextLeaderForRole(roleKey) {
-      const pool = sessionOrderByRole[roleKey] || [];
+      const pool = flashPoolByRole[roleKey] || [];
       if (!pool.length) return null;
 
-      const index = roleTrailIndexes[roleKey] || 0;
-      const leader = pool[index % pool.length];
+      let index = roleTrailIndexes[roleKey] || 0;
+      let leader = pool[index % pool.length];
+
+      if (pool.length > 1 && leaderKey(leader) === lastShownByRole[roleKey]) {
+        index = (index + 1) % pool.length;
+        leader = pool[index];
+      }
+
       roleTrailIndexes[roleKey] = (index + 1) % pool.length;
+      lastShownByRole[roleKey] = leaderKey(leader);
       return leader;
     }
 
     function getActiveOrder() {
-      return sessionOrderByRole[activeRole] || [];
+      return listOrderByRole[activeRole] || [];
     }
 
     function resetCardIndexes() {
       roleTrailIndexes = {};
       roleLoopOffsets = {};
+      lastShownByRole = {};
+
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         roleTrailIndexes[roleKey] = 0;
         roleLoopOffsets[roleKey] = 0;
+        lastShownByRole[roleKey] = null;
       });
 
       cardState = {
@@ -1417,7 +1420,7 @@
         cardState.singleLeader = null;
       }
 
-      const pool = sessionOrderByRole[activeRole] || [];
+      const pool = flashPoolByRole[activeRole] || [];
       if (!pool.length) {
         shipCard.classList.remove("show");
         return;
@@ -1431,7 +1434,11 @@
 
       if (shipState.cycleIndex !== cardState.singleCycleIndex) {
         if (cardState.singleCycleIndex >= 0) {
-          roleLoopOffsets[activeRole] = ((roleLoopOffsets[activeRole] || 0) + stepsPerCycle) % pool.length;
+          let nextOffset = ((roleLoopOffsets[activeRole] || 0) + stepsPerCycle) % pool.length;
+          if (pool.length > 1 && leaderKey(pool[nextOffset]) === lastShownByRole[activeRole]) {
+            nextOffset = (nextOffset + 1) % pool.length;
+          }
+          roleLoopOffsets[activeRole] = nextOffset;
         }
         cardState.singleCycleIndex = shipState.cycleIndex;
         cardState.singleStep = -1;
@@ -1448,8 +1455,17 @@
       const baseOffset = roleLoopOffsets[activeRole] || 0;
 
       if (step !== cardState.singleStep) {
+        let idx = (baseOffset + step) % pool.length;
+        let leader = pool[idx];
+
+        if (pool.length > 1 && leaderKey(leader) === lastShownByRole[activeRole]) {
+          idx = (idx + 1) % pool.length;
+          leader = pool[idx];
+        }
+
         cardState.singleStep = step;
-        cardState.singleLeader = pool[(baseOffset + step) % pool.length];
+        cardState.singleLeader = leader;
+        lastShownByRole[activeRole] = leaderKey(leader);
       }
 
       currentLeader = cardState.singleLeader;
