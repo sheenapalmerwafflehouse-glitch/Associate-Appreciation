@@ -902,10 +902,6 @@
       sessionOrderByRole = byRole;
     }
 
-    function getActiveOrder() {
-      return sessionOrderByRole[activeRole] || [];
-    }
-
     function getNextLeaderForRole(roleKey) {
       const pool = sessionOrderByRole[roleKey] || [];
       if (!pool.length) return null;
@@ -914,6 +910,10 @@
       const leader = pool[index % pool.length];
       roleTrailIndexes[roleKey] = (index + 1) % pool.length;
       return leader;
+    }
+
+    function getActiveOrder() {
+      return sessionOrderByRole[activeRole] || [];
     }
 
     function resetCardIndexes() {
@@ -1255,17 +1255,33 @@
 
     function getAllRoleStageForShipY(shipY) {
       const yNorm = shipY / stageHeight;
-      const ordered = ALL_ROLE_STAGE_ORDER.map((roleKey) => ({
-        roleKey,
-        cy: ALL_ROLE_LAYOUT[roleKey].cy
-      }));
 
-      for (let i = 0; i < ordered.length - 1; i += 1) {
-        const boundary = (ordered[i].cy + ordered[i + 1].cy) / 2;
-        if (yNorm >= boundary) return ordered[i];
+      const districtY = ALL_ROLE_LAYOUT.district_manager.cy;
+      const divisionY = ALL_ROLE_LAYOUT.division_manager.cy;
+      const areaY = ALL_ROLE_LAYOUT.area_region_manager.cy;
+      const svpY = ALL_ROLE_LAYOUT.senior_vice_president.cy;
+      const evpY = ALL_ROLE_LAYOUT.executive_vice_president.cy;
+
+      if (yNorm >= districtY) {
+        return { roleKey: "unit_manager" };
+      }
+      if (yNorm >= divisionY) {
+        return { roleKey: "district_manager" };
+      }
+      if (yNorm >= areaY) {
+        return { roleKey: "division_manager" };
+      }
+      if (yNorm >= svpY) {
+        return { roleKey: "area_region_manager" };
+      }
+      if (yNorm >= evpY) {
+        return { roleKey: "senior_vice_president" };
+      }
+      if (yNorm >= 0.03) {
+        return { roleKey: "executive_vice_president" };
       }
 
-      return yNorm >= 0.05 ? ordered[ordered.length - 1] : null;
+      return null;
     }
 
     function getShipFlight(now) {
