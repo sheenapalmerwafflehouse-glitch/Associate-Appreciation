@@ -340,9 +340,11 @@
         justify-content: center;
         font-size: 0.68rem;
         padding: 7px 11px;
-        max-width: calc(100% - 24px);
-        top: 16px;
-        right: 16px;
+        max-width: calc(100% - 32px);
+        top: 14px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
       }
 
       .allrole-label {
@@ -407,7 +409,7 @@
 
   <script>
     const CSV_URL = "leaders.csv";
-    const SHIP_SRC = "spaceship.png"; // change if your file name is different
+    const SHIP_SRC = "spaceship.png"; // change to your exact file name if needed
 
     const ROLE_META = [
       {
@@ -534,7 +536,7 @@
     let stageWidth = 0;
     let stageHeight = 0;
     let constellationPoints = {};
-    let starField = [];
+    let twinkleStars = [];
     let shipImage = null;
     let animationId = 0;
     let hintDismissed = false;
@@ -711,6 +713,7 @@
 
     function updateStatus() {
       statusNote.classList.remove("error");
+
       if (usingDemoData) {
         statusNote.innerHTML = `Showing <strong>${totalCount.toLocaleString()}</strong> demo leaders.`;
         return;
@@ -733,15 +736,32 @@
       return activeRole !== "all";
     }
 
-    function buildStars() {
-      starField = [];
-      const count = isMobile() ? 22 : 34;
-      for (let i = 0; i < count; i++) {
-        starField.push({
-          x: seededValue(`star-x-${i}`),
-          y: seededValue(`star-y-${i}`),
-          r: 0.7 + (i % 3) * 0.45,
-          alpha: 0.10 + seededValue(`star-a-${i}`) * 0.36
+    function buildTwinkleStars() {
+      twinkleStars = [];
+      const count = isMobile() ? 26 : 40;
+      let attempts = 0;
+
+      while (twinkleStars.length < count && attempts < 500) {
+        attempts += 1;
+
+        const x = seededValue(`twinkle-x-${attempts}`);
+        const y = seededValue(`twinkle-y-${attempts}`);
+
+        const dx = (x - 0.56) / 0.40;
+        const dy = (y - 0.58) / 0.28;
+        const insideProtectedZone = (dx * dx + dy * dy) < 1.0;
+
+        if (insideProtectedZone && seededValue(`keep-${attempts}`) < 0.85) {
+          continue;
+        }
+
+        twinkleStars.push({
+          x,
+          y,
+          r: 0.7 + seededValue(`r-${attempts}`) * 1.6,
+          alphaBase: 0.12 + seededValue(`a-${attempts}`) * 0.25,
+          speed: 0.8 + seededValue(`s-${attempts}`) * 1.6,
+          phase: seededValue(`p-${attempts}`) * Math.PI * 2
         });
       }
     }
@@ -762,7 +782,7 @@
       staticCanvas.height = Math.round(stageHeight * dpr);
       staticCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      buildStars();
+      buildTwinkleStars();
       buildLayout();
       renderStaticScene();
     }
@@ -822,17 +842,28 @@
         stageWidth * 0.58, stageHeight * 0.18, 0,
         stageWidth * 0.58, stageHeight * 0.18, stageWidth * 0.28
       );
-      glow.addColorStop(0, "rgba(255,255,255,0.18)");
+      glow.addColorStop(0, "rgba(255,255,255,0.17)");
       glow.addColorStop(0.20, "rgba(255,255,255,0.08)");
       glow.addColorStop(1, "rgba(255,255,255,0)");
       targetCtx.fillStyle = glow;
       targetCtx.fillRect(0, 0, stageWidth, stageHeight);
+    }
 
-      starField.forEach((star) => {
-        targetCtx.globalAlpha = star.alpha;
+    function drawTwinkleStars(targetCtx, nowMs) {
+      const t = nowMs / 1000;
+      twinkleStars.forEach((star) => {
+        const pulse = 0.55 + 0.45 * Math.sin(t * star.speed + star.phase);
+        const alpha = star.alphaBase + pulse * 0.22;
+
+        targetCtx.globalAlpha = Math.max(0.05, Math.min(0.65, alpha));
         targetCtx.fillStyle = "#ffffff";
         targetCtx.beginPath();
         targetCtx.arc(star.x * stageWidth, star.y * stageHeight, star.r, 0, Math.PI * 2);
+        targetCtx.fill();
+
+        targetCtx.globalAlpha = Math.max(0.02, Math.min(0.20, alpha * 0.45));
+        targetCtx.beginPath();
+        targetCtx.arc(star.x * stageWidth, star.y * stageHeight, star.r * 2.4, 0, Math.PI * 2);
         targetCtx.fill();
       });
       targetCtx.globalAlpha = 1;
@@ -985,22 +1016,22 @@
       let endY;
 
       if (activeRole === "all") {
-        endX = stageWidth * 0.91;
-        endY = stageHeight * 0.10;
+        endX = stageWidth * 1.06;
+        endY = stageHeight * -0.03;
       } else {
         const layout = ROLE_META_MAP[activeRole].single;
-        endX = stageWidth * Math.min(0.94, layout.cx + 0.04);
-        endY = stageHeight * Math.max(0.10, layout.cy - 0.10);
+        endX = stageWidth * Math.min(1.03, layout.cx + 0.16);
+        endY = stageHeight * Math.max(-0.03, layout.cy - 0.18);
       }
 
-      const eased = 1 - Math.pow(1 - t, 2.45);
+      const eased = 1 - Math.pow(1 - t, 2.7);
       const x = startX + (endX - startX) * eased;
-      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.2) * 4;
-      const angle = (-12 + 20 * eased) * Math.PI / 180;
+      const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 2.1) * 3.5;
+      const angle = (-12 + 22 * eased) * Math.PI / 180;
 
       let alpha = 1;
-      if (t < 0.06) alpha = t / 0.06;
-      else if (t > 0.97) alpha = (1 - t) / 0.03;
+      if (t < 0.04) alpha = t / 0.04;
+      else if (t > 0.99) alpha = (1 - t) / 0.01;
 
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
@@ -1018,6 +1049,7 @@
     function drawFrame(now) {
       ctx.clearRect(0, 0, stageWidth, stageHeight);
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
+      drawTwinkleStars(ctx, now);
       drawShipFrame(now);
       animationId = requestAnimationFrame(drawFrame);
     }
@@ -1110,7 +1142,7 @@
       animationId = requestAnimationFrame(drawFrame);
     });
 
-    buildStars();
+    buildTwinkleStars();
     resizeCanvas();
     loadLeaders().then(() => {
       cancelAnimationFrame(animationId);
