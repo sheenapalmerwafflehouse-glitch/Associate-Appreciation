@@ -70,7 +70,7 @@
       background: #fff;
       color: #1e1e1e;
       box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -79,7 +79,7 @@
 
     .btn:hover,
     .back-link:hover,
-    .chip:hover {
+    .chip:hover:not(.disabled) {
       transform: translateY(-1px);
       box-shadow: 0 12px 20px rgba(17, 17, 17, 0.12);
     }
@@ -87,6 +87,13 @@
     .btn.primary,
     .chip.active {
       background: linear-gradient(180deg, #ffe66a 0%, var(--yellow) 100%);
+    }
+
+    .chip.disabled {
+      opacity: 0.48;
+      cursor: default;
+      pointer-events: none;
+      background: rgba(255,255,255,0.7);
     }
 
     .hero {
@@ -154,7 +161,7 @@
 
     .hero p {
       margin: 12px auto 0;
-      max-width: 58ch;
+      max-width: 60ch;
       color: #474747;
       line-height: 1.65;
       font-size: 1rem;
@@ -329,6 +336,7 @@
 
     .starfield,
     .line-layer,
+    .placeholder-layer,
     .node-layer,
     .label-layer {
       position: absolute;
@@ -386,6 +394,12 @@
       opacity: 0.08;
     }
 
+    .constellation-line.placeholder {
+      stroke: rgba(255, 230, 106, 0.08);
+      stroke-width: 0.22;
+      filter: none;
+    }
+
     .label-layer {
       z-index: 3;
       pointer-events: none;
@@ -404,6 +418,32 @@
       text-transform: uppercase;
       backdrop-filter: blur(2px);
       white-space: nowrap;
+    }
+
+    .role-band-label.inactive {
+      opacity: 0.45;
+    }
+
+    .role-band-note {
+      position: absolute;
+      transform: translate(-50%, 0);
+      color: rgba(255,255,255,0.42);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .placeholder-layer {
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .unit-placeholder-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 240, 180, 0.30);
+      box-shadow: 0 0 8px rgba(255, 230, 106, 0.14);
     }
 
     .node-layer {
@@ -509,142 +549,92 @@
 
     .wilson-ship {
       position: absolute;
-      left: -10%;
-      top: 68%;
-      width: clamp(84px, 11vw, 132px);
+      left: 8%;
+      top: 82%;
+      width: clamp(80px, 10vw, 124px);
       z-index: 5;
       pointer-events: none;
-      filter: drop-shadow(0 16px 22px rgba(0,0,0,0.24));
-      opacity: 0.92;
+      filter: drop-shadow(0 14px 20px rgba(0,0,0,0.24));
+      opacity: 0.94;
       background: transparent !important;
       mix-blend-mode: normal;
+      will-change: left, top, transform, opacity;
     }
 
-   .constellation-shell.launched .wilson-ship {
-  animation: wilsonPatrol 14s linear infinite;
-}
-
-@keyframes wilsonPatrol {
-  0% {
-    left: 6%;
-    top: 83%;
-    opacity: 0;
-    transform: rotate(-10deg) scale(0.92);
-  }
-
-  6% {
-    left: 12%;
-    top: 80%;
-    opacity: 0.96;
-    transform: rotate(-8deg) scale(0.96);
-  }
-
-  18% {
-    left: 25%;
-    top: 68%;
-    opacity: 0.96;
-    transform: rotate(-5deg) scale(1);
-  }
-
-  34% {
-    left: 40%;
-    top: 54%;
-    opacity: 0.96;
-    transform: rotate(-1deg) scale(1.02);
-  }
-
-  50% {
-    left: 56%;
-    top: 39%;
-    opacity: 0.96;
-    transform: rotate(2deg) scale(1.02);
-  }
-
-  66% {
-    left: 70%;
-    top: 25%;
-    opacity: 0.94;
-    transform: rotate(4deg) scale(0.98);
-  }
-
-  80% {
-    left: 82%;
-    top: 14%;
-    opacity: 0.9;
-    transform: rotate(7deg) scale(0.94);
-  }
-
-  86% {
-    left: 88%;
-    top: 8%;
-    opacity: 0.75;
-    transform: rotate(9deg) scale(0.9);
-  }
-
-  87% {
-    left: 90%;
-    top: 6%;
-    opacity: 0;
-    transform: rotate(9deg) scale(0.88);
-  }
-
-  88% {
-    left: 4%;
-    top: 86%;
-    opacity: 0;
-    transform: rotate(-10deg) scale(0.88);
-  }
-
-  100% {
-    left: 4%;
-    top: 86%;
-    opacity: 0;
-    transform: rotate(-10deg) scale(0.88);
-  }
-}
-
-    .detail-card {
-      display: grid;
-      gap: 8px;
-      padding: 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,221,0.98));
-      border: 1px solid rgba(176, 150, 44, 0.18);
-      box-shadow: 0 18px 32px rgba(17,17,17,0.08);
+    .constellation-shell.launched .wilson-ship {
+      animation: wilsonPatrol 12s linear infinite;
     }
 
-    .detail-kicker {
-      font-size: 0.76rem;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #6f5f00;
-    }
+    @keyframes wilsonPatrol {
+      0% {
+        left: 8%;
+        top: 82%;
+        opacity: 0;
+        transform: rotate(-8deg) scale(0.94);
+      }
 
-    .detail-name {
-      font-size: clamp(1.2rem, 2.6vw, 1.7rem);
-      font-weight: 900;
-      line-height: 1.1;
-    }
+      6% {
+        left: 12%;
+        top: 78%;
+        opacity: 1;
+        transform: rotate(-7deg) scale(0.97);
+      }
 
-    .detail-role {
-      color: #4a4a4a;
-      font-weight: 700;
-      line-height: 1.55;
-    }
+      22% {
+        left: 26%;
+        top: 64%;
+        opacity: 1;
+        transform: rotate(-4deg) scale(1);
+      }
 
-    .detail-closing {
-      color: #5e5e5e;
-      line-height: 1.6;
-    }
+      40% {
+        left: 42%;
+        top: 50%;
+        opacity: 1;
+        transform: rotate(-1deg) scale(1.01);
+      }
 
-    .footer-note {
-      text-align: center;
-      color: #606060;
-      font-size: 0.9rem;
-      line-height: 1.55;
-      max-width: 70ch;
-      margin: 0 auto;
+      58% {
+        left: 58%;
+        top: 36%;
+        opacity: 1;
+        transform: rotate(2deg) scale(1.01);
+      }
+
+      76% {
+        left: 72%;
+        top: 23%;
+        opacity: 1;
+        transform: rotate(5deg) scale(0.98);
+      }
+
+      90% {
+        left: 84%;
+        top: 12%;
+        opacity: 0.95;
+        transform: rotate(7deg) scale(0.95);
+      }
+
+      94% {
+        left: 88%;
+        top: 8%;
+        opacity: 0;
+        transform: rotate(8deg) scale(0.92);
+      }
+
+      95% {
+        left: 8%;
+        top: 82%;
+        opacity: 0;
+        transform: rotate(-8deg) scale(0.94);
+      }
+
+      100% {
+        left: 8%;
+        top: 82%;
+        opacity: 0;
+        transform: rotate(-8deg) scale(0.94);
+      }
     }
 
     @media (max-width: 900px) {
@@ -702,12 +692,16 @@
         padding: 5px 8px;
       }
 
+      .role-band-note {
+        font-size: 0.6rem;
+      }
+
       .leader-tag {
         font-size: 0.66rem;
       }
 
       .wilson-ship {
-        width: 100px;
+        width: 96px;
       }
     }
 
@@ -729,8 +723,8 @@
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
       <p>
-        Let’s first shout out the leaders who support the leaders who support your stores.
-        Each point of light represents someone helping connect day-to-day store support with the broader leadership team and the company as a whole.
+        Let’s first shout out the senior leadership that supports your unit managers.
+        Each point of light represents someone helping connect day-to-day field support with the broader leadership team and the company as a whole.
       </p>
     </section>
 
@@ -750,7 +744,7 @@
         <div class="chip-row" id="filterChips"></div>
 
         <div class="status-note" id="statusNote">
-          Add <strong>leaders.csv</strong> and <strong>spaceship.gif</strong> to this same folder, then click Launch Constellation.
+          Add <strong>leaders.csv</strong> and <strong>spaceship.png</strong> to this same folder, then click Launch Constellation.
         </div>
       </div>
 
@@ -765,7 +759,7 @@
               <div class="overlay-kicker">Wilson Leads the Way</div>
               <h2>Launch the Leadership Constellation</h2>
               <p>
-                Wilson Waffle kicks things off, then the constellation lights up with the leaders who help support the field.
+                Wilson Waffle kicks things off, then the constellation lights up with the senior leadership that helps support your unit managers across the field.
               </p>
               <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
             </div>
@@ -780,31 +774,17 @@
           </div>
 
           <div class="label-layer" id="labelLayer"></div>
+          <div class="placeholder-layer" id="placeholderLayer"></div>
           <div class="node-layer" id="nodeLayer"></div>
 
           <img
-            src="spaceship.gif"
+            src="spaceship.png"
             alt="Wilson Waffle flying in a spaceship"
             class="wilson-ship"
             id="wilsonShip"
           />
         </div>
       </div>
-
-      <div class="detail-card" id="detailCard">
-        <div class="detail-kicker">Recognition Spotlight</div>
-        <div class="detail-name" id="detailName">Ready for launch</div>
-        <div class="detail-role" id="detailRole">
-          Click a point of light to spotlight a leader.
-        </div>
-        <div class="detail-closing" id="detailClosing">
-          Every name helps light the way for our stores, our associates, and the company as a whole.
-        </div>
-      </div>
-
-      <p class="footer-note">
-        This page accepts either your current wide export with leadership columns or a simple two-column CSV using <strong>Name</strong> and <strong>Role</strong>. Duplicate names in the same role are automatically grouped into one point of light.
-      </p>
     </section>
   </main>
 
@@ -812,13 +792,19 @@
     const CSV_URL = "leaders.csv";
 
     const ROLE_META = [
-      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 86, y: 13 },
-      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 74, y: 24 },
-      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 60, y: 38 },
-      { key: "division_manager", label: "Division Manager", short: "Division", x: 46, y: 53 },
-      { key: "district_manager", label: "District Manager", short: "District", x: 32, y: 66 },
-      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 18, y: 80 }
+      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 84, y: 14, active: true },
+      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 72, y: 26, active: true },
+      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40, active: true },
+      { key: "division_manager", label: "Division Manager", short: "Division", x: 42, y: 56, active: true },
+      { key: "district_manager", label: "District Manager", short: "District", x: 26, y: 74, active: true },
+
+      /* Keep Unit visible in the design, but inactive for now.
+         If you ever want to activate live unit manager data later,
+         change active: false to active: true. */
+      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 14, y: 86, active: false, placeholder: true }
     ];
+
+    const ACTIVE_ROLES = ROLE_META.filter((role) => role.active);
 
     const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
 
@@ -842,14 +828,10 @@
       { name: "Taylor Brooks", role: "Area / Region Manager" },
       { name: "Morgan Hayes", role: "Division Manager" },
       { name: "Avery Bennett", role: "District Manager" },
-      { name: "Riley Carter", role: "Unit Manager" },
       { name: "Devon Price", role: "Area / Region Manager" },
       { name: "Harper Stone", role: "Division Manager" },
       { name: "Jamie Palmer", role: "District Manager" },
-      { name: "Cameron Ellis", role: "Unit Manager" },
       { name: "Alex Turner", role: "District Manager" },
-      { name: "Parker Reed", role: "Unit Manager" },
-      { name: "Sydney Morgan", role: "Unit Manager" },
       { name: "Dakota Lane", role: "Division Manager" }
     ];
 
@@ -867,9 +849,7 @@
     const lineGroup = document.getElementById("lineGroup");
     const starfield = document.getElementById("starfield");
     const filterChips = document.getElementById("filterChips");
-    const detailName = document.getElementById("detailName");
-    const detailRole = document.getElementById("detailRole");
-    const detailClosing = document.getElementById("detailClosing");
+    const placeholderLayer = document.getElementById("placeholderLayer");
 
     let leaders = [];
     let launched = false;
@@ -940,8 +920,9 @@
         const name = (row[headerIndex.name] || "").trim();
         const roleRaw = (row[headerIndex.role] || "").trim();
         const roleKey = canonicalRoleFromString(roleRaw);
+        const roleMeta = ROLE_KEY_MAP[roleKey];
 
-        if (!name || !roleKey) return;
+        if (!name || !roleKey || !roleMeta || !roleMeta.active) return;
 
         const uniqueKey = `${name.toLowerCase()}|${roleKey}`;
         if (seen.has(uniqueKey)) return;
@@ -964,6 +945,8 @@
 
       rows.forEach((row) => {
         ROLE_META.forEach((role) => {
+          if (!role.active) return;
+
           const idx = headerMap[role.key];
           if (idx === undefined) return;
 
@@ -1020,6 +1003,16 @@
       return [];
     }
 
+    function seededValue(input) {
+      let hash = 0;
+      const text = String(input || "");
+      for (let i = 0; i < text.length; i++) {
+        hash = ((hash << 5) - hash) + text.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash) / 2147483647;
+    }
+
     function updateConstellationScrollHint() {
       if (!constellationScroll || !constellationScrollHint) return;
 
@@ -1035,48 +1028,22 @@
       );
     }
 
-    async function loadLeaders() {
-      try {
-        const response = await fetch(CSV_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error("CSV not found");
+    function centerConstellationIntro(smooth = false) {
+      if (!constellationScroll) return;
 
-        const text = await response.text();
-        const parsed = parseLeadersCSV(text);
-
-        if (!parsed.length) throw new Error("No usable leader rows found");
-
-        leaders = parsed;
-        usingDemoData = false;
-        statusNote.innerHTML = `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
-      } catch (error) {
-        leaders = DEMO_LEADERS.map((item) => {
-          const roleKey = canonicalRoleFromString(item.role);
-          return {
-            id: `${item.name.toLowerCase()}-${roleKey}`.replace(/[^\w]/g, "-"),
-            name: item.name,
-            roleKey,
-            roleLabel: roleLabelFromKey(roleKey)
-          };
-        });
-
-        usingDemoData = true;
-        statusNote.innerHTML = `Could not read <strong>leaders.csv</strong>, so demo leader data is showing for preview.`;
+      if (window.innerWidth > 700) {
+        constellationScroll.scrollLeft = 0;
+        return;
       }
 
-      buildFilterChips();
-      buildStarfield();
-      renderConstellation();
-      setTimeout(updateConstellationScrollHint, 60);
-    }
+      const maxScroll = Math.max(0, constellationScroll.scrollWidth - constellationScroll.clientWidth);
+      const target = maxScroll / 2;
 
-    function seededValue(input) {
-      let hash = 0;
-      const text = String(input || "");
-      for (let i = 0; i < text.length; i++) {
-        hash = ((hash << 5) - hash) + text.charCodeAt(i);
-        hash |= 0;
+      if (smooth) {
+        constellationScroll.scrollTo({ left: target, behavior: "smooth" });
+      } else {
+        constellationScroll.scrollLeft = target;
       }
-      return Math.abs(hash) / 2147483647;
     }
 
     function buildStarfield() {
@@ -1111,7 +1078,7 @@
       });
       filterChips.appendChild(allChip);
 
-      ROLE_META.forEach((role) => {
+      ACTIVE_ROLES.forEach((role) => {
         const chip = document.createElement("button");
         chip.type = "button";
         chip.className = `chip ${activeRoleFilter === role.key ? "active" : ""}`;
@@ -1123,11 +1090,22 @@
         });
         filterChips.appendChild(chip);
       });
+
+      const unitRole = ROLE_META.find((role) => role.key === "unit_manager");
+      if (unitRole) {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip disabled";
+        chip.textContent = unitRole.short;
+        chip.setAttribute("aria-disabled", "true");
+        chip.title = "Visual placeholder only for now";
+        filterChips.appendChild(chip);
+      }
     }
 
     function getGroupedLeaders() {
       const grouped = {};
-      ROLE_META.forEach((role) => {
+      ACTIVE_ROLES.forEach((role) => {
         grouped[role.key] = leaders.filter((leader) => leader.roleKey === role.key);
       });
       return grouped;
@@ -1137,7 +1115,7 @@
       const grouped = getGroupedLeaders();
       const positioned = [];
 
-      ROLE_META.forEach((role) => {
+      ACTIVE_ROLES.forEach((role) => {
         const people = grouped[role.key].slice().sort((a, b) => a.name.localeCompare(b.name));
         const count = people.length || 1;
         const baseRadius = Math.max(5, Math.min(16, 7 + count * 0.65));
@@ -1184,13 +1162,13 @@
       lineGroup.innerHTML = "";
 
       const grouped = {};
-      ROLE_META.forEach((role) => {
+      ACTIVE_ROLES.forEach((role) => {
         grouped[role.key] = visibleLeaders.filter((leader) => leader.roleKey === role.key && leader.passesFilter);
       });
 
-      for (let i = 0; i < ROLE_META.length - 1; i++) {
-        const currentRole = ROLE_META[i];
-        const nextRole = ROLE_META[i + 1];
+      for (let i = 0; i < ACTIVE_ROLES.length - 1; i++) {
+        const currentRole = ACTIVE_ROLES[i];
+        const nextRole = ACTIVE_ROLES[i + 1];
 
         grouped[currentRole.key].forEach((leader) => {
           if (!grouped[nextRole.key].length) return;
@@ -1231,28 +1209,71 @@
 
       ROLE_META.forEach((role) => {
         const label = document.createElement("div");
-        label.className = "role-band-label";
+        label.className = `role-band-label ${role.active ? "" : "inactive"}`;
         label.textContent = role.short;
         label.style.left = `${role.x}%`;
         label.style.top = `${Math.max(4, role.y - 7)}%`;
         label.style.transform = "translate(-50%, -50%)";
         labelLayer.appendChild(label);
+
+        if (!role.active && role.key === "unit_manager") {
+          const note = document.createElement("div");
+          note.className = "role-band-note";
+          note.textContent = "≈ 2,000 unit managers";
+          note.style.left = `${role.x}%`;
+          note.style.top = `${Math.min(94, role.y + 4)}%`;
+          labelLayer.appendChild(note);
+        }
       });
     }
 
-    function updateDetailCard(leader) {
-      if (!leader) {
-        detailName.textContent = launched ? "Constellation launched" : "Ready for launch";
-        detailRole.textContent = launched
-          ? "Click a point of light to spotlight a leader."
-          : "Click Launch Constellation to begin.";
-        detailClosing.textContent = "Every name helps light the way for our stores, our associates, and the company as a whole.";
-        return;
+    function buildUnitPlaceholder() {
+      placeholderLayer.innerHTML = "";
+
+      const unitRole = ROLE_META.find((role) => role.key === "unit_manager");
+      const districtRole = ROLE_META.find((role) => role.key === "district_manager");
+      if (!unitRole || !districtRole) return;
+
+      const placeholderPoints = [];
+
+      for (let i = 0; i < 88; i++) {
+        const seedA = seededValue(`unit-a-${i}`);
+        const seedB = seededValue(`unit-b-${i}`);
+        const seedC = seededValue(`unit-c-${i}`);
+
+        const angle = seedA * Math.PI * 2;
+        const radiusX = 9 + (seedB * 7);
+        const radiusY = 4.5 + (seedC * 4.8);
+
+        const x = Math.max(4, Math.min(30, unitRole.x + Math.cos(angle) * radiusX));
+        const y = Math.max(74, Math.min(95, unitRole.y + Math.sin(angle) * radiusY));
+
+        placeholderPoints.push({ x, y });
+
+        const dot = document.createElement("span");
+        dot.className = "unit-placeholder-dot";
+        const size = 3 + Math.floor(seedA * 3);
+        dot.style.width = `${size}px`;
+        dot.style.height = `${size}px`;
+        dot.style.left = `${x}%`;
+        dot.style.top = `${y}%`;
+        dot.style.transform = "translate(-50%, -50%)";
+        dot.style.opacity = (0.14 + seedB * 0.22).toFixed(2);
+        placeholderLayer.appendChild(dot);
       }
 
-      detailName.textContent = leader.name;
-      detailRole.textContent = leader.roleLabel;
-      detailClosing.textContent = `${leader.name} is one of the leaders helping connect day-to-day store support with the broader leadership team and the company as a whole.`;
+      for (let i = 0; i < 14; i++) {
+        const target = placeholderPoints[i * 4];
+        if (!target) continue;
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", districtRole.x);
+        line.setAttribute("y1", districtRole.y);
+        line.setAttribute("x2", target.x);
+        line.setAttribute("y2", target.y);
+        line.setAttribute("class", "constellation-line placeholder");
+        lineGroup.appendChild(line);
+      }
     }
 
     function renderNodes(visibleLeaders) {
@@ -1287,8 +1308,7 @@
         `;
 
         button.addEventListener("click", () => {
-          activeLeaderId = leader.id;
-          updateDetailCard(leader);
+          activeLeaderId = activeLeaderId === leader.id ? "" : leader.id;
           renderConstellation();
         });
 
@@ -1303,8 +1323,17 @@
       const visibleLeaders = getVisibleLeaders(positionedLeaders);
 
       buildLines(visibleLeaders);
+      buildUnitPlaceholder();
       renderNodes(visibleLeaders);
       setTimeout(updateConstellationScrollHint, 30);
+    }
+
+    function statusDefaultText() {
+      const unitNote = " Unit Managers are currently shown as a faded visual placeholder.";
+      if (usingDemoData) {
+        return `Could not read <strong>leaders.csv</strong>, so demo leadership data is showing for preview.${unitNote}`;
+      }
+      return `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.${unitNote}`;
     }
 
     function launchConstellation() {
@@ -1312,14 +1341,13 @@
       constellationShell.classList.add("launched");
       constellationOverlay.classList.add("hidden");
       activeLeaderId = "";
-      updateDetailCard(null);
+
+      centerConstellationIntro(false);
       renderConstellation();
 
       statusNote.innerHTML = usingDemoData
-        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders.`
-        : `Constellation launched with <strong>${leaders.length}</strong> leaders.`;
-
-      setTimeout(updateConstellationScrollHint, 60);
+        ? `Constellation launched with <strong>${leaders.length}</strong> demo leaders. Unit Managers remain a faded visual placeholder.`
+        : `Constellation launched with <strong>${leaders.length}</strong> leaders. Unit Managers remain a faded visual placeholder.`;
     }
 
     function resetView() {
@@ -1328,12 +1356,50 @@
       activeLeaderId = "";
       searchInput.value = "";
       buildFilterChips();
-      updateDetailCard(null);
       renderConstellation();
+      statusNote.innerHTML = statusDefaultText();
 
-      statusNote.innerHTML = usingDemoData
-        ? `Showing <strong>${leaders.length}</strong> demo leaders.`
-        : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
+      setTimeout(() => {
+        centerConstellationIntro(false);
+        updateConstellationScrollHint();
+      }, 80);
+    }
+
+    async function loadLeaders() {
+      try {
+        const response = await fetch(CSV_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error("CSV not found");
+
+        const text = await response.text();
+        const parsed = parseLeadersCSV(text);
+
+        if (!parsed.length) throw new Error("No usable leader rows found");
+
+        leaders = parsed;
+        usingDemoData = false;
+      } catch (error) {
+        leaders = DEMO_LEADERS.map((item) => {
+          const roleKey = canonicalRoleFromString(item.role);
+          return {
+            id: `${item.name.toLowerCase()}-${roleKey}`.replace(/[^\w]/g, "-"),
+            name: item.name,
+            roleKey,
+            roleLabel: roleLabelFromKey(roleKey)
+          };
+        });
+
+        usingDemoData = true;
+      }
+
+      buildFilterChips();
+      buildStarfield();
+      renderConstellation();
+      statusNote.innerHTML = statusDefaultText();
+
+      setTimeout(() => {
+        centerConstellationIntro(false);
+        updateConstellationScrollHint();
+      }, 80);
     }
 
     searchInput.addEventListener("input", (event) => {
@@ -1348,11 +1414,9 @@
       } else {
         statusNote.classList.remove("error");
         if (activeSearch) {
-          statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}.`;
-        } else if (leaders.length) {
-          statusNote.innerHTML = usingDemoData
-            ? `Showing <strong>${leaders.length}</strong> demo leaders.`
-            : `Loaded <strong>${leaders.length}</strong> leaders from <strong>leaders.csv</strong>.`;
+          statusNote.innerHTML = `Showing <strong>${matches}</strong> search result${matches === 1 ? "" : "s"}. Unit Managers remain a faded visual placeholder.`;
+        } else {
+          statusNote.innerHTML = statusDefaultText();
         }
       }
     });
@@ -1366,10 +1430,14 @@
     overlayLaunchBtn.addEventListener("click", launchConstellation);
     resetBtn.addEventListener("click", resetView);
 
-    window.addEventListener("resize", updateConstellationScrollHint);
-    window.addEventListener("resize", renderConstellation);
+    window.addEventListener("resize", () => {
+      renderConstellation();
+      setTimeout(() => {
+        centerConstellationIntro(false);
+        updateConstellationScrollHint();
+      }, 80);
+    });
 
-    updateDetailCard(null);
     loadLeaders();
   </script>
 </body>
