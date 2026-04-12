@@ -69,7 +69,12 @@
       background: #fff;
       color: #1e1e1e;
       box-shadow: 0 8px 16px rgba(17, 17, 17, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease,
+        opacity 0.18s ease;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -153,7 +158,7 @@
 
     .hero p {
       margin: 12px auto 0;
-      max-width: 66ch;
+      max-width: 68ch;
       color: #474747;
       line-height: 1.65;
       font-size: 1rem;
@@ -348,10 +353,6 @@
       transition: opacity 0.22s ease;
     }
 
-    .constellation-line.dimmed {
-      opacity: 0.08;
-    }
-
     .label-layer {
       z-index: 3;
       pointer-events: none;
@@ -361,15 +362,16 @@
       position: absolute;
       padding: 7px 11px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.82);
+      background: rgba(12, 24, 52, 0.82);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.96);
       font-size: 0.72rem;
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(4px);
       white-space: nowrap;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.18);
     }
 
     .node-layer {
@@ -657,7 +659,11 @@
       <div class="eyebrow">Leadership Lights the Way</div>
       <h1>Leadership Constellation</h1>
       <p>
-        Let’s first celebrate the leadership teams that help drive your unit’s success. Each point of light represents someone connecting the day-to-day work of the field to the bigger picture, where the pride you take in your work helps strengthen your unit, your unit helps strengthen the company, and every person plays a part in making Waffle House America’s Place.
+        Let’s first celebrate the leadership teams that help drive your unit’s success.
+        Each point of light represents someone connecting the day-to-day work of the field
+        to the bigger picture, where the pride you take in your work helps strengthen your unit,
+        your unit helps strengthen the company, and every person plays a part in making
+        Waffle House America’s Place.
       </p>
     </section>
 
@@ -685,7 +691,8 @@
             <div class="overlay-card">
               <h2>Launch the Leadership Constellation</h2>
               <p>
-                Tap below to light up the leadership groups that support your unit managers and help move every unit forward.
+                Tap below to light up the leadership groups that support your unit managers
+                and help move every unit forward.
               </p>
               <button id="overlayLaunchBtn" class="btn primary" type="button">Start Launch</button>
             </div>
@@ -717,12 +724,12 @@
     const CSV_URL = "leaders.csv";
 
     const ROLE_META = [
-      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 78, y: 18 },
-      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 68, y: 28 },
-      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40 },
-      { key: "division_manager", label: "Division Manager", short: "Division", x: 46, y: 55 },
-      { key: "district_manager", label: "District Manager", short: "District", x: 34, y: 69 },
-      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 24, y: 82 }
+      { key: "executive_vice_president", label: "Executive Vice President", short: "EVP", x: 78, y: 18, labelX: 78, labelY: 9 },
+      { key: "senior_vice_president", label: "Senior Vice President", short: "SVP", x: 68, y: 28, labelX: 68, labelY: 18 },
+      { key: "area_region_manager", label: "Area / Region Manager", short: "Area / Region", x: 58, y: 40, labelX: 17, labelY: 32 },
+      { key: "division_manager", label: "Division Manager", short: "Division", x: 46, y: 55, labelX: 15, labelY: 48 },
+      { key: "district_manager", label: "District Manager", short: "District", x: 34, y: 69, labelX: 13, labelY: 63 },
+      { key: "unit_manager", label: "Unit Manager", short: "Unit", x: 24, y: 82, labelX: 12, labelY: 79 }
     ];
 
     const ROLE_KEY_MAP = Object.fromEntries(ROLE_META.map((item) => [item.key, item]));
@@ -1145,8 +1152,8 @@
         const label = document.createElement("div");
         label.className = "role-band-label";
         label.textContent = role.short;
-        label.style.left = `${role.x}%`;
-        label.style.top = `${Math.max(4, role.y - 7)}%`;
+        label.style.left = `${role.labelX ?? role.x}%`;
+        label.style.top = `${role.labelY ?? Math.max(4, role.y - 7)}%`;
         label.style.transform = "translate(-50%, -50%)";
         frag.appendChild(label);
       });
@@ -1337,3 +1344,4 @@
   </script>
 </body>
 </html>
+
