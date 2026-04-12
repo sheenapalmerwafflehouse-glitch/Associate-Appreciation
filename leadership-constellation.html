@@ -451,11 +451,6 @@
     @media (max-width: 900px) {
       .stage { min-height: 500px; }
       .name-list { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 700px) {
-      body { padding: 12px; }
-      .card, .stage { border-radius: 24px; }
 
       .stage-scroll {
         overflow-x: auto;
@@ -465,6 +460,21 @@
         padding-bottom: 4px;
         scrollbar-width: thin;
       }
+
+      .stage {
+        width: clamp(900px, 150vw, 1180px);
+        min-height: 520px;
+      }
+
+      .stage.single-role-mobile {
+        width: 100%;
+        min-height: 500px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 12px; }
+      .card, .stage { border-radius: 24px; }
 
       .stage {
         width: clamp(760px, 182vw, 1040px);
@@ -536,7 +546,7 @@
       <div class="eyebrow">Celebration Constellation</div>
       <h1>Where Leadership Shines</h1>
       <div class="hero-copy">
-       To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that "All-Star" light up in the constellation 🌟.
+        To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that "All-Star" light up in the constellation 🌟.
       </div>
     </section>
 
@@ -566,7 +576,7 @@
       </div>
     </section>
 
-    <section class="card list-card">
+    <section class="card list-card" id="listSection" hidden>
       <div class="list-head">
         <h2 class="list-title">Leadership Roll Call</h2>
         <div class="list-meta" id="listMeta">Loading list…</div>
@@ -662,15 +672,6 @@
       "executive_vice_president"
     ];
 
-    const ALL_ROLE_STAGE_ORDER = [
-      "unit_manager",
-      "district_manager",
-      "division_manager",
-      "area_region_manager",
-      "senior_vice_president",
-      "executive_vice_president"
-    ];
-
     const ALL_ROLE_LAYOUT = {
       executive_vice_president: { cx: 0.90, cy: 0.15, rx: 0.07, ry: 0.06, size: 4.9, lineAlpha: 0.34 },
       senior_vice_president:    { cx: 0.82, cy: 0.28, rx: 0.08, ry: 0.07, size: 4.4, lineAlpha: 0.30 },
@@ -733,6 +734,7 @@
     const shipCardName = document.getElementById("shipCardName");
     const shipCardRole = document.getElementById("shipCardRole");
 
+    const listSection = document.getElementById("listSection");
     const nameList = document.getElementById("nameList");
     const emptyState = document.getElementById("emptyState");
     const listMeta = document.getElementById("listMeta");
@@ -763,6 +765,7 @@
     let currentPage = 1;
     let hintDismissed = false;
     let listSearchQuery = "";
+    let suppressHintDismiss = false;
 
     let shipImage = null;
     let animationId = 0;
@@ -956,6 +959,10 @@
       return window.innerWidth <= 700;
     }
 
+    function usesScrollableStage() {
+      return window.innerWidth <= 900;
+    }
+
     function isSingleRole() {
       return activeRole !== "all";
     }
@@ -1011,7 +1018,6 @@
       const order = getActiveOrder();
       const q = normalizeSearch(listSearchQuery);
       if (!q) return order;
-
       return order.filter((leader) => leader.name.toLowerCase().includes(q));
     }
 
@@ -1692,22 +1698,31 @@
 
     function updateScrollHint() {
       const canScroll = stageScroll.scrollWidth > stageScroll.clientWidth + 8;
-      const shouldShow = isMobile() && activeRole === "all" && canScroll && !hintDismissed;
+      const shouldShow = usesScrollableStage() && activeRole === "all" && canScroll && !hintDismissed;
       scrollHint.classList.toggle("show", shouldShow);
     }
 
     function positionStageScroll() {
-      if (!isMobile()) {
+      if (!usesScrollableStage()) {
         stageScroll.scrollLeft = 0;
         return;
       }
 
+      suppressHintDismiss = true;
+
       if (activeRole === "all") {
         const maxScroll = Math.max(0, stageScroll.scrollWidth - stageScroll.clientWidth);
-        stageScroll.scrollLeft = maxScroll * 0.18;
+        stageScroll.scrollLeft = maxScroll / 2;
       } else {
         stageScroll.scrollLeft = 0;
       }
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          suppressHintDismiss = false;
+          updateScrollHint();
+        });
+      });
     }
 
     function restartFlight() {
@@ -1722,7 +1737,16 @@
     }
 
     function renderPagedList() {
-      const baseOrder = getActiveOrder();
+      if (activeRole === "all") {
+        nameList.innerHTML = "";
+        emptyState.hidden = true;
+        listMeta.textContent = "";
+        pagerInfo.textContent = "";
+        prevPageBtn.disabled = true;
+        nextPageBtn.disabled = true;
+        return;
+      }
+
       const filteredOrder = getFilteredActiveOrder();
       const total = filteredOrder.length;
       const perPage = pageSize();
@@ -1754,8 +1778,6 @@
 
       if (searching) {
         listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} matches in ${ROLE_META_MAP[activeRole].label}`;
-      } else if (activeRole === "all") {
-        listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} leaders`;
       } else {
         listMeta.textContent = `Showing ${start + 1}–${end} of ${total.toLocaleString()} ${ROLE_META_MAP[activeRole].label}${total === 1 ? "" : "s"}`;
       }
@@ -1773,11 +1795,7 @@
         subtitle.textContent = ROLE_META_MAP[leader.roleKey].label;
 
         li.appendChild(title);
-
-        if (activeRole === "all") {
-          li.appendChild(subtitle);
-        }
-
+        li.appendChild(subtitle);
         nameList.appendChild(li);
       });
 
@@ -1792,13 +1810,19 @@
       updateMapBadge();
       updateSearchUI();
 
-      stage.classList.toggle("single-role-mobile", isMobile() && isSingleRole());
+      const showListSection = activeRole !== "all";
+      listSection.hidden = !showListSection;
+
+      stage.classList.toggle("single-role-mobile", usesScrollableStage() && isSingleRole());
 
       resizeCanvas();
       renderStaticScene();
       positionStageScroll();
       updateScrollHint();
-      renderPagedList();
+
+      if (showListSection) {
+        renderPagedList();
+      }
     }
 
     async function loadLeaders() {
@@ -1864,7 +1888,9 @@
     });
 
     stageScroll.addEventListener("scroll", () => {
-      if (stageScroll.scrollLeft > 12) hintDismissed = true;
+      if (!suppressHintDismiss && stageScroll.scrollLeft > 12) {
+        hintDismissed = true;
+      }
       updateScrollHint();
     }, { passive: true });
 
