@@ -295,8 +295,8 @@
       position: absolute;
       z-index: 6;
       pointer-events: none;
-      min-width: 170px;
-      max-width: 220px;
+      min-width: 176px;
+      max-width: 230px;
       padding: 10px 12px;
       border-radius: 18px;
       background: rgba(255,255,255,0.95);
@@ -464,7 +464,7 @@
 
       .ship-trail {
         min-width: 150px;
-        max-width: 185px;
+        max-width: 190px;
         padding: 9px 10px;
       }
     }
@@ -566,7 +566,7 @@
 
   <script>
     const CSV_URL = "leaders.csv";
-    const SHIP_SRC = "spaceship.png"; // change only if your file name is different
+    const SHIP_SRC = "spaceship.png";
 
     const ROLE_META = [
       {
@@ -652,12 +652,12 @@
     };
 
     const ALL_ROLE_STAGE_WINDOWS = [
-      { roleKey: "unit_manager", start: 0.00, end: 0.22 },
-      { roleKey: "district_manager", start: 0.22, end: 0.41 },
-      { roleKey: "division_manager", start: 0.41, end: 0.58 },
-      { roleKey: "area_region_manager", start: 0.58, end: 0.74 },
-      { roleKey: "senior_vice_president", start: 0.74, end: 0.88 },
-      { roleKey: "executive_vice_president", start: 0.88, end: 0.97 }
+      { roleKey: "unit_manager", start: 0.00, end: 0.25 },
+      { roleKey: "district_manager", start: 0.25, end: 0.43 },
+      { roleKey: "division_manager", start: 0.43, end: 0.59 },
+      { roleKey: "area_region_manager", start: 0.59, end: 0.75 },
+      { roleKey: "senior_vice_president", start: 0.75, end: 0.87 },
+      { roleKey: "executive_vice_president", start: 0.87, end: 0.93 }
     ];
 
     const ROLE_ALIAS_MAP = {
@@ -1000,10 +1000,10 @@
 
     function buildTwinkleStars() {
       twinkleStars = [];
-      const count = isMobile() ? 42 : 64;
+      const count = isMobile() ? 44 : 68;
       let attempts = 0;
 
-      while (twinkleStars.length < count && attempts < 1000) {
+      while (twinkleStars.length < count && attempts < 1200) {
         attempts += 1;
 
         const x = seededValue(`twinkle-x-${attempts}`);
@@ -1268,7 +1268,10 @@
 
     function getShipFlight(now) {
       const elapsed = Math.max(0, now - flightStartMs);
-      const cycleMs = activeRole === "all" ? 10500 : 8500;
+
+      // Slower pace here
+      const cycleMs = activeRole === "all" ? 13800 : 10800;
+
       const t = (elapsed % cycleMs) / cycleMs;
 
       const startX = stageWidth * 0.12;
@@ -1278,12 +1281,12 @@
       let endY;
 
       if (activeRole === "all") {
-        endX = stageWidth * 1.07;
-        endY = stageHeight * -0.04;
+        endX = stageWidth * 1.09;
+        endY = stageHeight * -0.06;
       } else {
         const layout = ROLE_META_MAP[activeRole].single;
-        endX = stageWidth * Math.min(1.05, layout.cx + 0.19);
-        endY = stageHeight * Math.max(-0.04, layout.cy - 0.26);
+        endX = stageWidth * Math.min(1.08, layout.cx + 0.20);
+        endY = stageHeight * Math.max(-0.06, layout.cy - 0.28);
       }
 
       const eased = 1 - Math.pow(1 - t, 2.75);
@@ -1332,11 +1335,16 @@
     }
 
     function updateShipTrail(shipState) {
-      if (!shipState || shipState.alpha < 0.10 || shipState.t >= 0.985) {
+      // Hide earlier so nothing new appears after he is basically gone
+      if (!shipState || shipState.alpha < 0.10 || shipState.t >= 0.93) {
         shipTrail.classList.remove("show");
-        if (activeRole === "all" && shipState && shipState.t >= 0.985) {
+        if (activeRole === "all" && shipState && shipState.t >= 0.93) {
           trailState.allStageKey = null;
           trailState.allLeader = null;
+        }
+        if (activeRole !== "all" && shipState && shipState.t >= 0.93) {
+          trailState.singleStep = -1;
+          trailState.singleLeader = null;
         }
         return;
       }
@@ -1363,7 +1371,9 @@
           return;
         }
 
-        const step = Math.floor(shipState.elapsed / 1800);
+        // Slightly slower switching here too
+        const step = Math.floor(shipState.elapsed / 2400);
+
         if (step !== trailState.singleStep) {
           trailState.singleStep = step;
           trailState.singleLeader = pool[step % pool.length];
