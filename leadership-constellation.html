@@ -550,7 +550,7 @@
       <div class="eyebrow">Celebration Constellation</div>
       <h1>Where Leadership Shines</h1>
       <div class="hero-copy">
-        To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that "All-Star" leader twinkle in the constellation 🌟.
+        To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that place in the constellation light up.
       </div>
     </section>
 
@@ -618,7 +618,6 @@
     const SHIP_SRC = "spaceship.png";
     const OMC_SRC = "omc.png";
 
-    /* Smaller logo directly under the yellow title badge */
     const OMC_PLACEMENT = {
       all:    { x: 0.50, y: 0.205, maxWMobile: 104, maxWDesktop: 118 },
       single: { x: 0.50, y: 0.205, maxWMobile: 104, maxWDesktop: 118 }
@@ -768,9 +767,7 @@
     let constellationPoints = {};
     let leaderPointMap = {};
     let listOrderByRole = {};
-    let flashPoolByRole = {};
-    let roleTrailIndexes = {};
-    let roleLoopOffsets = {};
+    let roleFlashState = {};
     let lastShownByRole = {};
     let activeRole = "all";
     let currentPage = 1;
@@ -790,7 +787,8 @@
       singleStep: -1,
       singleLeader: null,
       singleCycleIndex: -1,
-      singleRoleKey: null
+      singleRoleKey: null,
+      singleSequence: []
     };
 
     function normalizeText(value) {
@@ -989,37 +987,91 @@
       currentPage = 1;
     }
 
+    function createRoleQueue(roleKey, round = 0) {
+      return shuffleWithSeed((listOrderByRole[roleKey] || []).slice(), `role-queue-${roleKey}-${round}`);
+    }
+
+    function initializeRoleQueues() {
+      roleFlashState = {};
+      lastShownByRole = {};
+
+      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
+        roleFlashState[roleKey] = {
+          round: 0,
+          pool: createRoleQueue(roleKey, 0),
+          cursor: 0
+        };
+        lastShownByRole[roleKey] = null;
+      });
+    }
+
     function buildSessionOrders() {
       const lists = {};
-      const flashes = {};
 
       ROLE_DISPLAY_ORDER.forEach((roleKey) => {
         const roleLeaders = leaders.filter(leader => leader.roleKey === roleKey);
         lists[roleKey] = roleLeaders.slice().sort(compareLeadersByName);
-        flashes[roleKey] = shuffleWithSeed(roleLeaders.slice(), `flash-${roleKey}`);
       });
 
       lists.all = leaders.slice().sort(compareLeadersByName);
-
       listOrderByRole = lists;
-      flashPoolByRole = flashes;
+      initializeRoleQueues();
+    }
+
+    function getNextFromRoleQueue(roleKey) {
+      const state = roleFlashState[roleKey];
+      if (!state) return null;
+
+      const sourceList = listOrderByRole[roleKey] || [];
+      if (!sourceList.length) return null;
+
+      if (!state.pool.length) {
+        state.pool = createRoleQueue(roleKey, state.round);
+        state.cursor = 0;
+      }
+
+      let attempts = 0;
+
+      while (attempts < sourceList.length + 2) {
+        if (state.cursor >= state.pool.length) {
+          state.round += 1;
+          state.pool = createRoleQueue(roleKey, state.round);
+          state.cursor = 0;
+        }
+
+        const leader = state.pool[state.cursor];
+        state.cursor += 1;
+        attempts += 1;
+
+        if (!leader) continue;
+
+        if (state.pool.length > 1 && lastShownByRole[roleKey] && leaderKey(leader) === lastShownByRole[roleKey]) {
+          continue;
+        }
+
+        lastShownByRole[roleKey] = leaderKey(leader);
+        return leader;
+      }
+
+      return sourceList[0] || null;
+    }
+
+    function buildNextSingleCycleSequence(roleKey, amount) {
+      const poolSize = (listOrderByRole[roleKey] || []).length;
+      const count = Math.max(1, Math.min(poolSize || 1, amount));
+      const sequence = [];
+
+      for (let i = 0; i < count; i++) {
+        const leader = getNextFromRoleQueue(roleKey);
+        if (!leader) break;
+        sequence.push(leader);
+      }
+
+      return sequence;
     }
 
     function getNextLeaderForRole(roleKey) {
-      const pool = flashPoolByRole[roleKey] || [];
-      if (!pool.length) return null;
-
-      let index = roleTrailIndexes[roleKey] || 0;
-      let leader = pool[index % pool.length];
-
-      if (pool.length > 1 && leaderKey(leader) === lastShownByRole[roleKey]) {
-        index = (index + 1) % pool.length;
-        leader = pool[index];
-      }
-
-      roleTrailIndexes[roleKey] = (index + 1) % pool.length;
-      lastShownByRole[roleKey] = leaderKey(leader);
-      return leader;
+      return getNextFromRoleQueue(roleKey);
     }
 
     function getActiveOrder() {
@@ -1041,15 +1093,7 @@
     }
 
     function resetCardIndexes() {
-      roleTrailIndexes = {};
-      roleLoopOffsets = {};
-      lastShownByRole = {};
-
-      ROLE_DISPLAY_ORDER.forEach((roleKey) => {
-        roleTrailIndexes[roleKey] = 0;
-        roleLoopOffsets[roleKey] = 0;
-        lastShownByRole[roleKey] = null;
-      });
+      initializeRoleQueues();
 
       cardState = {
         allStageKey: null,
@@ -1057,7 +1101,8 @@
         singleStep: -1,
         singleLeader: null,
         singleCycleIndex: -1,
-        singleRoleKey: null
+        singleRoleKey: null,
+        singleSequence: []
       };
     }
 
@@ -1601,42 +1646,40 @@
       shipCard.style.top = `${top}px`;
     }
 
-   function positionCardForSingleRole() {
-  const layout = ROLE_META_MAP[activeRole].single;
-  const clusterX = stageWidth * layout.cx;
-  const clusterY = stageHeight * layout.cy;
+    function positionCardForSingleRole() {
+      const layout = ROLE_META_MAP[activeRole].single;
+      const clusterX = stageWidth * layout.cx;
+      const clusterY = stageHeight * layout.cy;
 
-  const mobile = isMobile();
-  let left = clusterX - (mobile ? 92 : 124);
-  let top = clusterY - (mobile ? 78 : 86);
+      const mobile = isMobile();
+      let left = clusterX - (mobile ? 92 : 124);
+      let top = clusterY - (mobile ? 78 : 86);
 
-  /* Keep the card off the OMC logo for the top roles */
-  if (mobile && activeRole === "executive_vice_president") {
-    left = stageWidth * 0.42;
-    top = stageHeight * 0.31;
-  } else if (mobile && activeRole === "senior_vice_president") {
-    left = stageWidth * 0.42;
-    top = stageHeight * 0.35;
-  } else if (!mobile && activeRole === "executive_vice_president") {
-    left = stageWidth * 0.37;
-    top = stageHeight * 0.27;
-  } else if (!mobile && activeRole === "senior_vice_president") {
-    left = stageWidth * 0.37;
-    top = stageHeight * 0.31;
-  }
+      if (mobile && activeRole === "executive_vice_president") {
+        left = stageWidth * 0.42;
+        top = stageHeight * 0.31;
+      } else if (mobile && activeRole === "senior_vice_president") {
+        left = stageWidth * 0.42;
+        top = stageHeight * 0.35;
+      } else if (!mobile && activeRole === "executive_vice_president") {
+        left = stageWidth * 0.37;
+        top = stageHeight * 0.27;
+      } else if (!mobile && activeRole === "senior_vice_president") {
+        left = stageWidth * 0.37;
+        top = stageHeight * 0.31;
+      }
 
-  const minLeft = mobile ? 92 : 110;
-  const maxLeft = stageWidth - (mobile ? 92 : 110);
-  const minTop = 74;
-  const maxTop = stageHeight - 72;
+      const minLeft = mobile ? 92 : 110;
+      const maxLeft = stageWidth - (mobile ? 92 : 110);
+      const minTop = 74;
+      const maxTop = stageHeight - 72;
 
-  left = Math.max(minLeft, Math.min(maxLeft, left));
-  top = Math.max(minTop, Math.min(maxTop, top));
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
 
-  shipCard.style.left = `${left}px`;
-  shipCard.style.top = `${top}px`;
-}
-
+      shipCard.style.left = `${left}px`;
+      shipCard.style.top = `${top}px`;
+    }
 
     function updateShipCard(shipState) {
       const shipGone =
@@ -1655,6 +1698,7 @@
         cardState.singleLeader = null;
         cardState.singleCycleIndex = -1;
         cardState.singleRoleKey = activeRole;
+        cardState.singleSequence = [];
         return;
       }
 
@@ -1691,9 +1735,10 @@
         cardState.singleCycleIndex = -1;
         cardState.singleStep = -1;
         cardState.singleLeader = null;
+        cardState.singleSequence = [];
       }
 
-      const pool = flashPoolByRole[activeRole] || [];
+      const pool = listOrderByRole[activeRole] || [];
       if (!pool.length) {
         shipCard.classList.remove("show");
         return;
@@ -1706,16 +1751,10 @@
       const stepsPerCycle = Math.max(1, Math.floor(spotlightMs / stepDuration));
 
       if (shipState.cycleIndex !== cardState.singleCycleIndex) {
-        if (cardState.singleCycleIndex >= 0) {
-          let nextOffset = ((roleLoopOffsets[activeRole] || 0) + stepsPerCycle) % pool.length;
-          if (pool.length > 1 && leaderKey(pool[nextOffset]) === lastShownByRole[activeRole]) {
-            nextOffset = (nextOffset + 1) % pool.length;
-          }
-          roleLoopOffsets[activeRole] = nextOffset;
-        }
         cardState.singleCycleIndex = shipState.cycleIndex;
         cardState.singleStep = -1;
         cardState.singleLeader = null;
+        cardState.singleSequence = buildNextSingleCycleSequence(activeRole, stepsPerCycle);
       }
 
       if (!shipState.spotlightActive || shipState.spotlightProgress < 0.06 || shipState.spotlightProgress > 0.98) {
@@ -1725,20 +1764,13 @@
 
       const spotlightElapsed = Math.max(0, (shipState.t - spotlightStart) * shipState.cycleMs);
       const step = Math.floor(spotlightElapsed / stepDuration);
-      const baseOffset = roleLoopOffsets[activeRole] || 0;
 
       if (step !== cardState.singleStep) {
-        let idx = (baseOffset + step) % pool.length;
-        let leader = pool[idx];
-
-        if (pool.length > 1 && leaderKey(leader) === lastShownByRole[activeRole]) {
-          idx = (idx + 1) % pool.length;
-          leader = pool[idx];
-        }
-
         cardState.singleStep = step;
-        cardState.singleLeader = leader;
-        lastShownByRole[activeRole] = leaderKey(leader);
+        if (cardState.singleSequence.length) {
+          const cappedIndex = Math.min(step, cardState.singleSequence.length - 1);
+          cardState.singleLeader = cardState.singleSequence[cappedIndex];
+        }
       }
 
       currentLeader = cardState.singleLeader;
@@ -1808,6 +1840,7 @@
       cardState.singleLeader = null;
       cardState.singleCycleIndex = -1;
       cardState.singleRoleKey = activeRole;
+      cardState.singleSequence = [];
       shipCard.classList.remove("show");
     }
 
