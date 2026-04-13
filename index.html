@@ -379,7 +379,42 @@ body::before {
       height: auto;
       object-fit: contain;
       transition: transform 0.4s ease;
-    }
+	  }
+   /* Celebration Constellation */
+#celebration-constellation .media-frame {
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Desktop */
+@media (min-width: 641px) {
+  #celebration-constellation .media-frame {
+    height: auto;
+  }
+
+  #celebration-constellation .media-frame img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    object-position: center center;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  #celebration-constellation .media-frame {
+    height: 380px;
+  }
+
+  #celebration-constellation .media-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
 
     .section-image-link:hover .media-frame img { transform: scale(1.03); }
     .section-copy { margin-top: 20px; }
@@ -3289,7 +3324,7 @@ body::before {
 <section id="celebration-constellation" class="section">
   <div class="section-head">
     <h2>Celebration Constellation</h2>
-
+</div>
   <div class="section-image-wrap" style="margin-top: 22px;">
     <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
       <div class="tilt-stage">
@@ -4261,8 +4296,8 @@ const applyRoadTripLayout = (levelKey = "base") => {
         { start: 111.2, end: 116.5, top: "68%", text: "Because of you each day" },
         { start: 116.7, end: 121.7, top: "22%", text: "So here’s to you" },
         { start: 121.5, end: 123.8, top: "40%", text: "Serving up egg-cellence" },
-        { start: 124.0, end: 126.8, top: "56%", text: "Serving up egg-cellence" },
-        { start: 126.9, end: 129.5, top: "72%", text: "Serving up egg-cellence" },
+        { start: 124.0, end: 126.5, top: "56%", text: "Serving up egg-cellence" },
+        { start: 126.6, end: 129.5, top: "72%", text: "Serving up egg-cellence" },
         { start: 136.6, end: 149.0, top: "42%", text: "Thank you" }
       ];
 
