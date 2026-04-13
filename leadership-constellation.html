@@ -1601,25 +1601,42 @@
       shipCard.style.top = `${top}px`;
     }
 
-    function positionCardForSingleRole() {
-      const layout = ROLE_META_MAP[activeRole].single;
-      const clusterX = stageWidth * layout.cx;
-      const clusterY = stageHeight * layout.cy;
+   function positionCardForSingleRole() {
+  const layout = ROLE_META_MAP[activeRole].single;
+  const clusterX = stageWidth * layout.cx;
+  const clusterY = stageHeight * layout.cy;
 
-      let left = clusterX - (isMobile() ? 92 : 124);
-      let top = clusterY - (isMobile() ? 78 : 86);
+  const mobile = isMobile();
+  let left = clusterX - (mobile ? 92 : 124);
+  let top = clusterY - (mobile ? 78 : 86);
 
-      const minLeft = isMobile() ? 92 : 110;
-      const maxLeft = stageWidth - (isMobile() ? 92 : 110);
-      const minTop = 74;
-      const maxTop = stageHeight - 72;
+  /* Keep the card off the OMC logo for the top roles */
+  if (mobile && activeRole === "executive_vice_president") {
+    left = stageWidth * 0.42;
+    top = stageHeight * 0.31;
+  } else if (mobile && activeRole === "senior_vice_president") {
+    left = stageWidth * 0.42;
+    top = stageHeight * 0.35;
+  } else if (!mobile && activeRole === "executive_vice_president") {
+    left = stageWidth * 0.37;
+    top = stageHeight * 0.27;
+  } else if (!mobile && activeRole === "senior_vice_president") {
+    left = stageWidth * 0.37;
+    top = stageHeight * 0.31;
+  }
 
-      left = Math.max(minLeft, Math.min(maxLeft, left));
-      top = Math.max(minTop, Math.min(maxTop, top));
+  const minLeft = mobile ? 92 : 110;
+  const maxLeft = stageWidth - (mobile ? 92 : 110);
+  const minTop = 74;
+  const maxTop = stageHeight - 72;
 
-      shipCard.style.left = `${left}px`;
-      shipCard.style.top = `${top}px`;
-    }
+  left = Math.max(minLeft, Math.min(maxLeft, left));
+  top = Math.max(minTop, Math.min(maxTop, top));
+
+  shipCard.style.left = `${left}px`;
+  shipCard.style.top = `${top}px`;
+}
+
 
     function updateShipCard(shipState) {
       const shipGone =
