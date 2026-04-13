@@ -1504,7 +1504,7 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 7000;
+        const cycleMs = 9500;
         const cycleIndex = Math.floor(elapsed / cycleMs);
         const t = (elapsed % cycleMs) / cycleMs;
 
@@ -1747,7 +1747,7 @@
       const spotlightStart = 0.40;
       const spotlightEnd = 0.80;
       const spotlightMs = (spotlightEnd - spotlightStart) * shipState.cycleMs;
-      const stepDuration = Math.max(90, Math.min(320, Math.floor(spotlightMs / Math.max(1, pool.length))));
+      const stepDuration = Math.max(170, Math.min(520, Math.floor(spotlightMs / Math.max(1, pool.length))));
       const stepsPerCycle = Math.max(1, Math.floor(spotlightMs / stepDuration));
 
       if (shipState.cycleIndex !== cardState.singleCycleIndex) {
