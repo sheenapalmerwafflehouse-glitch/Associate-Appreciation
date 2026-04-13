@@ -5757,7 +5757,7 @@ const getRoadTripEndReason = () => {
   unlockRoadtripAudio();
   playCelebrationSelfieOpenSound();
 
-  const destination = openSelfiePageLink.getAttribute("href") || "selfie.html";
+  const destination = openSelfiePageLink.getAttribute("href") || "selfie.html?extrnlPage";
 
   window.setTimeout(() => {
     window.location.href = destination;
