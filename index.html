@@ -3337,7 +3337,7 @@ body::before {
   </div>
 
   <p>
-   This constellation reflects the leadership teams whose support helps every Unit shine! In a sky full of lights, it serves as a reminder of the power of collaboration and the shared commitment to building a better tomorrow.  
+   This constellation reflects the leadership teams whose support helps every Unit shine! In a sky full of lights, it serves as a reminder of the power of teamwork and the shared commitment to building a better tomorrow.  
   </p>
   <div class="links">
     <a
@@ -3462,17 +3462,16 @@ body::before {
   </div>
 
   <div class="video-frame">
-  <iframe
-    id="museum-tour-video"
-    data-src=https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479
-    src=https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479
-    title="Associate Museum Tour"
-    frameborder="0"
-    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen
-    loading="eager">
-  </iframe>
+    <iframe
+      src="https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+      title="Associate Museum Tour"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+      loading="lazy">
+    </iframe>
+  </div>
 </div>
 
 
@@ -3846,7 +3845,6 @@ body::before {
       const lyricScrubber = document.getElementById("lyric-scrubber");
       const lyricStage = document.getElementById("lyric-stage");
       const lyricBgVideo = document.getElementById("lyric-bg-video");
-      const museumTourVideo = document.getElementById("museum-tour-video");
       const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
       const roadtripModal = document.getElementById("roadtrip-game-modal");
       const openRoadtripGame = document.getElementById("open-roadtrip-game");
@@ -4406,31 +4404,6 @@ const scrollMiniNav = (direction) => {
   window.setTimeout(updateMiniNavArrows, 250);
 };
 
-const reloadMuseumTourVideo = () => {
-  if (!museumTourVideo) return;
-
-  const iframeSrc = museumTourVideo.dataset.src || museumTourVideo.getAttribute("src");
-  if (!iframeSrc) return;
-
-  museumTourVideo.setAttribute("src", "about:blank");
-
-  window.setTimeout(() => {
-    museumTourVideo.setAttribute("src", iframeSrc);
-  }, 0);
-};
-
-const isBackForwardRestore = (event) => {
-  const navEntries = performance.getEntriesByType?.("navigation") || [];
-  const navType = navEntries[0]?.type;
-  return !!event?.persisted || navType === "back_forward";
-};
-
-window.addEventListener("pageshow", (event) => {
-  if (isBackForwardRestore(event)) {
-    reloadMuseumTourVideo();
-  }
-});
-		
 updateProgressBar();
 setActiveMiniNav();
 
