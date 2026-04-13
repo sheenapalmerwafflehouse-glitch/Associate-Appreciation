@@ -3464,8 +3464,8 @@ body::before {
   <div class="video-frame">
   <iframe
     id="museum-tour-video"
-    data-src=https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479
-    src=https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479
+    data-src="https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+    src="https://player.vimeo.com/video/1181986664?h=caabdeb290&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
     title="Associate Museum Tour"
     frameborder="0"
     allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
@@ -3474,6 +3474,7 @@ body::before {
     loading="eager">
   </iframe>
 </div>
+
 
 
         <div class="section-copy">
@@ -3811,6 +3812,7 @@ body::before {
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -3846,6 +3848,10 @@ body::before {
       const lyricScrubber = document.getElementById("lyric-scrubber");
       const lyricStage = document.getElementById("lyric-stage");
       const lyricBgVideo = document.getElementById("lyric-bg-video");
+	  const museumTourVideo = document.getElementById("museum-tour-video");
+      const MUSEUM_VIDEO_STORAGE_KEY = "museum-tour-video-time";
+      let museumTourPlayer = null;
+      let museumTourSaveInterval = null;
       const museumTourVideo = document.getElementById("museum-tour-video");
       const tiltCards = Array.from(document.querySelectorAll("[data-tilt-card]"));
       const roadtripModal = document.getElementById("roadtrip-game-modal");
@@ -4430,6 +4436,148 @@ window.addEventListener("pageshow", (event) => {
     reloadMuseumTourVideo();
   }
 });
+
+const persistMuseumTourTime = (seconds) => {
+  try {
+    if (!Number.isFinite(seconds) || seconds <= 0.5) {
+      localStorage.removeItem(MUSEUM_VIDEO_STORAGE_KEY);
+      return;
+    }
+
+    localStorage.setItem(MUSEUM_VIDEO_STORAGE_KEY, String(seconds));
+  } catch (err) {}
+};
+
+const getSavedMuseumTourTime = () => {
+  try {
+    const saved = Number(localStorage.getItem(MUSEUM_VIDEO_STORAGE_KEY) || 0);
+    return Number.isFinite(saved) && saved > 0 ? saved : 0;
+  } catch (err) {
+    return 0;
+  }
+};
+
+const clearSavedMuseumTourTime = () => {
+  try {
+    localStorage.removeItem(MUSEUM_VIDEO_STORAGE_KEY);
+  } catch (err) {}
+};
+
+const saveMuseumTourTimeFromPlayer = async () => {
+  if (!museumTourPlayer) return;
+
+  try {
+    const seconds = await museumTourPlayer.getCurrentTime();
+    persistMuseumTourTime(seconds);
+  } catch (err) {}
+};
+
+const destroyMuseumTourPlayer = () => {
+  if (museumTourSaveInterval) {
+    clearInterval(museumTourSaveInterval);
+    museumTourSaveInterval = null;
+  }
+
+  if (museumTourPlayer && typeof museumTourPlayer.destroy === "function") {
+    museumTourPlayer.destroy().catch(() => {});
+  }
+
+  museumTourPlayer = null;
+};
+
+const initMuseumTourPlayer = () => {
+  if (!museumTourVideo || !window.Vimeo || !window.Vimeo.Player) return;
+
+  destroyMuseumTourPlayer();
+  museumTourPlayer = new Vimeo.Player(museumTourVideo);
+
+  museumTourPlayer.ready().then(async () => {
+    const savedTime = getSavedMuseumTourTime();
+
+    if (savedTime > 0) {
+      try {
+        await museumTourPlayer.setCurrentTime(savedTime);
+      } catch (err) {}
+    }
+  }).catch(() => {});
+
+  museumTourPlayer.on("timeupdate", (data) => {
+    const seconds = Number(data?.seconds || 0);
+    if (Number.isFinite(seconds)) persistMuseumTourTime(seconds);
+  });
+
+  museumTourPlayer.on("pause", (data) => {
+    const seconds = Number(data?.seconds || 0);
+    if (Number.isFinite(seconds)) persistMuseumTourTime(seconds);
+  });
+
+  museumTourPlayer.on("seeked", (data) => {
+    const seconds = Number(data?.seconds || 0);
+    if (Number.isFinite(seconds)) persistMuseumTourTime(seconds);
+  });
+
+  museumTourPlayer.on("ended", () => {
+    clearSavedMuseumTourTime();
+  });
+
+  museumTourSaveInterval = window.setInterval(() => {
+    saveMuseumTourTimeFromPlayer();
+  }, 1500);
+};
+
+const reloadMuseumTourVideo = async () => {
+  if (!museumTourVideo) return;
+
+  await saveMuseumTourTimeFromPlayer();
+
+  const iframeSrc = museumTourVideo.dataset.src || museumTourVideo.getAttribute("src");
+  if (!iframeSrc) return;
+
+  destroyMuseumTourPlayer();
+  museumTourVideo.setAttribute("src", "about:blank");
+
+  window.setTimeout(() => {
+    museumTourVideo.addEventListener(
+      "load",
+      () => {
+        window.setTimeout(() => {
+          initMuseumTourPlayer();
+        }, 60);
+      },
+      { once: true }
+    );
+
+    museumTourVideo.setAttribute("src", iframeSrc);
+  }, 0);
+};
+
+const isBackForwardRestore = (event) => {
+  const navEntries = performance.getEntriesByType?.("navigation") || [];
+  const navType = navEntries[0]?.type;
+  return !!event?.persisted || navType === "back_forward";
+};
+
+window.addEventListener("pagehide", () => {
+  saveMuseumTourTimeFromPlayer();
+});
+
+window.addEventListener("beforeunload", () => {
+  saveMuseumTourTimeFromPlayer();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) saveMuseumTourTimeFromPlayer();
+});
+
+window.addEventListener("pageshow", (event) => {
+  if (isBackForwardRestore(event)) {
+    reloadMuseumTourVideo();
+  }
+});
+
+initMuseumTourPlayer();
+
+
 		
 updateProgressBar();
 setActiveMiniNav();
