@@ -1369,12 +1369,13 @@
       let size = opts.size ?? layout.size;
 
       if (activeRole === "all" && roleKey === "unit_manager" && opts.alpha === undefined) {
-        alpha = 0.72;
-        size = 1.55;
+      alpha = 0.84;
+      size = 1.8;
       } else if (activeRole === "unit_manager" && opts.alpha === undefined) {
-        alpha = 0.86;
-        size = 1.75;
+      alpha = 0.96;
+      size = 2.05;
       }
+
 
       pts.forEach((point) => drawPoint(targetCtx, point, size, alpha));
     }
@@ -1411,52 +1412,65 @@
     }
 
     function drawSearchHighlights(targetCtx, nowMs) {
-      if (activeRole === "all") return;
+  if (activeRole === "all") return;
 
-      const matches = getSearchMatches();
-      if (!matches.length) return;
+  const matches = getSearchMatches();
+  if (!matches.length) return;
 
-      const pulse = 0.5 + 0.5 * Math.sin(nowMs / 250);
-      const beam = 0.5 + 0.5 * Math.sin(nowMs / 360 + 1.1);
-      const baseSize = activeRole === "unit_manager" ? 1.85 : ROLE_META_MAP[activeRole].single.size;
+  const pulse = 0.5 + 0.5 * Math.sin(nowMs / 250);
+  const beam = 0.5 + 0.5 * Math.sin(nowMs / 360 + 1.1);
 
-      matches.forEach((leader) => {
-        const point = leaderPointMap[leaderKey(leader)];
-        if (!point) return;
+  const baseSize = activeRole === "unit_manager"
+    ? 2.8
+    : ROLE_META_MAP[activeRole].single.size;
 
-        const haloRadius = Math.max(18, (baseSize * 4.4) + (pulse * 8));
-        const glow = targetCtx.createRadialGradient(point.x, point.y, 0, point.x, point.y, haloRadius);
-        glow.addColorStop(0, "rgba(255,255,255,0.98)");
-        glow.addColorStop(0.16, `rgba(255,230,106,${0.66 + beam * 0.16})`);
-        glow.addColorStop(0.48, "rgba(255,230,106,0.24)");
-        glow.addColorStop(1, "rgba(255,230,106,0)");
+  matches.forEach((leader) => {
+    const point = leaderPointMap[leaderKey(leader)];
+    if (!point) return;
 
-        targetCtx.fillStyle = glow;
-        targetCtx.beginPath();
-        targetCtx.arc(point.x, point.y, haloRadius, 0, Math.PI * 2);
-        targetCtx.fill();
+    const haloRadius = Math.max(
+      activeRole === "unit_manager" ? 24 : 18,
+      (baseSize * 5.4) + (pulse * 12)
+    );
 
-        targetCtx.strokeStyle = `rgba(255,255,255,${0.70 + pulse * 0.18})`;
-        targetCtx.lineWidth = 1.8;
-        targetCtx.beginPath();
-        targetCtx.arc(point.x, point.y, haloRadius * 0.48, 0, Math.PI * 2);
-        targetCtx.stroke();
+    const glow = targetCtx.createRadialGradient(point.x, point.y, 0, point.x, point.y, haloRadius);
+    glow.addColorStop(0, "rgba(255,255,255,0.98)");
+    glow.addColorStop(0.16, `rgba(255,230,106,${0.66 + beam * 0.16})`);
+    glow.addColorStop(0.48, "rgba(255,230,106,0.24)");
+    glow.addColorStop(1, "rgba(255,230,106,0)");
 
-        targetCtx.strokeStyle = `rgba(255,230,106,${0.40 + beam * 0.22})`;
-        targetCtx.lineWidth = 1.15;
-        targetCtx.beginPath();
-        targetCtx.moveTo(point.x - haloRadius * 0.95, point.y);
-        targetCtx.lineTo(point.x + haloRadius * 0.95, point.y);
-        targetCtx.stroke();
+    targetCtx.fillStyle = glow;
+    targetCtx.beginPath();
+    targetCtx.arc(point.x, point.y, haloRadius, 0, Math.PI * 2);
+    targetCtx.fill();
 
-        targetCtx.beginPath();
-        targetCtx.moveTo(point.x, point.y - haloRadius * 0.95);
-        targetCtx.lineTo(point.x, point.y + haloRadius * 0.95);
-        targetCtx.stroke();
+    targetCtx.strokeStyle = `rgba(255,255,255,${0.70 + pulse * 0.18})`;
+    targetCtx.lineWidth = activeRole === "unit_manager" ? 2.2 : 1.8;
+    targetCtx.beginPath();
+    targetCtx.arc(point.x, point.y, haloRadius * 0.48, 0, Math.PI * 2);
+    targetCtx.stroke();
 
-        drawPoint(targetCtx, point, Math.max(2.1, baseSize * 0.92), 1);
-      });
-    }
+    targetCtx.strokeStyle = `rgba(255,230,106,${0.40 + beam * 0.22})`;
+    targetCtx.lineWidth = activeRole === "unit_manager" ? 1.5 : 1.15;
+    targetCtx.beginPath();
+    targetCtx.moveTo(point.x - haloRadius * 0.95, point.y);
+    targetCtx.lineTo(point.x + haloRadius * 0.95, point.y);
+    targetCtx.stroke();
+
+    targetCtx.beginPath();
+    targetCtx.moveTo(point.x, point.y - haloRadius * 0.95);
+    targetCtx.lineTo(point.x, point.y + haloRadius * 0.95);
+    targetCtx.stroke();
+
+    drawPoint(
+      targetCtx,
+      point,
+      Math.max(activeRole === "unit_manager" ? 3.0 : 2.1, baseSize * 1.05),
+      1
+    );
+  });
+}
+
 
     function drawOmcLogo(targetCtx) {
       if (!omcImage || !omcImage.complete || !omcImage.naturalWidth) return;
@@ -1511,25 +1525,24 @@
         const startX = stageWidth * 0.05;
         const startY = stageHeight * 0.90;
 
-        const midX = stageWidth * 0.95;
-        const midY = stageHeight * 0.03;
+        const midX = stageWidth * 0.93;
+        const midY = stageHeight * 0.01;
 
-        const endX = stageWidth * 1.16;
-        const endY = stageHeight * -0.18;
+        const endX = stageWidth * 1.20;
+        const endY = stageHeight * -0.22;
 
-        let x, y, angle;
-
-        if (t < 0.84) {
-          const local = t / 0.84;
-          const eased = 1 - Math.pow(1 - local, 2.05);
-          x = startX + (midX - startX) * eased;
-          y = startY + (midY - startY) * eased + Math.sin(local * Math.PI * 1.35) * 1.6;
-          angle = (-12 + 19 * eased) * Math.PI / 180;
+        if (t < 0.78) {
+        const local = t / 0.78;
+        const eased = local;
+        x = startX + (midX - startX) * eased;
+        y = startY + (midY - startY) * eased + Math.sin(local * Math.PI * 1.15) * 1.2;
+        angle = (-12 + 17 * eased) * Math.PI / 180;
         } else {
-          const local = (t - 0.84) / 0.16;
-          x = midX + (endX - midX) * local;
-          y = midY + (endY - midY) * local;
-          angle = (7 + 15 * local) * Math.PI / 180;
+        const local = (t - 0.78) / 0.22;
+        const eased = 1 - Math.pow(1 - local, 2.2);
+        x = midX + (endX - midX) * eased;
+        y = midY + (endY - midY) * eased;
+        angle = (5 + 20 * eased) * Math.PI / 180;
         }
 
         let alpha = 1;
