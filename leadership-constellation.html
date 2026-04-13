@@ -580,7 +580,7 @@
       </div>
     </section>
 
-    <section class="card list-card" id="listSection" hidden>
+    <section class="card list-card" id="listSection" hidden style="display:none;">
       <div class="list-head">
         <h2 class="list-title">Leadership Roll Call</h2>
         <div class="list-meta" id="listMeta">Loading list…</div>
@@ -618,10 +618,10 @@
     const SHIP_SRC = "spaceship.png";
     const OMC_SRC = "omc.png";
 
-    /* Adjust these if you want to nudge the omc logo */
+    /* Smaller logo directly under the yellow title badge */
     const OMC_PLACEMENT = {
-      all:    { x: 0.29, y: 0.21, maxWMobile: 150, maxWDesktop: 190 },
-      single: { x: 0.15, y: 0.18, maxWMobile: 128, maxWDesktop: 155 }
+      all:    { x: 0.50, y: 0.205, maxWMobile: 104, maxWDesktop: 118 },
+      single: { x: 0.50, y: 0.205, maxWMobile: 104, maxWDesktop: 118 }
     };
 
     const ROLE_META = [
@@ -1418,10 +1418,8 @@
 
       const placement = activeRole === "all" ? OMC_PLACEMENT.all : OMC_PLACEMENT.single;
       const maxW = Math.min(
-        activeRole === "all"
-          ? (isMobile() ? placement.maxWMobile : placement.maxWDesktop)
-          : (isMobile() ? placement.maxWMobile : placement.maxWDesktop),
-        stageWidth * 0.26
+        isMobile() ? placement.maxWMobile : placement.maxWDesktop,
+        stageWidth * 0.19
       );
 
       const w = maxW;
@@ -1430,10 +1428,10 @@
       const y = stageHeight * placement.y - (h / 2);
 
       targetCtx.save();
-      targetCtx.shadowColor = "rgba(0,0,0,0.28)";
-      targetCtx.shadowBlur = 18;
-      targetCtx.shadowOffsetY = 6;
-      targetCtx.globalAlpha = 0.98;
+      targetCtx.shadowColor = "rgba(0,0,0,0.20)";
+      targetCtx.shadowBlur = 12;
+      targetCtx.shadowOffsetY = 4;
+      targetCtx.globalAlpha = 0.97;
       targetCtx.drawImage(omcImage, x, y, w, h);
       targetCtx.restore();
     }
@@ -1461,23 +1459,37 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 9000;
+        const cycleMs = 7000;
         const cycleIndex = Math.floor(elapsed / cycleMs);
         const t = (elapsed % cycleMs) / cycleMs;
 
-        const startX = stageWidth * 0.04;
+        const startX = stageWidth * 0.05;
         const startY = stageHeight * 0.90;
-        const endX = stageWidth * 1.03;
-        const endY = stageHeight * -0.06;
-        const eased = 1 - Math.pow(1 - t, 2.42);
 
-        const x = startX + (endX - startX) * eased;
-        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.45) * 1.8;
-        const angle = (-12 + 20 * eased) * Math.PI / 180;
+        const midX = stageWidth * 0.95;
+        const midY = stageHeight * 0.03;
+
+        const endX = stageWidth * 1.16;
+        const endY = stageHeight * -0.18;
+
+        let x, y, angle;
+
+        if (t < 0.84) {
+          const local = t / 0.84;
+          const eased = 1 - Math.pow(1 - local, 2.05);
+          x = startX + (midX - startX) * eased;
+          y = startY + (midY - startY) * eased + Math.sin(local * Math.PI * 1.35) * 1.6;
+          angle = (-12 + 19 * eased) * Math.PI / 180;
+        } else {
+          const local = (t - 0.84) / 0.16;
+          x = midX + (endX - midX) * local;
+          y = midY + (endY - midY) * local;
+          angle = (7 + 15 * local) * Math.PI / 180;
+        }
 
         let alpha = 1;
-        if (t < 0.015) alpha = t / 0.015;
-        else if (t > 0.996) alpha = (1 - t) / 0.004;
+        if (t < 0.014) alpha = t / 0.014;
+        else if (t > 0.975) alpha = (1 - t) / 0.025;
 
         const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
         const w = Math.max(60, baseSize);
@@ -1486,7 +1498,7 @@
         return { mode: "all", cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h };
       }
 
-      const cycleMs = 12200;
+      const cycleMs = 9800;
       const cycleIndex = Math.floor(elapsed / cycleMs);
       const t = (elapsed % cycleMs) / cycleMs;
       const layout = ROLE_META_MAP[activeRole].single;
@@ -1503,39 +1515,47 @@
       const hoverEndX = stageWidth * Math.min(0.92, layout.cx + 0.08);
       const hoverEndY = stageHeight * Math.max(0.12, layout.cy - 0.05);
 
-      const exitX = Math.min(stageWidth * 1.02, hoverEndX + stageWidth * 0.08);
-      const exitY = stageHeight * -0.06;
+      const edgeExitX = stageWidth * 0.98;
+      const edgeExitY = stageHeight * 0.01;
+
+      const finalExitX = stageWidth * 1.12;
+      const finalExitY = stageHeight * -0.14;
 
       const p1 = 0.38;
-      const p2 = 0.79;
+      const p2 = 0.78;
+      const p3 = 0.90;
 
       let x, y, angle, spotlightActive = false, spotlightProgress = 0;
 
       if (t < p1) {
         const local = t / p1;
-        const eased = 1 - Math.pow(1 - local, 2.35);
+        const eased = 1 - Math.pow(1 - local, 2.25);
         x = startX + (approachX - startX) * eased;
-        y = startY + (approachY - startY) * eased + Math.sin(local * Math.PI * 1.2) * 2.4;
+        y = startY + (approachY - startY) * eased + Math.sin(local * Math.PI * 1.2) * 2.0;
         angle = (-14 + 16 * eased) * Math.PI / 180;
       } else if (t < p2) {
         const local = (t - p1) / (p2 - p1);
-        const eased = 1 - Math.pow(1 - local, 2.15);
+        const eased = 1 - Math.pow(1 - local, 2.0);
         x = hoverStartX + (hoverEndX - hoverStartX) * eased;
-        y = hoverStartY + (hoverEndY - hoverStartY) * eased + Math.sin(local * Math.PI * 2.0) * 2.4;
+        y = hoverStartY + (hoverEndY - hoverStartY) * eased + Math.sin(local * Math.PI * 2.0) * 2.0;
         angle = (2 + 10 * eased) * Math.PI / 180;
         spotlightActive = true;
         spotlightProgress = local;
+      } else if (t < p3) {
+        const local = (t - p2) / (p3 - p2);
+        x = hoverEndX + (edgeExitX - hoverEndX) * local;
+        y = hoverEndY + (edgeExitY - hoverEndY) * local;
+        angle = (10 + 8 * local) * Math.PI / 180;
       } else {
-        const local = (t - p2) / (1 - p2);
-        const eased = 1 - Math.pow(1 - local, 2.8);
-        x = hoverEndX + (exitX - hoverEndX) * eased;
-        y = hoverEndY + (exitY - hoverEndY) * eased;
-        angle = (10 + 12 * eased) * Math.PI / 180;
+        const local = (t - p3) / (1 - p3);
+        x = edgeExitX + (finalExitX - edgeExitX) * local;
+        y = edgeExitY + (finalExitY - edgeExitY) * local;
+        angle = (18 + 12 * local) * Math.PI / 180;
       }
 
       let alpha = 1;
-      if (t < 0.022) alpha = t / 0.022;
-      else if (t > 0.996) alpha = (1 - t) / 0.004;
+      if (t < 0.02) alpha = t / 0.02;
+      else if (t > 0.972) alpha = (1 - t) / 0.028;
 
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
@@ -1849,7 +1869,17 @@
       updateSearchUI();
 
       const showListSection = activeRole !== "all";
-      listSection.hidden = !showListSection;
+      if (showListSection) {
+        listSection.hidden = false;
+        listSection.style.display = "grid";
+      } else {
+        listSection.hidden = true;
+        listSection.style.display = "none";
+        nameList.innerHTML = "";
+        emptyState.hidden = true;
+        listMeta.textContent = "";
+        pagerInfo.textContent = "";
+      }
 
       stage.classList.toggle("single-role-mobile", usesScrollableStage() && isSingleRole());
 
