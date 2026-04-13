@@ -380,6 +380,19 @@ body::before {
       object-fit: contain;
       transition: transform 0.4s ease;
     }
+#celebration-constellation .media-frame {
+  min-height: 0;
+  height: 380px;          
+  padding: 0;
+  overflow: hidden;
+}
+
+#celebration-constellation .media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;      
+  object-position: center center;
+}
 
     .section-image-link:hover .media-frame img { transform: scale(1.03); }
     .section-copy { margin-top: 20px; }
@@ -3289,7 +3302,7 @@ body::before {
 <section id="celebration-constellation" class="section">
   <div class="section-head">
     <h2>Celebration Constellation</h2>
-
+</div>
   <div class="section-image-wrap" style="margin-top: 22px;">
     <div class="section-image-link lightbox-trigger tilt-card" data-tilt-card>
       <div class="tilt-stage">
