@@ -21,6 +21,10 @@
 
     * { box-sizing: border-box; }
 
+    [hidden] {
+      display: none !important;
+    }
+
     html, body {
       margin: 0;
       min-height: 100%;
@@ -546,7 +550,7 @@
       <div class="eyebrow">Celebration Constellation</div>
       <h1>Where Leadership Shines</h1>
       <div class="hero-copy">
-        To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that "All-Star" light up in the constellation 🌟.
+        To be "America's Place" is our mission. As Wilson Waffle travels through space, use the search box in each leadership group to find an individual name and watch that place in the constellation light up.
       </div>
     </section>
 
@@ -612,6 +616,13 @@
   <script>
     const CSV_URL = "leaders.csv";
     const SHIP_SRC = "spaceship.png";
+    const OMC_SRC = "omc.png";
+
+    /* Adjust these if you want to nudge the omc logo */
+    const OMC_PLACEMENT = {
+      all:    { x: 0.29, y: 0.21, maxWMobile: 150, maxWDesktop: 190 },
+      single: { x: 0.15, y: 0.18, maxWMobile: 128, maxWDesktop: 155 }
+    };
 
     const ROLE_META = [
       {
@@ -768,6 +779,7 @@
     let suppressHintDismiss = false;
 
     let shipImage = null;
+    let omcImage = null;
     let animationId = 0;
     let flightStartMs = performance.now();
     let sessionSeed = Math.floor(Math.random() * 1000000);
@@ -1401,6 +1413,31 @@
       });
     }
 
+    function drawOmcLogo(targetCtx) {
+      if (!omcImage || !omcImage.complete || !omcImage.naturalWidth) return;
+
+      const placement = activeRole === "all" ? OMC_PLACEMENT.all : OMC_PLACEMENT.single;
+      const maxW = Math.min(
+        activeRole === "all"
+          ? (isMobile() ? placement.maxWMobile : placement.maxWDesktop)
+          : (isMobile() ? placement.maxWMobile : placement.maxWDesktop),
+        stageWidth * 0.26
+      );
+
+      const w = maxW;
+      const h = w * (omcImage.naturalHeight / omcImage.naturalWidth);
+      const x = stageWidth * placement.x - (w / 2);
+      const y = stageHeight * placement.y - (h / 2);
+
+      targetCtx.save();
+      targetCtx.shadowColor = "rgba(0,0,0,0.28)";
+      targetCtx.shadowBlur = 18;
+      targetCtx.shadowOffsetY = 6;
+      targetCtx.globalAlpha = 0.98;
+      targetCtx.drawImage(omcImage, x, y, w, h);
+      targetCtx.restore();
+    }
+
     function getAllRoleStageForShipY(shipY) {
       const yNorm = shipY / stageHeight;
 
@@ -1424,23 +1461,23 @@
       const elapsed = Math.max(0, now - flightStartMs);
 
       if (activeRole === "all") {
-        const cycleMs = 10800;
+        const cycleMs = 9000;
         const cycleIndex = Math.floor(elapsed / cycleMs);
         const t = (elapsed % cycleMs) / cycleMs;
 
-        const startX = stageWidth * 0.08;
-        const startY = stageHeight * 0.89;
-        const endX = stageWidth * 1.10;
-        const endY = stageHeight * -0.14;
-        const eased = 1 - Math.pow(1 - t, 2.34);
+        const startX = stageWidth * 0.04;
+        const startY = stageHeight * 0.90;
+        const endX = stageWidth * 1.03;
+        const endY = stageHeight * -0.06;
+        const eased = 1 - Math.pow(1 - t, 2.42);
 
         const x = startX + (endX - startX) * eased;
-        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.5) * 2.0;
+        const y = startY + (endY - startY) * eased + Math.sin(t * Math.PI * 1.45) * 1.8;
         const angle = (-12 + 20 * eased) * Math.PI / 180;
 
         let alpha = 1;
-        if (t < 0.018) alpha = t / 0.018;
-        else if (t > 0.994) alpha = (1 - t) / 0.006;
+        if (t < 0.015) alpha = t / 0.015;
+        else if (t > 0.996) alpha = (1 - t) / 0.004;
 
         const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
         const w = Math.max(60, baseSize);
@@ -1449,12 +1486,12 @@
         return { mode: "all", cycleIndex, t, x, y, angle, alpha, elapsed, width: w, height: h };
       }
 
-      const cycleMs = 13800;
+      const cycleMs = 12200;
       const cycleIndex = Math.floor(elapsed / cycleMs);
       const t = (elapsed % cycleMs) / cycleMs;
       const layout = ROLE_META_MAP[activeRole].single;
 
-      const startX = stageWidth * 0.12;
+      const startX = stageWidth * 0.11;
       const startY = stageHeight * 0.91;
 
       const approachX = stageWidth * Math.max(0.28, layout.cx - 0.05);
@@ -1466,11 +1503,11 @@
       const hoverEndX = stageWidth * Math.min(0.92, layout.cx + 0.08);
       const hoverEndY = stageHeight * Math.max(0.12, layout.cy - 0.05);
 
-      const exitX = Math.min(stageWidth * 1.06, hoverEndX + stageWidth * 0.12);
-      const exitY = stageHeight * -0.10;
+      const exitX = Math.min(stageWidth * 1.02, hoverEndX + stageWidth * 0.08);
+      const exitY = stageHeight * -0.06;
 
-      const p1 = 0.40;
-      const p2 = 0.80;
+      const p1 = 0.38;
+      const p2 = 0.79;
 
       let x, y, angle, spotlightActive = false, spotlightProgress = 0;
 
@@ -1497,8 +1534,8 @@
       }
 
       let alpha = 1;
-      if (t < 0.025) alpha = t / 0.025;
-      else if (t > 0.992) alpha = (1 - t) / 0.008;
+      if (t < 0.022) alpha = t / 0.022;
+      else if (t > 0.996) alpha = (1 - t) / 0.004;
 
       const baseSize = isMobile() ? Math.min(88, stageWidth * 0.12) : Math.min(96, stageWidth * 0.10);
       const w = Math.max(60, baseSize);
@@ -1682,6 +1719,7 @@
     function drawFrame(now) {
       ctx.clearRect(0, 0, stageWidth, stageHeight);
       ctx.drawImage(staticCanvas, 0, 0, stageWidth, stageHeight);
+      drawOmcLogo(ctx);
       drawSearchHighlights(ctx, now);
       const shipState = drawShipFrame(now);
       updateShipCard(shipState);
@@ -1914,6 +1952,13 @@
     });
     shipImage.addEventListener("error", () => {
       shipCard.classList.remove("show");
+    });
+
+    omcImage = new Image();
+    omcImage.src = OMC_SRC;
+    omcImage.addEventListener("load", () => {
+      cancelAnimationFrame(animationId);
+      animationId = requestAnimationFrame(drawFrame);
     });
 
     resizeCanvas();
